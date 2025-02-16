@@ -9,11 +9,11 @@ import {
   FaSignInAlt,
   FaAlignJustify,
 } from "react-icons/fa";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-cyna-white.svg";
 
 export default function Header() {
   return (
-    <header className="w-full fixed top-0 flex flex-row justify-between items-center p-4 bg-primaryBackground text-white shadow-md">
+    <header className="w-full top-0 flex flex-row justify-between items-center p-4 bg-primaryBackground text-white shadow-md">
       <img src={logo} alt="Cyna Logo" className="w-40 sm:w-40" />
       <nav className="navigation-menu flex flex-row space-x-4 items-center">
         <Link

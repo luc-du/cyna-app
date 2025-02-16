@@ -1,13 +1,16 @@
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
 import AppRouter from "./routes/AppRouter";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 const App = () => {
   return (
     <div className="app-container">
+      <Header />
       <main className="content">
         <AppRouter />
       </main>
+      <Footer />
     </div>
   );
 };

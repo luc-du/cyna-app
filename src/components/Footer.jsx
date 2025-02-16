@@ -5,7 +5,7 @@ import { BsTwitterX } from "react-icons/bs";
 
 export default function Footer() {
   return (
-    <footer className="hidden sm:flex flex-col items-center p-4 bg-primaryBackground text-white w-full fixed bottom-0 shadow-md">
+    <footer className="hidden sm:flex flex-col items-center p-4 bg-primaryBackground text-white w-full bottom-0 shadow-md">
       <div className="flex flex-row space-x-4 mb-4">
         <Link to="/terms" className="hover:text-gray-400 text-white">
           CGU
