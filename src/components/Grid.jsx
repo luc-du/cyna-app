@@ -4,7 +4,9 @@ const Grid = ({ items, renderItem, title, text, gridClasses = "" }) => {
   return (
     <section className="my-8 px-4 bg-grey-100">
       {title && (
-        <h2 className="text-2xl font-bold mb-4 text-center">{title}</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-primaryBackground">
+          {title}
+        </h2>
       )}
       {text && <h2 className="text-2xl font-bold mb-4 text-center">{text}</h2>}
       <div

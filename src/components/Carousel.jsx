@@ -14,17 +14,27 @@ const Carousel = ({ children, settings }) => {
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1024, // PC
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 3,
           slidesToScroll: 1,
+          centerPadding: "0px",
         },
       },
       {
-        breakpoint: 640,
+        breakpoint: 426, // Tablette
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          centerPadding: "10px",
+        },
+      },
+      {
+        breakpoint: 767, // Mobile
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          centerPadding: "20px",
         },
       },
     ],

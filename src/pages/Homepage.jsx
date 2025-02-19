@@ -9,6 +9,9 @@ import xdr from "../assets/images/xdr.jpg";
 import siem from "../assets/images/siem.jpg";
 import identity from "../assets/images/identity.jpg";
 import technology from "../assets/images/technology.jpg";
+import socPremium from "../assets/images/socPremium.jpg";
+import edrPremium from "../assets/images/edrPremium.jpg";
+import xdrPremium from "../assets/images/xdrPremium.png";
 
 const servicesData = [
   {
@@ -44,7 +47,7 @@ const categoriesData = [
   },
   {
     id: 2,
-    image: technology, // image illustrant la protection des endpoints
+    image: technology,
     name: "EDR & XDR",
     link: "/categories/edr-xdr",
   },
@@ -60,19 +63,19 @@ const categoriesData = [
 const topProductsData = [
   {
     id: 1,
-    image: "../assets/images/soc-premium.jpg", // image d'une solution SOC haut de gamme
+    image: socPremium,
     name: "SOC Premium",
     link: "/product/soc-premium",
   },
   {
     id: 2,
-    image: "../assets/images/edr-advanced.jpg", // image d'une solution EDR avancée
+    image: edrPremium,
     name: "EDR Avancé",
     link: "/product/edr-avance",
   },
   {
     id: 3,
-    image: "../assets/images/xdr-pro.jpg", // image d'une solution XDR professionnelle
+    image: xdrPremium,
     name: "XDR Pro",
     link: "/product/xdr-pro",
   },
@@ -149,7 +152,7 @@ const Homepage = () => {
           items={categoriesData}
           renderItem={renderCategory}
           title="Nos Catégories"
-          text="Découvrez nos catégories"
+          text=""
         />
       </div>
       <div className="m-20">
@@ -157,7 +160,7 @@ const Homepage = () => {
           items={topProductsData}
           renderItem={renderProduct}
           title="Les Top Produits du moment"
-          text="Découvrez nos tops produits"
+          text=""
         />
       </div>
     </div>
