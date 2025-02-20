@@ -7,7 +7,7 @@ const ProductDetails = () => {
       <h1 className="text-2xl font-bold mb-4">Détails du Produit</h1>
       <p>Catégorie : {categoryId}</p>
       <p>Produit : {productId}</p>
-      <p>Informations sur le produit ici...</p>
+      <p>Informations sur le produit</p>
     </div>
   );
 };

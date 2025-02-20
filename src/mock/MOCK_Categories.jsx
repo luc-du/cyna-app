@@ -8,6 +8,8 @@ export const MOCK_Categories = [
     name: "Service 1",
     url: "1",
     imageUrl: placeholder,
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
         name: "Produit A",
@@ -30,6 +32,8 @@ export const MOCK_Categories = [
     name: "Service 2",
     url: "2",
     imageUrl: placeholder2,
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
         name: "Produit D",
@@ -52,7 +56,8 @@ export const MOCK_Categories = [
     name: "Service 3",
     url: "3",
     imageUrl: placeholder3,
-    disponible: true,
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
         name: "Produit D",
@@ -75,6 +80,8 @@ export const MOCK_Categories = [
     name: "Service 4",
     url: "4",
     imageUrl: placeholder,
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
         name: "Produit A",
@@ -97,6 +104,8 @@ export const MOCK_Categories = [
     name: "Service 5",
     url: "5",
     imageUrl: placeholder2,
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
         name: "Produit D",
@@ -117,7 +126,8 @@ export const MOCK_Categories = [
     name: "Service 6",
     url: "6",
     imageUrl: placeholder3,
-    disponible: true,
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
         name: "Produit D",
