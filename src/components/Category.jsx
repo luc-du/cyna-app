@@ -3,7 +3,8 @@ import { Link } from "react-router";
 const Category = ({ name, url, imageUrl, products }) => {
   return (
     <Link to={url}>
-      <div className="p-4 border rounded-lg shadow-lg bg-white flex flex-col items-center justify-between w-64 h-80">
+      <div className="relative w-64 h-80 rounded-lg overflow-hidden shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+        {" "}
         <div className="relative w-full h-40 rounded-lg overflow-hidden">
           <img
             src={imageUrl}
@@ -14,7 +15,6 @@ const Category = ({ name, url, imageUrl, products }) => {
             <h2 className="text-lg font-bold text-white">{name}</h2>
           </div>
         </div>
-
         <div id="products" className="flex flex-wrap justify-center gap-2 mt-4">
           {products.map((product, index) => (
             <Link key={index} to={product.url}>
