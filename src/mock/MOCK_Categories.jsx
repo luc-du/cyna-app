@@ -6,7 +6,7 @@ export const MOCK_Categories = [
   {
     id: 1,
     name: "Service 1",
-    url: "/service-1",
+    url: "1",
     imageUrl: placeholder,
     products: [
       {
@@ -28,7 +28,7 @@ export const MOCK_Categories = [
   {
     id: 2,
     name: "Service 2",
-    url: "/service-2",
+    url: "2",
     imageUrl: placeholder2,
     products: [
       {
@@ -50,7 +50,7 @@ export const MOCK_Categories = [
   {
     id: 3,
     name: "Service 3",
-    url: "/service-3",
+    url: "3",
     imageUrl: placeholder3,
     disponible: true,
     products: [
@@ -73,7 +73,7 @@ export const MOCK_Categories = [
   {
     id: 4,
     name: "Service 4",
-    url: "/service-4",
+    url: "4",
     imageUrl: placeholder,
     products: [
       {
@@ -95,7 +95,7 @@ export const MOCK_Categories = [
   {
     id: 5,
     name: "Service 5",
-    url: "/service-5",
+    url: "5",
     imageUrl: placeholder2,
     products: [
       {
@@ -115,7 +115,7 @@ export const MOCK_Categories = [
   {
     id: 6,
     name: "Service 6",
-    url: "/service-6",
+    url: "6",
     imageUrl: placeholder3,
     disponible: true,
     products: [
