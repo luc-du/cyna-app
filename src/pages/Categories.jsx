@@ -8,11 +8,14 @@ const categoryData = [
   { id: 4, name: "Category 4", url: "/" },
   { id: 5, name: "Category 5", url: "/" },
   { id: 6, name: "Category 6", url: "/" },
+  { id: 7, name: "Category 7", url: "/" },
+  { id: 8, name: "Category 8", url: "/" },
+  { id: 9, name: "Category 9", url: "/" },
 ];
 
 export default function Categories() {
   return (
-    <div>
+    <>
       <Grid
         title={"Catégories des produits"}
         items={categoryData}
@@ -20,6 +23,6 @@ export default function Categories() {
           <Category key={item.id} name={item.name} url={item.url} />
         )}
       />
-    </div>
+    </>
   );
 }
