@@ -28,7 +28,7 @@ const Category = ({ name, url, imageUrl, products }) => {
                   title={product.name}
                 />
                 <span>{product.name}</span>
-                <span>{product.price}€</span>
+                <span>{product.prix}€</span>
                 <span
                   className={`font-bold ${
                     product.disponible ? "text-green-500" : "text-red-500"

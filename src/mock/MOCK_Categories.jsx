@@ -11,14 +11,14 @@ export const MOCK_Categories = [
     products: [
       {
         name: "Produit A",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         img: placeholder2,
         imageUrl: placeholder,
       },
       {
         name: "Produit B",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         img: placeholder2,
         imageUrl: placeholder,
@@ -33,14 +33,14 @@ export const MOCK_Categories = [
     products: [
       {
         name: "Produit D",
-        price: 99.99,
+        prix: 99.99,
         img: placeholder2,
         disponible: true,
         imageUrl: placeholder,
       },
       {
         name: "Produit E",
-        price: 99.99,
+        prix: 99.99,
         img: placeholder2,
         disponible: true,
         imageUrl: placeholder,
@@ -56,14 +56,14 @@ export const MOCK_Categories = [
     products: [
       {
         name: "Produit D",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         img: placeholder2,
         imageUrl: placeholder,
       },
       {
         name: "Produit E",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         img: placeholder2,
         imageUrl: placeholder,
@@ -78,14 +78,14 @@ export const MOCK_Categories = [
     products: [
       {
         name: "Produit A",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         img: placeholder2,
         imageUrl: placeholder,
       },
       {
         name: "Produit B",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         img: placeholder2,
         imageUrl: placeholder,
@@ -100,13 +100,13 @@ export const MOCK_Categories = [
     products: [
       {
         name: "Produit D",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         imageUrl: placeholder,
       },
       {
         name: "Produit E",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         imageUrl: placeholder,
       },
@@ -121,13 +121,13 @@ export const MOCK_Categories = [
     products: [
       {
         name: "Produit D",
-        price: 99.99,
+        prix: 99.99,
         disponible: true,
         imageUrl: placeholder,
       },
       {
         name: "Produit E",
-        price: 99.99,
+        prix: 99.99,
         disponible: false,
         imageUrl: placeholder,
       },
