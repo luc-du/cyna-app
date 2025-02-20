@@ -2,7 +2,7 @@ import React from "react";
 
 const Grid = ({ items, renderItem, title, text, gridClasses = "" }) => {
   return (
-    <section className="my-8 px-4 bg-grey-100">
+    <section className="my-8 px-4 bg-grey-100 ">
       {title && (
         <h2 className="text-2xl font-bold mb-4 text-center text-primaryBackground">
           {title}
