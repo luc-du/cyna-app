@@ -16,7 +16,9 @@ export default function Categories() {
       <Grid
         title={"Catégories des produits"}
         items={categoryData}
-        renderItem={(item) => <Category key={item.id} name={item.name} />}
+        renderItem={(item) => (
+          <Category key={item.id} name={item.name} url={item.url} />
+        )}
       />
     </div>
   );
