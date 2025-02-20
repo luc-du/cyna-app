@@ -8,7 +8,6 @@ const categoryData = MOCK_Categories;
 export default function Categories() {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Catégories des produits</h1>
       <Grid
         title={"Catégories des produits"}
         items={categoryData}
