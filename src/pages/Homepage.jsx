@@ -1,17 +1,13 @@
 import React from "react";
 import Carousel from "../components/Carousel";
-import ServiceCard from "../components/ServiceCard";
 import Grid from "../components/Grid";
+import ServiceCard from "../components/ServiceCard";
 
-import soc from "../assets/images/soc.jpg";
 import edr from "../assets/images/edr.jpg";
+import soc from "../assets/images/soc.jpg";
 import xdr from "../assets/images/xdr.jpg";
-import siem from "../assets/images/siem.jpg";
-import identity from "../assets/images/identity.jpg";
-import technology from "../assets/images/technology.jpg";
-import socPremium from "../assets/images/socPremium.jpg";
-import edrPremium from "../assets/images/edrPremium.jpg";
-import xdrPremium from "../assets/images/xdrPremium.png";
+import { MOCK_Categories } from "../mock/MOCK_Categories";
+import { MOCK_TopProductsData } from "../mock/MOCK_Top_Products";
 
 const servicesData = [
   {
@@ -19,97 +15,73 @@ const servicesData = [
     title: "SOC as a Service",
     description:
       "Votre centre opérationnel de sécurité, assurant une surveillance continue et une réponse proactive aux incidents.",
-    link: "#",
+    link: "/category/:categoryId",
   },
   {
     image: edr,
     title: "EDR (Endpoint Detection & Response)",
     description:
       "Détection avancée et réponse automatisée sur l'ensemble de vos endpoints pour une protection optimale.",
-    link: "#",
+    link: "/category/:categoryId",
   },
   {
     image: xdr,
     title: "XDR (Extended Detection & Response)",
     description:
       "Intégrez et corrélez les données de sécurité de toute votre infrastructure pour une vision globale des menaces.",
-    link: "#",
+    link: "/category/:categoryId",
   },
 ];
 
 // Données pour la grille des catégories
-const categoriesData = [
-  {
-    id: 1,
-    image: siem,
-    name: "SOC & SIEM",
-    link: "/categories/soc-siem",
-  },
-  {
-    id: 2,
-    image: technology,
-    name: "EDR & XDR",
-    link: "/categories/edr-xdr",
-  },
-  {
-    id: 3,
-    image: identity,
-    name: "Gestion d'Identité",
-    link: "/categories/iam-dlp",
-  },
-];
+const categoriesData = MOCK_Categories;
 
 // Données pour la grille des Top Produits
-const topProductsData = [
-  {
-    id: 1,
-    image: socPremium,
-    name: "SOC Premium",
-    link: "/product/soc-premium",
-  },
-  {
-    id: 2,
-    image: edrPremium,
-    name: "EDR Avancé",
-    link: "/product/edr-avance",
-  },
-  {
-    id: 3,
-    image: xdrPremium,
-    name: "XDR Pro",
-    link: "/product/xdr-pro",
-  },
-];
+const topProductsData = MOCK_TopProductsData;
 
 // Fonctions de rendu pour la grille
 const renderCategory = (category) => (
   <a
-    href={category.link}
-    className="block text-center hover:shadow-lg transition-shadow"
+    href={`/categories/${category.url}`}
+    className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
   >
-    <img
-      src={category.image}
-      alt={category.name}
-      className="w-full h-40 object-cover rounded-lg"
-    />
-    <h3 className="mt-2 text-lg font-semibold">{category.name}</h3>
+    <div className="relative overflow-hidden rounded-t-lg">
+      <img
+        src={category.imageUrl}
+        alt={category.name}
+        className="w-full h-40 object-cover object-center transition-transform duration-300 hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+        <h3 className="text-xl font-semibold text-white">{category.name}</h3>
+      </div>
+    </div>
+    <div className="p-4">
+      <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
+    </div>
   </a>
 );
 
 const renderProduct = (product) => (
-  <div className="bg-white shadow-lg rounded-xl p-4 text-center">
-    <img
-      src={product.image}
-      alt={product.name}
-      className="w-full h-40 object-cover rounded-t-xl"
-    />
-    <h3 className="mt-2 text-lg font-semibold">{product.name}</h3>
-    <a
-      href={product.link}
-      className="mt-2 inline-block text-blue-500 font-semibold hover:underline"
-    >
-      Voir le produit
-    </a>
+  <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+    <div className="relative overflow-hidden rounded-t-lg">
+      <img
+        src={product.image}
+        alt={product.name}
+        className="w-full h-40 object-cover object-center transition-transform duration-300 hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+        <h3 className="text-lg font-semibold text-white">{product.name}</h3>
+      </div>
+    </div>
+    <div className="p-4">
+      <h3 className="text-md font-semibold text-gray-800">{product.name}</h3>
+      <a
+        href={product.link}
+        className="mt-2 inline-block text-blue-500 font-semibold hover:underline hover:text-blue-700 transition"
+      >
+        Voir le produit
+      </a>
+    </div>
   </div>
 );
 
