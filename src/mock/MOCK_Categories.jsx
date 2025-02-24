@@ -1,11 +1,11 @@
-import placeholder from "../assets/images/cloud.jpg";
-import placeholder2 from "../assets/images/edr.jpg";
-import placeholder3 from "../assets/images/edrPremium.jpg";
+import placeholder3 from "../assets/images/identity.jpg";
+import placeholder from "../assets/images/siem.jpg";
+import placeholder2 from "../assets/images/technology.jpg";
 
 export const MOCK_Categories = [
   {
     id: 1,
-    name: "Service 1",
+    name: "SOC & SIEM",
     url: "1",
     imageUrl: placeholder,
     description:
@@ -29,7 +29,7 @@ export const MOCK_Categories = [
   },
   {
     id: 2,
-    name: "Service 2",
+    name: "EDR & XDR",
     url: "2",
     imageUrl: placeholder2,
     description:
@@ -53,7 +53,7 @@ export const MOCK_Categories = [
   },
   {
     id: 3,
-    name: "Service 3",
+    name: "Cyna SOC",
     url: "3",
     imageUrl: placeholder3,
     description:
@@ -71,74 +71,6 @@ export const MOCK_Categories = [
         prix: 99.99,
         disponible: true,
         img: placeholder2,
-        imageUrl: placeholder,
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: "Service 4",
-    url: "4",
-    imageUrl: placeholder,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
-    products: [
-      {
-        name: "Produit A",
-        prix: 99.99,
-        disponible: true,
-        img: placeholder2,
-        imageUrl: placeholder,
-      },
-      {
-        name: "Produit B",
-        prix: 99.99,
-        disponible: true,
-        img: placeholder2,
-        imageUrl: placeholder,
-      },
-    ],
-  },
-  {
-    id: 5,
-    name: "Service 5",
-    url: "5",
-    imageUrl: placeholder2,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
-    products: [
-      {
-        name: "Produit D",
-        prix: 99.99,
-        disponible: true,
-        imageUrl: placeholder,
-      },
-      {
-        name: "Produit E",
-        prix: 99.99,
-        disponible: true,
-        imageUrl: placeholder,
-      },
-    ],
-  },
-  {
-    id: 6,
-    name: "Service 6",
-    url: "6",
-    imageUrl: placeholder3,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
-    products: [
-      {
-        name: "Produit D",
-        prix: 99.99,
-        disponible: true,
-        imageUrl: placeholder,
-      },
-      {
-        name: "Produit E",
-        prix: 99.99,
-        disponible: false,
         imageUrl: placeholder,
       },
     ],

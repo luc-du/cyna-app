@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Category = ({ name, url, imageUrl, products }) => {
   return (
-    <div className="relative w-64 h-80 rounded-lg overflow-hidden shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+    <div className="w-full relative w-64 h-80 rounded-lg overflow-hidden shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
       <Link to={`/categories/${url}`}>
         <div className="relative w-full h-40 rounded-lg overflow-hidden">
           <img
