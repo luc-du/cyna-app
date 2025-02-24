@@ -9,6 +9,7 @@ export const MOCK_TopProductsData = [
     name: "SOC Premium",
     description:
       "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum qui dolorem, molestiae deleniti animi aspernatur reprehenderit nostrum eos iusto esse deserunt voluptas saepe praesentium vitae provident, unde harum magni tempora.",
+    disponible: true,
     link: "/products/1",
   },
   {
@@ -17,6 +18,7 @@ export const MOCK_TopProductsData = [
     name: "EDR Avancé",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut modi fugit dolores suscipit fugiat beatae repellat aut saepe consequatur quibusdam! Iusto voluptas quod, placeat consectetur nisi vel veritatis quo fugit.",
+    disponible: false,
     link: "/products/2",
   },
   {
@@ -25,6 +27,7 @@ export const MOCK_TopProductsData = [
     name: "XDR Pro",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut modi fugit dolores suscipit fugiat beatae repellat aut saepe consequatur quibusdam! Iusto voluptas quod, placeat consectetur nisi vel veritatis quo fugit.",
+    disponible: true,
     link: "/products/3",
   },
 ];
