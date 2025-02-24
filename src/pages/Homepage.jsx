@@ -1,37 +1,11 @@
-import React from "react";
 import Carousel from "../components/Carousel";
 import Grid from "../components/Grid";
 import ServiceCard from "../components/ServiceCard";
 
-import edr from "../assets/images/edr.jpg";
-import soc from "../assets/images/soc.jpg";
-import xdr from "../assets/images/xdr.jpg";
 import { MOCK_Categories } from "../mock/MOCK_Categories";
 import { MOCK_TopProductsData } from "../mock/MOCK_Top_Products";
 
-const servicesData = [
-  {
-    image: soc,
-    title: "SOC as a Service",
-    description:
-      "Votre centre opérationnel de sécurité, assurant une surveillance continue et une réponse proactive aux incidents.",
-    link: "/category/:categoryId",
-  },
-  {
-    image: edr,
-    title: "EDR (Endpoint Detection & Response)",
-    description:
-      "Détection avancée et réponse automatisée sur l'ensemble de vos endpoints pour une protection optimale.",
-    link: "/category/:categoryId",
-  },
-  {
-    image: xdr,
-    title: "XDR (Extended Detection & Response)",
-    description:
-      "Intégrez et corrélez les données de sécurité de toute votre infrastructure pour une vision globale des menaces.",
-    link: "/category/:categoryId",
-  },
-];
+const servicesData = MOCK_Categories;
 
 // Données pour la grille des catégories
 const categoriesData = MOCK_Categories;
