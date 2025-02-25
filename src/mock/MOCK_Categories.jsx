@@ -39,7 +39,7 @@ export const MOCK_Categories = [
         name: "Produit D",
         prix: 99.99,
         img: placeholder2,
-        disponible: true,
+        disponible: false,
         imageUrl: placeholder,
       },
       {
