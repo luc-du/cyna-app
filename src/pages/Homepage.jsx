@@ -87,7 +87,7 @@ const Homepage = () => {
         </p>
         <div className="mt-6 space-x-4">
           <button className="px-6 py-3 bg-primaryBackground text-white rounded-md hover:bg-primaryHover transition">
-            Découvrir nos produits
+            <Link to={"/categories"}>Découvrir nos produits</Link>
           </button>
           <button className="px-6 py-3 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition">
             Contacter un expert

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 const ServiceCard = ({ imageUrl, name, description, url }) => {
@@ -10,7 +11,7 @@ const ServiceCard = ({ imageUrl, name, description, url }) => {
         <div>
           <h3 className="text-xl font-semibold">{name}</h3>
           <p className="text-gray-600 text-sm my-2 line-clamp-3 overflow-ellipsis overflow-hidden">
-            {description}
+            {description.slice(0, 100) + "..."}
           </p>
         </div>
         <Link
@@ -22,6 +23,12 @@ const ServiceCard = ({ imageUrl, name, description, url }) => {
       </div>
     </div>
   );
+};
+ServiceCard.propTypes = {
+  imageUrl: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default ServiceCard;
