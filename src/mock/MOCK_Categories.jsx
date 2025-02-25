@@ -12,7 +12,7 @@ export const MOCK_Categories = [
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
-        id: 0,
+        id: 1,
         name: "Produit A",
         prix: 99.99,
         disponible: true,
@@ -38,7 +38,7 @@ export const MOCK_Categories = [
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
-        id: 0,
+        id: 1,
         name: "Produit D",
         prix: 99.99,
         img: placeholder2,
@@ -64,7 +64,7 @@ export const MOCK_Categories = [
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
     products: [
       {
-        id: 0,
+        id: 1,
         name: "Produit D",
         prix: 99.99,
         disponible: true,
