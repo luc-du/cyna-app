@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { MOCK_Categories } from "../mock/MOCK_Categories";
 
 const categoryData = MOCK_Categories;
@@ -28,27 +28,31 @@ export default function Categories() {
               </header>
               <footer>
                 <ul className="text-gray-600 text-sm space-y-2">
-                  {category.products.map((item, index) => (
-                    <li
-                      key={index}
-                      className="p-2 border rounded-lg bg-amber-100 hover:bg-amber-200 transition"
-                    >
-                      <p className="flex justify-between items-center">
-                        <span className="font-semibold">{item.name}</span>
-                        <span className="text-blue-600 font-bold">
-                          {item.prix} €
-                        </span>
-                        <span
-                          className={`text-xs font-semibold px-2 py-1 rounded-md ${
-                            item.disponible
-                              ? "bg-green-100 text-green-600"
-                              : "bg-red-100 text-red-600"
-                          }`}
-                        >
-                          {item.disponible ? "Disponible" : "Indisponible"}
-                        </span>
-                      </p>
-                    </li>
+                  {category.products.map((item) => (
+                    <Link to={`/products/${item.id}`} key={item.id}>
+                      <li className="m-2 p-2 border rounded-lg bg-amber-100 hover:bg-amber-200 transition">
+                        <p className="flex justify-between items-center">
+                          <img
+                            src={item.imageUrl}
+                            alt={item.name}
+                            className="w-12 rounded object-center object-cover"
+                          />
+                          <span className="font-semibold">{item.name}</span>
+                          <span className="text-blue-600 font-bold">
+                            {item.prix} €
+                          </span>
+                          <span
+                            className={`text-xs font-semibold px-2 py-1 rounded-md ${
+                              item.disponible
+                                ? "bg-green-100 text-green-600"
+                                : "bg-red-100 text-red-600"
+                            }`}
+                          >
+                            {item.disponible ? "Disponible" : "Indisponible"}
+                          </span>
+                        </p>
+                      </li>
+                    </Link>
                   ))}
                 </ul>
               </footer>

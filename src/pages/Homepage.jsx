@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Carousel from "../components/Carousel";
 import Grid from "../components/Grid";
 import ServiceCard from "../components/ServiceCard";
@@ -15,8 +16,8 @@ const topProductsData = MOCK_TopProductsData;
 
 // Fonctions de rendu pour la grille
 const renderCategory = (category) => (
-  <a
-    href={`/categories/${category.url}`}
+  <Link
+    to={`/categories/${category.url}`}
     className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
   >
     <div className="relative overflow-hidden rounded-t-lg">
@@ -32,7 +33,7 @@ const renderCategory = (category) => (
     <div className="p-4">
       <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
     </div>
-  </a>
+  </Link>
 );
 
 const renderProduct = (product) => (
@@ -49,12 +50,12 @@ const renderProduct = (product) => (
     </div>
     <div className="p-4">
       <h3 className="text-md font-semibold text-gray-800">{product.name}</h3>
-      <a
-        href={product.link}
+      <Link
+        to={product.link}
         className="mt-2 inline-block text-blue-500 font-semibold hover:underline hover:text-blue-700 transition"
       >
         Voir le produit
-      </a>
+      </Link>
     </div>
   </div>
 );
