@@ -1,11 +1,10 @@
 import PropTypes from "prop-types";
 
-// 1.State :
-// 2.Functions:
-// 3. Others
-
-// Render
 const ProductInfo = ({ product }) => {
+  // 1.State :
+  // 2.Functions:
+  // 3. Others
+  // Render
   return (
     <div className="mt-6 text-center">
       <h1 className="text-3xl font-bold text-primary">{product.name}</h1>
@@ -28,7 +27,7 @@ ProductInfo.propTypes = {
   product: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    // prix: PropTypes.number.isRequired,
+    prix: PropTypes.number.isRequired,
     disponible: PropTypes.bool.isRequired,
   }).isRequired,
 };

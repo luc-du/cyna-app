@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import ProductCarousel from "../components/ProductDetail/ProductCarousel";
 import ProductCTA from "../components/ProductDetail/ProductCTA";
 import ProductInfo from "../components/ProductDetail/ProductInfo";
+import ProductPricing from "../components/ProductDetail/ProductPricing";
 import ProductSpecs from "../components/ProductDetail/ProductSpecs";
 import SimilarProducts from "../components/ProductDetail/SimilarProducts";
 import { MOCK_TopProductsData } from "../mock/MOCK_Top_Products";
@@ -32,7 +33,10 @@ const ProductDetails = () => {
       {/* 4.CTA ajout au panier 🛒 */}
       <ProductCTA product={product} />
 
-      {/* 5.Services similaires */}
+      {/* 5. Prix des services  */}
+      <ProductPricing product={product} />
+
+      {/* 6.Services similaires */}
       <SimilarProducts similar={product.similar} />
     </div>
   );

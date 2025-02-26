@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import CardSimilarProducts from "./CardSimilarProducts";
 
-// 1.State:
-// 2.Functions:
-// 3.Others:
-
-// Render:
 const SimilarProducts = ({ similar }) => {
+  // 1.State:
+  // 2.Functions:
+  // 3.Others:
+
+  // Render:
   if (!similar || similar.length === 0) {
     return <p>Aucun produit similaire trouvé</p>;
   }

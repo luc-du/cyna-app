@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+
 import { FaCartPlus } from "react-icons/fa";
 // 1.State :
 // 2.Functions:
