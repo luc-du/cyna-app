@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
-import { FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router";
+import CardSimilarProducts from "./CardSimilarProducts";
 
+// 1.State:
+// 2.Functions:
+// 3.Others:
+
+// Render:
 const SimilarProducts = ({ similar }) => {
   if (!similar || similar.length === 0) {
     return <p>Aucun produit similaire trouvé</p>;
@@ -14,27 +18,7 @@ const SimilarProducts = ({ similar }) => {
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {similar.map((item) => (
-          <div
-            key={item.id}
-            className="border rounded-md p-4 shadow-md hover:shadow-lg transition"
-          >
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-full h-32 object-cover rounded-md"
-            />
-            <h3 className="mt-2 text-lg font-semibold text-primary">
-              {item.name}
-            </h3>
-            <div className="flex justify-end mt-2">
-              <Link
-                to={`/products/${item.id}`}
-                className="text-primary flex items-center hover:text-blue-700 transition duration-300 hover:translate-x-1"
-              >
-                Voir <FaArrowRight className="ml-1" />
-              </Link>
-            </div>{" "}
-          </div>
+          <CardSimilarProducts item={item} key={item.id} />
         ))}
       </div>
     </div>
