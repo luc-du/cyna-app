@@ -9,7 +9,7 @@ const ProductPricing = () => {
 
   return (
     <div className="mt-6">
-      <h2 className="text-2xl font-bold mb-4 text-primary">
+      <h2 className="text-2xl font-bold text-center mb-4 text-primary">
         Prix des services
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
