@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 
 const ProductCarousel = ({ images, delayTransitionImage }) => {
   // 1. States :
@@ -7,11 +8,11 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
 
   // 2. Functions:
   // 2.1 next :
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) => {
       return prevIndex === images.length - 1 ? 0 : prevIndex + 1;
     });
-  };
+  }, [images.length]);
 
   // 2.2: prev
   const prevSlide = () => {
@@ -29,7 +30,7 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
     return () => {
       clearInterval(interval);
     };
-  }, [currentIndex]); // Dépendance : currentIndex, nextSlide
+  }, [currentIndex, delayTransitionImage, nextSlide]);
 
   // Render
   return (
@@ -54,7 +55,7 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
         onClick={prevSlide}
         className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2"
       >
-        ⬅️
+        <FaArrowAltCircleLeft />
       </button>
 
       {/* Bouton Suivant */}
@@ -62,7 +63,7 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
         onClick={nextSlide}
         className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2"
       >
-        ▶️
+        <FaArrowAltCircleRight />
       </button>
     </div>
   );

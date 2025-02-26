@@ -27,10 +27,10 @@ const ProductDetails = () => {
       <ProductInfo product={product} />
 
       {/* 3.Carac. techniques 🕹️ */}
-      <ProductSpecs product={"product"} />
+      <ProductSpecs product={product} />
 
       {/* 4.CTA ajout au panier 🛒 */}
-      <ProductCTA product={"product"} />
+      <ProductCTA product={product} />
 
       {/* 5.Services similaires */}
       <SimilarProducts currentProductId={"product.Id"} />
