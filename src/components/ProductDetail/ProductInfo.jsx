@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 // 1.State :
 // 2.Functions:
 // 3. Others
@@ -20,6 +22,15 @@ const ProductInfo = ({ product }) => {
       </span>
     </div>
   );
+};
+
+ProductInfo.propTypes = {
+  product: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    prix: PropTypes.number.isRequired,
+    disponible: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
 export default ProductInfo;
