@@ -24,7 +24,7 @@ const ProductDetails = () => {
       <ProductCarousel images={product.image} delayTransitionImage={5000} />
 
       {/* 2.Informations produit 📰 */}
-      <ProductInfo product={"product"} />
+      <ProductInfo product={product} />
 
       {/* 3.Carac. techniques 🕹️ */}
       <ProductSpecs product={"product"} />
