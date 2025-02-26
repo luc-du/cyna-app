@@ -10,20 +10,20 @@ const ProductDetails = () => {
   const { productId } = useParams();
   const productIdToNumber = parseInt(productId);
 
-  const product = MOCK_TopProductsData.find((product) => {
-    product.id === productIdToNumber;
-  });
+  const product = MOCK_TopProductsData.find(
+    (product) => product.id === productIdToNumber
+  );
 
   if (!product) {
-    return <p>Produit non trouvé</p>;
+    return <p>Produit non trouvé ⁉️</p>;
   }
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       {/* 1. Carrousel d'illustration 🎠 */}
-      <ProductCarousel images={"product.image"} />
+      <ProductCarousel images={product.image} delayTransitionImage={5000} />
 
-      {/* 2.Informations produit */}
+      {/* 2.Informations produit 📰 */}
       <ProductInfo product={"product"} />
 
       {/* 3.Carac. techniques 🕹️ */}

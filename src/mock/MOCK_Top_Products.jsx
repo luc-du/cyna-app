@@ -5,7 +5,7 @@ import xdrPremium from "../assets/images/xdrPremium.png";
 export const MOCK_TopProductsData = [
   {
     id: 1,
-    image: socPremium,
+    image: [socPremium, edrPremium, xdrPremium],
     name: "SOC Premium",
     description:
       "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum qui dolorem, molestiae deleniti animi aspernatur reprehenderit nostrum eos iusto esse deserunt voluptas saepe praesentium vitae provident, unde harum magni tempora.",
