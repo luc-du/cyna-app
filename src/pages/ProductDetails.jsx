@@ -33,7 +33,7 @@ const ProductDetails = () => {
       <ProductCTA product={product} />
 
       {/* 5.Services similaires */}
-      <SimilarProducts currentProductId={"product.Id"} />
+      <SimilarProducts similar={product.similar} />
     </div>
   );
 };
