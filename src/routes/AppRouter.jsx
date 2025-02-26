@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import CategoryDetails from "../components/CategoryDetails";
-import ProductDetails from "../components/ProductDetails";
 import ProductList from "../components/ProductList";
 import AdminDashboard from "../pages/AdminDashboard";
 import CartPage from "../pages/CartPage";
@@ -10,6 +9,7 @@ import ContactPage from "../pages/ContactPage";
 import Homepage from "../pages/Homepage";
 import Login from "../pages/Login";
 import OrderPage from "../pages/OrderPage";
+import ProductDetails from "../pages/ProductDetails";
 import ProductPage from "../pages/ProductPage";
 import Profile from "../pages/Profile";
 import Register from "../pages/Register";

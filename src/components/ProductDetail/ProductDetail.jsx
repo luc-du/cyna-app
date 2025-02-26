@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { MOCK_TopProductsData } from "../mock/MOCK_Top_Products";
+import { MOCK_TopProductsData } from "../../mock/MOCK_Top_Products";
 
 const ProductDetails = () => {
   const { categoryId, productId } = useParams();
