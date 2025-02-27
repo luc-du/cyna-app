@@ -5,28 +5,62 @@ import xdrPremium from "../assets/images/xdrPremium.png";
 export const MOCK_TopProductsData = [
   {
     id: 1,
-    image: socPremium,
+    image: [socPremium, edrPremium, xdrPremium],
     name: "SOC Premium",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rerum qui dolorem, molestiae deleniti animi aspernatur reprehenderit nostrum eos iusto esse deserunt voluptas saepe praesentium vitae provident, unde harum magni tempora.",
+      "Solution de surveillance de sécurité en temps réel pour détecter et répondre aux menaces complexes. Idéal pour les entreprises cherchant une protection avancée et une visibilité complète sur leurs réseaux.",
+    caracteristiques: {
+      performances: "Haute",
+      scalabilite: "Flexible",
+      nvSupport: "Aucun",
+    },
+    prix: 99.99,
+    similar: [
+      { id: 0, image: edrPremium, name: "EDR Avancé" },
+      { id: 1, image: xdrPremium, name: "XDR Pro" },
+      { id: 2, image: edrPremium, name: "EDR Avancé" },
+      { id: 3, image: edrPremium, name: "EDR Avancé" },
+    ],
     disponible: true,
     link: "/products/1",
   },
   {
     id: 2,
-    image: edrPremium,
+    image: [edrPremium, socPremium, xdrPremium],
     name: "EDR Avancé",
     description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut modi fugit dolores suscipit fugiat beatae repellat aut saepe consequatur quibusdam! Iusto voluptas quod, placeat consectetur nisi vel veritatis quo fugit.",
+      "Endpoint Detection and Response pour une protection proactive contre les menaces ciblant les terminaux. Offre des capacités de détection, d'investigation et de réponse aux attaques.",
+    caracteristiques: {
+      performances: "Haute",
+      scalabilite: "Flexible",
+      nvSupport: "24/7",
+    },
+    prix: 99.99,
+    similar: [
+      { id: 0, image: xdrPremium, name: "XDR Pro" },
+      { id: 1, image: socPremium, name: "SOC Premium" },
+      { id: 2, image: xdrPremium, name: "XDR Pro" },
+    ],
     disponible: false,
     link: "/products/2",
   },
   {
     id: 3,
-    image: xdrPremium,
+    image: [xdrPremium, socPremium, edrPremium],
     name: "XDR Pro",
     description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut modi fugit dolores suscipit fugiat beatae repellat aut saepe consequatur quibusdam! Iusto voluptas quod, placeat consectetur nisi vel veritatis quo fugit.",
+      "Extended Detection and Response pour une gestion centralisée des menaces sur l'ensemble des environnements cloud, réseau et endpoints. Améliore la détection et la réponse aux menaces sophistiquées.",
+    caracteristiques: {
+      performances: "Haute",
+      scalabilite: "Flexible",
+      nvSupport: "24/7",
+    },
+    prix: 99.99,
+    similar: [
+      { id: 0, image: socPremium, name: "SOC Premium" },
+      { id: 1, image: edrPremium, name: "EDR Avancé" },
+      { id: 2, image: socPremium, name: "SOC Premium" },
+    ],
     disponible: true,
     link: "/products/3",
   },

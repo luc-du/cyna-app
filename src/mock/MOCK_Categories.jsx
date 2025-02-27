@@ -9,10 +9,10 @@ export const MOCK_Categories = [
     url: "1",
     imageUrl: placeholder,
     description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
+      "Le SOC (Security Operations Center) fonctionne en synergie avec le SIEM (Security Information and Event Management) pour surveiller, détecter et répondre aux incidents de sécurité. Grâce à une analyse approfondie des logs et des événements, cette solution permet de corréler les données pour identifier des menaces complexes et de répondre aux incidents de manière rapide et efficace.",
     products: [
       {
-        id: 0,
+        id: 1,
         name: "Produit A",
         prix: 99.99,
         disponible: true,
@@ -20,7 +20,7 @@ export const MOCK_Categories = [
         imageUrl: placeholder,
       },
       {
-        id: 1,
+        id: 2,
         name: "Produit B",
         prix: 99.99,
         disponible: true,
@@ -35,10 +35,10 @@ export const MOCK_Categories = [
     url: "2",
     imageUrl: placeholder2,
     description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
+      "Les solutions EDR (Endpoint Detection and Response) et XDR (Extended Detection and Response) offrent une protection proactive contre les menaces avancées. L'EDR surveille en temps réel les endpoints pour détecter les comportements anormaux, tandis que le XDR étend cette surveillance à l'ensemble de l'écosystème IT, offrant ainsi une visibilité accrue et une réponse automatisée aux incidents.",
     products: [
       {
-        id: 0,
+        id: 1,
         name: "Produit D",
         prix: 99.99,
         img: placeholder2,
@@ -46,7 +46,7 @@ export const MOCK_Categories = [
         imageUrl: placeholder,
       },
       {
-        id: 1,
+        id: 2,
         name: "Produit E",
         prix: 99.99,
         img: placeholder2,
@@ -57,14 +57,14 @@ export const MOCK_Categories = [
   },
   {
     id: 3,
-    name: "Cyna SOC",
+    name: "CYNA SOC",
     url: "3",
     imageUrl: placeholder3,
     description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, reiciendis dolores molestiae voluptas tenetur quod facilis fuga, itaque obcaecati nisi illo commodi incidunt sit, rem excepturi dicta sapiente fugit officia!",
+      "Le CYNA SOC est une solution de sécurité de nouvelle génération basée sur une architecture cloud-native. Utilisant l'intelligence artificielle et le machine learning, il détecte les menaces en temps réel et orchestre des réponses automatisées pour minimiser l'impact des incidents. Son approche adaptative offre une protection avancée contre les cyberattaques sophistiquées.",
     products: [
       {
-        id: 0,
+        id: 1,
         name: "Produit D",
         prix: 99.99,
         disponible: true,
@@ -72,7 +72,7 @@ export const MOCK_Categories = [
         imageUrl: placeholder,
       },
       {
-        id: 1,
+        id: 2,
         name: "Produit E",
         prix: 99.99,
         disponible: true,
