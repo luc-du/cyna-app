@@ -1,6 +1,7 @@
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useParams } from "react-router-dom";
 import { MOCK_Categories } from "../mock/MOCK_Categories";
+import CTAButton from "./ui/CTAButton";
 
 const CategoryDetails = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const CategoryDetails = () => {
       </div>
     );
   }
+
   return (
     <div id="category_container" className="p-4">
       <button
@@ -73,16 +75,15 @@ const CategoryDetails = () => {
                   >
                     {item.disponible ? "Disponible" : "Indisponible"}
                   </span>
-                  <button
-                    type="button"
-                    className="mt-4 w-full px-4 py-2 rounded-md text-white font-semibold transition bg-blue-500 hover:bg-blue-600"
-                  >
-                    <Link to={`/products/${item.id}`}>Voir le produit</Link>
-                  </button>
+                  <CTAButton
+                    link={`/products/${item.id}`}
+                    label="Voir le produit"
+                  />
                 </div>
               </div>
             );
           })}
+          <h1>Test tailwind</h1>
         </section>
       </main>
     </div>

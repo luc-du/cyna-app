@@ -1,5 +1,3 @@
-const { typography } = require("@material-tailwind/react");
-
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
@@ -7,6 +5,7 @@ module.exports = {
       colors: {
         primaryBackground: "#302082",
         primary: "#302082",
+        CTAHover: "#A3A0E2",
       },
       backgroundImage: {
         "gradient-primary":
@@ -15,14 +14,11 @@ module.exports = {
       typography: (theme) => ({
         DEFAULT: {
           css: {
-            h1: { color: theme("colors.primary") }, // Correction ici
-            h2: { color: theme("colors.primary") }, // Correction ici
+            h1: { color: theme("colors.primary"), fontWeight: 700 },
+            h2: { color: theme("colors.primary"), fontWeight: 500 },
           },
         },
       }),
     },
   },
-  plugins: [
-    require("@tailwindcss/typography"), // Ajout du plugin Typography
-  ],
 };
