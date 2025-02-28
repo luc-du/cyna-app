@@ -53,7 +53,7 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
       {/* Bouton Précédent */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2"
+        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-700 hover:bg-primary hover:scale-110 text-white rounded-full p-2"
       >
         <FaArrowAltCircleLeft />
       </button>
@@ -61,7 +61,7 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
       {/* Bouton Suivant */}
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2"
+        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-700 hover:bg-primary hover:scale-110 text-white rounded-full p-2"
       >
         <FaArrowAltCircleRight />
       </button>

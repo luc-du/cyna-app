@@ -16,7 +16,7 @@ const ProductCTA = ({ product }) => {
         disabled={!product.disponible}
         className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition ${
           product.disponible
-            ? "bg-blue-500 hover:bg-blue-600"
+            ? "bg-primary hover:bg-CTAHover"
             : "bg-gray-400 cursor-not-allowed"
         }`}
         onClick={() => addToCart(product)}
