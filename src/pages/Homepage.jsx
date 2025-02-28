@@ -2,9 +2,7 @@ import { Link } from "react-router";
 import Carousel from "../components/Carousel";
 import Grid from "../components/Grid";
 import ServiceCard from "../components/ServiceCard";
-
-import { MOCK_Categories } from "../mock/MOCK_Categories";
-import { MOCK_TopProductsData } from "../mock/MOCK_Top_Products";
+import { MOCK_Categories, MOCK_TopProducts } from "../mock/MOCKS_DATA";
 
 const servicesData = MOCK_Categories;
 
@@ -12,7 +10,7 @@ const servicesData = MOCK_Categories;
 const categoriesData = MOCK_Categories;
 
 // Données pour la grille des Top Produits
-const topProductsData = MOCK_TopProductsData;
+const topProductsData = MOCK_TopProducts;
 
 // Fonctions de rendu pour la grille
 const renderCategory = (category) => (
@@ -40,7 +38,7 @@ const renderProduct = (product) => (
   <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
     <div className="relative overflow-hidden rounded-t-lg">
       <img
-        src={product.image}
+        src={product.imageUrl}
         alt={product.name}
         className="w-full h-40 object-cover object-center transition-transform duration-300 hover:scale-110"
       />
