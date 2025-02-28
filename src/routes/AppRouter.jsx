@@ -9,6 +9,7 @@ import ContactPage from "../pages/ContactPage";
 import Homepage from "../pages/Homepage";
 import Login from "../pages/Login";
 import OrderPage from "../pages/OrderPage";
+import PageNotFound from "../pages/PageNotFound";
 import ProductPage from "../pages/ProductPage";
 import Profile from "../pages/Profile";
 import Register from "../pages/Register";
@@ -42,6 +43,7 @@ const AppRouter = () => {
         path="/admin"
         element={<PrivateRoute component={<AdminDashboard />} />}
       />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };
