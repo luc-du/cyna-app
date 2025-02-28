@@ -5,7 +5,7 @@ const ProductCard = ({ item }) => {
   return (
     <div
       id="card_product"
-      className="bg-white rounded-lg shadow-md hover:shadow-2xl transition transform hover:scale-105"
+      className="bg-white rounded-lg shadow-md hover:shadow-2xl transition transform"
       key={item.id}
     >
       <img

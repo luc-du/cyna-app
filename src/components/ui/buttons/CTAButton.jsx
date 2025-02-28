@@ -6,12 +6,14 @@ const CTAButton = ({ style, link, label }) => {
   // 2.Functions
   // 3.Others
   const defaultStyle =
-    "mt-4 w-full px-4 py-2 rounded-md text-white font-semibold transition bg-primary hover:bg-CTAHover";
+    "flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition bg-primary hover:bg-CTAHover";
   // 4.Render
   return (
-    <button type="button" className={`${defaultStyle} ${style || ""}`}>
-      <Link to={link}>{label}</Link>
-    </button>
+    <div className="flex items-center justify-center">
+      <button type="button" className={`${defaultStyle} ${style || ""}`}>
+        <Link to={link}>{label}</Link>
+      </button>
+    </div>
   );
 };
 CTAButton.propTypes = {
