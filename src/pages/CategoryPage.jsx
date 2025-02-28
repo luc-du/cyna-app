@@ -1,4 +1,4 @@
-import CategoryDetails from "../components/CategoryDetails";
+import CategoryDetails from "../components/Category/CategoryDetails";
 
 const CategoryPage = () => {
   return <CategoryDetails />;

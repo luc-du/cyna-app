@@ -6,6 +6,6 @@ h1 {
   @apply text-primary text-2xl font-bold mb-4;
 }
 
-h1 {
-  @apply text-primary text-xl font-bold mb-4;
+h2 {
+  @apply text-primary text-2xl font-bold mb-4;
 }
