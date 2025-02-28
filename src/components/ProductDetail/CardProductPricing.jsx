@@ -7,8 +7,8 @@ const CardProductPricing = ({ option }) => {
 
   // 2. Functions
   const handleToggle = () => {
-    setToggle((prev) => !prev); // Utilisation de la fonction callback pour éviter le problème d'asynchronie
-    console.log(!toggle); // Affiche la valeur mise à jour
+    setToggle((prev) => !prev);
+    console.log(!toggle);
   };
 
   // 3. Others
@@ -33,11 +33,11 @@ const CardProductPricing = ({ option }) => {
           {option.prix ? `${option.prix}€` : "Prix non disponible"}
         </p>
       </div>
-      <div className="flex items-center justify-center mt-6">
+      <div className="flex items-center justify-center">
         <button
           disabled={!option.disponible}
           aria-disabled={!option.disponible}
-          className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition bg-primary hover:bg-CTAHover ${
+          className={`max-w-xs w-full px-4 py-2 rounded-md text-white font-semibold transition ${
             option.disponible
               ? "bg-primary hover:bg-CTAHover"
               : "bg-gray-400 cursor-not-allowed"
@@ -54,7 +54,7 @@ CardProductPricing.propTypes = {
   option: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    prix: PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // Accepte string ou number
+    prix: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     disponible: PropTypes.bool,
   }).isRequired,
 };

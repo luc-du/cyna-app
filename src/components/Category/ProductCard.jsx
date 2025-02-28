@@ -26,7 +26,11 @@ const ProductCard = ({ item }) => {
             {item.disponible ? "Disponible" : "Indisponible"}
           </span>
         </div>
-        <CTAButton link={`/products/${item.id}`} label="Voir le produit" />
+        <CTAButton
+          link={`/products/${item.id}`}
+          label="Voir le produit"
+          style={`bg-orange-500`}
+        />
       </div>
     </div>
   );
