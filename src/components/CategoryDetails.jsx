@@ -1,34 +1,26 @@
 import { useNavigate } from "react-router";
 import { useParams } from "react-router-dom";
+import useFindById from "../hooks/useFindById";
 import { MOCK_Categories } from "../mock/MOCK_Categories";
-import CTAButton from "./ui/CTAButton";
+import CTAButton from "./ui/buttons/CTAButton";
+import NavigateButton from "./ui/buttons/NavigateButton";
 
 const CategoryDetails = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
-  const categoryIdToNumber = parseInt(categoryId);
 
-  const findCategory = MOCK_Categories.find((category) => {
-    return category.id === categoryIdToNumber;
-  });
+  const findCategory = useFindById(categoryId, MOCK_Categories);
 
   if (!findCategory) {
-    return (
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Catégorie non trouvée</h1>
-      </div>
-    );
+    navigate("/");
   }
 
   return (
-    <div id="category_container" className="p-4">
-      <button
-        onClick={() => navigate(-1)}
-        className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
-      >
-        Liste des produits
-      </button>
-
+    <div className="max-w-6xl m-auto p-4">
+      <NavigateButton
+        handleClick={() => navigate(-1)}
+        label="Liste des produits"
+      />
       <div className="text-center my-6">
         <div className="relative">
           <img

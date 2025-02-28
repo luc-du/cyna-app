@@ -13,10 +13,7 @@ module.exports = {
       },
       typography: (theme) => ({
         DEFAULT: {
-          css: {
-            h1: { color: theme("colors.primary"), fontWeight: 700 },
-            h2: { color: theme("colors.primary"), fontWeight: 500 },
-          },
+          css: {},
         },
       }),
     },

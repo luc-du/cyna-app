@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router-dom";
-import CategoryDetails from "../components/CategoryDetails";
 import ProductList from "../components/ProductList";
 import AdminDashboard from "../pages/AdminDashboard";
 import CartPage from "../pages/CartPage";
 import Categories from "../pages/Categories";
+import CategoryPage from "../pages/CategoryPage";
 import Checkout from "../pages/Checkout";
 import ContactPage from "../pages/ContactPage";
 import Homepage from "../pages/Homepage";
@@ -26,7 +26,7 @@ const AppRouter = () => {
 
       {/* Modification du workflow catalogue */}
       <Route path="/categories" element={<Categories />} />
-      <Route path="/categories/:categoryId" element={<CategoryDetails />} />
+      <Route path="/categories/:categoryId" element={<CategoryPage />} />
       <Route path="products" element={<ProductList />} />
       <Route path="/products/:productId" element={<ProductDetails />} />
 
