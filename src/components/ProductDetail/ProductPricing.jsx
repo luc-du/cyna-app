@@ -1,4 +1,4 @@
-import MOCK_PricingOptions from "../../mock/MOCK_PricingOptions.jsx";
+import { MOCK_PricingOptions } from "../../mock/MOCKS_DATA.jsx";
 import CardProductPricing from "./CardProductPricing.jsx";
 
 const ProductPricing = () => {
@@ -7,6 +7,7 @@ const ProductPricing = () => {
   // 3. Others
   const pricingOptions = MOCK_PricingOptions;
 
+  // 4.Render
   return (
     <div className="mt-6">
       <h2 className="text-2xl font-bold text-center mb-4 text-primary">

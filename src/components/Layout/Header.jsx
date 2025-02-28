@@ -1,14 +1,14 @@
-import { Link } from "react-router-dom";
 import {
-  FaHome,
-  FaThList,
-  FaShoppingCart,
-  FaUser,
-  FaSearch,
-  FaSignInAlt,
   FaAlignJustify,
+  FaHome,
+  FaSearch,
+  FaShoppingCart,
+  FaSignInAlt,
+  FaThList,
+  FaUser,
 } from "react-icons/fa";
-import logo from "../assets/logo-cyna-white.svg";
+import { Link } from "react-router-dom";
+import logo from "../../assets/logo-cyna-white.svg";
 
 export default function Header() {
   return (

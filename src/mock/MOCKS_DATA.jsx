@@ -88,24 +88,48 @@ export const MOCK_Categories = [
 export const MOCK_PricingOptions = [
   {
     id: 1,
-    name: "Abonnement #1",
+    name: "Abonnement Mensuel",
     type: "Mensuel",
     prix: 29.99,
     disponible: true,
+    description:
+      "Paiement récurrent tous les mois. Idéal pour une flexibilité maximale.",
   },
   {
     id: 2,
-    name: "Abonnement #2",
+    name: "Abonnement Annuel",
     type: "Annuel",
     prix: 299.99,
     disponible: true,
+    description:
+      "Économisez 20% en payant annuellement. Parfait pour un engagement sur le long terme.",
   },
   {
     id: 3,
-    name: "Abonnement #3",
+    name: "Par Utilisateur",
     type: "Par utilisateur",
     prix: 9.99,
+    disponible: true,
+    description:
+      "Tarification par utilisateur. Adapté aux équipes de toutes tailles.",
+  },
+  {
+    id: 4,
+    name: "Par Appareil",
+    type: "Par appareil",
+    prix: 14.99,
     disponible: false,
+    description:
+      "Tarification par appareil utilisé. Idéal pour les solutions multi-appareils.",
+  },
+  {
+    id: 5,
+    name: "Abonnement Entreprise",
+    type: "Personnalisable",
+    prix: "Sur demande",
+    disponible: true,
+    description:
+      "Tarification flexible pour les grandes entreprises. Contactez-nous pour un devis personnalisé.",
   },
 ];
 

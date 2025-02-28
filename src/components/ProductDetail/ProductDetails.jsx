@@ -1,19 +1,18 @@
 import { useParams } from "react-router-dom";
-import ProductCarousel from "../components/ProductDetail/ProductCarousel";
-import ProductCTA from "../components/ProductDetail/ProductCTA";
-import ProductInfo from "../components/ProductDetail/ProductInfo";
-import ProductPricing from "../components/ProductDetail/ProductPricing";
-import ProductSpecs from "../components/ProductDetail/ProductSpecs";
-import SimilarProducts from "../components/ProductDetail/SimilarProducts";
-import { MOCK_TopProductsData } from "../mock/MOCK_Top_Products";
+import useFindById from "../../hooks/useFindById";
+import { MOCK_TopProductsData } from "../../mock/MOCK_Top_Products";
+import ProductCarousel from "./ProductCarousel";
+import ProductCTA from "./ProductCTA";
+import ProductInfo from "./ProductInfo";
+import ProductPricing from "./ProductPricing";
+import ProductSpecs from "./ProductSpecs";
+import SimilarProducts from "./SimilarProducts";
 
 const ProductDetails = () => {
   const { productId } = useParams();
   const productIdToNumber = parseInt(productId);
 
-  const product = MOCK_TopProductsData.find(
-    (product) => product.id === productIdToNumber
-  );
+  const product = useFindById(productIdToNumber, MOCK_TopProductsData);
 
   if (!product) {
     return <p>Produit non trouvé ⁉️</p>;
