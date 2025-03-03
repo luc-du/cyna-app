@@ -2,6 +2,9 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 const FooterCardCategory = ({ element }) => {
+  if (!element) {
+    console.log(element);
+  }
   // 1.States
   // 2.Functions
   const navigate = useNavigate();

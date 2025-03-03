@@ -1,5 +1,5 @@
-import GridCategories from "../components/Categories/GridCategories";
-import { MOCK_Categories } from "../mock/MOCKS_DATA";
+import { MOCK_Categories } from "../../mock/MOCKS_DATA";
+import GridCategories from "./GridCategories";
 
 const categoryData = MOCK_Categories;
 

@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import AdminDashboard from "../pages/AdminDashboard";
 import CartPage from "../pages/CartPage";
-import Categories from "../pages/Categories";
+import CategoriesPage from "../pages/CategoriesPage";
 import CategoryPage from "../pages/CategoryPage";
 import Checkout from "../pages/Checkout";
 import ContactPage from "../pages/ContactPage";
@@ -30,7 +30,7 @@ const AppRouter = () => {
         <Route path="/product:id" element={<ProductPage />} />
 
         {/* Modification du workflow catalogue */}
-        <Route path="/categories" element={<Categories />} />
+        <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/categories/:categoryId" element={<CategoryPage />} />
         <Route path="products" element={<ProductList />} />
         <Route path="/products/:productId" element={<ProductPage />} />
