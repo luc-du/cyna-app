@@ -8,9 +8,9 @@ const FooterCardCategory = ({ element }) => {
   // 3.Others
 
   return (
-    <div
+    <footer
       id="FooterCardCategory"
-      className="flex flex-grow flex-wrap justify-center gap-2 mt-4"
+      className="flex flex-grow flex-wrap justify-center gap-2 mt-6"
     >
       <ul className="w-full text-gray-600 text-sm space-y-2">
         {element.map((item) => (
@@ -27,7 +27,7 @@ const FooterCardCategory = ({ element }) => {
               <img
                 src={item.imageUrl}
                 alt={item.name}
-                className="w-12 rounded object-center object-cover"
+                className="w-12 h-12 rounded object-center object-cover"
               />
               <span className="font-semibold">{item.name}</span>
               <span className="text-blue-600 font-bold">{item.prix} €</span>
@@ -44,7 +44,7 @@ const FooterCardCategory = ({ element }) => {
           </li>
         ))}
       </ul>
-    </div>
+    </footer>
   );
 };
 FooterCardCategory.propTypes = {
