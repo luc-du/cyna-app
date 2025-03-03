@@ -8,10 +8,19 @@ const GridCategories = ({ data }) => {
 
   // 4.Render
   return (
-    <div className="grid grid-cols-1 gap-8 px-4 m-8 max-w-4xl mx-auto">
-      {data.map((element) => (
-        <CardCategory element={element} key={element.id} />
-      ))}
+    //📌à changer pour disposition grid et non plus en stack
+    <div
+      id="containerGridCategories"
+      className="w-full flex justify-center bg-pink-500 p-6"
+    >
+      <div
+        id="gridCategories"
+        className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6 max-w-7xl w-full items-stretch"
+      >
+        {data.map((element) => (
+          <CardCategory element={element} key={element.id} />
+        ))}
+      </div>
     </div>
   );
 };

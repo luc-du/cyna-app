@@ -60,7 +60,7 @@ const renderProduct = (product) => (
 
 const Homepage = () => {
   return (
-    <div className="homepage-content">
+    <div className="w-full homepage-content">
       <div className="w-full flex items-center justify-center bg-primaryBackground overflow-hidden p-10">
         <Carousel>
           {servicesData.map((service, index) => (
