@@ -17,11 +17,11 @@ const FooterCardCategory = ({ element }) => {
           <li
             key={item.id}
             className={`m-2 p-2 border rounded-lg transition cursor-pointer ${
-              item.disponible
+              item.available
                 ? "bg-amber-100 hover:bg-amber-200"
                 : "bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed"
             }`}
-            onClick={() => item.disponible && navigate(`/products/${item.id}`)}
+            onClick={() => item.available && navigate(`/products/${item.id}`)}
           >
             <p className="flex justify-between items-center">
               <img
@@ -30,15 +30,15 @@ const FooterCardCategory = ({ element }) => {
                 className="w-12 h-12 rounded object-center object-cover"
               />
               <span className="font-semibold">{item.name}</span>
-              <span className="text-blue-600 font-bold">{item.prix} €</span>
+              <span className="text-blue-600 font-bold">{item.price} €</span>
               <span
                 className={`text-xs font-semibold px-2 py-1 rounded-md ${
-                  item.disponible
+                  item.available
                     ? "bg-green-100 text-green-600"
                     : "bg-red-100 text-red-600"
                 }`}
               >
-                {item.disponible ? "Disponible" : "Indisponible"}
+                {item.available ? "Disponible" : "Indisponible"}
               </span>
             </p>
           </li>
@@ -53,8 +53,8 @@ FooterCardCategory.propTypes = {
       id: PropTypes.number.isRequired,
       imageUrl: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      prix: PropTypes.number.isRequired,
-      disponible: PropTypes.bool.isRequired,
+      price: PropTypes.number.isRequired,
+      available: PropTypes.bool.isRequired,
     })
   ).isRequired,
 };

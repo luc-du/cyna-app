@@ -32,7 +32,7 @@ const ProductDetails = () => {
       {/* 4.CTA ajout au panier 🛒 */}
       <AddToCartButton product={product} />
 
-      {/* 5. Prix des services  */}
+      {/* 5. price des services  */}
       <ProductPricing product={product} />
 
       {/* 6.Services similaires */}

@@ -14,9 +14,9 @@ const AddToCartButton = ({ product }) => {
     <div className="flex items-center justify-center mt-6">
       <button
         onClick={() => dispatch(addToCart(product))}
-        disabled={!product.disponible}
+        disabled={!product.available}
         className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition ${
-          product.disponible
+          product.available
             ? "bg-primary hover:bg-CTAHover"
             : "bg-gray-400 cursor-not-allowed"
         }`}
@@ -29,7 +29,7 @@ const AddToCartButton = ({ product }) => {
 
 AddToCartButton.propTypes = {
   product: PropTypes.shape({
-    disponible: PropTypes.bool.isRequired,
+    available: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
 };

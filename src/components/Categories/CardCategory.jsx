@@ -60,8 +60,8 @@ CardCategory.propTypes = {
         id: PropTypes.number.isRequired,
         imageUrl: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-        prix: PropTypes.number.isRequired,
-        disponible: PropTypes.bool.isRequired,
+        price: PropTypes.number.isRequired,
+        available: PropTypes.bool.isRequired,
       })
     ).isRequired,
   }).isRequired,

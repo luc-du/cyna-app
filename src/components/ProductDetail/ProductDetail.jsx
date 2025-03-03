@@ -36,17 +36,17 @@ const ProductDetails = () => {
       <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
       <p className="text-gray-600 mt-2">Référence : {productId}</p>
 
-      {/* Prix et disponibilité */}
+      {/* price et disponibilité */}
       <div className="mt-4 flex items-center space-x-4">
         <span className="text-2xl font-semibold text-green-600">
-          99.99€ {/* Prix statique pour l'instant */}
+          99.99€ {/* price statique pour l'instant */}
         </span>
         <span
           className={`text-sm font-bold ${
-            product.disponible ? "text-green-500" : "text-red-500"
+            product.available ? "text-green-500" : "text-red-500"
           }`}
         >
-          {product.disponible ? "Disponible" : "Indisponible"}
+          {product.available ? "available" : "Indisponible"}
         </span>
       </div>
 
@@ -61,10 +61,10 @@ const ProductDetails = () => {
       {/* Bouton d'action */}
       <div className="mt-6">
         <button
-          disabled={!product.disponible}
+          disabled={!product.available}
           className={`px-6 py-3 rounded-md text-white font-semibold transition 
             ${
-              product.disponible
+              product.available
                 ? "bg-blue-500 hover:bg-blue-600"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
