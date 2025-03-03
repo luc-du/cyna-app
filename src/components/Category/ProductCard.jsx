@@ -5,7 +5,11 @@ const ProductCard = ({ item }) => {
   return (
     <div
       id="card_product"
-      className="bg-white rounded-lg shadow-md hover:shadow-2xl transition transform"
+      className={`${
+        item.available
+          ? "bg-white rounded-lg shadow-md hover:shadow-2xl transition transform"
+          : "bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed"
+      }`}
       key={item.id}
     >
       <img
@@ -17,20 +21,24 @@ const ProductCard = ({ item }) => {
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
 
         <div className="flex flex-col items-end justify-end">
-          <span className="text-blue-600 font-bold">{item.prix} €</span>
+          <span className="text-blue-600 font-bold">{item.price} €</span>
           <span
             className={`block text-sm font-semibold mt-2 ${
-              item.disponible ? "text-green-600" : "text-red-600"
+              item.available ? "text-green-600" : "text-red-600"
             }`}
           >
-            {item.disponible ? "Disponible" : "Indisponible"}
+            {item.available ? "Disponible" : "Indisponible"}
           </span>
         </div>
-        <CTAButton
-          link={`/products/${item.id}`}
-          label="Voir le produit"
-          style={`bg-orange-500`}
-        />
+        {item.available ? (
+          <CTAButton
+            link={`/products/${item.id}`}
+            label="Voir le produit"
+            style={`bg-orange-500`}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
@@ -40,8 +48,8 @@ ProductCard.propTypes = {
     id: PropTypes.number.isRequired,
     imageUrl: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    prix: PropTypes.number.isRequired,
-    disponible: PropTypes.bool.isRequired,
+    price: PropTypes.number.isRequired,
+    available: PropTypes.bool.isRequired,
   }).isRequired,
 };
 

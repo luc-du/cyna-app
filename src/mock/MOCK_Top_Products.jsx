@@ -14,14 +14,14 @@ export const MOCK_TopProductsData = [
       scalabilite: "Flexible",
       nvSupport: "Aucun",
     },
-    prix: 99.99,
+    price: 99.99,
     similar: [
       { id: 0, image: edrPremium, name: "EDR Avancé" },
       { id: 1, image: xdrPremium, name: "XDR Pro" },
       { id: 2, image: edrPremium, name: "EDR Avancé" },
       { id: 3, image: edrPremium, name: "EDR Avancé" },
     ],
-    disponible: true,
+    available: true,
     link: "/products/1",
   },
   {
@@ -35,13 +35,13 @@ export const MOCK_TopProductsData = [
       scalabilite: "Flexible",
       nvSupport: "24/7",
     },
-    prix: 99.99,
+    price: 99.99,
     similar: [
       { id: 0, image: xdrPremium, name: "XDR Pro" },
       { id: 1, image: socPremium, name: "SOC Premium" },
       { id: 2, image: xdrPremium, name: "XDR Pro" },
     ],
-    disponible: false,
+    available: false,
     link: "/products/2",
   },
   {
@@ -55,13 +55,13 @@ export const MOCK_TopProductsData = [
       scalabilite: "Flexible",
       nvSupport: "24/7",
     },
-    prix: 99.99,
+    price: 99.99,
     similar: [
       { id: 0, image: socPremium, name: "SOC Premium" },
       { id: 1, image: edrPremium, name: "EDR Avancé" },
       { id: 2, image: socPremium, name: "SOC Premium" },
     ],
-    disponible: true,
+    available: true,
     link: "/products/3",
   },
 ];

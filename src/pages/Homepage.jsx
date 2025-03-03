@@ -2,15 +2,15 @@ import { Link } from "react-router";
 import Carousel from "../components/Carousel";
 import Grid from "../components/Grid";
 import ServiceCard from "../components/ServiceCard";
-import { MOCK_Categories, MOCK_TopProducts } from "../mock/MOCKS_DATA";
-
+import { MOCK_Categories } from "../mock/MOCKS_DATA";
+import { MOCK_TopProductsData } from "../mock/MOCK_Top_Products";
 const servicesData = MOCK_Categories;
 
 // Données pour la grille des catégories
 const categoriesData = MOCK_Categories;
 
 // Données pour la grille des Top Produits
-const topProductsData = MOCK_TopProducts;
+const topProductsData = MOCK_TopProductsData;
 
 // Fonctions de rendu pour la grille
 const renderCategory = (category) => (

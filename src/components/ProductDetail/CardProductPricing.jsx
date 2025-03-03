@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import AddToCartButton from "../ui/buttons/AddToCartButton";
 
 const CardProductPricing = ({ option }) => {
   // 1. State
@@ -13,7 +14,7 @@ const CardProductPricing = ({ option }) => {
 
   // 3. Others
   if (!option) {
-    return null;
+    return <h2>Aucun service similaire à proposer</h2>;
   }
 
   // 4. Render
@@ -30,21 +31,11 @@ const CardProductPricing = ({ option }) => {
       </p>
       <div className="flex items-center justify-end">
         <p className="text-xl font-bold my-2">
-          {option.prix ? `${option.prix}€` : "Prix non disponible"}
+          {option.price ? `${option.price}€` : "price non available"}
         </p>
       </div>
       <div className="flex items-center justify-center">
-        <button
-          disabled={!option.disponible}
-          aria-disabled={!option.disponible}
-          className={`max-w-xs w-full px-4 py-2 rounded-md text-white font-semibold transition ${
-            option.disponible
-              ? "bg-primary hover:bg-CTAHover"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-        >
-          {option.disponible ? "Acheter" : "Indisponible"}
-        </button>
+        <AddToCartButton product={option} />
       </div>
     </div>
   );
@@ -54,8 +45,8 @@ CardProductPricing.propTypes = {
   option: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
-    prix: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    disponible: PropTypes.bool,
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    available: PropTypes.bool,
   }).isRequired,
 };
 

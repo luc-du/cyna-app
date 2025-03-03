@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import useFindById from "../../hooks/useFindById";
 import { MOCK_TopProductsData } from "../../mock/MOCK_Top_Products";
+import AddToCartButton from "../ui/buttons/AddToCartButton";
 import ProductCarousel from "./ProductCarousel";
-import ProductCTA from "./ProductCTA";
 import ProductInfo from "./ProductInfo";
 import ProductPricing from "./ProductPricing";
 import ProductSpecs from "./ProductSpecs";
@@ -30,9 +30,9 @@ const ProductDetails = () => {
       <ProductSpecs product={product} />
 
       {/* 4.CTA ajout au panier 🛒 */}
-      <ProductCTA product={product} />
+      <AddToCartButton product={product} />
 
-      {/* 5. Prix des services  */}
+      {/* 5. price des services  */}
       <ProductPricing product={product} />
 
       {/* 6.Services similaires */}

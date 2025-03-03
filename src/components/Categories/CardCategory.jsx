@@ -1,19 +1,13 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router";
+import useSortedProducts from "../../hooks/useSortedProducts";
 import FooterCardCategory from "./FooterCardCategory";
 
 const CardCategory = ({ element }) => {
   // 1.States
   // 2.Functions
   // 3.Others
-
-  const sortedProducts = [...element.products].sort((a, b) => {
-    if (a.disponible === b.disponible) {
-      return a.priorite - b.priorite;
-    }
-    return b.disponible - a.disponible;
-  });
-
+  const sortedProducts = useSortedProducts(element);
   // 4.Render
   return (
     <>
@@ -66,8 +60,8 @@ CardCategory.propTypes = {
         id: PropTypes.number.isRequired,
         imageUrl: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-        prix: PropTypes.number.isRequired,
-        disponible: PropTypes.bool.isRequired,
+        price: PropTypes.number.isRequired,
+        available: PropTypes.bool.isRequired,
       })
     ).isRequired,
   }).isRequired,
