@@ -7,6 +7,13 @@ const CardCategory = ({ element }) => {
   // 2.Functions
   // 3.Others
 
+  const sortedProducts = [...element.products].sort((a, b) => {
+    if (a.disponible === b.disponible) {
+      return a.priorite - b.priorite;
+    }
+    return b.disponible - a.disponible;
+  });
+
   // 4.Render
   return (
     <>
@@ -16,8 +23,11 @@ const CardCategory = ({ element }) => {
         key={element.id}
         className="block hover:scale-105 transition-transform"
       >
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl">
-          <div className="p-4">
+        <div
+          id="cardCategory"
+          className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl w-full min-h-full flex flex-col"
+        >
+          <div className="flex flex-col flex-grow p-4">
             <figure>
               <img
                 src={element.imageUrl}
@@ -25,14 +35,19 @@ const CardCategory = ({ element }) => {
                 className="w-full h-64 object-cover rounded-md"
               />
             </figure>
-            <header>
-              <h1 className="text-3xl font-bold mb-4 text-center text-gray-800">
-                {element.name}
-              </h1>
-            </header>
-            <footer>
-              <FooterCardCategory element={element} key={element.id} />
-            </footer>
+            <div className="p-4 flex flex-col flex-grow">
+              <header>
+                <h1 className="text-3xl font-bold mb-4 text-center text-gray-800">
+                  {element.name}
+                </h1>
+              </header>
+              <div id="contentCard" className=" flex flex-grow bg-orange-500">
+                <p className="text-gray-600 text-center flex-grow">
+                  {element.description}
+                </p>
+              </div>
+              <FooterCardCategory element={sortedProducts} />
+            </div>
           </div>
         </div>
       </Link>
@@ -45,6 +60,7 @@ CardCategory.propTypes = {
     id: PropTypes.number.isRequired,
     imageUrl: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
     products: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,

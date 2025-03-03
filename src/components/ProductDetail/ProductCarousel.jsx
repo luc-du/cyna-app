@@ -34,7 +34,7 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
 
   // Render
   return (
-    <div className="relative w-full h-96 overflow-hidden rounded-lg shadow-md">
+    <div className="relative  w-full flex items-center justify-center h-96 overflow-hidden rounded-lg shadow-md">
       {/* Container des images avec Flex et transition */}
       <div
         className="flex transition-transform duration-700 ease-in-out"
@@ -45,7 +45,7 @@ const ProductCarousel = ({ images, delayTransitionImage }) => {
             key={index}
             src={image}
             alt={`Slide ${index + 1}`}
-            className="w-full h-full object-cover flex-shrink-0"
+            className="w-full h-full object-center flex-shrink-0"
           />
         ))}
       </div>

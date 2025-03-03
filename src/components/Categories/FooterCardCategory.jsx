@@ -8,19 +8,26 @@ const FooterCardCategory = ({ element }) => {
   // 3.Others
 
   return (
-    <>
-      <ul className="text-gray-600 text-sm space-y-2">
-        {element.products.map((item) => (
+    <footer
+      id="FooterCardCategory"
+      className="flex flex-grow flex-wrap justify-center gap-2 mt-6"
+    >
+      <ul className="w-full text-gray-600 text-sm space-y-2">
+        {element.map((item) => (
           <li
             key={item.id}
-            className="m-2 p-2 border rounded-lg bg-amber-100 hover:bg-amber-200 transition cursor-pointer"
-            onClick={() => navigate(`/products/${item.id}`)}
+            className={`m-2 p-2 border rounded-lg transition cursor-pointer ${
+              item.disponible
+                ? "bg-amber-100 hover:bg-amber-200"
+                : "bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed"
+            }`}
+            onClick={() => item.disponible && navigate(`/products/${item.id}`)}
           >
             <p className="flex justify-between items-center">
               <img
                 src={item.imageUrl}
                 alt={item.name}
-                className="w-12 rounded object-center object-cover"
+                className="w-12 h-12 rounded object-center object-cover"
               />
               <span className="font-semibold">{item.name}</span>
               <span className="text-blue-600 font-bold">{item.prix} €</span>
@@ -37,21 +44,19 @@ const FooterCardCategory = ({ element }) => {
           </li>
         ))}
       </ul>
-    </>
+    </footer>
   );
 };
 FooterCardCategory.propTypes = {
-  element: PropTypes.shape({
-    products: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        imageUrl: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        prix: PropTypes.number.isRequired,
-        disponible: PropTypes.bool.isRequired,
-      })
-    ).isRequired,
-  }).isRequired,
+  element: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      imageUrl: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      prix: PropTypes.number.isRequired,
+      disponible: PropTypes.bool.isRequired,
+    })
+  ).isRequired,
 };
 
 export default FooterCardCategory;
