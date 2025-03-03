@@ -1,3 +1,4 @@
+import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import AdminDashboard from "../pages/AdminDashboard";
@@ -14,37 +15,42 @@ import ProductPage from "../pages/ProductPage";
 import Profile from "../pages/Profile";
 import Register from "../pages/Register";
 import SearchPage from "../pages/SearchPage";
+import store from "../store/Store";
 import PrivateRoute from "./PrivateRoute";
 
 const AppRouter = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Homepage />} />
-      <Route path="/order" element={<OrderPage />} />
-      <Route path="/cart" element={<CartPage />} />
-      <Route path="/product:id" element={<ProductPage />} />
+    <Provider store={store}>
+      {" "}
+      {/*Mise en place le 03032025*/}
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/order" element={<OrderPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/product:id" element={<ProductPage />} />
 
-      {/* Modification du workflow catalogue */}
-      <Route path="/categories" element={<Categories />} />
-      <Route path="/categories/:categoryId" element={<CategoryPage />} />
-      <Route path="products" element={<ProductList />} />
-      <Route path="/products/:productId" element={<ProductPage />} />
+        {/* Modification du workflow catalogue */}
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/categories/:categoryId" element={<CategoryPage />} />
+        <Route path="products" element={<ProductList />} />
+        <Route path="/products/:productId" element={<ProductPage />} />
 
-      <Route path="/search" element={<SearchPage />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route
-        path="/profile"
-        element={<PrivateRoute component={<Profile />} />}
-      />
-      <Route
-        path="/admin"
-        element={<PrivateRoute component={<AdminDashboard />} />}
-      />
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route
+          path="/profile"
+          element={<PrivateRoute component={<Profile />} />}
+        />
+        <Route
+          path="/admin"
+          element={<PrivateRoute component={<AdminDashboard />} />}
+        />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </Provider>
   );
 };
 
