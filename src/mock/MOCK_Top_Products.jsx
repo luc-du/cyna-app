@@ -21,7 +21,7 @@ export const MOCK_TopProductsData = [
       { id: 2, image: edrPremium, name: "EDR Avancé" },
       { id: 3, image: edrPremium, name: "EDR Avancé" },
     ],
-    available: true,
+    disponible: true,
     link: "/products/1",
   },
   {
@@ -41,7 +41,7 @@ export const MOCK_TopProductsData = [
       { id: 1, image: socPremium, name: "SOC Premium" },
       { id: 2, image: xdrPremium, name: "XDR Pro" },
     ],
-    available: false,
+    disponible: false,
     link: "/products/2",
   },
   {
@@ -61,7 +61,7 @@ export const MOCK_TopProductsData = [
       { id: 1, image: edrPremium, name: "EDR Avancé" },
       { id: 2, image: socPremium, name: "SOC Premium" },
     ],
-    available: true,
+    disponible: true,
     link: "/products/3",
   },
 ];
