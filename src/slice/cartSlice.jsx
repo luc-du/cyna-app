@@ -14,7 +14,7 @@ const loadFromLocalStorage = () => {
   }
 };
 
-// SAuvegarde du panier
+// 2.SAuvegarde du panier
 const saveCartToLocalStorage = (cart) => {
   try {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -41,7 +41,7 @@ const cartSlice = createSlice({
       const existingItem = state.items.find((item) => item.id === id);
 
       if (existingItem) {
-        existingItem.item += 1;
+        existingItem.quantity += 1;
       } else {
         state.items.push({ id, name, price, duration, quantity: 1 });
       }

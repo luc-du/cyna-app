@@ -5,7 +5,11 @@ const ProductCard = ({ item }) => {
   return (
     <div
       id="card_product"
-      className="bg-white rounded-lg shadow-md hover:shadow-2xl transition transform"
+      className={`${
+        item.disponible
+          ? "bg-white rounded-lg shadow-md hover:shadow-2xl transition transform"
+          : "bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed"
+      }`}
       key={item.id}
     >
       <img
@@ -26,11 +30,15 @@ const ProductCard = ({ item }) => {
             {item.disponible ? "Disponible" : "Indisponible"}
           </span>
         </div>
-        <CTAButton
-          link={`/products/${item.id}`}
-          label="Voir le produit"
-          style={`bg-orange-500`}
-        />
+        {item.disponible ? (
+          <CTAButton
+            link={`/products/${item.id}`}
+            label="Voir le produit"
+            style={`bg-orange-500`}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
