@@ -15,7 +15,7 @@ import ProductPage from "../pages/ProductPage";
 import Profile from "../pages/Profile";
 import Register from "../pages/Register";
 import SearchPage from "../pages/SearchPage";
-import store from "../store/Store";
+import store from "../redux/store/Store";
 import PrivateRoute from "./PrivateRoute";
 
 const AppRouter = () => {

@@ -1,14 +1,12 @@
 // src/data/mocks.js
 
 import edr from "../assets/images/edr.jpg";
-import edrPremium from "../assets/images/edrPremium.jpg";
 import placeholder3 from "../assets/images/identity.jpg";
 import placeholder from "../assets/images/siem.jpg";
 import soc from "../assets/images/soc.jpg";
 import socPremium from "../assets/images/socPremium.jpg";
 import placeholder2 from "../assets/images/technology.jpg";
 import xdr from "../assets/images/xdr.jpg";
-import xdrPremium from "../assets/images/xdrPremium.png";
 
 export const MOCK_Categories = [
   {
@@ -18,22 +16,7 @@ export const MOCK_Categories = [
     imageUrl: placeholder,
     description:
       "Le SOC (Security Operations Center) fonctionne en synergie avec le SIEM (Security Information and Event Management) pour surveiller, détecter et répondre aux incidents de sécurité.",
-    products: [
-      {
-        id: 1,
-        name: "Produit A",
-        price: 99.99,
-        available: true,
-        imageUrl: placeholder2,
-      },
-      {
-        id: 2,
-        name: "Produit B",
-        price: 99.99,
-        available: true,
-        imageUrl: placeholder2,
-      },
-    ],
+    services: [1, 2], // Référence vers les services
   },
   {
     id: 2,
@@ -42,22 +25,7 @@ export const MOCK_Categories = [
     imageUrl: placeholder2,
     description:
       "Les solutions EDR (Endpoint Detection and Response) et XDR (Extended Detection and Response) offrent une protection proactive contre les menaces avancées.",
-    products: [
-      {
-        id: 3,
-        name: "Produit D",
-        price: 99.99,
-        available: false,
-        imageUrl: placeholder,
-      },
-      {
-        id: 4,
-        name: "Produit E",
-        price: 99.99,
-        available: true,
-        imageUrl: placeholder,
-      },
-    ],
+    services: [3, 4],
   },
   {
     id: 3,
@@ -66,144 +34,105 @@ export const MOCK_Categories = [
     imageUrl: placeholder3,
     description:
       "Le CYNA SOC est une solution de sécurité de nouvelle génération basée sur une architecture cloud-native.",
-    products: [
-      {
-        id: 5,
-        name: "Produit F",
-        price: 99.99,
-        available: true,
-        imageUrl: placeholder2,
-      },
-      {
-        id: 6,
-        name: "Produit G",
-        price: 99.99,
-        available: true,
-        imageUrl: placeholder2,
-      },
-    ],
-  },
-];
-
-export const MOCK_PricingOptions = [
-  {
-    id: 1,
-    name: "Abonnement Mensuel",
-    type: "Mensuel",
-    price: 29.99,
-    available: true,
-    description:
-      "Paiement récurrent tous les mois. Idéal pour une flexibilité maximale.",
-  },
-  {
-    id: 2,
-    name: "Abonnement Annuel",
-    type: "Annuel",
-    price: 299.99,
-    available: true,
-    description:
-      "Économisez 20% en payant annuellement. Parfait pour un engagement sur le long terme.",
-  },
-  {
-    id: 3,
-    name: "Par Utilisateur",
-    type: "Par utilisateur",
-    price: 9.99,
-    available: true,
-    description:
-      "Tarification par utilisateur. Adapté aux équipes de toutes tailles.",
-  },
-  {
-    id: 4,
-    name: "Par Appareil",
-    type: "Par appareil",
-    price: 14.99,
-    available: false,
-    description:
-      "Tarification par appareil utilisé. Idéal pour les solutions multi-appareils.",
-  },
-  {
-    id: 5,
-    name: "Abonnement Entreprise",
-    type: "Personnalisable",
-    price: "Sur demande",
-    available: true,
-    description:
-      "Tarification flexible pour les grandes entreprises. Contactez-nous pour un devis personnalisé.",
+    services: [5, 6],
   },
 ];
 
 export const MOCK_Services = [
   {
     id: 1,
+    name: "SOC Standard",
+    categoryId: 1,
     imageUrl: soc,
-    name: "SOC as a Service",
     description:
-      "Votre centre opérationnel de sécurité, assurant une surveillance continue et une réponse proactive aux incidents.",
-    url: "/categories/00",
+      "Service de surveillance continue et de réponse aux incidents en temps réel.",
+    available: true,
+    pricingIds: [1, 2, 3], // Référence vers les modèles de pricing
   },
   {
     id: 2,
-    imageUrl: edr,
-    name: "EDR (Endpoint Detection & Response)",
+    name: "SOC Premium",
+    categoryId: 1,
+    imageUrl: socPremium,
     description:
-      "Détection avancée et réponse automatisée sur l'ensemble de vos endpoints pour une protection optimale.",
-    url: "/categories/01",
+      "Version avancée du SOC avec des analyses approfondies et réponse automatisée.",
+    available: true,
+    pricingIds: [1, 2, 5],
   },
   {
     id: 3,
+    name: "EDR Protection",
+    categoryId: 2,
+    imageUrl: edr,
+    description: "Détection et réponse aux menaces ciblant les terminaux.",
+    available: true,
+    pricingIds: [1, 2, 3],
+  },
+  {
+    id: 4,
+    name: "XDR Advanced",
+    categoryId: 2,
     imageUrl: xdr,
-    name: "XDR (Extended Detection & Response)",
     description:
-      "Intégrez et corrélez les données de sécurité de toute votre infrastructure pour une vision globale des menaces.",
-    url: "/categories/02",
+      "Gestion centralisée des menaces sur l’ensemble des environnements.",
+    available: true,
+    pricingIds: [1, 2, 4, 5],
+  },
+  {
+    id: 5,
+    name: "CYNA SOC Standard",
+    categoryId: 3,
+    imageUrl: placeholder2,
+    description: "Surveillance de sécurité cloud-native avec support 24/7.",
+    available: true,
+    pricingIds: [1, 2],
+  },
+  {
+    id: 6,
+    name: "CYNA SOC Entreprise",
+    categoryId: 3,
+    imageUrl: placeholder3,
+    description:
+      "Solution SOC dédiée aux grandes entreprises, avec personnalisation avancée.",
+    available: true,
+    pricingIds: [5], // Uniquement sur devis
   },
 ];
 
-export const MOCK_TopProducts = [
+export const MOCK_PricingOptions = [
   {
     id: 1,
-    name: "SOC Premium",
-    description:
-      "Solution de surveillance de sécurité en temps réel pour détecter et répondre aux menaces complexes.",
-    imageUrl: socPremium,
-    caracteristiques: {
-      performances: "Haute",
-      scalabilite: "Flexible",
-      nvSupport: "Aucun",
-    },
-    price: 99.99,
+    type: "Mensuel",
+    price: 29.99,
     available: true,
-    url: "/products/1",
+    description: "Paiement mensuel pour une flexibilité maximale.",
   },
   {
     id: 2,
-    name: "EDR Avancé",
-    description:
-      "Endpoint Detection and Response pour une protection proactive contre les menaces ciblant les terminaux.",
-    imageUrl: edrPremium,
-    caracteristiques: {
-      performances: "Haute",
-      scalabilite: "Flexible",
-      nvSupport: "24/7",
-    },
-    price: 99.99,
-    available: false,
-    url: "/products/2",
+    type: "Annuel",
+    price: 299.99,
+    available: true,
+    description: "Économisez 20% en payant annuellement.",
   },
   {
     id: 3,
-    name: "XDR Pro",
-    description:
-      "Extended Detection and Response pour une gestion centralisée des menaces sur l'ensemble des environnements.",
-    imageUrl: xdrPremium,
-    caracteristiques: {
-      performances: "Haute",
-      scalabilite: "Flexible",
-      nvSupport: "24/7",
-    },
-    price: 99.99,
+    type: "Par utilisateur",
+    price: 9.99,
     available: true,
-    url: "/products/3",
+    description: "Tarification adaptée aux équipes de toutes tailles.",
+  },
+  {
+    id: 4,
+    type: "Par appareil",
+    price: 14.99,
+    available: false,
+    description: "Tarification par appareil utilisé.",
+  },
+  {
+    id: 5,
+    type: "Entreprise",
+    price: "Sur demande",
+    available: true,
+    description: "Tarification flexible pour les grandes entreprises.",
   },
 ];

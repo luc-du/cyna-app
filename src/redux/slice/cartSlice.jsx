@@ -23,6 +23,11 @@ const saveCartToLocalStorage = (cart) => {
   }
 };
 
+/* Calcul auto des prix */
+const calculateTotal = (items) => {
+  return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+};
+
 /* RTK */
 
 const initialState = {
@@ -47,6 +52,8 @@ const cartSlice = createSlice({
         state.items.push({ id, name, price, duration, quantity: 1 });
         console.log(existingItem);
       }
+
+      state.total = calculateTotal(state.items);
       saveCartToLocalStorage(state.items);
     },
 
@@ -64,12 +71,16 @@ const cartSlice = createSlice({
     /* Suppr. un produit */
     removeFromCart: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
+
+      state.total = calculateTotal(state.items);
       saveCartToLocalStorage(state.items);
     },
 
     /* Vider le panier */
     clearCart: (state) => {
       state.items = [];
+
+      state.total = calculateTotal(state.items);
       saveCartToLocalStorage(state.items);
     },
   },
