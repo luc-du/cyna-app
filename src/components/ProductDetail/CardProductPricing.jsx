@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import AddToCartButton from "../ui/buttons/AddToCartButton";
 
 const CardProductPricing = ({ option }) => {
   // 1. State
@@ -34,17 +35,7 @@ const CardProductPricing = ({ option }) => {
         </p>
       </div>
       <div className="flex items-center justify-center">
-        <button
-          disabled={!option.disponible}
-          aria-disabled={!option.disponible}
-          className={`max-w-xs w-full px-4 py-2 rounded-md text-white font-semibold transition ${
-            option.disponible
-              ? "bg-primary hover:bg-CTAHover"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-        >
-          {option.disponible ? "Acheter" : "Indisponible"}
-        </button>
+        <AddToCartButton product={option} />
       </div>
     </div>
   );

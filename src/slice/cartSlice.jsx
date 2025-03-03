@@ -42,8 +42,10 @@ const cartSlice = createSlice({
 
       if (existingItem) {
         existingItem.quantity += 1;
+        console.log(existingItem);
       } else {
         state.items.push({ id, name, price, duration, quantity: 1 });
+        console.log(existingItem);
       }
       saveCartToLocalStorage(state.items);
     },
