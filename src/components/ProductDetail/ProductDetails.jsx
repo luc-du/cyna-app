@@ -23,21 +23,16 @@ const ProductDetails = () => {
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       {/* 1. Carrousel d'illustration 🎠 */}
       <ProductCarousel images={indexImages} delayTransitionImage={5000} />
-
       {/* 2.Informations produit 📰 */}
       <ProductInfo product={service} />
-
       {/* 3.Carac. techniques 🕹️ */}
       <ProductSpecs product={service} />
-
       {/* 4.CTA ajout au panier 🛒 */}
       <AddToCartButton product={service} />
-
       {/* 5. price des services  */}
       <ProductPricing product={service} />
-
       {/* 6.Services similaires */}
-      <SimilarProducts similar={service.similar} />
+      <SimilarProducts similar={service.similar} key={service.id} />
     </div>
   );
 };

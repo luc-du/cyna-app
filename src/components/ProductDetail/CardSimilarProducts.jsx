@@ -23,7 +23,7 @@ const CardSimilarProducts = ({ item }) => {
 
   return (
     <div
-      key={getServiceById}
+      key={getServiceById.id}
       className="border rounded-md p-4 shadow-md hover:shadow-lg transition"
     >
       <img
@@ -47,11 +47,7 @@ const CardSimilarProducts = ({ item }) => {
 };
 
 CardSimilarProducts.propTypes = {
-  item: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
+  item: PropTypes.number.isRequired,
 };
 
 export default CardSimilarProducts;
