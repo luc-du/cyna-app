@@ -19,18 +19,9 @@ const CategoryProductList = ({ element }) => {
     </main>
   );
 };
+
 CategoryProductList.propTypes = {
-  element: PropTypes.shape({
-    products: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        imageUrl: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        available: PropTypes.bool.isRequired,
-      })
-    ).isRequired,
-  }).isRequired,
+  element: PropTypes.object.isRequired,
 };
 
 export default CategoryProductList;

@@ -4,7 +4,9 @@ import { Link } from "react-router";
 import { MOCK_Services } from "../../mock/MOCKS_DATA";
 
 const CardSimilarProducts = ({ item }) => {
-  console.log("itemIndex:", item);
+  // 1.State
+  // 2.Function
+  // 3.Others
 
   /* => hook ? */
   const getServiceById = (serviceId) => {
@@ -21,6 +23,7 @@ const CardSimilarProducts = ({ item }) => {
 
   const findSimilarServices = getServiceById(item);
 
+  // 4.Render
   return (
     <div
       key={getServiceById.id}

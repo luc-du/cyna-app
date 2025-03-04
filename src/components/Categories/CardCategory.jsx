@@ -48,22 +48,14 @@ const CardCategory = ({ element }) => {
     </>
   );
 };
+
 CardCategory.propTypes = {
   element: PropTypes.shape({
-    url: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    products: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        imageUrl: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        available: PropTypes.bool.isRequired,
-      })
-    ).isRequired,
   }).isRequired,
 };
 
