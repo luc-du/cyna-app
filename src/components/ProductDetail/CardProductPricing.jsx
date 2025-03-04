@@ -18,26 +18,38 @@ const CardProductPricing = ({ option }) => {
 
   // 4. Render
   return (
-    <div className="border rounded-md p-4 shadow-md hover:shadow-lg transition cursor-pointer">
-      <h3 className="text-lg font-semibold text-primary">
-        {option.name ?? "Nom indisponible"}
-      </h3>
-      <p className="text-gray-600">
-        {toggle ? option.description : option.description.slice(0, 75) + "..."}
-      </p>
-      <p
-        className="font-bold underline text-gray-600 text-right"
-        onClick={handleToggle}
-      >
-        suite ...
-      </p>
-      <div className="flex items-center justify-end">
+    <div className="flex flex-col border rounded-md p-4 shadow-md hover:shadow-lg transition cursor-pointer">
+      <header>
+        <h2 className="text-lg font-semibold text-primary">
+          {option.name ?? "Nom indisponible"}
+        </h2>
+      </header>
+      <div id="cardContent" className="flex flex-col flex-grow gap-4">
+        <p className="text-gray-600">
+          {toggle
+            ? option.description
+            : option.description.slice(0, 75) + "..."}
+        </p>
+        <p
+          className="font-bold underline text-gray-600 text-right"
+          onClick={handleToggle}
+        >
+          suite ...
+        </p>
+      </div>
+      <div className="flex flex-grow items-center justify-end">
         <p className="text-xl font-bold my-2">
-          {option.price ? `${option.price}€` : "price non available"}
+          {typeof option.price === "number"
+            ? `${option.price}€`
+            : `${option.price}`}
         </p>
       </div>
       <div className="flex items-center justify-center">
-        <AddToCartButton product={option} />
+        {typeof option.price === "number" ? (
+          <AddToCartButton product={option} />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
