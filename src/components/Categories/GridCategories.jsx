@@ -23,11 +23,7 @@ const GridCategories = ({ data }) => {
 };
 
 GridCategories.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-    })
-  ).isRequired,
+  data: PropTypes.array.isRequired,
 };
 
 export default GridCategories;

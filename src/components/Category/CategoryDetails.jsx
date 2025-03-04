@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { useParams } from "react-router-dom";
 import useFindById from "../../hooks/useFindById";
-import { MOCK_Categories } from "../../mock/MOCK_Categories";
+import { MOCK_Categories } from "../../mock/MOCKS_DATA";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";
@@ -26,6 +26,7 @@ const CategoryDetails = () => {
       />
 
       {/* Header affichage -  de l'image catégorie */}
+
       <CategoryHeader element={findCategory}>
         {/* Description de la catégorie */}
         <CategoryDescription element={findCategory} />

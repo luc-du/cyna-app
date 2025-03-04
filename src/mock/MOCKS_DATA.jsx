@@ -46,8 +46,14 @@ export const MOCK_Services = [
     imageUrl: soc,
     description:
       "Service de surveillance continue et de réponse aux incidents en temps réel.",
-    available: true,
+    available: false,
     pricingIds: [1, 2, 3], // Référence vers les modèles de pricing
+    keyCharacteristics: {
+      performance: "Moyenne",
+      scalability: "Standard",
+      support: "24/7",
+    },
+    similar: [2, 5], // SOC Premium & CYNA SOC Standard
   },
   {
     id: 2,
@@ -58,6 +64,12 @@ export const MOCK_Services = [
       "Version avancée du SOC avec des analyses approfondies et réponse automatisée.",
     available: true,
     pricingIds: [1, 2, 5],
+    keyCharacteristics: {
+      performance: "Élevée",
+      scalability: "Haute",
+      support: "Premium 24/7",
+    },
+    similar: [1, 6], // SOC Standard & CYNA SOC Entreprise
   },
   {
     id: 3,
@@ -65,8 +77,14 @@ export const MOCK_Services = [
     categoryId: 2,
     imageUrl: edr,
     description: "Détection et réponse aux menaces ciblant les terminaux.",
-    available: true,
+    available: false,
     pricingIds: [1, 2, 3],
+    keyCharacteristics: {
+      performance: "Élevée",
+      scalability: "Standard",
+      support: "Standard",
+    },
+    similar: [4, 5], // XDR Advanced & CYNA SOC Standard
   },
   {
     id: 4,
@@ -77,6 +95,12 @@ export const MOCK_Services = [
       "Gestion centralisée des menaces sur l’ensemble des environnements.",
     available: true,
     pricingIds: [1, 2, 4, 5],
+    keyCharacteristics: {
+      performance: "Très élevée",
+      scalability: "Élastique",
+      support: "Premium 24/7",
+    },
+    similar: [3, 6], // EDR Protection & CYNA SOC Entreprise
   },
   {
     id: 5,
@@ -86,6 +110,12 @@ export const MOCK_Services = [
     description: "Surveillance de sécurité cloud-native avec support 24/7.",
     available: true,
     pricingIds: [1, 2],
+    keyCharacteristics: {
+      performance: "Élevée",
+      scalability: "Cloud-native",
+      support: "24/7",
+    },
+    similar: [1, 3], // SOC Standard & EDR Protection
   },
   {
     id: 6,
@@ -96,41 +126,47 @@ export const MOCK_Services = [
       "Solution SOC dédiée aux grandes entreprises, avec personnalisation avancée.",
     available: true,
     pricingIds: [5], // Uniquement sur devis
+    keyCharacteristics: {
+      performance: "Optimisée pour les grandes entreprises",
+      scalability: "Personnalisable",
+      support: "Support dédié",
+    },
+    similar: [2, 4], // SOC Premium & XDR Advanced
   },
 ];
 
 export const MOCK_PricingOptions = [
   {
     id: 1,
-    type: "Mensuel",
+    name: "Mensuel",
     price: 29.99,
     available: true,
     description: "Paiement mensuel pour une flexibilité maximale.",
   },
   {
     id: 2,
-    type: "Annuel",
+    name: "Annuel",
     price: 299.99,
     available: true,
     description: "Économisez 20% en payant annuellement.",
   },
   {
     id: 3,
-    type: "Par utilisateur",
+    name: "Par utilisateur",
     price: 9.99,
     available: true,
     description: "Tarification adaptée aux équipes de toutes tailles.",
   },
   {
     id: 4,
-    type: "Par appareil",
+    name: "Par appareil",
     price: 14.99,
     available: false,
     description: "Tarification par appareil utilisé.",
   },
   {
     id: 5,
-    type: "Entreprise",
+    name: "Entreprise",
     price: "Sur demande",
     available: true,
     description: "Tarification flexible pour les grandes entreprises.",

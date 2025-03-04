@@ -2,6 +2,9 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 const FooterCardCategory = ({ element }) => {
+  if (!element) {
+    console.log(element);
+  }
   // 1.States
   // 2.Functions
   const navigate = useNavigate();
@@ -30,7 +33,6 @@ const FooterCardCategory = ({ element }) => {
                 className="w-12 h-12 rounded object-center object-cover"
               />
               <span className="font-semibold">{item.name}</span>
-              <span className="text-blue-600 font-bold">{item.price} €</span>
               <span
                 className={`text-xs font-semibold px-2 py-1 rounded-md ${
                   item.available
@@ -53,7 +55,6 @@ FooterCardCategory.propTypes = {
       id: PropTypes.number.isRequired,
       imageUrl: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired,
       available: PropTypes.bool.isRequired,
     })
   ).isRequired,

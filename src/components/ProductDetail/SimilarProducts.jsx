@@ -8,7 +8,7 @@ const SimilarProducts = ({ similar }) => {
 
   // Render:
   if (!similar || similar.length === 0) {
-    return <p>Aucun produit similaire trouvé</p>;
+    return <p>Aucun service similaire trouvé</p>;
   }
 
   return (
@@ -17,22 +17,18 @@ const SimilarProducts = ({ similar }) => {
         Services Similaires
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {similar.map((item) => (
-          <CardSimilarProducts item={item} key={item.id} />
+        {similar.map((item, index) => (
+          <CardSimilarProducts
+            item={item}
+            key={item.id || `similar-${index}`}
+          />
         ))}
       </div>
     </div>
   );
 };
-
 SimilarProducts.propTypes = {
-  similar: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      image: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
+  similar: PropTypes.array.isRequired,
 };
 
 export default SimilarProducts;

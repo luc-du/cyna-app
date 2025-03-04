@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import useSortedProducts from "../../hooks/useSortedProducts";
+import useSortedServices from "../../hooks/useSortedServices";
 import FooterCardCategory from "./FooterCardCategory";
 
 const CardCategory = ({ element }) => {
   // 1.States
   // 2.Functions
   // 3.Others
-  const sortedProducts = useSortedProducts(element);
+  const sortedProducts = useSortedServices(element);
   // 4.Render
   return (
     <>
@@ -48,22 +48,14 @@ const CardCategory = ({ element }) => {
     </>
   );
 };
+
 CardCategory.propTypes = {
   element: PropTypes.shape({
-    url: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    products: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        imageUrl: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        available: PropTypes.bool.isRequired,
-      })
-    ).isRequired,
   }).isRequired,
 };
 
