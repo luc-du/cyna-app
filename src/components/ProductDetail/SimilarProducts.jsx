@@ -8,7 +8,7 @@ const SimilarProducts = ({ similar }) => {
 
   // Render:
   if (!similar || similar.length === 0) {
-    return <p>Aucun produit similaire trouvé</p>;
+    return <p>Aucun service similaire trouvé</p>;
   }
 
   return (

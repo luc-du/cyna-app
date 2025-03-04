@@ -9,7 +9,6 @@ const CardProductPricing = ({ option }) => {
   // 2. Functions
   const handleToggle = () => {
     setToggle((prev) => !prev);
-    console.log(!toggle);
   };
 
   // 3. Others
@@ -19,15 +18,18 @@ const CardProductPricing = ({ option }) => {
 
   // 4. Render
   return (
-    <div
-      onClick={handleToggle}
-      className="border rounded-md p-4 shadow-md hover:shadow-lg transition cursor-pointer"
-    >
+    <div className="border rounded-md p-4 shadow-md hover:shadow-lg transition cursor-pointer">
       <h3 className="text-lg font-semibold text-primary">
-        {option.type ?? "Nom indisponible"}
+        {option.name ?? "Nom indisponible"}
       </h3>
       <p className="text-gray-600">
         {toggle ? option.description : option.description.slice(0, 75) + "..."}
+      </p>
+      <p
+        className="font-bold underline text-gray-600 text-right"
+        onClick={handleToggle}
+      >
+        suite ...
       </p>
       <div className="flex items-center justify-end">
         <p className="text-xl font-bold my-2">
@@ -43,7 +45,7 @@ const CardProductPricing = ({ option }) => {
 
 CardProductPricing.propTypes = {
   option: PropTypes.shape({
-    type: PropTypes.string,
+    name: PropTypes.string,
     description: PropTypes.string,
     price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     available: PropTypes.bool,

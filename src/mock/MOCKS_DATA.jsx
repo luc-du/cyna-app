@@ -53,6 +53,7 @@ export const MOCK_Services = [
       scalability: "Standard",
       support: "24/7",
     },
+    similar: [2, 5], // SOC Premium & CYNA SOC Standard
   },
   {
     id: 2,
@@ -68,6 +69,7 @@ export const MOCK_Services = [
       scalability: "Haute",
       support: "Premium 24/7",
     },
+    similar: [1, 6], // SOC Standard & CYNA SOC Entreprise
   },
   {
     id: 3,
@@ -82,6 +84,7 @@ export const MOCK_Services = [
       scalability: "Standard",
       support: "Standard",
     },
+    similar: [4, 5], // XDR Advanced & CYNA SOC Standard
   },
   {
     id: 4,
@@ -97,6 +100,7 @@ export const MOCK_Services = [
       scalability: "Élastique",
       support: "Premium 24/7",
     },
+    similar: [3, 6], // EDR Protection & CYNA SOC Entreprise
   },
   {
     id: 5,
@@ -111,6 +115,7 @@ export const MOCK_Services = [
       scalability: "Cloud-native",
       support: "24/7",
     },
+    similar: [1, 3], // SOC Standard & EDR Protection
   },
   {
     id: 6,
@@ -126,41 +131,42 @@ export const MOCK_Services = [
       scalability: "Personnalisable",
       support: "Support dédié",
     },
+    similar: [2, 4], // SOC Premium & XDR Advanced
   },
 ];
 
 export const MOCK_PricingOptions = [
   {
     id: 1,
-    type: "Mensuel",
+    name: "Mensuel",
     price: 29.99,
     available: true,
     description: "Paiement mensuel pour une flexibilité maximale.",
   },
   {
     id: 2,
-    type: "Annuel",
+    name: "Annuel",
     price: 299.99,
     available: true,
     description: "Économisez 20% en payant annuellement.",
   },
   {
     id: 3,
-    type: "Par utilisateur",
+    name: "Par utilisateur",
     price: 9.99,
     available: true,
     description: "Tarification adaptée aux équipes de toutes tailles.",
   },
   {
     id: 4,
-    type: "Par appareil",
+    name: "Par appareil",
     price: 14.99,
     available: false,
     description: "Tarification par appareil utilisé.",
   },
   {
     id: 5,
-    type: "Entreprise",
+    name: "Entreprise",
     price: "Sur demande",
     available: true,
     description: "Tarification flexible pour les grandes entreprises.",
