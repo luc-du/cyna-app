@@ -21,9 +21,8 @@ const ProductCard = ({ item }) => {
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
 
         <div className="flex flex-col items-end justify-end">
-          <span className="text-blue-600 font-bold">{item.price} €</span>
           <span
-            className={`block text-sm font-semibold mt-2 ${
+            className={`block text-sm font-semibold m-2 ${
               item.available ? "text-green-600" : "text-red-600"
             }`}
           >

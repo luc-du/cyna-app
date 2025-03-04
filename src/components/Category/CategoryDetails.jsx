@@ -26,6 +26,7 @@ const CategoryDetails = () => {
       />
 
       {/* Header affichage -  de l'image catégorie */}
+
       <CategoryHeader element={findCategory}>
         {/* Description de la catégorie */}
         <CategoryDescription element={findCategory} />

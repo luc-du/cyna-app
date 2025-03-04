@@ -1,42 +1,43 @@
 import { useParams } from "react-router-dom";
 import useFindById from "../../hooks/useFindById";
-import { MOCK_TopProductsData } from "../../mock/MOCK_Top_Products";
-import AddToCartButton from "../ui/buttons/AddToCartButton";
+// import AddToCartButton from "../ui/buttons/AddToCartButton";
+import { MOCK_Services } from "../../mock/MOCKS_DATA";
 import ProductCarousel from "./ProductCarousel";
 import ProductInfo from "./ProductInfo";
-import ProductPricing from "./ProductPricing";
-import ProductSpecs from "./ProductSpecs";
-import SimilarProducts from "./SimilarProducts";
+// import ProductPricing from "./ProductPricing";
+// import ProductSpecs from "./ProductSpecs";
+// import SimilarProducts from "./SimilarProducts";
+import { indexImages } from "../../assets/indexImages";
 
 const ProductDetails = () => {
   const { productId } = useParams();
-  const productIdToNumber = parseInt(productId);
+  const serviceIdToNumber = parseInt(productId);
 
-  const product = useFindById(productIdToNumber, MOCK_TopProductsData);
+  const service = useFindById(serviceIdToNumber, MOCK_Services);
 
-  if (!product) {
+  if (!service) {
     return <p>Produit non trouvé ⁉️</p>;
   }
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       {/* 1. Carrousel d'illustration 🎠 */}
-      <ProductCarousel images={product.image} delayTransitionImage={5000} />
+      <ProductCarousel images={indexImages} delayTransitionImage={5000} />
 
       {/* 2.Informations produit 📰 */}
-      <ProductInfo product={product} />
+      <ProductInfo product={service} />
 
       {/* 3.Carac. techniques 🕹️ */}
-      <ProductSpecs product={product} />
+      {/* <ProductSpecs product={service} /> */}
 
       {/* 4.CTA ajout au panier 🛒 */}
-      <AddToCartButton product={product} />
+      {/* <AddToCartButton product={service} /> */}
 
       {/* 5. price des services  */}
-      <ProductPricing product={product} />
+      {/* <ProductPricing product={service} /> */}
 
       {/* 6.Services similaires */}
-      <SimilarProducts similar={product.similar} />
+      {/* <SimilarProducts similar={service.similar} /> */}
     </div>
   );
 };
