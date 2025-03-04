@@ -11,25 +11,23 @@ const ProductSpecs = ({ product }) => {
         Caractéristiques techniques
       </h2>
       <ul>
-        {/* Voir pour ajouter une key caractéristiques techniques */}
-
         {/* map sur caractéristiques */}
         <li className="font-bold">
-          Performances:{" "}
+          performance:{" "}
           <span className="font-medium">
-            {product.caracteristiques.performances}
+            {product.keyCharacteristics.performance}
           </span>
         </li>
         <li className="font-bold">
           Scalabilité:{" "}
           <span className="font-medium">
-            {product.caracteristiques.scalabilite}
+            {product.keyCharacteristics.scalability}
           </span>
         </li>
         <li className="font-bold">
           Niveau de support:{" "}
           <span className="font-medium">
-            {product.caracteristiques.nvSupport}
+            {product.keyCharacteristics.support}
           </span>
         </li>
       </ul>
@@ -38,10 +36,10 @@ const ProductSpecs = ({ product }) => {
 };
 ProductSpecs.propTypes = {
   product: PropTypes.shape({
-    caracteristiques: PropTypes.shape({
-      performances: PropTypes.string.isRequired,
-      scalabilite: PropTypes.string.isRequired,
-      nvSupport: PropTypes.string.isRequired,
+    keyCharacteristics: PropTypes.shape({
+      performance: PropTypes.string.isRequired,
+      scalability: PropTypes.string.isRequired,
+      support: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
 };

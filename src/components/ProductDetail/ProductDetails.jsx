@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import useFindById from "../../hooks/useFindById";
-// import AddToCartButton from "../ui/buttons/AddToCartButton";
 import { MOCK_Services } from "../../mock/MOCKS_DATA";
+import AddToCartButton from "../ui/buttons/AddToCartButton";
 import ProductCarousel from "./ProductCarousel";
 import ProductInfo from "./ProductInfo";
-// import ProductPricing from "./ProductPricing";
-// import ProductSpecs from "./ProductSpecs";
+import ProductPricing from "./ProductPricing";
+import ProductSpecs from "./ProductSpecs";
 // import SimilarProducts from "./SimilarProducts";
 import { indexImages } from "../../assets/indexImages";
 
@@ -28,13 +28,13 @@ const ProductDetails = () => {
       <ProductInfo product={service} />
 
       {/* 3.Carac. techniques 🕹️ */}
-      {/* <ProductSpecs product={service} /> */}
+      <ProductSpecs product={service} />
 
       {/* 4.CTA ajout au panier 🛒 */}
-      {/* <AddToCartButton product={service} /> */}
+      <AddToCartButton product={service} />
 
       {/* 5. price des services  */}
-      {/* <ProductPricing product={service} /> */}
+      <ProductPricing product={service} />
 
       {/* 6.Services similaires */}
       {/* <SimilarProducts similar={service.similar} /> */}

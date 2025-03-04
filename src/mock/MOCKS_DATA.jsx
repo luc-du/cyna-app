@@ -48,6 +48,11 @@ export const MOCK_Services = [
       "Service de surveillance continue et de réponse aux incidents en temps réel.",
     available: false,
     pricingIds: [1, 2, 3], // Référence vers les modèles de pricing
+    keyCharacteristics: {
+      performance: "Moyenne",
+      scalability: "Standard",
+      support: "24/7",
+    },
   },
   {
     id: 2,
@@ -58,6 +63,11 @@ export const MOCK_Services = [
       "Version avancée du SOC avec des analyses approfondies et réponse automatisée.",
     available: true,
     pricingIds: [1, 2, 5],
+    keyCharacteristics: {
+      performance: "Élevée",
+      scalability: "Haute",
+      support: "Premium 24/7",
+    },
   },
   {
     id: 3,
@@ -67,6 +77,11 @@ export const MOCK_Services = [
     description: "Détection et réponse aux menaces ciblant les terminaux.",
     available: false,
     pricingIds: [1, 2, 3],
+    keyCharacteristics: {
+      performance: "Élevée",
+      scalability: "Standard",
+      support: "Standard",
+    },
   },
   {
     id: 4,
@@ -77,6 +92,11 @@ export const MOCK_Services = [
       "Gestion centralisée des menaces sur l’ensemble des environnements.",
     available: true,
     pricingIds: [1, 2, 4, 5],
+    keyCharacteristics: {
+      performance: "Très élevée",
+      scalability: "Élastique",
+      support: "Premium 24/7",
+    },
   },
   {
     id: 5,
@@ -86,6 +106,11 @@ export const MOCK_Services = [
     description: "Surveillance de sécurité cloud-native avec support 24/7.",
     available: true,
     pricingIds: [1, 2],
+    keyCharacteristics: {
+      performance: "Élevée",
+      scalability: "Cloud-native",
+      support: "24/7",
+    },
   },
   {
     id: 6,
@@ -96,6 +121,11 @@ export const MOCK_Services = [
       "Solution SOC dédiée aux grandes entreprises, avec personnalisation avancée.",
     available: true,
     pricingIds: [5], // Uniquement sur devis
+    keyCharacteristics: {
+      performance: "Optimisée pour les grandes entreprises",
+      scalability: "Personnalisable",
+      support: "Support dédié",
+    },
   },
 ];
 

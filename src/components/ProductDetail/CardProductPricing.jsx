@@ -24,7 +24,7 @@ const CardProductPricing = ({ option }) => {
       className="border rounded-md p-4 shadow-md hover:shadow-lg transition cursor-pointer"
     >
       <h3 className="text-lg font-semibold text-primary">
-        {option.name ?? "Nom indisponible"}
+        {option.type ?? "Nom indisponible"}
       </h3>
       <p className="text-gray-600">
         {toggle ? option.description : option.description.slice(0, 75) + "..."}
@@ -43,7 +43,7 @@ const CardProductPricing = ({ option }) => {
 
 CardProductPricing.propTypes = {
   option: PropTypes.shape({
-    name: PropTypes.string,
+    type: PropTypes.string,
     description: PropTypes.string,
     price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     available: PropTypes.bool,
