@@ -33,7 +33,6 @@ const FooterCardCategory = ({ element }) => {
                 className="w-12 h-12 rounded object-center object-cover"
               />
               <span className="font-semibold">{item.name}</span>
-              <span className="text-blue-600 font-bold">{item.price} €</span>
               <span
                 className={`text-xs font-semibold px-2 py-1 rounded-md ${
                   item.available
