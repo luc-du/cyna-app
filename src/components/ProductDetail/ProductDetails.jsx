@@ -34,7 +34,6 @@ const ProductDetails = () => {
         <ProductSpecs product={service} />
         {/* 4. CTA ajout au panier 🛒 */}
         <ProductCTA product={service} />
-
         {/* 5. Prix des services 💰 */}
         <ProductPricing product={service} />
         {/* 6. Services similaires 🔄 */}
