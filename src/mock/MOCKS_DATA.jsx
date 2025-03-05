@@ -47,6 +47,7 @@ export const MOCK_Services = [
     description:
       "Service de surveillance continue et de réponse aux incidents en temps réel.",
     available: false,
+    defaultPricing: 1,
     pricingIds: [1, 2, 3], // Référence vers les modèles de pricing
     keyCharacteristics: {
       performance: "Moyenne",
@@ -63,6 +64,7 @@ export const MOCK_Services = [
     description:
       "Version avancée du SOC avec des analyses approfondies et réponse automatisée.",
     available: true,
+    defaultPricing: 1,
     pricingIds: [1, 2, 5],
     keyCharacteristics: {
       performance: "Élevée",
@@ -78,6 +80,7 @@ export const MOCK_Services = [
     imageUrl: edr,
     description: "Détection et réponse aux menaces ciblant les terminaux.",
     available: false,
+    defaultPricing: 1,
     pricingIds: [1, 2, 3],
     keyCharacteristics: {
       performance: "Élevée",
@@ -94,6 +97,7 @@ export const MOCK_Services = [
     description:
       "Gestion centralisée des menaces sur l’ensemble des environnements.",
     available: true,
+    defaultPricing: 1,
     pricingIds: [1, 2, 4, 5],
     keyCharacteristics: {
       performance: "Très élevée",
@@ -109,6 +113,7 @@ export const MOCK_Services = [
     imageUrl: placeholder2,
     description: "Surveillance de sécurité cloud-native avec support 24/7.",
     available: true,
+    defaultPricing: 1,
     pricingIds: [1, 2],
     keyCharacteristics: {
       performance: "Élevée",
@@ -125,6 +130,7 @@ export const MOCK_Services = [
     description:
       "Solution SOC dédiée aux grandes entreprises, avec personnalisation avancée.",
     available: true,
+    defaultPricing: 5,
     pricingIds: [5], // Uniquement sur devis
     keyCharacteristics: {
       performance: "Optimisée pour les grandes entreprises",

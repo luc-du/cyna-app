@@ -25,11 +25,7 @@ const saveCartToLocalStorage = (cart) => {
 
 /* Calcul auto des prix */
 const calculateTotal = (items) => {
-  return items.reduce((acc, item) => {
-    return (
-      acc + (item.price !== "Sur demande" ? item.price * item.quantity : 0)
-    );
-  }, 0);
+  return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 };
 
 /* RTK */
@@ -46,28 +42,15 @@ const cartSlice = createSlice({
   reducers: {
     /* Ajouter un produit */
     addToCart: (state, action) => {
-      // 1.Def du payload
-      const { serviceId, categoryId, pricingId, name, price, duration } =
-        action.payload;
+      const { id, name, price, duration } = action.payload;
+      const existingItem = state.items.find((item) => item.id === id);
 
-      // 2.Find l'item
-      const existingItem = state.items.find(
-        (item) => item.serviceId === serviceId && item.pricing === pricingId
-      );
-
-      // 3.Fallback
       if (existingItem) {
         existingItem.quantity += 1;
+        console.log(existingItem);
       } else {
-        state.items.push({
-          serviceId,
-          categoryId,
-          pricingId,
-          name,
-          price,
-          duration,
-          quantity: 1,
-        });
+        state.items.push({ id, name, price, duration, quantity: 1 });
+        console.log(existingItem);
       }
 
       state.total = calculateTotal(state.items);
