@@ -50,13 +50,13 @@ AddToCartButton.propTypes = {
     categoryId: PropTypes.number.isRequired,
     available: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string,
   }).isRequired,
   pricing: PropTypes.shape({
     id: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string,
   }).isRequired,
 };
 
