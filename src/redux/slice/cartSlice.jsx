@@ -97,14 +97,7 @@ const cartSlice = createSlice({
 
     /* Suppr. un service */
     removeFromCart: (state, action) => {
-      // 1.Find l'item
-      state.items = state.items.filter(
-        (item) =>
-          !(
-            item.serviceId === action.payload.serviceId &&
-            item.pricingId === action.payload.pricingId
-          )
-      );
+      state.items = state.items.filter((item) => item.id !== action.payload);
 
       // 2.Mise à jour du total
       state.total = calculateTotal(state.items);
