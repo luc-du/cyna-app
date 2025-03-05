@@ -76,19 +76,37 @@ const cartSlice = createSlice({
 
     /* Modif de la quantité */
     updateQuantity: (state, action) => {
-      const { id, quantity } = action.payload;
-      const item = state.items.find((item) => item.id === id);
+      // 1.Def du payload :
+      const { serviceId, pricingId, quantity } = action.payload;
 
+      // 2.Find l'item
+      const item = state.items.find(
+        (item) => item.serviceId === serviceId && item.pricingId === pricingId
+      );
+
+      // 3.Si true
       if (item) {
         item.quantity = quantity > 0 ? quantity : 1;
       }
+
+      // 4.Mise à jour du total
+      calculateTotal(state.items);
+      // 5.Save
       saveCartToLocalStorage(state.items);
     },
 
-    /* Suppr. un produit */
+    /* Suppr. un service */
     removeFromCart: (state, action) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
+      // 1.Find l'item
+      state.items = state.items.filter(
+        (item) =>
+          !(
+            item.serviceId === action.payload.serviceId &&
+            item.pricingId === action.payload.pricingId
+          )
+      );
 
+      // 2.Mise à jour du total
       state.total = calculateTotal(state.items);
       saveCartToLocalStorage(state.items);
     },
