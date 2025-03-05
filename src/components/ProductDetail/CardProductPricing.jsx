@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import AddToCartButton from "../ui/buttons/AddToCartButton";
 
-const CardProductPricing = ({ option }) => {
+const CardProductPricing = ({ option, product }) => {
   // 1. State
   const [toggle, setToggle] = useState(false);
 
@@ -46,7 +46,7 @@ const CardProductPricing = ({ option }) => {
       </div>
       <div className="flex items-center justify-center">
         {typeof option.price === "number" ? (
-          <AddToCartButton product={option} />
+          <AddToCartButton product={product} pricing={option} />
         ) : (
           ""
         )}
@@ -62,6 +62,7 @@ CardProductPricing.propTypes = {
     price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     available: PropTypes.bool,
   }).isRequired,
+  product: PropTypes.object.isRequired,
 };
 
 export default CardProductPricing;

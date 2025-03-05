@@ -3,41 +3,40 @@ import { FaCartPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/slice/cartSlice";
 
-const AddToCartButton = ({ product, pricingOption }) => {
+const AddToCartButton = ({ product, pricing }) => {
   // 1.State
-  // 2.Function
   const dispatch = useDispatch();
-
+  // 2.Function
   const handleAddToCart = () => {
     dispatch(
-      addToCart(
-        addToCart({
-          serviceId: product.id,
-          categoryId: product.categoryId,
-          pricingId: pricingOption.id,
-          name: product.name,
-          price: pricingOption.price,
-          duration: pricingOption.name,
-        })
-      )
+      addToCart({
+        serviceId: product.id,
+        categoryId: product.categoryId,
+        pricingId: pricing.id,
+        name: product.name,
+        price: pricing.price,
+        duration: pricing.name,
+      })
     );
-    console.log("Ajout au panier :", product, pricingOption);
+    console.log(`Ajouté : ${product.name} (${pricing.name}) au panier`);
   };
-  // 3.Others
 
+  // 3.Others
+  if (!product || !pricing) {
+    return null;
+  }
   // 4.Render
   return (
     <div className="flex items-center justify-center mt-6">
       <button
         onClick={handleAddToCart}
-        disabled={!product?.available}
+        disabled={!product.available}
         className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition ${
-          product?.available && pricingOption?.available
+          product.available
             ? "bg-primary hover:bg-CTAHover"
             : "bg-gray-400 cursor-not-allowed"
         }`}
       >
-        {" "}
         <FaCartPlus /> <span className="ml-2">Ajouter au panier</span>
       </button>
     </div>
@@ -47,15 +46,15 @@ const AddToCartButton = ({ product, pricingOption }) => {
 AddToCartButton.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    categoryId: PropTypes.number,
-    available: PropTypes.bool,
+    categoryId: PropTypes.number.isRequired,
+    available: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
-  }),
-  pricingOption: PropTypes.shape({
+  }).isRequired,
+  pricing: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    available: PropTypes.bool,
+    price: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }).isRequired,
 };
+
 export default AddToCartButton;
