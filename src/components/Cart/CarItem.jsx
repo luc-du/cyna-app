@@ -7,7 +7,7 @@ const CartItem = ({ item }) => {
 
   return (
     <div className="grid grid-cols-4 items-center bg-white shadow-md p-4 rounded-lg">
-      {/* ✅ Image + Nom du produit */}
+      {/* Image + Nom du produit */}
       <div className="flex items-center space-x-4 col-span-1">
         <img
           src={item.imageUrl}
@@ -25,7 +25,7 @@ const CartItem = ({ item }) => {
         </div>
       </div>
 
-      {/* ✅ Sélection de quantité */}
+      {/* Sélection de quantité */}
       <div className="flex items-center space-x-2 col-span-1 justify-center">
         <button
           className="bg-primary text-white px-3 py-2 rounded-lg"
@@ -59,7 +59,7 @@ const CartItem = ({ item }) => {
         </button>
       </div>
 
-      {/* ✅ Supprimer le produit */}
+      {/* Supprimer le produit */}
       <div className="col-span-1 flex justify-center">
         <button
           className="text-red-600 underline"
@@ -76,7 +76,7 @@ const CartItem = ({ item }) => {
         </button>
       </div>
 
-      {/* ✅ Affichage du total par produit */}
+      {/* Affichage du total par produit */}
       <div className="col-span-1 text-right font-semibold">
         <span>
           {item.price !== "Sur demande"
