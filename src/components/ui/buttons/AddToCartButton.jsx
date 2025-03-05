@@ -14,6 +14,7 @@ const AddToCartButton = ({ product, pricing }) => {
         categoryId: product.categoryId,
         pricingId: pricing.id,
         name: product.name,
+        imageUrl: product.imageUrl,
         price: pricing.price,
         duration: pricing.name,
       })
@@ -49,11 +50,13 @@ AddToCartButton.propTypes = {
     categoryId: PropTypes.number.isRequired,
     available: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
   }).isRequired,
   pricing: PropTypes.shape({
     id: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
   }).isRequired,
 };
 

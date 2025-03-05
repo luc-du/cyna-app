@@ -27,6 +27,7 @@ const ProductCTA = ({ product }) => {
         categoryId: product.categoryId,
         pricingId: defaultPricing.id,
         name: product.name,
+        imageUrl: product.imageUrl,
         price: defaultPricing.price,
         duration: defaultPricing.name,
       })
@@ -58,6 +59,7 @@ ProductCTA.propTypes = {
     categoryId: PropTypes.number.isRequired,
     available: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
     defaultPricing: PropTypes.number.isRequired,
   }).isRequired,
 };

@@ -1,29 +1,28 @@
-/* 
-En attendant le backend, je set sur un localStorage
-*/
-
 import { createSlice } from "@reduxjs/toolkit";
 
-// 1.Chargement du panier
+// 1️.Chargement du panier - Fix du total depuis localStorage
 const loadFromLocalStorage = () => {
   try {
-    const cart = localStorage.getItem("cart");
-    return cart ? JSON.parse(cart) : [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const total = JSON.parse(localStorage.getItem("total")) || 0;
+    return { cart, total };
   } catch (error) {
     console.error("Erreur lors du chargement du panier:", error);
+    return { cart: [], total: 0 };
   }
 };
 
-// 2.SAuvegarde du panier
-const saveCartToLocalStorage = (cart) => {
+// 2️.Sauvegarde dans localStorage
+const saveCartToLocalStorage = (cart, total) => {
   try {
     localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("total", JSON.stringify(total));
   } catch (error) {
     console.error("Erreur lors de la sauvegarde du panier:", error);
   }
 };
 
-/* Calcul auto des prix */
+// 3️.Calcul du total du panier
 const calculateTotal = (items) => {
   return items.reduce((acc, item) => {
     return (
@@ -32,38 +31,34 @@ const calculateTotal = (items) => {
   }, 0);
 };
 
-/* RTK */
-
+// 4️.Init. du state avec les valeurs de localStorage
+const { cart, total } = loadFromLocalStorage();
 const initialState = {
-  items: loadFromLocalStorage(),
-  total: 0,
+  items: cart,
+  total: total,
 };
 
-// slice
+// 5️.Slice
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    /* Ajouter un produit */
+    /* 5.1.Ajouter un service avec une option de pricing */
     addToCart: (state, action) => {
-      // 1.Def du payload
-      const { serviceId, categoryId, pricingId, name, price, duration } =
+      const { serviceId, pricingId, name, imageUrl, price, duration } =
         action.payload;
-
-      // 2.Find l'item
       const existingItem = state.items.find(
-        (item) => item.serviceId === serviceId && item.pricing === pricingId
+        (item) => item.serviceId === serviceId && item.pricingId === pricingId
       );
 
-      // 3.Fallback
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
         state.items.push({
           serviceId,
-          categoryId,
           pricingId,
           name,
+          imageUrl,
           price,
           duration,
           quantity: 1,
@@ -71,45 +66,42 @@ const cartSlice = createSlice({
       }
 
       state.total = calculateTotal(state.items);
-      saveCartToLocalStorage(state.items);
+      saveCartToLocalStorage(state.items, state.total);
     },
 
-    /* Modif de la quantité */
+    /* 5.2.Modifier la quantité */
     updateQuantity: (state, action) => {
-      // 1.Def du payload :
       const { serviceId, pricingId, quantity } = action.payload;
-
-      // 2.Find l'item
       const item = state.items.find(
         (item) => item.serviceId === serviceId && item.pricingId === pricingId
       );
 
-      // 3.Si true
       if (item) {
-        item.quantity = quantity > 0 ? quantity : 1;
+        item.quantity = Math.max(1, quantity);
       }
 
-      // 4.Mise à jour du total
-      calculateTotal(state.items);
-      // 5.Save
-      saveCartToLocalStorage(state.items);
-    },
-
-    /* Suppr. un service */
-    removeFromCart: (state, action) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
-
-      // 2.Mise à jour du total
       state.total = calculateTotal(state.items);
-      saveCartToLocalStorage(state.items);
+      saveCartToLocalStorage(state.items, state.total);
     },
 
-    /* Vider le panier */
+    /* 5.3.Supprimer un élément */
+    removeFromCart: (state, action) => {
+      const { serviceId, pricingId } = action.payload;
+      state.items = state.items.filter(
+        (item) =>
+          !(item.serviceId === serviceId && item.pricingId === pricingId)
+      );
+
+      state.total = calculateTotal(state.items);
+      saveCartToLocalStorage(state.items, state.total);
+    },
+
+    /* 5.4.Vider le panier */
     clearCart: (state) => {
       state.items = [];
-
-      state.total = calculateTotal(state.items);
-      saveCartToLocalStorage(state.items);
+      state.total = 0;
+      saveCartToLocalStorage(state.items, state.total);
+      console.log("clearCart");
     },
   },
 });
