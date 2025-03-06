@@ -1,13 +1,13 @@
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/logo-cyna-white.svg";
-// import CartBadge from "./CartBadge";
+import CartBadge from "./CartBadge";
 import MobileMenu from "./MobileMenu";
 import NavbarLinks from "./NavbarLinks";
 
 export default function Navbar() {
   return (
-    <header className="w-full top-0 flex flex-row justify-between items-center p-4 bg-primaryBackground text-white shadow-md">
+    <>
       {/* Logo */}
       <Link to="/">
         <img src={logo} alt="Cyna Logo" className="w-40 sm:w-40" />
@@ -19,7 +19,7 @@ export default function Navbar() {
       </nav>
 
       {/* Cart Badge */}
-      {/* <CartBadge /> */}
+      <CartBadge />
 
       {/* Tablet/Mobile Navigation */}
       <div className="lg:hidden flex items-center">
@@ -28,6 +28,6 @@ export default function Navbar() {
         </Link>
         <MobileMenu />
       </div>
-    </header>
+    </>
   );
 }

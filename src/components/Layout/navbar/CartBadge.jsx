@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function CartBadge() {
-  const cartItemCount = useSelector((state) => state.cart.totalItems);
+  const cartItemCount = useSelector((state) => state.cart.items.length);
+  console.log(cartItemCount);
 
   return (
     <Link
@@ -13,7 +14,7 @@ export default function CartBadge() {
     >
       <FaShoppingCart className="text-xl" />
       {cartItemCount > 0 && (
-        <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-2 py-1">
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[16px] text-center">
           {cartItemCount}
         </span>
       )}
