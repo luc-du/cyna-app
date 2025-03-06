@@ -1,6 +1,7 @@
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/logo-cyna-white.svg";
+import SearchBar from "../SearchBar";
 import CartBadge from "./CartBadge";
 import MobileMenu from "./MobileMenu";
 import NavbarLinks from "./NavbarLinks";
@@ -14,15 +15,18 @@ export default function Navbar() {
       </Link>
 
       {/* Desktop Navigation */}
-      <nav className="hidden lg:flex space-x-4">
+      <nav className="hidden lg:flex items-center space-x-4">
         <NavbarLinks />
+        <SearchBar />
       </nav>
 
       {/* Cart Badge */}
-      <CartBadge />
+      <div className="flex items-center space-x-4">
+        <CartBadge />
+      </div>
 
       {/* Tablet/Mobile Navigation */}
-      <div className="lg:hidden flex items-center">
+      <div className="lg:hidden flex items-center space-x-4">
         <Link to="/search" className="text-white text-xl p-2">
           <FaSearch />
         </Link>
