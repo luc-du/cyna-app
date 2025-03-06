@@ -83,7 +83,7 @@ const Homepage = () => {
           réel. <br /> Passez à l'ère du numérique pour sécuriser efficacement
           votre infrastructure.
         </p>
-        <div className="mt-6 space-x-4">
+        <div className="flex items-center justify-center sm:flex-col mt-6 space-x-4 bg-amber-500">
           <button className="px-6 py-3 bg-primaryBackground text-white rounded-md hover:bg-primaryHover transition">
             <Link to={"/categories"}>Découvrir nos produits</Link>
           </button>

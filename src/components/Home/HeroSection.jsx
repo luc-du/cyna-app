@@ -8,10 +8,7 @@ const HeroSection = () => {
       className="w-full flex flex-col items-center justify-center   p-10"
     >
       <div className="w-full flex flex-col items-center justify-center bg-primaryBackground rounded-md overflow-hidden">
-        <Carousel
-          images={["Image1", "Image2", "Image3"]}
-          delayTransitionImage={5000}
-        />
+        <Carousel />
       </div>
       <div className="text-center mt-6">
         <h1 className="text-4xl font-extrabold text-primaryBackground">
@@ -27,7 +24,7 @@ const HeroSection = () => {
         </p>
         <div
           id="containerCTA"
-          className="w-full flex items-center justify-center gap-6 mt-6 space-x-4"
+          className="w-full flex flex-col lg:flex-row items-center justify-center gap-6 mt-6"
         >
           <CTAButton link="/categories" label="Découvrir nos produits" />
           <CTAButton

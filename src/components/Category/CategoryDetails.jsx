@@ -18,7 +18,7 @@ const CategoryDetails = () => {
   }
 
   return (
-    <div className="max-w-6xl m-auto p-4">
+    <div className="max-w-7xl w-full my-6 mx-auto p-4">
       {/* Bouton de navigation*/}
       <NavigateButton
         handleClick={() => navigate("/categories")}

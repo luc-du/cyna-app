@@ -1,10 +1,10 @@
 import CategoriesGrid from "./CategoriesGrid";
-import HeroSection from "./Herosection";
+import HeroSection from "./HeroSection";
 import TopProductsGrid from "./TopProductsGrid";
 
 const Home = () => {
   return (
-    <div id="homepageContent" className="max-w-full mx-auto px-4">
+    <div id="homepageContent" className="max-w-6xl mx-auto px-4">
       <HeroSection />
       <CategoriesGrid />
       <TopProductsGrid />

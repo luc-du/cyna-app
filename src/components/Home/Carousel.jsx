@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import edr from "../../assets/images/edr.jpg";
-import soc from "../../assets/images/soc.jpg";
 import xdr from "../../assets/images/xdr.jpg";
 
 // En attendant - backend => Simulation des données du back-office (remplacé par un fetch API)
@@ -26,7 +25,7 @@ const mockSlides = [
   },
   {
     id: 3,
-    imageUrl: soc,
+    imageUrl: xdr,
     title: "Cybersécurité de nouvelle génération",
     description:
       "Protégez votre infrastructure avec des outils SaaS performants.",
@@ -73,7 +72,7 @@ const Carousel = ({ slides, delayTransitionImage }) => {
             <img
               src={slide.imageUrl}
               alt={`Slide ${index + 1}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-fill"
             />
 
             {/* Overlay Texte */}
@@ -105,7 +104,7 @@ const Carousel = ({ slides, delayTransitionImage }) => {
         <FaArrowAltCircleRight />
       </button>
 
-      {/* Dots */}
+      {/* Navigation Dots */}
       <div className="absolute bottom-4 flex space-x-2">
         {slides.map((_, index) => (
           <button
