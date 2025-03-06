@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const NavigateButton = ({ handleClick, style, label }) => {
+const NavigateButton = ({ handleClick, className, label }) => {
   // 1.States
   // 2.Functions
   // 3.Others
@@ -9,7 +9,10 @@ const NavigateButton = ({ handleClick, style, label }) => {
     "px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition";
   // 4.Render
   return (
-    <button onClick={handleClick} className={`${defaultStyle} ${style || ""}`}>
+    <button
+      onClick={handleClick}
+      className={className ? className : defaultStyle}
+    >
       {label}
     </button>
   );
@@ -17,7 +20,7 @@ const NavigateButton = ({ handleClick, style, label }) => {
 
 NavigateButton.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  style: PropTypes.string,
+  className: PropTypes.string,
   label: PropTypes.string.isRequired,
 };
 

@@ -23,7 +23,7 @@ export default function MobileMenu() {
         {isOpen ? <FaTimes /> : <FaAlignJustify />}
       </button>
       {isOpen && (
-        <div className="absolute top-16 left-0 w-full bg-primaryBackground p-4 flex flex-col space-y-4 shadow-md">
+        <div className="absolute z-1 top-16 left-0 w-full bg-primaryBackground p-4 flex flex-col space-y-4 shadow-md">
           <Link
             to="/"
             className="text-white flex items-center"
