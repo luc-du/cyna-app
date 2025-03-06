@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 export default function CartBadge() {
   const cartItemCount = useSelector((state) => state.cart.items.length);
-  console.log(cartItemCount);
 
   return (
     <Link
