@@ -21,15 +21,12 @@ import PrivateRoute from "./PrivateRoute";
 const AppRouter = () => {
   return (
     <Provider store={store}>
-      {" "}
-      {/*Mise en place le 03032025*/}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/order" element={<OrderPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/product:id" element={<ProductPage />} />
 
-        {/* Modification du workflow catalogue */}
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/categories/:categoryId" element={<CategoryPage />} />
         <Route path="products" element={<ProductList />} />
