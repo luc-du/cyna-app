@@ -2,7 +2,7 @@ import edrPremium from "../assets/images/edrPremium.jpg";
 import socPremium from "../assets/images/socPremium.jpg";
 import xdrPremium from "../assets/images/xdrPremium.png";
 
-export const MOCK_TopProductsData = [
+const MOCK_TopProductsData = [
   {
     id: 1,
     image: [socPremium, edrPremium, xdrPremium],
@@ -65,3 +65,5 @@ export const MOCK_TopProductsData = [
     link: "/products/3",
   },
 ];
+
+export default MOCK_TopProductsData;

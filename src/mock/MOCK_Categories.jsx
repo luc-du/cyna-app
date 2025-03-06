@@ -2,7 +2,7 @@ import placeholder3 from "../assets/images/identity.jpg";
 import placeholder from "../assets/images/siem.jpg";
 import placeholder2 from "../assets/images/technology.jpg";
 
-export const MOCK_Categories = [
+const MOCK_Categories = [
   {
     id: 1,
     name: "SOC & SIEM",
@@ -82,3 +82,5 @@ export const MOCK_Categories = [
     ],
   },
 ];
+
+export default MOCK_Categories;
