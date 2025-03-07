@@ -8,8 +8,8 @@ const Register = () => {
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
   // 2.Function
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setForm({
       ...form,

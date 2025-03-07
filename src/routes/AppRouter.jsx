@@ -7,8 +7,9 @@ import CategoriesPage from "../pages/CategoriesPage";
 import CategoryPage from "../pages/CategoryPage";
 import Checkout from "../pages/Checkout";
 import ContactPage from "../pages/ContactPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import Homepage from "../pages/Homepage";
-import Login from "../pages/Login";
+import LoginPage from "../pages/LoginPage";
 import OrderPage from "../pages/OrderPage";
 import PageNotFound from "../pages/PageNotFound";
 import ProductPage from "../pages/ProductPage";
@@ -35,7 +36,8 @@ const AppRouter = () => {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot_password" element={<ForgotPasswordPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route
           path="/profile"
