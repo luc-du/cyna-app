@@ -13,7 +13,7 @@ import OrderPage from "../pages/OrderPage";
 import PageNotFound from "../pages/PageNotFound";
 import ProductPage from "../pages/ProductPage";
 import Profile from "../pages/Profile";
-import Register from "../pages/Register";
+import RegisterPage from "../pages/RegisterPage";
 import SearchPage from "../pages/SearchPage";
 import store from "../redux/store/Store";
 import PrivateRoute from "./PrivateRoute";
@@ -33,7 +33,7 @@ const AppRouter = () => {
         <Route path="/products/:productId" element={<ProductPage />} />
 
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/checkout" element={<Checkout />} />
