@@ -1,40 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  loadFomLocalStorage,
+  removeFromLocalStorage,
+  saveToLocalStorage,
+} from "../../components/utils/storage";
 
 /* En attendant le backend */
-const loadUserFomLocalStorage = () => {
-  try {
-    const user = localStorage.getItem("user", JSON.parse(user));
-    console.log("Chargement des données de user:", user);
-  } catch (error) {
-    console.error("Erreur lors de la sauvegarde de l'utilisateur:", error);
-    return { user: [] };
-  }
-};
-
-const saveUserToLocalStorage = (user) => {
-  try {
-    localStorage.setItem("user", JSON.stringify(user));
-    console.log("Sauvegarde de user réussie");
-  } catch (error) {
-    console.error("Erreur lors de la sauvegarde de l'utilisateur:", error);
-  }
-};
-
-/* Test */
+/* 
+Utilisation du localStorage
+*/
+/* DataTest */
 const userTest = {
   id: 0,
-  fname: "John",
-  lname: "Doe",
+  name: "John Doe",
   age: 24,
   job: "web engineer",
   email: "johndoe@fakemail.com",
   password: "P@ssword123.",
 };
 
+saveToLocalStorage("user", userTest);
+
 /* Slice */
+const initialUser = loadFomLocalStorage("user") || null;
 const initialState = {
-  initialState: JSON.parse(localStorage.getItem("user")) || null,
-  isAuthenticated: false,
+  initialState: initialUser,
+  isAuthenticated: initialUser ? true : false,
   loading: false,
   error: null,
 };
@@ -43,8 +34,42 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginUser: {},
-    registerUser: {},
-    logOut: {},
+    // 1.Connexion
+    loginUser: (state, action) => {
+      state.loading = true;
+      state.error = null;
+      const { email, password } = action.payload;
+
+      // Simulation d'un fetch API
+      if (email === userTest.email && password === userTest.password) {
+        state.user = { name: userTest.name, email: userTest.email };
+        state.isAuthenticated = true;
+        saveToLocalStorage("user", state.user);
+      } else {
+        state.error = "Invalid Credentials";
+      }
+      state.loading = false;
+    },
+
+    // 2.Création
+    registerUser: (state, action) => {
+      state.loading = false;
+      state.error = null;
+
+      // Simulation d'une API
+      state.user = { name: action.payload, email: action.payload };
+      state.isAuthenticated = true;
+      saveToLocalStorage("user", state.user);
+    },
+
+    // 3.Déconnexion
+    logOut: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      removeFromLocalStorage("user");
+    },
   },
 });
+
+export const { loginUser, registerUser, logOut } = authSlice.actions;
+export default authSlice.reducer;
