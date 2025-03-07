@@ -1,15 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  loadFomLocalStorage,
+  loadFromLocalStorage,
   removeFromLocalStorage,
   saveToLocalStorage,
 } from "../../components/utils/storage";
 
-/* En attendant le backend */
-/* 
-Utilisation du localStorage
-*/
-/* DataTest */
+const storedUsers = loadFromLocalStorage("users") || [];
+
+// test
 const userTest = {
   id: 0,
   name: "John Doe",
@@ -19,13 +17,19 @@ const userTest = {
   password: "P@ssword123.",
 };
 
-saveToLocalStorage("user", userTest);
+// Ajout de l'utilisateur test s'il n'existe pas déjà
+if (!storedUsers.find((user) => user.email === userTest.email)) {
+  storedUsers.push(userTest);
+  saveToLocalStorage("users", storedUsers);
+}
 
-/* Slice */
-const initialUser = loadFomLocalStorage("user") || null;
+// Chargement de l'utilisateur connecté
+const initialUser = loadFromLocalStorage("user") || null;
+
 const initialState = {
-  initialState: initialUser,
-  isAuthenticated: initialUser ? true : false,
+  user: initialUser,
+  isAuthenticated: !!initialUser,
+  users: storedUsers,
   loading: false,
   error: null,
 };
@@ -34,35 +38,49 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // 1.Connexion
+    // 1. Connexion
     loginUser: (state, action) => {
       state.loading = true;
       state.error = null;
-      const { email, password } = action.payload;
 
-      // Simulation d'un fetch API
-      if (email === userTest.email && password === userTest.password) {
-        state.user = { name: userTest.name, email: userTest.email };
+      const { email, password } = action.payload;
+      const foundUser = state.users.find(
+        (user) => user.email === email && user.password === password
+      );
+
+      if (foundUser) {
+        state.user = { name: foundUser.name, email: foundUser.email };
         state.isAuthenticated = true;
         saveToLocalStorage("user", state.user);
       } else {
-        state.error = "Invalid Credentials";
+        state.error = "Email ou mot de passe invalide";
       }
       state.loading = false;
     },
 
-    // 2.Création
+    // 2. Création d'un compte
     registerUser: (state, action) => {
-      state.loading = false;
+      state.loading = true;
       state.error = null;
 
-      // Simulation d'une API
-      state.user = { name: action.payload, email: action.payload };
-      state.isAuthenticated = true;
-      saveToLocalStorage("user", state.user);
+      const { name, email, password } = action.payload;
+      const existingUser = state.users.find((user) => user.email === email);
+
+      if (existingUser) {
+        state.error = "Email déjà utilisé";
+      } else {
+        const newUser = { id: state.users.length, name, email, password };
+        state.users.push(newUser);
+        saveToLocalStorage("users", state.users);
+
+        state.user = { name, email };
+        state.isAuthenticated = true;
+        saveToLocalStorage("user", state.user);
+      }
+      state.loading = false;
     },
 
-    // 3.Déconnexion
+    // 3. Déconnexion
     logOut: (state) => {
       state.user = null;
       state.isAuthenticated = false;

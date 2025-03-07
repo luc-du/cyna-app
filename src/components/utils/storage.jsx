@@ -7,7 +7,7 @@ const saveToLocalStorage = (arrayName, obj) => {
   }
 };
 
-const loadFomLocalStorage = (arrayName) => {
+const loadFromLocalStorage = (arrayName) => {
   try {
     const data = localStorage.getItem(arrayName);
 
@@ -32,4 +32,4 @@ const removeFromLocalStorage = (key) => {
   }
 };
 
-export { loadFomLocalStorage, removeFromLocalStorage, saveToLocalStorage };
+export { loadFromLocalStorage, removeFromLocalStorage, saveToLocalStorage };

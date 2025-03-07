@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
+import { loginUser } from "../redux/slice/authSlice";
 
 const Login = () => {
   // 1.State
@@ -11,6 +12,9 @@ const Login = () => {
   });
   // 2.Function
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { error } = useSelector((state) => state.auth);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -20,7 +24,8 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch("loginUser(form)"); //modif apres le slice
+    dispatch(loginUser(form));
+    navigate("/profile");
   };
   // 3.Others
   // 4.Render
@@ -50,6 +55,7 @@ const Login = () => {
         <p className="text-sm italic underline text-gray-400 hover:text-gray-600">
           <Link to="/forgot_password">Mot de passe oublié ?</Link>
         </p>
+        {error && <p className="text-red-500">{error}</p>}
         <button type="submit" className="btn">
           Se connecter
         </button>

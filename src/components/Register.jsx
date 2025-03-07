@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { registerUser } from "../redux/slice/authSlice";
 
 const Register = () => {
   // 1.State
@@ -8,8 +10,12 @@ const Register = () => {
     email: "",
     password: "",
   });
+
   // 2.Function
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { error } = useSelector((state) => state.auth);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -19,8 +25,10 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch("registerUser(form)"); //modif apres le slice
+    dispatch(registerUser(form));
+    navigate("/profile");
   };
+
   // 3.Others
   // 4.Render
   return (
@@ -55,6 +63,7 @@ const Register = () => {
           placeholder="Mot de passe"
           onChange={handleChange}
         />
+        {error && <p className="text-red-500">{error}</p>}
         <button type="submit" className="btn">
           S&apos;inscrire
         </button>

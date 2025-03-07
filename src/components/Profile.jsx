@@ -1,35 +1,32 @@
-// import { useSelector } from "react-redux";
-// import { logout } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logOut } from "../redux/slice/authSlice";
 
 const Profile = () => {
-  // 1.State
-  // const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // if (!user) {
-  //   return <h1>Nothing</h1>;
-  // }
-  // 2.Functions
-  // const dispatch = useDispatch();
-  // 3.Others
+  const handleLogout = () => {
+    dispatch(logOut());
+    navigate("/login");
+  };
 
-  // 4.Render
   return (
-    // <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-    //   {user ? (
-    //     <>
-    //       <h1 className="text-2xl font-bold">Profil</h1>
-    //       <p>Nom : {user?.name}</p>
-    //       <p>Email : {user?.email}</p>
-    //       {/* <button className="btn" onClick={() => dispatch("logout()")}>
-    //         Se déconnecter
-    //       </button> */}
-    //     </>
-    //   ) : (
-    //     <h1>Veuillez vous connectez</h1>
-    //   )}
-    // </div>
-
-    <h1>Profile</h1>
+    <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-2xl font-bold">Profil</h1>
+      {user ? (
+        <>
+          <p>Nom : {user.name}</p>
+          <p>Email : {user.email}</p>
+          <button className="btn" onClick={handleLogout}>
+            Se déconnecter
+          </button>
+        </>
+      ) : (
+        <p>Veuillez vous connecter.</p>
+      )}
+    </div>
   );
 };
 
