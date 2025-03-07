@@ -2,8 +2,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
-  console.log(product);
-
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
       <img
@@ -27,7 +25,7 @@ ProductCard.propTypes = {
   product: PropTypes.shape({
     imageUrl: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    link: PropTypes.string.isRequired,
+    link: PropTypes.string,
   }).isRequired,
 };
 
