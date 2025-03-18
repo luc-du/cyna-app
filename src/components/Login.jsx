@@ -17,11 +17,11 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultAction = await dispatch(loginUser(form)); // Ajout du `await`
+    const resultAction = await dispatch(loginUser(form));
 
     if (loginUser.fulfilled.match(resultAction)) {
       console.log(`Token reçu : ${resultAction.payload.token}`);
-      navigate("/profile"); // Redirige après connexion réussie
+      navigate("/profile");
     }
   };
 
@@ -48,11 +48,7 @@ const Login = () => {
           onChange={handleChange}
           required
         />
-        {error && (
-          <p className="text-red-500">
-            {typeof error === "string" ? error : JSON.stringify(error)}
-          </p>
-        )}
+        {error && <p className="text-red-500">{error}</p>}
 
         <button type="submit" className="btn" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}

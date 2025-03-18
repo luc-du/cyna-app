@@ -6,27 +6,33 @@ import { registerUser } from "../redux/slice/authSlice";
 const Register = () => {
   // 1.State
   const [form, setForm] = useState({
-    name: "",
+    firstname: "",
+    lastname: "",
     email: "",
     password: "",
+    role: "USER",
   });
 
-  // 2.Function
+  // 2.Functions
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error } = useSelector((state) => state.auth);
+  const { error, loading } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.name,
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(registerUser(form));
-    navigate("/profile");
+    const resultAction = await dispatch(registerUser(form));
+
+    if (resultAction.fulfilled.match(resultAction)) {
+      console.log(`Utilisateur créé: ${resultAction.payload}`);
+      navigate("/profile");
+    }
   };
 
   // 3.Others
@@ -40,13 +46,20 @@ const Register = () => {
       >
         <input
           type="text"
-          name="name"
-          id="name"
+          name="firstname"
+          id="firstname"
           className="input"
-          placeholder="nom"
+          placeholder="Prénom"
           onChange={handleChange}
         />{" "}
-        {/* créer un composant*/}
+        <input
+          type="text"
+          name="lastname"
+          id="lastname"
+          className="input"
+          placeholder="Nom"
+          onChange={handleChange}
+        />{" "}
         <input
           type="email"
           name="email"
@@ -64,8 +77,8 @@ const Register = () => {
           onChange={handleChange}
         />
         {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="btn">
-          S&apos;inscrire
+        <button type="submit" className="btn" disabled={loading}>
+          {loading ? "Inscription" : "S'inscrire"}
         </button>
       </form>
     </div>
