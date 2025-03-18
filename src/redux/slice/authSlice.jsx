@@ -16,6 +16,9 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem("token", response.data.token);
       return response.data;
     } catch (error) {
+      if (error.response?.data?.message?.includes("Duplicate entry")) {
+        return rejectWithValue("Cet email est déjà utilisé.");
+      }
       return rejectWithValue(
         error.response?.data || "Erreur lors de l'inscription"
       );

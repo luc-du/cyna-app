@@ -10,8 +10,12 @@ const Register = () => {
     lastname: "",
     email: "",
     password: "",
+    confirmPassword: "",
     role: "USER",
   });
+
+  /* Error confirmPassword*/
+  const [passwordError, setPasswordError] = useState(null);
 
   // 2.Functions
   const dispatch = useDispatch();
@@ -27,10 +31,21 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    /* Vérification du mot de passe */
+    if (form.password !== form.confirmPassword) {
+      setPasswordError(`Les mots de passe saisis ne correspondent pas`);
+      return;
+    }
+
+    setPasswordError(null);
+
+    const { confirmPassword, ...userData } = form;
+
     const resultAction = await dispatch(registerUser(form));
 
-    if (resultAction.fulfilled.match(resultAction)) {
-      console.log(`Utilisateur créé: ${resultAction.payload}`);
+    if (registerUser.fulfilled.match(resultAction)) {
+      console.log(`Utilisateur créé: ${resultAction.payload.token}`);
       navigate("/profile");
     }
   };
@@ -76,7 +91,20 @@ const Register = () => {
           placeholder="Mot de passe"
           onChange={handleChange}
         />
-        {error && <p className="text-red-500">{error}</p>}
+        <input
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          className="input"
+          placeholder="Confirmer mot de passe"
+          onChange={handleChange}
+        />
+        {passwordError && <p className="text-red-500">{passwordError}</p>}
+        {error && (
+          <p className="text-red-500">
+            {typeof error === "string" ? error : JSON.stringify(error)}
+          </p>
+        )}{" "}
         <button type="submit" className="btn" disabled={loading}>
           {loading ? "Inscription" : "S'inscrire"}
         </button>

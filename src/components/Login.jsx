@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router";
 import { useNavigate } from "react-router-dom"; // Corrigé
 import { loginUser } from "../redux/slice/authSlice";
 
@@ -50,6 +51,11 @@ const Login = () => {
         />
         {error && <p className="text-red-500">{error}</p>}
 
+        <Link to={"/register"}>
+          <p className=" text-gray-500 italic underline text-center hover:text-gray-600">
+            Créer un compte
+          </p>
+        </Link>
         <button type="submit" className="btn" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>
