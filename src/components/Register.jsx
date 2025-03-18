@@ -16,6 +16,7 @@ const Register = () => {
 
   /* Error confirmPassword*/
   const [passwordError, setPasswordError] = useState(null);
+  const [passwordStrength, setPasswordStrength] = useState("Faible");
 
   // 2.Functions
   const dispatch = useDispatch();
@@ -27,8 +28,23 @@ const Register = () => {
       ...form,
       [e.target.name]: e.target.value,
     });
+
+    if (e.target.name === "password") {
+      setPasswordStrength(checkPasswordStrength(e.target.value));
+    }
   };
 
+  const checkPasswordStrength = (password) => {
+    if (password.length < 6) return "Faible";
+    if (
+      password.length >= 6 &&
+      /[A-Z]/.test(password) &&
+      /\d/.test(password) &&
+      /[^a-zA-Z0-9]/.test(password)
+    )
+      return "Fort";
+    return "Moyen";
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -91,6 +107,21 @@ const Register = () => {
           placeholder="Mot de passe"
           onChange={handleChange}
         />
+        <p className="text-sm text-gray-500">
+          Le mot de passe doit contenir au moins 6 caractères, une majuscule, un
+          chiffre et un caractère spécial.
+        </p>
+        <p
+          className={`text-sm ${
+            passwordStrength === "Fort"
+              ? "text-green-500"
+              : passwordStrength === "Moyen"
+              ? "text-yellow-500"
+              : "text-red-500"
+          }`}
+        >
+          Force du mot de passe : {passwordStrength}
+        </p>
         <input
           type="password"
           name="confirmPassword"
@@ -105,9 +136,11 @@ const Register = () => {
             {typeof error === "string" ? error : JSON.stringify(error)}
           </p>
         )}{" "}
-        <button type="submit" className="btn" disabled={loading}>
-          {loading ? "Inscription" : "S'inscrire"}
-        </button>
+        <div className="w-full flex items-center justify-center">
+          <button type="submit" className="btn" disabled={loading}>
+            {loading ? "Inscription" : "S'inscrire"}
+          </button>
+        </div>
       </form>
     </div>
   );
