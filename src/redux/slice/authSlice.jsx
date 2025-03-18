@@ -1,19 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { data } from "react-router";
 
-const API_PROXY = "https://cors-anywhere.herokuapp.com/";
-const API_BASE_URL = "http://localhost:8080/api/v1/auth";
+// Développement
+// const API_PROXY = "https://cors-anywhere.herokuapp.com/";
+const API_BASE_URL = "/api/v1/auth"; //développement
+// Prod:
+// const API_BASE_URL = "http://localhost:8080/api/v1/auth"; //origin
 
 /* Signup de user */
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${API_PROXY}${API_BASE_URL}/signup`,
-        userData
-      );
+      const response = await axios.post(`${API_BASE_URL}/signup`, userData);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -28,17 +27,16 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${API_PROXY}${API_BASE_URL}/signin`,
-        credentials
-      );
+      const response = await axios.post(`${API_BASE_URL}/signin`, credentials);
 
       localStorage.setItem("token", response.data.token);
-      console.log(`Token créée ${data.token}`);
-      alert(`Vous êtes auth!`);
+      console.log(`Token reçu : ${response.data.token}`);
+      alert("Vous êtes authentifié !");
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Pair login incorrect!");
+      return rejectWithValue(
+        error.response?.data || "Email ou mot de passe incorrect !"
+      );
     }
   }
 );
@@ -54,7 +52,7 @@ export const validateToken = createAsyncThunk(
       }
 
       const response = await axios.post(
-        `${API_PROXY}${API_BASE_URL}/validate`,
+        `${API_BASE_URL}/validate`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

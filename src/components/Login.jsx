@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom"; // Corrigé
 import { loginUser } from "../redux/slice/authSlice";
 
 const Login = () => {
@@ -9,18 +9,21 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error, loading } = useSelector((state) => state.auth);
+
   // 2.Functions
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleChange = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const resultAction = dispatch(loginUser(form));
+    const resultAction = await dispatch(loginUser(form)); // Ajout du `await`
+
     if (loginUser.fulfilled.match(resultAction)) {
-      navigate("/profile");
+      console.log(`Token reçu : ${resultAction.payload.token}`);
+      navigate("/profile"); // Redirige après connexion réussie
     }
   };
-  // 3.Others
 
   // 4.Render
   return (
@@ -45,7 +48,12 @@ const Login = () => {
           onChange={handleChange}
           required
         />
-        {error && <p className="text-red-500">{error}</p>}
+        {error && (
+          <p className="text-red-500">
+            {typeof error === "string" ? error : JSON.stringify(error)}
+          </p>
+        )}
+
         <button type="submit" className="btn" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>
