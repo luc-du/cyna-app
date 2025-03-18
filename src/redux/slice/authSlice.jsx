@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 // Développement
-// const API_PROXY = "https://cors-anywhere.herokuapp.com/";
-const API_BASE_URL = "/api/v1/auth"; //développement
+const API_BASE_URL = "/api/v1/auth"; // Développement
 // Prod:
 // const API_BASE_URL = "http://localhost:8080/api/v1/auth"; //origin
 
@@ -32,7 +32,6 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/signin`, credentials);
-
       localStorage.setItem("token", response.data.token);
       console.log(`Token reçu : ${response.data.token}`);
       alert("Vous êtes authentifié !");
@@ -66,6 +65,41 @@ export const validateToken = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Token invalide");
+    }
+  }
+);
+
+/* Récupérer les informations du profil utilisateur */
+export const fetchUserProfile = createAsyncThunk(
+  "auth/fetchUserProfile",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token non disponible");
+      }
+
+      // Décryptage du token
+      const decodedToken = jwtDecode(token);
+      console.log("Token décodé :", decodedToken);
+      const userId = decodedToken.id;
+
+      console.log("Recup de l'id user depuis auth slice", userId);
+
+      const response = await axios.get(`/api/v1/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Réponse de l'API (profil) :", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Erreur API (profil) :",
+        error.response?.data || error.message
+      );
+      return rejectWithValue(
+        error.response?.data || "Impossible de récupérer le profil utilisateur"
+      );
     }
   }
 );
@@ -112,6 +146,13 @@ const authSlice = createSlice({
       .addCase(validateToken.rejected, (state) => {
         state.isAuthenticated = false;
         localStorage.removeItem("token");
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.error = action.payload;
       });
   },
 });

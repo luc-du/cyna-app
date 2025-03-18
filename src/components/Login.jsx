@@ -29,6 +29,8 @@ const Login = () => {
   // 4.Render
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1>Connection</h1>
+
       <form
         className="flex flex-col gap-6 p-6 bg-white shadow-lg rounded-lg"
         onSubmit={handleSubmit}
