@@ -81,8 +81,9 @@ export const fetchUserProfile = createAsyncThunk(
 
       // Décryptage du token
       const decodedToken = jwtDecode(token);
+
       console.log("Token décodé :", decodedToken);
-      const userId = decodedToken.id;
+      const userId = decodedToken.jti;
 
       console.log("Recup de l'id user depuis auth slice", userId);
 
