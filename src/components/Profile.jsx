@@ -94,7 +94,7 @@ const Profile = () => {
           </div>
         </div>
       ) : (
-        <p>Impossible de récupérer les informations de l'utilisateur.</p>
+        <p>Impossible de récupérer les informations de l`&apos`utilisateur.</p>
       )}
     </div>
   );
