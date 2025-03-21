@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.navBarLink {
+  @apply text-white hover:text-gray-400 flex items-center;
+}
+
+.navBarLinkIcon {
+  @apply mr-2 text-xl;
+}
+
 h1 {
   @apply text-primary text-2xl font-bold mb-4;
 }

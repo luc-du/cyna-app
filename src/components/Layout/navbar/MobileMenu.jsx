@@ -5,14 +5,27 @@ import {
   FaHome,
   FaShoppingCart,
   FaSignInAlt,
+  FaSignOutAlt,
   FaThList,
   FaTimes,
   FaUser,
 } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { logout } from "../../../redux/slice/authSlice";
 
 export default function MobileMenu() {
+  // 1.State
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const isLogged = useSelector((state) => state.auth.isAuthenticated);
+
+  // 2.Functions
+  const logoutAndCloseMenu = () => {
+    setIsOpen(false);
+    dispatch(logout());
+  };
+  // 3.Others
 
   return (
     <div className="md:flex lg:hidden">
@@ -45,13 +58,23 @@ export default function MobileMenu() {
           >
             <FaThList className="mr-2" /> Catégories
           </Link>
-          <Link
-            to="/login"
-            className="text-white flex items-center"
-            onClick={() => setIsOpen(false)}
-          >
-            <FaSignInAlt className="mr-2" /> Me connecter
-          </Link>
+
+          {isLogged ? (
+            <Link
+              onClick={() => logoutAndCloseMenu()}
+              className="text-white flex items-center"
+            >
+              <FaSignOutAlt className="mr-2" /> Se déconnecter
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="text-white flex items-center"
+              onClick={() => setIsOpen(false)}
+            >
+              <FaSignInAlt className="mr-2" /> Me connecter
+            </Link>
+          )}
           <Link
             to="/profile"
             className="text-white flex items-center"
