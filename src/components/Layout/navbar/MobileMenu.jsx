@@ -27,6 +27,7 @@ export default function MobileMenu() {
   };
   // 3.Others
 
+  // 4.Render
   return (
     <div className="md:flex lg:hidden">
       <button

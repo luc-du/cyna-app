@@ -15,8 +15,6 @@ export default function NavbarLinks() {
   const dispatch = useDispatch();
   const isLogged = useSelector((state) => state.auth.isAuthenticated);
 
-  console.log(isLogged);
-
   // 2.Functions
   // 3.Others
 
