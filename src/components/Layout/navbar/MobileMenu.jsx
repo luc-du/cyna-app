@@ -75,13 +75,16 @@ export default function MobileMenu() {
               <FaSignInAlt className="mr-2" /> Me connecter
             </Link>
           )}
-          <Link
-            to="/profile"
-            className="text-white flex items-center"
-            onClick={() => setIsOpen(false)}
-          >
-            <FaUser className="mr-2" /> Mon compte
-          </Link>
+
+          {isLogged && (
+            <Link
+              to="/profile"
+              className="text-white flex items-center"
+              onClick={() => setIsOpen(false)}
+            >
+              <FaUser className="mr-2" /> Mon compte
+            </Link>
+          )}
         </div>
       )}
     </div>
