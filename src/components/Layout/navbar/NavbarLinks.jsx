@@ -46,10 +46,13 @@ export default function NavbarLinks() {
           <span>Me connecter</span>
         </Link>
       )}
-      <Link to="/profile" className="navBarLink">
-        <FaUser className="navBarLinkIcon" />
-        <span>Mon compte</span>
-      </Link>
+
+      {isLogged && (
+        <Link to="/profile" className="navBarLink">
+          <FaUser className="navBarLinkIcon" />
+          <span>Mon compte</span>
+        </Link>
+      )}
     </>
   );
 }
