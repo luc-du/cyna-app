@@ -58,6 +58,12 @@ const Login = () => {
             Créer un compte
           </p>
         </Link>
+        <Link to={"/forgot_password"}>
+          {" "}
+          <p className=" text-gray-500 italic underline text-center hover:text-gray-600">
+            Mot de passe oublié ?
+          </p>
+        </Link>
         <button type="submit" className="btn" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>
