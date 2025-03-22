@@ -21,3 +21,16 @@ h2 {
 .btn {
   @apply flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition bg-primary hover:bg-CTAHover;
 }
+
+/* Profile */
+
+.container-cta {
+  @apply w-full flex items-center justify-end;
+}
+
+.container-profile-section {
+  @apply py-4 border-b-2;
+}
+.cta-profile-style {
+  @apply mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition;
+}
