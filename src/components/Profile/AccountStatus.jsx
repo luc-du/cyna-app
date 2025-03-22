@@ -10,6 +10,7 @@ const AccountStatus = ({ data }) => {
     content =
       "Erreur lors de la récupération des informations de l'utilisateur";
   } else {
+    /* Actif / Vérifié / Verrouillé + bouton vérifier */
     content = (
       <>
         <p

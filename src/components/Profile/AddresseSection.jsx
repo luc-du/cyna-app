@@ -12,6 +12,7 @@ const AddresseSection = ({ data }) => {
       <div id="address" className="container-profile-section">
         <h2 className="text-xl">Adresses</h2>
         {
+          /* Afficher 2 adresses */
           <ul>
             {data.addresses?.length > 0
               ? data.addresses.map((element, index) => {

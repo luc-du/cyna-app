@@ -22,22 +22,27 @@ const AppRouter = () => {
     <Provider store={store}>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/cart" element={<CartPage />} />
 
+        {/* Categories et produits/services */}
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/categories/:categoryId" element={<CategoryPage />} />
         <Route path="products" element={<ProductList />} />
         <Route path="/products/:productId" element={<ProductPage />} />
         <Route path="/product:id" element={<ProductPage />} />
 
+        {/* Flow cart > checkout */}
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/order" element={<OrderPage />} />
         <Route path="/checkout" element={<Checkout />} />
 
+        {/* Auth */}
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot_password" element={<ForgotPasswordPage />} />
 
+        {/* Profile */}
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/edit-profile" element={<LoginPage />} />
 
         <Route path="/search" element={<SearchPage />} />
 

@@ -14,6 +14,7 @@ const PaymentMethodsSection = ({ data }) => {
       <div id="payment_methods" className="container-profile-section">
         <h2 className="text-xl">Méthodes de paiement</h2>
         {
+          /* Afficher 2 CB */
           <ul>
             {data.cards?.length > 0
               ? data.cards.map((card, index) => {
