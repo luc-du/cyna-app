@@ -26,7 +26,7 @@ const CartSummary = ({ total, cartLength }) => {
         </label>
         <input
           type="text"
-          className="w-full border p-2 rounded-lg mt-2"
+          className="w-full border rounded-lg px-4 py-2 mt-2 mb-4 text-sm"
           placeholder="Entrez votre code promo"
         />
       </div>
