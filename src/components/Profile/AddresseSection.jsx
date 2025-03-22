@@ -6,8 +6,6 @@ const AddresseSection = ({ data }) => {
   // 2.Functions
   // 3.Others
 
-  // 4.Render
-
   return (
     <>
       {/* Adresses */}
