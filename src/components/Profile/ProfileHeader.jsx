@@ -3,10 +3,9 @@ import MenDefaultAvatar from "../../assets/avatars/default-men.png";
 import CTAButton from "../ui/buttons/CTAButton";
 
 const ProfileHeader = ({ data }) => {
-  console.log(data);
-
   // 1.States
   // 2.Functions
+
   // 3.Others
   let content;
   if (!data || data === undefined) {

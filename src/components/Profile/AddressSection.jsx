@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import CTAButton from "../ui/buttons/CTAButton";
 
-const AddresseSection = ({ data }) => {
+const AddressSection = ({ data }) => {
   // 1.States
   // 2.Functions
   // 3.Others
@@ -39,10 +39,10 @@ const AddresseSection = ({ data }) => {
     </>
   );
 };
-AddresseSection.propTypes = {
+AddressSection.propTypes = {
   data: PropTypes.shape({
     addresses: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 };
 
-export default AddresseSection;
+export default AddressSection;
