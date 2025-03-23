@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
 
+// const API_URL = "/api/v1/address";
 const API_URL = API_ROUTES.ADDRESS.BY_USER;
 
 // Thunk pour récup les adresses par l'ID se user
