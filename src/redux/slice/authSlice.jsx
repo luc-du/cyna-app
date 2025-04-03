@@ -1,18 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-
-// Développement
-const API_BASE_URL = "/api/v1/auth"; // Développement
-// Prod:
-// const API_BASE_URL = "http://localhost:8080/api/v1/auth"; //origin
+import { API_ROUTES } from "../../api/apiRoutes";
 
 /* Signup de user */
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/signup`, userData);
+      const response = await axios.post(API_ROUTES.AUTH.SIGNUP, userData);
       localStorage.setItem("token", response.data.token);
       return response.data;
     } catch (error) {
@@ -31,7 +27,7 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/signin`, credentials);
+      const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
       localStorage.setItem("token", response.data.token);
       console.log(`Token reçu : ${response.data.token}`);
       alert("Vous êtes authentifié !");
@@ -55,7 +51,7 @@ export const validateToken = createAsyncThunk(
       }
 
       const response = await axios.post(
-        `${API_BASE_URL}/validate`,
+        API_ROUTES.AUTH.VALIDATE,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -87,7 +83,7 @@ export const fetchUserProfile = createAsyncThunk(
 
       console.log("Recup de l'id user depuis auth slice", userId);
 
-      const response = await axios.get(`/api/v1/user/${userId}`, {
+      const response = await axios.get(API_ROUTES.USER.BY_ID(userId), {
         headers: { Authorization: `Bearer ${token}` },
       });
 

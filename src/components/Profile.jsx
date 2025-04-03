@@ -3,17 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile, logout } from "../redux/slice/authSlice";
 import AccountStatus from "./Profile/AccountStatus";
-import AddresseSection from "./Profile/AddresseSection";
+import AddressSection from "./Profile/AddressSection";
 import LogoutButton from "./Profile/LogoutButton";
 import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
 import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
 
 const Profile = () => {
+  // 1.State
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 2.Functions
+
+  /* UseEffect Zone */
+  // Auth
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -22,11 +27,21 @@ const Profile = () => {
     }
   }, [isAuthenticated, dispatch, navigate]);
 
+  // Fetch profile
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchUserProfile(user.id));
+    }
+  }, [user?.id, dispatch]);
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
+  // 3.Others
+
+  // 4.Render
   return (
     // main grid
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
@@ -44,7 +59,7 @@ const Profile = () => {
           {/* Container details */}
           <div id="container-details-section" className="mt-4 py-4 text-left">
             {/* Adresses */}
-            <AddresseSection data={user} />
+            <AddressSection data={user} />
             {/* Méthode de paiement*/}
             <PaymentMethodsSection data={user} />
             {/* Statut du compte */}

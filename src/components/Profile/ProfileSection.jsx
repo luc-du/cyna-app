@@ -23,7 +23,8 @@ const ProfileSection = ({ data }) => {
           <strong>Téléphone :</strong> {data.phone || "Non renseigné"}
         </p>
         <p>
-          <strong>Rôle :</strong> {data.roles ? "Client" : "Administrateur"}
+          <strong>Rôle :</strong>{" "}
+          {data?.roles?.slice(0, 1) + data?.roles?.slice(1).toLowerCase()}
         </p>
 
         <div className="container-cta ">
