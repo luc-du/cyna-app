@@ -22,6 +22,15 @@ h2 {
   @apply flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition bg-primary hover:bg-CTAHover;
 }
 
+/* FeedBack */
+.error-feedback {
+  @apply text-red-500;
+}
+
+.loading-feedback {
+  @apply text-green-500;
+}
+
 /* Profile */
 
 .container-cta {
