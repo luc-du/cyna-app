@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import cynaLogo from "../assets/logo.png";
 import { registerUser } from "../redux/slice/authSlice";
 
 const Register = () => {
-  // 1.State
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -14,11 +14,9 @@ const Register = () => {
     role: "USER",
   });
 
-  /* Error confirmPassword*/
   const [passwordError, setPasswordError] = useState(null);
   const [passwordStrength, setPasswordStrength] = useState("Faible");
 
-  // 2.Functions
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error, loading } = useSelector((state) => state.auth);
@@ -45,68 +43,72 @@ const Register = () => {
       return "Fort";
     return "Moyen";
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    /* Vérification du mot de passe */
     if (form.password !== form.confirmPassword) {
-      setPasswordError(`Les mots de passe saisis ne correspondent pas`);
+      setPasswordError("Les mots de passe saisis ne correspondent pas");
       return;
     }
 
     setPasswordError(null);
-
     const { confirmPassword, ...userData } = form;
 
-    const resultAction = await dispatch(registerUser(form));
-
+    const resultAction = await dispatch(registerUser(userData));
     if (registerUser.fulfilled.match(resultAction)) {
       console.log(`Utilisateur créé: ${resultAction.payload.token}`);
       navigate("/profile");
     }
   };
 
-  // 3.Others
-  // 4.Render
   return (
-    <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1>Créer votre compte</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
-        className="flex flex-col gap-6 p-6 bg-white shadow-lg rounded-lg"
         onSubmit={handleSubmit}
+        className="w-full max-w-md bg-white rounded-xl shadow-md px-10 py-8 flex flex-col gap-6"
       >
+        <div className="flex justify-center">
+          <img src={cynaLogo} alt="Cyna Logo" className="h-14" />
+        </div>
+
+        <h1 className="text-center text-2xl font-bold text-gray-900">
+          Créez votre compte
+        </h1>
+
         <input
           type="text"
           name="firstname"
-          id="firstname"
-          className="input"
           placeholder="Prénom"
+          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
           onChange={handleChange}
-        />{" "}
+          required
+        />
         <input
           type="text"
           name="lastname"
-          id="lastname"
-          className="input"
           placeholder="Nom"
+          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
           onChange={handleChange}
-        />{" "}
+          required
+        />
         <input
           type="email"
           name="email"
-          id="email"
-          className="input"
-          placeholder="Email"
+          placeholder="Adresse e-mail"
+          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
           onChange={handleChange}
+          required
         />
         <input
           type="password"
           name="password"
-          id="password"
-          className="input"
           placeholder="Mot de passe"
+          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
           onChange={handleChange}
+          required
         />
+
         <p className="text-sm text-gray-500">
           Le mot de passe doit contenir au moins 6 caractères, une majuscule, un
           chiffre et un caractère spécial.
@@ -114,33 +116,40 @@ const Register = () => {
         <p
           className={`text-sm ${
             passwordStrength === "Fort"
-              ? "text-green-500"
+              ? "text-green-600"
               : passwordStrength === "Moyen"
-              ? "text-yellow-500"
-              : "text-red-500"
+              ? "text-yellow-600"
+              : "text-red-600"
           }`}
         >
           Force du mot de passe : {passwordStrength}
         </p>
+
         <input
           type="password"
           name="confirmPassword"
-          id="confirmPassword"
-          className="input"
-          placeholder="Confirmer mot de passe"
+          placeholder="Confirmez le mot de passe"
+          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
           onChange={handleChange}
+          required
         />
-        {passwordError && <p className="text-red-500">{passwordError}</p>}
+
+        {passwordError && (
+          <p className="text-red-500 text-sm">{passwordError}</p>
+        )}
         {error && (
-          <p className="text-red-500">
+          <p className="text-red-500 text-sm">
             {typeof error === "string" ? error : JSON.stringify(error)}
           </p>
-        )}{" "}
-        <div className="w-full flex items-center justify-center">
-          <button type="submit" className="btn" disabled={loading}>
-            {loading ? "Inscription" : "S'inscrire"}
-          </button>
-        </div>
+        )}
+
+        <button
+          type="submit"
+          className="bg-purple-600 text-white py-3 rounded-md font-semibold hover:bg-purple-700 transition"
+          disabled={loading}
+        >
+          {loading ? "Inscription..." : "S'inscrire"}
+        </button>
       </form>
     </div>
   );
