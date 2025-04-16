@@ -43,8 +43,11 @@ const AddressSection = ({ data }) => {
                       <span> {address.name}</span>
                     </p>
                     <p>
-                      <strong>Localisation :</strong> {address.postcode} -{" "}
-                      {address.city}
+                      <strong>Ville :</strong> <span>{address.city}</span>
+                    </p>
+                    <p>
+                      <strong>Code postal :</strong>
+                      <span>{address.postcode}</span>
                     </p>
                     <p>
                       <strong>Pays :</strong>
