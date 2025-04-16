@@ -35,10 +35,28 @@ const AddressSection = ({ data }) => {
             {data.addresses?.length > 0
               ? data.addresses.map((address, index) => (
                   <li key={index}>
+                    <h3>
+                      {index + 1 ? "Adresse principale" : "Adresse secondaire"}
+                    </h3>
                     <p>
-                      <strong>Adresse :</strong>
-                      {address.street}, {address.city} ({address.zipcode})
+                      <strong>Nom :</strong>
+                      <span> {address.name}</span>
                     </p>
+                    <p>
+                      <strong>Localisation :</strong> {address.postcode} -{" "}
+                      {address.city}
+                    </p>
+                    <p>
+                      <strong>Pays :</strong>
+                      <span> {address.country}</span>
+                    </p>
+                    <p>
+                      <strong>
+                        <a href={address.url}>
+                          <span className="text-violet-600">Google map</span>
+                        </a>
+                      </strong>
+                    </p>{" "}
                   </li>
                 ))
               : "Non renseigné"}
