@@ -13,7 +13,9 @@ export const API_ROUTES = {
     DELETE: (id) => `${API_BASE}/user/${id}`,
   },
   ADDRESS: {
+    //ADD create path
     BY_USER: (userId) => `${API_BASE}/address?user_id=${userId}`,
+    CREATE: () => `api/v1/address`,
   },
   CARD: {
     BY_USER: (userId) => `${API_BASE}/card?user_id=${userId}`,

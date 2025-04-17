@@ -45,12 +45,14 @@ const Profile = () => {
   return (
     // main grid
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-4">Profil utilisateur</h1>
       {loading ? (
         <p>Chargement des informations...</p>
       ) : user ? (
         /* profile content */
         <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-md">
+          <h1 className="text-3xl font-bold text-center mb-4">
+            Profil utilisateur
+          </h1>
           {/* Avatar */}
           <ProfileHeader data={user} />
           {/* Informations utilisateur */}
