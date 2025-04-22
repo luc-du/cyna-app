@@ -1,8 +1,11 @@
-import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAddress } from "../../redux/slice/addressSlice";
+import {
+  deleteAddress,
+  fetchUserAddresses,
+} from "../../redux/slice/addressSlice";
 import AddAddressForm from "../Address/AddressForm";
 import CTAButton from "../ui/buttons/CTAButton";
 
@@ -14,28 +17,15 @@ const AddressSection = ({ data }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const testCorsDelete = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-      try {
-        const res = await axios.delete(
-          "http://localhost:8081/api/v1/test-cors/1",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log("✅ CORS DELETE test réussi :", res.data);
-      } catch (err) {
-        console.error("❌ CORS DELETE test échoué :", err);
-      }
-    };
+    const decoded = jwtDecode(token);
+    const userId = decoded.jti;
 
-    testCorsDelete();
-  }, []);
+    dispatch(fetchUserAddresses(userId));
+  }, [dispatch]);
+
   // 2.Functions
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -60,16 +50,14 @@ const AddressSection = ({ data }) => {
       <div id="address" className="container-profile-section">
         <h2 className="text-xl">Adresses</h2>
         {error && <p className="error-feedback">{error}</p>}
-        {console.log("From fallback error", error)}
-
         {/* FAllback loading */}
         {loading ? (
           <h2 className="loading-feedback">Chargement en cours ...</h2>
         ) : (
           /* Afficher les adresses */
           <ul>
-            {data.addresses?.length > 0
-              ? data.addresses.map((address, index) => (
+            {list?.length > 0
+              ? list.map((address, index) => (
                   <li key={address.id}>
                     <h3>
                       {index === 0
@@ -115,7 +103,6 @@ const AddressSection = ({ data }) => {
                         />
                       </div>
                     </div>
-                    <button onClick={"testCors"}>TEST</button>
                   </li>
                 ))
               : "Non renseigné"}
