@@ -1,5 +1,6 @@
+import axios from "axios";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAddress } from "../../redux/slice/addressSlice";
 import AddAddressForm from "../Address/AddressForm";
@@ -8,22 +9,36 @@ import CTAButton from "../ui/buttons/CTAButton";
 const AddressSection = ({ data }) => {
   // 1.States
   const { list, loading, error } = useSelector((state) => state.address);
-  console.log("Data", data);
-  console.log("Liste d'adresse", data.addresses);
   const [showForm, setShowForm] = useState(false);
 
   const dispatch = useDispatch();
 
-  if (!list || list.length === 0) {
-    console.log("La liste d'addresses est vide");
-  } else {
-    console.log(list);
-  }
+  useEffect(() => {
+    const testCorsDelete = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
+      try {
+        const res = await axios.delete(
+          "http://localhost:8081/api/v1/test-cors/1",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("✅ CORS DELETE test réussi :", res.data);
+      } catch (err) {
+        console.error("❌ CORS DELETE test échoué :", err);
+      }
+    };
+
+    testCorsDelete();
+  }, []);
   // 2.Functions
   const toggleForm = () => {
     setShowForm(!showForm);
-    console.log(showForm);
   };
 
   const handleDeleteAddress = async (addressId) => {
@@ -100,6 +115,7 @@ const AddressSection = ({ data }) => {
                         />
                       </div>
                     </div>
+                    <button onClick={"testCors"}>TEST</button>
                   </li>
                 ))
               : "Non renseigné"}

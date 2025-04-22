@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,15 +11,11 @@ import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
 
 const Profile = () => {
-  // 1.State
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 2.Functions
-
-  /* UseEffect Zone */
-  // Auth
+  // Redirection si pas authentifié
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -27,51 +24,59 @@ const Profile = () => {
     }
   }, [isAuthenticated, dispatch, navigate]);
 
-  // Fetch profile
+  // Rechargement du profil complet (utile si user.id évolue)
   useEffect(() => {
     if (user?.id) {
       dispatch(fetchUserProfile(user.id));
     }
   }, [user?.id, dispatch]);
 
+  // Test manuel de requête API (via proxy Vite)
+  useEffect(() => {
+    const testRequest = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const res = await axios.get("/api/v1/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("✅ /api/v1/user depuis React :", res.data);
+      } catch (err) {
+        console.error("❌ /api/v1/user KO :", err.response || err.message);
+      }
+    };
+
+    testRequest();
+  }, []);
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
-  // 3.Others
-
-  // 4.Render
   return (
-    // main grid
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       {loading ? (
         <p>Chargement des informations...</p>
       ) : user ? (
-        /* profile content */
         <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-md">
           <h1 className="text-3xl font-bold text-center mb-4">
             Profil utilisateur
           </h1>
-          {/* Avatar */}
           <ProfileHeader data={user} />
-          {/* Informations utilisateur */}
           <ProfileSection data={user} />
 
-          {/* Container details */}
           <div id="container-details-section" className="mt-4 py-4 text-left">
-            {/* Adresses */}
             <AddressSection data={user} />
-            {/* Méthode de paiement*/}
             <PaymentMethodsSection data={user} />
-            {/* Statut du compte */}
             <AccountStatus data={user} />
-            {/* LogoutButton */}
             <LogoutButton handleClick={handleLogout} />
           </div>
         </div>
       ) : (
-        <p>Impossible de récupérer les informations de l`&apos`utilisateur.</p>
+        <p>Impossible de récupérer les informations de l'utilisateur.</p>
       )}
     </div>
   );
