@@ -1,47 +1,71 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createAddress, deleteAddress } from "../../redux/slice/addressSlice";
+import {
+  createAddress,
+  deleteAddress,
+  updateAddress,
+} from "../../redux/slice/addressSlice";
+import { fetchUserProfile } from "../../redux/slice/authSlice";
 import AddAddressForm from "../Address/AddressForm";
 import CTAButton from "../ui/buttons/CTAButton";
 
 const AddressSection = () => {
+  // 🌟 States
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [showForm, setShowForm] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(null);
 
+  // 🧠 Handlers
   const toggleForm = () => {
     setShowForm(!showForm);
+    if (!showForm) setEditingAddress(null);
   };
 
   const handleDeleteAddress = async (addressId) => {
-    const userConfirmed = window.confirm(
+    const confirmed = window.confirm(
       "Voulez-vous réellement supprimer cette adresse ?"
     );
-    if (!userConfirmed) return;
+    if (!confirmed) return;
 
     try {
       await dispatch(deleteAddress(addressId)).unwrap();
-      window.location.reload();
+      await dispatch(fetchUserProfile());
     } catch (error) {
       console.error("Erreur lors de la suppression :", error);
     }
   };
 
-  const handleAddAddress = async (addressData) => {
+  const handleSubmit = async (formData) => {
     try {
-      await dispatch(
-        createAddress({
-          ...addressData,
-          userId: user.id,
-        })
-      ).unwrap();
+      if (editingAddress) {
+        await dispatch(
+          updateAddress({
+            addressId: editingAddress.id,
+            updatedData: {
+              ...formData,
+              userId: user.id,
+            },
+          })
+        ).unwrap();
+      } else {
+        await dispatch(
+          createAddress({
+            ...formData,
+            userId: user.id,
+          })
+        ).unwrap();
+      }
+
+      await dispatch(fetchUserProfile());
       setShowForm(false);
-      window.location.reload();
+      setEditingAddress(null);
     } catch (error) {
-      console.error("Erreur lors de l'ajout :", error);
+      console.error("Erreur lors de la soumission du formulaire :", error);
     }
   };
 
+  // 🖼️ Render
   return (
     <div id="address" className="container-profile-section">
       <h2 className="text-xl">Adresses</h2>
@@ -72,8 +96,9 @@ const AddressSection = () => {
                       href={address.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className="text-violet-600"
                     >
-                      <span className="text-violet-600">Google map</span>
+                      Google map
                     </a>
                   </strong>
                 </p>
@@ -87,7 +112,10 @@ const AddressSection = () => {
                 <CTAButton
                   label="Modifier"
                   className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
-                  handleClick={() => alert("TODO: modification d'adresse")}
+                  handleClick={() => {
+                    setEditingAddress(address);
+                    setShowForm(true);
+                  }}
                 />
               </div>
             </li>
@@ -105,7 +133,17 @@ const AddressSection = () => {
         />
       </div>
 
-      {showForm && <AddAddressForm onSubmit={handleAddAddress} />}
+      {showForm && (
+        <AddAddressForm
+          initialData={editingAddress}
+          onSuccess={() => {
+            setShowForm(false);
+            setEditingAddress(null);
+          }}
+          onSubmit={handleSubmit}
+          showForm={showForm}
+        />
+      )}
     </div>
   );
 };

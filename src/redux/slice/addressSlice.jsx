@@ -2,29 +2,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
 
-// Thunk pour récup les adresses par l'ID utilisateur
-export const fetchUserAddresses = createAsyncThunk(
-  "address/getUserAddresses",
-  async (userId, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8081/api/v1/user/1", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Impossible de récupérer les adresses"
-      );
-    }
-  }
-);
-
+// CREATE
 export const createAddress = createAsyncThunk(
   "address/create",
   async (addressData, { rejectWithValue }) => {
+    console.log(addressData);
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -50,6 +33,36 @@ export const createAddress = createAsyncThunk(
   }
 );
 
+// READ
+/* simple fetch de user via le token */
+
+// UPDATE
+export const updateAddress = createAsyncThunk(
+  "address/update",
+  async ({ addressId, updatedData }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.patch(
+        `${API_ROUTES.ADDRESS.DELETE(addressId)}`,
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Erreur de mise à jour :", error);
+      return rejectWithValue(
+        error.response?.data?.message || "Erreur lors de la mise à jour"
+      );
+    }
+  }
+);
+
+/* DELETE */
 export const deleteAddress = createAsyncThunk(
   "address/delete",
   async (addressId, { rejectWithValue }) => {
@@ -89,21 +102,6 @@ const addressSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Get addresses
-      .addCase(fetchUserAddresses.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchUserAddresses.fulfilled, (state, action) => {
-        state.loading = false;
-        state.list = action.payload;
-        state.error = null;
-      })
-      .addCase(fetchUserAddresses.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
       // Create address
       .addCase(createAddress.pending, (state) => {
         state.loading = true;

@@ -1,21 +1,29 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createAddress } from "../../redux/slice/addressSlice";
+import { useEffect, useState } from "react";
 
-const AddAddressForm = ({ onSuccess }) => {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-
+const AddAddressForm = ({
+  onSubmit,
+  initialData = {},
+  onSuccess,
+  showForm,
+}) => {
   const [form, setForm] = useState({
     name: "",
     postcode: "",
     city: "",
     country: "",
     url: "",
+    ...initialData,
   });
 
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      ...initialData,
+    }));
+  }, [initialData]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,20 +31,10 @@ const AddAddressForm = ({ onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Authentification requise.");
-      return;
-    }
-
-    const addressData = {
-      ...form,
-      user_id: user?.id,
-    };
+    setError(null);
 
     try {
-      await dispatch(createAddress(addressData)).unwrap();
+      await onSubmit(form);
       setForm({
         name: "",
         postcode: "",
@@ -44,10 +42,9 @@ const AddAddressForm = ({ onSuccess }) => {
         country: "",
         url: "",
       });
-      setError(null);
       onSuccess?.();
     } catch (err) {
-      setError(err?.message || "Erreur lors de l'ajout de l'adresse.");
+      setError(err?.message || "Erreur lors de la soumission.");
     }
   };
 
@@ -63,7 +60,7 @@ const AddAddressForm = ({ onSuccess }) => {
         className="input-style"
       />
       <input
-        type="number"
+        type="text"
         name="postcode"
         placeholder="Code postal"
         value={form.postcode}
@@ -98,20 +95,36 @@ const AddAddressForm = ({ onSuccess }) => {
         className="input-style"
       />
 
+      <button
+        onClick={showForm}
+        className="bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition"
+      >
+        Annuler
+      </button>
+
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <button
         type="submit"
         className="bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition"
       >
-        Ajouter l’adresse
+        {initialData?.id ? "Mettre à jour" : "Ajouter l’adresse"}
       </button>
     </form>
   );
 };
 
 AddAddressForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
   onSuccess: PropTypes.func,
+  initialData: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    postcode: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    city: PropTypes.string,
+    country: PropTypes.string,
+    url: PropTypes.string,
+  }),
 };
 
 export default AddAddressForm;
