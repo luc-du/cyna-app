@@ -7,16 +7,17 @@ import {
 } from "../../redux/slice/addressSlice";
 import { fetchUserProfile } from "../../redux/slice/authSlice";
 import AddAddressForm from "../Address/AddressForm";
+import AddressList from "../Address/AddressList";
 import CTAButton from "../ui/buttons/CTAButton";
 
 const AddressSection = () => {
-  // 🌟 States
+  // 1.States
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
 
-  // 🧠 Handlers
+  // 2.Handlers
   const toggleForm = () => {
     setShowForm(!showForm);
     if (!showForm) setEditingAddress(null);
@@ -67,64 +68,14 @@ const AddressSection = () => {
 
   // 🖼️ Render
   return (
-    <div id="address" className="container-profile-section">
-      <h2 className="text-xl">Adresses</h2>
-
-      <ul>
-        {user?.addresses?.length > 0 ? (
-          user.addresses.map((address, index) => (
-            <li key={address.id}>
-              <h3>
-                {index === 0 ? "Adresse principale" : "Adresse secondaire"}
-              </h3>
-              <p>
-                <strong>Nom :</strong> <span>{address.name}</span>
-              </p>
-              <p>
-                <strong>Ville :</strong> <span>{address.city}</span>
-              </p>
-              <p>
-                <strong>Code postal :</strong> <span>{address.postcode}</span>
-              </p>
-              <p>
-                <strong>Pays :</strong> <span>{address.country}</span>
-              </p>
-              {address.url && (
-                <p>
-                  <strong>
-                    <a
-                      href={address.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-violet-600"
-                    >
-                      Google map
-                    </a>
-                  </strong>
-                </p>
-              )}
-              <div className="w-full flex items-center gap-2 my-2 justify-evenly">
-                <CTAButton
-                  label="Supprimer"
-                  className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-red-600 hover:text-white transition"
-                  handleClick={() => handleDeleteAddress(address.id)}
-                />
-                <CTAButton
-                  label="Modifier"
-                  className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
-                  handleClick={() => {
-                    setEditingAddress(address);
-                    setShowForm(true);
-                  }}
-                />
-              </div>
-            </li>
-          ))
-        ) : (
-          <li>Non renseigné</li>
-        )}
-      </ul>
-
+    <>
+      <AddressList
+        handleDeleteAddress={handleDeleteAddress}
+        setEditingAddress={setEditingAddress}
+        setShowForm={setShowForm}
+        key={user.id}
+        user={user}
+      />
       <div className="w-full flex items-center gap-2 my-2 justify-end">
         <CTAButton
           label="Ajouter une adresse"
@@ -136,15 +87,16 @@ const AddressSection = () => {
       {showForm && (
         <AddAddressForm
           initialData={editingAddress}
+          handleClick={showForm}
           onSuccess={() => {
             setShowForm(false);
             setEditingAddress(null);
           }}
           onSubmit={handleSubmit}
-          showForm={showForm}
+          showForm={toggleForm}
         />
       )}
-    </div>
+    </>
   );
 };
 
