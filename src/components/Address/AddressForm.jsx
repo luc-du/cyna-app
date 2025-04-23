@@ -25,7 +25,6 @@ const AddAddressForm = ({
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    showForm: PropTypes.func.isRequired,
   };
 
   const handleSubmit = async (e) => {
@@ -52,11 +51,11 @@ const AddAddressForm = ({
     </form>
   );
 };
-
 AddAddressForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onSuccess: PropTypes.func,
   initialData: PropTypes.object,
+  showForm: PropTypes.func.isRequired,
 };
 
 export default AddAddressForm;

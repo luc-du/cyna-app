@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -30,26 +29,6 @@ const Profile = () => {
       dispatch(fetchUserProfile(user.id));
     }
   }, [user?.id, dispatch]);
-
-  // Test manuel de requête API (via proxy Vite)
-  useEffect(() => {
-    const testRequest = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-      try {
-        const res = await axios.get("/api/v1/user", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log("✅ /api/v1/user depuis React :", res.data);
-      } catch (err) {
-        console.error("❌ /api/v1/user KO :", err.response || err.message);
-      }
-    };
-
-    testRequest();
-  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
