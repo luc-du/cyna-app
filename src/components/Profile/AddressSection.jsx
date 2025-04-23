@@ -1,66 +1,103 @@
-import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createAddress,
+  deleteAddress,
+  updateAddress,
+} from "../../redux/slice/addressSlice";
+import { fetchUserProfile } from "../../redux/slice/authSlice";
+import AddAddressForm from "../Address/AddressForm";
+import AddressList from "../Address/AddressList";
 import CTAButton from "../ui/buttons/CTAButton";
 
-const AddressSection = ({ data }) => {
+const AddressSection = () => {
   // 1.States
-  const { list, loading, error } = useSelector((state) => state.address);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const [showForm, setShowForm] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(null);
 
-  console.log("From AddresseSection:", list);
-  console.log("From AddresseSection:", loading);
-  console.log("From AddresseSection:", error);
+  // 2.Handlers
+  const toggleForm = () => {
+    setShowForm(!showForm);
+    if (!showForm) setEditingAddress(null);
+  };
 
-  if (!list || list === undefined || list.length === 0) {
-    console.log("La liste d'addresses est vide");
-  } else {
-    console.log(list);
-  }
+  const handleDeleteAddress = async (addressId) => {
+    const confirmed = window.confirm(
+      "Voulez-vous réellement supprimer cette adresse ?"
+    );
+    if (!confirmed) return;
 
-  // 2.Functions
-  // 3.Others
+    try {
+      await dispatch(deleteAddress(addressId)).unwrap();
+      await dispatch(fetchUserProfile());
+    } catch (error) {
+      console.error("Erreur lors de la suppression :", error);
+    }
+  };
+
+  const handleSubmit = async (formData) => {
+    try {
+      if (editingAddress) {
+        await dispatch(
+          updateAddress({
+            addressId: editingAddress.id,
+            updatedData: {
+              ...formData,
+              userId: user.id,
+            },
+          })
+        ).unwrap();
+      } else {
+        await dispatch(
+          createAddress({
+            ...formData,
+            userId: user.id,
+          })
+        ).unwrap();
+      }
+
+      await dispatch(fetchUserProfile());
+      setShowForm(false);
+      setEditingAddress(null);
+    } catch (error) {
+      console.error("Erreur lors de la soumission du formulaire :", error);
+    }
+  };
+
+  // 🖼️ Render
   return (
     <>
-      {/* Adresses */}
-      <div id="address" className="container-profile-section">
-        <h2 className="text-xl">Adresses</h2>
-        {error && <p className="error-feedback">{error}</p>}
-        {console.log("From fallback error", error)}
-
-        {/* FAllback loading */}
-        {loading ? (
-          <h2 className="loading-feedback">Chargement en cours ...</h2>
-        ) : (
-          /* Afficher 2 adresses */
-          <ul>
-            {data.addresses?.length > 0
-              ? data.addresses.map((address, index) => (
-                  <li key={index}>
-                    <p>
-                      <strong>Adresse :</strong>
-                      {address.street}, {address.city} ({address.zipcode})
-                    </p>
-                  </li>
-                ))
-              : "Non renseigné"}
-          </ul>
-        )}
-
-        <div className="w-full flex items-center justify-end">
-          <CTAButton
-            label="Modifier"
-            className={
-              "mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
-            }
-          />
-        </div>
+      <AddressList
+        handleDeleteAddress={handleDeleteAddress}
+        setEditingAddress={setEditingAddress}
+        setShowForm={setShowForm}
+        key={user.id}
+        user={user}
+      />
+      <div className="w-full flex items-center gap-2 my-2 justify-end">
+        <CTAButton
+          label="Ajouter une adresse"
+          className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
+          handleClick={toggleForm}
+        />
       </div>
+
+      {showForm && (
+        <AddAddressForm
+          initialData={editingAddress}
+          handleClick={showForm}
+          onSuccess={() => {
+            setShowForm(false);
+            setEditingAddress(null);
+          }}
+          onSubmit={handleSubmit}
+          showForm={toggleForm}
+        />
+      )}
     </>
   );
-};
-AddressSection.propTypes = {
-  data: PropTypes.shape({
-    addresses: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
 };
 
 export default AddressSection;
