@@ -8,7 +8,7 @@ export const fetchUserAddresses = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(API_ROUTES.ADDRESS.BY_USER(userId), {
+      const response = await axios.get("http://localhost:8081/api/v1/user/1", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
