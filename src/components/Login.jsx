@@ -56,7 +56,13 @@ const Login = () => {
           required
         />
 
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {error && (
+          <p className="text-red-600 text-sm mt-2">
+            {typeof error === "string"
+              ? error
+              : error.message || "Erreur inconnue"}
+          </p>
+        )}
 
         <button
           type="submit"

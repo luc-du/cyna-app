@@ -6,8 +6,6 @@ import CTAButton from "../ui/buttons/CTAButton";
 const ProfileHeader = ({ data, onUpload }) => {
   const fileInputRef = useRef();
 
-  console.log("avatar", data.urlProfile);
-
   const handleClick = () => {
     fileInputRef.current?.click();
   };
