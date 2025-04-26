@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +36,25 @@ const Profile = () => {
     navigate("/login");
   };
 
+  const handleAvatarUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch(`/api/v1/user/${user.id}/avatar`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      dispatch(fetchUserProfile()); // Rafraîchi l'affichage
+    } catch (error) {
+      console.error("Erreur lors de l'upload d'avatar :", error);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       {loading ? (
@@ -44,7 +64,7 @@ const Profile = () => {
           <h1 className="text-3xl font-bold text-center mb-4">
             Profil utilisateur
           </h1>
-          <ProfileHeader data={user} />
+          <ProfileHeader data={user} onUpload={handleAvatarUpload} />
           <ProfileSection data={user} />
 
           <div id="container-details-section" className="mt-4 py-4 text-left">

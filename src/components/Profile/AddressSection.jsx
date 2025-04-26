@@ -6,10 +6,9 @@ import {
   updateAddress,
 } from "../../redux/slice/addressSlice";
 import { fetchUserProfile } from "../../redux/slice/authSlice";
-import AddAddressForm from "../Address/AddressForm";
-import AddressList from "../Address/AddressList";
 import CTAButton from "../ui/buttons/CTAButton";
-
+import AddressForm from "./Address/AddressForm";
+import AddressList from "./Address/AddressList";
 const AddressSection = () => {
   // 1.States
   const dispatch = useDispatch();
@@ -85,7 +84,7 @@ const AddressSection = () => {
       </div>
 
       {showForm && (
-        <AddAddressForm
+        <AddressForm
           initialData={editingAddress}
           handleClick={showForm}
           onSuccess={() => {

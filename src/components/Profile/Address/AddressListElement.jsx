@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import CTAButton from "../ui/buttons/CTAButton";
+import CTAButton from "../../ui/buttons/CTAButton";
 
 const AddressListElement = ({
   address,

@@ -78,7 +78,6 @@ export const fetchUserProfile = createAsyncThunk(
       // Décryptage du token
       const decodedToken = jwtDecode(token);
 
-      console.log("Token décodé :", decodedToken);
       const userId = decodedToken.jti;
 
       console.log("Recup de l'id user depuis auth slice", userId);
@@ -87,7 +86,6 @@ export const fetchUserProfile = createAsyncThunk(
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("Réponse de l'API (profil) :", response.data);
       return response.data;
     } catch (error) {
       console.error(
@@ -100,6 +98,35 @@ export const fetchUserProfile = createAsyncThunk(
     }
   }
 );
+
+/* Mise çà jour des info du profil utilisateur */
+export const updateUserProfile = createAsyncThunk(
+  "auth/updateUserProfile",
+  async ({ userId, profileData }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.patch(
+        API_ROUTES.USER.BY_ID(userId),
+        profileData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du profil :", error);
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Erreur lors de la mise à jour du profil"
+      );
+    }
+  }
+);
+
+// Tu as déjà fetchUserProfile, pas besoin de le recréer
 
 /* Slice */
 const initialState = {
