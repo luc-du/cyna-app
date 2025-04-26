@@ -31,29 +31,28 @@ const Profile = () => {
     }
   }, [user?.id, dispatch]);
 
-  // Test manuel de requête API (via proxy Vite)
-  useEffect(() => {
-    const testRequest = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-      try {
-        const res = await axios.get("/api/v1/user", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log("✅ /api/v1/user depuis React :", res.data);
-      } catch (err) {
-        console.error("❌ /api/v1/user KO :", err.response || err.message);
-      }
-    };
-
-    testRequest();
-  }, []);
-
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
+  };
+
+  const handleAvatarUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch(`/api/v1/user/${user.id}/avatar`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      dispatch(fetchUserProfile()); // Rafraîchi l'affichage
+    } catch (error) {
+      console.error("Erreur lors de l'upload d'avatar :", error);
+    }
   };
 
   return (
@@ -65,7 +64,7 @@ const Profile = () => {
           <h1 className="text-3xl font-bold text-center mb-4">
             Profil utilisateur
           </h1>
-          <ProfileHeader data={user} />
+          <ProfileHeader data={user} onUpload={handleAvatarUpload} />
           <ProfileSection data={user} />
 
           <div id="container-details-section" className="mt-4 py-4 text-left">

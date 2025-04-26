@@ -1,56 +1,101 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchUserProfile,
+  updateUserProfile,
+} from "../../redux/slice/authSlice";
 import CTAButton from "../ui/buttons/CTAButton";
+import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 
 const ProfileSection = ({ data }) => {
-  // 1.States
-  // 2.Functions
-  // 3.Others
-  let content;
-  if (!data || data === undefined) {
-    content =
-      "Erreur lors de la récupération des informations de l'utilisateur";
-  } else {
-    content = (
-      <>
-        <h2 className="text-xl">Informations personnelles</h2>
-        <p>
-          <strong>Nom :</strong> {data.firstname} {""} {data.lastname}
-        </p>
-        <p>
-          <strong>Email :</strong> {data.email}
-        </p>
-        <p>
-          <strong>Téléphone :</strong> {data.phone || "Non renseigné"}
-        </p>
-        <p>
-          <strong>Rôle :</strong>{" "}
-          {data?.roles?.slice(0, 1) + data?.roles?.slice(1).toLowerCase()}
-        </p>
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
-        <div className="container-cta ">
-          <CTAButton label="Modifier" className="cta-profile-style" />
-        </div>
-      </>
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  const handleSaveProfile = async (formData) => {
+    try {
+      await dispatch(
+        updateUserProfile({ userId: data.id, profileData: formData })
+      ).unwrap();
+      await dispatch(fetchUserProfile());
+      setIsEditing(false);
+      alert("Informations mises à jour !");
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour :", error);
+      alert("Erreur lors de la mise à jour du profil");
+    }
+  };
+
+  if (!data || loading) {
+    return (
+      <div id="personal-informations" className="container-profile-section">
+        <p>Chargement des informations...</p>
+      </div>
     );
   }
-  // 4.Render
+
   return (
-    <>
-      {/* Informations utilisateur */}
-      <div id="personal-informations" className="container-profile-section">
-        {content}
-      </div>
-    </>
+    <div id="personal-informations" className="container-profile-section">
+      <h2 className="text-xl mb-4">Informations personnelles</h2>
+
+      {isEditing ? (
+        <PersonalInfoForm
+          userData={data}
+          onSave={handleSaveProfile}
+          onCancel={handleCancelEdit}
+        />
+      ) : (
+        <>
+          <p>
+            <strong>Nom :</strong> {data.firstname} {data.lastname}
+          </p>
+          <p>
+            <strong>Email :</strong> {data.email}
+          </p>
+          <p>
+            <strong>Téléphone :</strong>{" "}
+            {data.phone
+              ? data.phone.toString().startsWith("0")
+                ? data.phone
+                : `0${data.phone}`
+              : "Non renseigné"}
+          </p>
+          <p>
+            <strong>Rôle :</strong>{" "}
+            {data?.roles?.slice(0, 1) + data?.roles?.slice(1).toLowerCase()}
+          </p>
+
+          <div className="container-cta mt-4">
+            <CTAButton
+              label="Modifier"
+              className="cta-profile-style"
+              handleClick={handleEditClick}
+            />
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
 ProfileSection.propTypes = {
   data: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     firstname: PropTypes.string.isRequired,
     lastname: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    phone: PropTypes.string,
-    roles: PropTypes.bool.isRequired,
+    phone: PropTypes.string || PropTypes.number,
+    roles: PropTypes.string.isRequired,
   }).isRequired,
 };
 

@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 import AddressFieldGroup from "./AddressFieldGroup";
 import AddressFormActions from "./AddressFormActions";
 
-const AddAddressForm = ({
-  onSubmit,
-  initialData = {},
-  onSuccess,
-  showForm,
-}) => {
+const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
   const [form, setForm] = useState({
     name: "",
     postcode: "",
@@ -25,7 +20,6 @@ const AddAddressForm = ({
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    showForm: PropTypes.func.isRequired,
   };
 
   const handleSubmit = async (e) => {
@@ -42,21 +36,24 @@ const AddAddressForm = ({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-4">
       <AddressFieldGroup form={form} handleChange={handleChange} />
-      <p
-        onClick={showForm}
-        className="text-right font-semibold text-primaryBackground underline hover:text-primaryBackground cursor-pointer"
-      >
-        Annuler
-      </p>
+      <div className="w-full flex items-center justify-end">
+        <button
+          type="button"
+          onClick={showForm}
+          className="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition"
+        >
+          Annuler
+        </button>
+      </div>
       <AddressFormActions error={error} isEditing={!!initialData?.id} />
     </form>
   );
 };
-
-AddAddressForm.propTypes = {
+AddressForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onSuccess: PropTypes.func,
   initialData: PropTypes.object,
+  showForm: PropTypes.func.isRequired,
 };
 
-export default AddAddressForm;
+export default AddressForm;
