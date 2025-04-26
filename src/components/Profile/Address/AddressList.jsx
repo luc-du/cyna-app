@@ -17,7 +17,10 @@ const AddressList = ({
             user.addresses.map((address) => (
               <AddressListElement
                 key={address.id}
-                address={address}
+                address={{
+                  ...address,
+                  postcode: String(address.postcode),
+                }}
                 index={address.id}
                 setEditingAddress={setEditingAddress}
                 handleDeleteAddress={handleDeleteAddress}

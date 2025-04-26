@@ -44,6 +44,14 @@ const ProfileSection = ({ data }) => {
     );
   }
 
+  const mapUserRole = (value) => {
+    if (value === "User") {
+      return "Membre";
+    } else {
+      return "Administrateur";
+    }
+  };
+
   return (
     <div id="personal-informations" className="container-profile-section">
       <h2 className="text-xl mb-4">Informations personnelles</h2>
@@ -71,8 +79,10 @@ const ProfileSection = ({ data }) => {
               : "Non renseigné"}
           </p>
           <p>
-            <strong>Rôle :</strong>{" "}
-            {data?.roles?.slice(0, 1) + data?.roles?.slice(1).toLowerCase()}
+            <strong>Status :</strong>{" "}
+            {mapUserRole(
+              data?.roles?.slice(0, 1) + data?.roles?.slice(1).toLowerCase()
+            )}
           </p>
 
           <div className="container-cta mt-4">
@@ -94,7 +104,7 @@ ProfileSection.propTypes = {
     firstname: PropTypes.string.isRequired,
     lastname: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    phone: PropTypes.string || PropTypes.number,
+    phone: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     roles: PropTypes.string.isRequired,
   }).isRequired,
 };

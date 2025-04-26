@@ -80,8 +80,6 @@ export const fetchUserProfile = createAsyncThunk(
 
       const userId = decodedToken.jti;
 
-      console.log("Recup de l'id user depuis auth slice", userId);
-
       const response = await axios.get(API_ROUTES.USER.BY_ID(userId), {
         headers: { Authorization: `Bearer ${token}` },
       });
