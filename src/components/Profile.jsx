@@ -49,7 +49,7 @@ const Profile = () => {
         },
       });
 
-      dispatch(fetchUserProfile()); // Rafraîchi l'affichage
+      dispatch(fetchUserProfile());
     } catch (error) {
       console.error("Erreur lors de l'upload d'avatar :", error);
     }

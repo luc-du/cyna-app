@@ -11,7 +11,6 @@ const AddressList = ({
     <>
       <div id="address" className="container-profile-section">
         <h2 className="text-xl">Adresses</h2>
-
         <ul>
           {user?.addresses?.length > 0 ? (
             user.addresses.map((address) => (

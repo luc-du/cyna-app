@@ -27,7 +27,6 @@ const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation basique
     if (!form.firstname || !form.lastname || !form.email) {
       alert("Tous les champs obligatoires doivent être remplis.");
       return;
@@ -111,7 +110,7 @@ PersonalInfoForm.propTypes = {
     firstname: PropTypes.string,
     lastname: PropTypes.string,
     email: PropTypes.string,
-    phone: PropTypes.string,
+    phone: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
