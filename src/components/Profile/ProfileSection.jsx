@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "../../hooks/useToast";
 import {
   fetchUserProfile,
   updateUserProfile,
 } from "../../redux/slice/authSlice";
 import CTAButton from "../ui/buttons/CTAButton";
-import Toast from "../ui/Toast";
 import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 
 const ProfileSection = ({ data }) => {
@@ -14,7 +14,8 @@ const ProfileSection = ({ data }) => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
-  const [toast, setToast] = useState(null);
+
+  const { showToast, ToastComponent } = useToast();
 
   // 2.Functions:
   const handleEditClick = () => {
@@ -32,10 +33,10 @@ const ProfileSection = ({ data }) => {
       ).unwrap();
       await dispatch(fetchUserProfile());
       setIsEditing(false);
-      showToast("Informations mise à jour!");
+      showToast("Informations mises à jour !");
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
-      showToast("Erreur lors de la mise à jour du profil");
+      showToast("Erreur lors de la mise à jour du profil", "error");
     }
   };
 
@@ -45,14 +46,6 @@ const ProfileSection = ({ data }) => {
     } else {
       return "Administrateur";
     }
-  };
-
-  const showToast = (message, type = "success") => {
-    setToast({ message, type });
-  };
-
-  const hideToast = () => {
-    setToast(null);
   };
 
   if (!data || loading) {
@@ -66,10 +59,7 @@ const ProfileSection = ({ data }) => {
   // 4.Render:
   return (
     <>
-      {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={hideToast} />
-      )}
-
+      <ToastComponent />
       <div id="personal-informations" className="container-profile-section">
         <h2 className="text-xl mb-4">Informations personnelles</h2>
 
