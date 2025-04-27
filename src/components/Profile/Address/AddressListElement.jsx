@@ -11,7 +11,6 @@ const AddressListElement = ({
   return (
     <>
       <li key={address.id}>
-        <h3>{index === 0 ? "Adresse principale" : "Adresse secondaire"}</h3>
         <p>
           <strong>Nom :</strong> <span>{address.name}</span>
         </p>

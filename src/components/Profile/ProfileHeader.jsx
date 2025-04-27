@@ -50,8 +50,8 @@ const ProfileHeader = ({ data, onUpload }) => {
 ProfileHeader.propTypes = {
   data: PropTypes.shape({
     urlProfile: PropTypes.string,
-    firstname: PropTypes.string.isRequired,
-    lastname: PropTypes.string.isRequired,
+    firstname: PropTypes.string,
+    lastname: PropTypes.string,
   }).isRequired,
   onUpload: PropTypes.func,
 };
