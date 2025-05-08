@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "../../hooks/useToast";
 import {
   createAddress,
   deleteAddress,
@@ -15,6 +16,7 @@ const AddressSection = () => {
   const { user } = useSelector((state) => state.auth);
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
+  const { showToast, ToastComponent } = useToast();
 
   // 2.Handlers
   const toggleForm = () => {
@@ -31,8 +33,10 @@ const AddressSection = () => {
     try {
       await dispatch(deleteAddress(addressId)).unwrap();
       await dispatch(fetchUserProfile());
+      showToast("Adresse supprimée");
     } catch (error) {
       console.error("Erreur lors de la suppression :", error);
+      showToast("Erreur lors de la suppression de l'adresse", "error");
     }
   };
 
@@ -60,41 +64,46 @@ const AddressSection = () => {
       await dispatch(fetchUserProfile());
       setShowForm(false);
       setEditingAddress(null);
+      showToast("Adresse modifiée");
     } catch (error) {
       console.error("Erreur lors de la soumission du formulaire :", error);
+      showToast("Erreur lors de mise à jour de l'adresse", "error");
     }
   };
 
   // 🖼️ Render
   return (
     <>
-      <AddressList
-        handleDeleteAddress={handleDeleteAddress}
-        setEditingAddress={setEditingAddress}
-        setShowForm={setShowForm}
-        key={user.id}
-        user={user}
-      />
-      <div className="w-full flex items-center gap-2 my-2 justify-end">
-        <CTAButton
-          label="Ajouter une adresse"
-          className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
-          handleClick={toggleForm}
+      <ToastComponent />
+      <>
+        <AddressList
+          handleDeleteAddress={handleDeleteAddress}
+          setEditingAddress={setEditingAddress}
+          setShowForm={setShowForm}
+          key={user.id}
+          user={user}
         />
-      </div>
+        <div className="w-full flex items-center gap-2 my-2 justify-end">
+          <CTAButton
+            label="Ajouter une adresse"
+            className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
+            handleClick={toggleForm}
+          />
+        </div>
 
-      {showForm && (
-        <AddressForm
-          initialData={editingAddress}
-          handleClick={showForm}
-          onSuccess={() => {
-            setShowForm(false);
-            setEditingAddress(null);
-          }}
-          onSubmit={handleSubmit}
-          showForm={toggleForm}
-        />
-      )}
+        {showForm && (
+          <AddressForm
+            initialData={editingAddress}
+            handleClick={showForm}
+            onSuccess={() => {
+              setShowForm(false);
+              setEditingAddress(null);
+            }}
+            onSubmit={handleSubmit}
+            showForm={toggleForm}
+          />
+        )}
+      </>
     </>
   );
 };

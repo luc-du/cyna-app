@@ -34,19 +34,21 @@ const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-4">
-      <AddressFieldGroup form={form} handleChange={handleChange} />
-      <div className="w-full flex items-center justify-end">
-        <button
-          type="button"
-          onClick={showForm}
-          className="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition"
-        >
-          Annuler
-        </button>
-      </div>
-      <AddressFormActions error={error} isEditing={!!initialData?.id} />
-    </form>
+    <>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-4">
+        <AddressFieldGroup form={form} handleChange={handleChange} />
+        <div className="w-full flex items-center justify-end">
+          <button
+            type="button"
+            onClick={showForm}
+            className="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition"
+          >
+            Annuler
+          </button>
+        </div>
+        <AddressFormActions error={error} isEditing={!!initialData?.id} />
+      </form>
+    </>
   );
 };
 AddressForm.propTypes = {

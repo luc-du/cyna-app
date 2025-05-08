@@ -109,8 +109,8 @@ const ProfileSection = ({ data }) => {
 ProfileSection.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.number,
-    firstname: PropTypes.string.isRequired,
-    lastname: PropTypes.string.isRequired,
+    firstname: PropTypes.string,
+    lastname: PropTypes.string,
     email: PropTypes.string.isRequired,
     phone: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     roles: PropTypes.string.isRequired,

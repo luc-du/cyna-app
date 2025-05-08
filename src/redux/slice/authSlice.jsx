@@ -124,8 +124,6 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
-// Tu as déjà fetchUserProfile, pas besoin de le recréer
-
 /* Slice */
 const initialState = {
   user: null,
