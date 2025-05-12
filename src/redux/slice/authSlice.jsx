@@ -79,6 +79,7 @@ export const fetchUserProfile = createAsyncThunk(
       const decodedToken = jwtDecode(token);
 
       const userId = decodedToken.jti;
+      console.log(userId);
 
       const response = await axios.get(API_ROUTES.USER.BY_ID(userId), {
         headers: { Authorization: `Bearer ${token}` },
@@ -124,11 +125,10 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
-// Tu as déjà fetchUserProfile, pas besoin de le recréer
-
 /* Slice */
 const initialState = {
   user: null,
+  userId: null,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -155,6 +155,9 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        const token = action.payload.token;
+        const decoded = jwtDecode(token);
+        state.userId = decoded.jti;
         state.isAuthenticated = true;
         state.user = action.payload;
         state.error = null;
