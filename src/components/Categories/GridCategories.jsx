@@ -8,7 +8,6 @@ const GridCategories = ({ data }) => {
 
   // 4.Render
   return (
-    //📌à changer pour disposition grid et non plus en stack
     <div
       id="containerGridCategories"
       className="w-full flex justify-center m-6"
