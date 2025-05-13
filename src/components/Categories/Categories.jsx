@@ -1,8 +1,20 @@
-import { MOCK_Categories } from "../../mock/MOCKS_DATA";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../redux/slice/categorySlice";
 import GridCategories from "./GridCategories";
 
-const categoryData = MOCK_Categories;
-
 export default function Categories() {
-  return <GridCategories data={categoryData} />;
+  const dispatch = useDispatch();
+  const { categories, loading, error } = useSelector(
+    (state) => state.categories
+  );
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  if (loading) return <p>Chargement...</p>;
+  if (error) return <p>Erreur : {error}</p>;
+
+  return <GridCategories data={categories} />;
 }

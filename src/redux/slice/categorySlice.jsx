@@ -224,6 +224,22 @@ export const fetchCategoryDetails = createAsyncThunk(
   }
 );
 
+export const fetchProducts = createAsyncThunk(
+  "products/fetchAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const headers = getAuthHeaders();
+      const response = await axios.get("/api/v1/products", { headers });
+      return response.data;
+    } catch (error) {
+      if (error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      return rejectWithValue("Échec de la récupération des produits");
+    }
+  }
+);
+
 // Slice
 const categorySlice = createSlice({
   name: "categories",
