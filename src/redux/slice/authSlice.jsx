@@ -3,13 +3,33 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../../api/apiRoutes";
 
+// Helper functions for localStorage
+const setTokenInLocalStorage = (token) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("token", token);
+  }
+};
+
+const removeTokenFromLocalStorage = () => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("token");
+  }
+};
+
+const getTokenFromLocalStorage = () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("token");
+  }
+  return null;
+};
+
 /* Signup de user */
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(API_ROUTES.AUTH.SIGNUP, userData);
-      localStorage.setItem("token", response.data.token);
+      setTokenInLocalStorage(response.data.token);
       return response.data;
     } catch (error) {
       if (error.response?.data?.message?.includes("Duplicate entry")) {
@@ -28,7 +48,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
-      localStorage.setItem("token", response.data.token);
+      setTokenInLocalStorage(response.data.token);
       console.log(`Token reçu : ${response.data.token}`);
       alert("Vous êtes authentifié !");
       return response.data;
@@ -45,7 +65,7 @@ export const validateToken = createAsyncThunk(
   "auth/validateToken",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getTokenFromLocalStorage();
       if (!token) {
         throw new Error("Token non disponible");
       }
@@ -60,6 +80,7 @@ export const validateToken = createAsyncThunk(
 
       return response.data;
     } catch (error) {
+      removeTokenFromLocalStorage(); // Remove invalid token
       return rejectWithValue(error.response?.data || "Token invalide");
     }
   }
@@ -70,7 +91,7 @@ export const fetchUserProfile = createAsyncThunk(
   "auth/fetchUserProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getTokenFromLocalStorage();
       if (!token) {
         throw new Error("Token non disponible");
       }
@@ -79,6 +100,7 @@ export const fetchUserProfile = createAsyncThunk(
       const decodedToken = jwtDecode(token);
 
       const userId = decodedToken.jti;
+      console.log(userId);
 
       const response = await axios.get(API_ROUTES.USER.BY_ID(userId), {
         headers: { Authorization: `Bearer ${token}` },
@@ -97,12 +119,12 @@ export const fetchUserProfile = createAsyncThunk(
   }
 );
 
-/* Mise çà jour des info du profil utilisateur */
+/* Mise à jour des info du profil utilisateur */
 export const updateUserProfile = createAsyncThunk(
   "auth/updateUserProfile",
   async ({ userId, profileData }, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getTokenFromLocalStorage();
       const response = await axios.patch(
         API_ROUTES.USER.BY_ID(userId),
         profileData,
@@ -127,7 +149,8 @@ export const updateUserProfile = createAsyncThunk(
 /* Slice */
 const initialState = {
   user: null,
-  isAuthenticated: false,
+  userId: null,
+  isAuthenticated: !!getTokenFromLocalStorage(), // Initialize based on token presence
   loading: false,
   error: null,
 };
@@ -139,20 +162,35 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      localStorage.removeItem("token");
+      removeTokenFromLocalStorage();
+    },
+    setAuth: (state, action) => {
+      state.isAuthenticated = !!action.payload;
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setUserId: (state, action) => {
+      state.userId = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        const { token } = action.payload;
+        const decoded = jwtDecode(token);
+        state.userId = decoded.jti;
         state.isAuthenticated = true;
+        state.user = action.payload;
         state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.error = action.payload;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        const { token } = action.payload;
+        const decoded = jwtDecode(token);
+        state.userId = decoded.jti;
         state.isAuthenticated = true;
         state.user = action.payload;
         state.error = null;
@@ -165,7 +203,8 @@ const authSlice = createSlice({
       })
       .addCase(validateToken.rejected, (state) => {
         state.isAuthenticated = false;
-        localStorage.removeItem("token");
+        state.user = null;
+        state.userId = null;
       })
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.user = action.payload;
@@ -177,5 +216,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setAuth, setUser, setUserId } = authSlice.actions;
 export default authSlice.reducer;
