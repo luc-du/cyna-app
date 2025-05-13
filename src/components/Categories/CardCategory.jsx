@@ -1,61 +1,46 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router";
-import useSortedServices from "../../hooks/useSortedServices";
-import FooterCardCategory from "./FooterCardCategory";
+import { useNavigate } from "react-router-dom";
 
 const CardCategory = ({ element }) => {
-  // 1.States
-  // 2.Functions
-  // 3.Others
-  const sortedProducts = useSortedServices(element);
-  // 4.Render
+  const { id, name, description, images } = element;
+  const navigate = useNavigate();
+
+  const imageUrl =
+    images?.[0]?.url || "https://via.placeholder.com/300x200?text=Aucune+image";
+
+  const handleClick = () => {
+    navigate(`/categories/${id}`);
+  };
+
   return (
-    <>
-      {" "}
-      <Link
-        to={`/categories/${element.url}`}
-        key={element.id}
-        className="block hover:scale-105 transition-transform"
-      >
-        <div
-          id="cardCategory"
-          className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl w-full min-h-full flex flex-col"
-        >
-          <div className="flex flex-col flex-grow p-4">
-            <figure>
-              <img
-                src={element.imageUrl}
-                alt={element.name}
-                className="w-full h-64 object-cover rounded-md"
-              />
-            </figure>
-            <div className="p-4 flex flex-col flex-grow">
-              <header>
-                <h1 className="text-3xl font-bold mb-4 text-center text-gray-800">
-                  {element.name}
-                </h1>
-              </header>
-              <div id="contentCard" className=" flex flex-grow bg-orange-500">
-                <p className="text-gray-600 text-center flex-grow">
-                  {element.description}
-                </p>
-              </div>
-              <FooterCardCategory element={sortedProducts} />
-            </div>
-          </div>
-        </div>
-      </Link>
-    </>
+    <div
+      onClick={handleClick}
+      className="bg-white rounded-xl shadow p-4 flex flex-col items-center cursor-pointer hover:shadow-lg transition"
+    >
+      <img
+        src={imageUrl}
+        alt={`Illustration de la catégorie ${name}`}
+        className="w-full h-48 object-cover rounded-lg mb-4"
+      />
+      <h2 className="text-lg font-bold mb-2">{name}</h2>
+      <p className="text-sm text-gray-600 text-center">{description}</p>
+    </div>
   );
 };
 
 CardCategory.propTypes = {
   element: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    url: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        url: PropTypes.string,
+        uploadDate: PropTypes.string,
+      })
+    ),
   }).isRequired,
 };
 

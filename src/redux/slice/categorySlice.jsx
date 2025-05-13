@@ -17,14 +17,13 @@ export const fetchCategories = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const headers = getAuthHeaders();
-      // Debug: log headers to ensure token is present
       console.log("fetchCategories headers:", headers);
       const response = await axios.get(CATEGORY_API_BASE_URL, {
         headers,
       });
+      console.log("From categorySlice", response.data);
       return response.data;
     } catch (error) {
-      // Debug: log error details for 400 errors
       if (error.response) {
         console.error("fetchCategories error response:", error.response);
         if (error.response.data && error.response.data.message) {
