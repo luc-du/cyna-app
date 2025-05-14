@@ -1,23 +1,21 @@
 import PropTypes from "prop-types";
 
 const ProductInfo = ({ product }) => {
-  // 1.State :
-  // 2.Functions:
-  // 3. Others
-  // Render
   return (
     <div className="mt-6 text-center">
       <h1 className="text-3xl font-bold text-primary">{product.name}</h1>
       <p className="mt-4 text-gray-600">{product.description}</p>
       <span className="block mt-4 text-2xl font-semibold text-green-600">
-        {product.price ? `${product.price}€` : ""}
+        {product.amount ? `${product.amount / 100}€` : ""}
       </span>
       <span
         className={`block mt-2 text-sm font-semibold ${
-          product.available ? "text-green-500" : "text-red-500"
+          product.status === "AVAILABLE" ? "text-green-500" : "text-red-500"
         }`}
       >
-        {product.available ? "Disponible immédiatement" : "Indisponible"}
+        {product.status === "AVAILABLE"
+          ? "Disponible immédiatement"
+          : "Indisponible"}
       </span>
     </div>
   );
@@ -27,8 +25,8 @@ ProductInfo.propTypes = {
   product: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    price: PropTypes.number,
-    available: PropTypes.bool.isRequired,
+    amount: PropTypes.number,
+    status: PropTypes.string.isRequired,
   }).isRequired,
 };
 
