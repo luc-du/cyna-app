@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import AddToCartButton from "../ui/buttons/AddToCartButton";
 import { getPricingLabel } from "../utils/pricingLabel";
 
 const ProductSpecs = ({ product }) => {
@@ -20,9 +19,6 @@ const ProductSpecs = ({ product }) => {
           </li>
         </ul>
       </div>
-      <div className="w-full flex mt-2 p-2 items-center justify-center">
-        <AddToCartButton product={product} pricing={product.amount} />
-      </div>
     </>
   );
 };
@@ -32,6 +28,7 @@ ProductSpecs.propTypes = {
     pricingModel: PropTypes.string.isRequired,
     brand: PropTypes.string.isRequired,
     priceId: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
   }).isRequired,
 };
 
