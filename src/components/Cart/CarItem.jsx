@@ -83,7 +83,7 @@ const CartItem = ({ item }) => {
       <div className="text-right font-semibold sm:text-base text-sm mt-2 sm:mt-0">
         <span>
           {item.price !== "Sur demande"
-            ? `${(item.price * item.quantity).toFixed(2)}€`
+            ? `${(item.price * item.quantity).toFixed(2) / 1000}€`
             : "Sur demande"}
         </span>
       </div>

@@ -35,7 +35,6 @@ const ProductInfo = ({ product }) => {
         {isAvailable ? "Disponible immédiatement" : "Indisponible"}
       </span>
 
-      {/* 🔽 Ajout bouton discret sous le prix */}
       <div className="flex justify-center mt-4">
         <button
           onClick={handleAddToCart}
