@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
+import { getPricingLabel } from "../utils/pricingLabel";
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
@@ -16,9 +17,9 @@ const CartItem = ({ item }) => {
         />
         <div className="text-right font-semibold sm:text-base text-sm mt-2 sm:mt-0">
           <h4 className="text-lg font-semibold">{item.name}</h4>
-          <p className="text-gray-500">{item.duration}</p>
+          <p className="text-gray-500">{getPricingLabel(item.duration)}</p>
           {item.price !== "Sur demande" ? (
-            <p className="text-gray-700">Prix : {item.price}€</p>
+            <p className="text-gray-700">Prix : {item.price / 1000}€</p>
           ) : (
             <p className="text-red-500 font-semibold">Sur demande</p>
           )}
