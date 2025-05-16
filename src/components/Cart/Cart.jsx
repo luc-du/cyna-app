@@ -21,6 +21,7 @@ const Cart = () => {
             <span>Durée</span>
             <span>Quantité</span>
             <span>Prix unitaire</span>
+            <span></span>
             <span>Total</span>
             <span></span> {/* pour le bouton de suppression */}
           </div>
