@@ -11,7 +11,7 @@ const Cart = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 relative">
-      <ToastComponent /> {/* ✅ visible en permanence dans la page */}
+      <ToastComponent />
       <h2 className="text-3xl text-center font-bold mb-6">Mon Panier</h2>
       {cart.length === 0 ? (
         <p className="text-lg text-center text-gray-500">
@@ -36,7 +36,7 @@ const Cart = () => {
               <CartItem
                 key={`${item.id}-${item.pricingModel}`}
                 item={item}
-                showToast={showToast} // ✅ ici
+                showToast={showToast}
               />
             ))}
           </div>
