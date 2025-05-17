@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router";
-import { useParams } from "react-router-dom";
-import useFindById from "../../hooks/useFindById";
-import { MOCK_Categories } from "../../mock/MOCKS_DATA";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchCategoryDetails } from "../../redux/slice/categorySlice";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";
@@ -10,30 +10,34 @@ import CategoryProductList from "./CategoryProductList";
 const CategoryDetails = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
+  const dispatch = useDispatch();
 
-  const findCategory = useFindById(categoryId, MOCK_Categories);
+  const category = useSelector((state) =>
+    state.categories.categories.find((cat) => cat.id === parseInt(categoryId))
+  );
 
-  if (!findCategory) {
-    navigate("/");
+  useEffect(() => {
+    if (!category) {
+      dispatch(fetchCategoryDetails(categoryId));
+    }
+  }, [categoryId, category, dispatch]);
+
+  if (!category) {
+    return <p className="text-center mt-10">Chargement de la catégorie...</p>;
   }
 
   return (
     <div className="max-w-7xl w-full my-6 mx-auto p-4">
-      {/* Bouton de navigation*/}
       <NavigateButton
         handleClick={() => navigate("/categories")}
-        label="Liste des produits"
+        label="⬅️Liste des catégories"
       />
 
-      {/* Header affichage -  de l'image catégorie */}
-
-      <CategoryHeader element={findCategory}>
-        {/* Description de la catégorie */}
-        <CategoryDescription element={findCategory} />
+      <CategoryHeader element={category}>
+        <CategoryDescription element={category} />
       </CategoryHeader>
 
-      {/* Rendu de la liste de liste des produits et services */}
-      <CategoryProductList element={findCategory} />
+      <CategoryProductList element={category} />
     </div>
   );
 };
