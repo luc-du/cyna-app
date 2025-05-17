@@ -1,4 +1,4 @@
-import Carousel from "./Carousel";
+import CarouselContainer from "./CarouselContainer";
 
 const HeroSection = () => {
   return (
@@ -7,7 +7,7 @@ const HeroSection = () => {
       className="w-full flex flex-col items-center justify-center   p-10"
     >
       <div className="w-full flex flex-col items-center justify-center bg-primaryBackground rounded-md overflow-hidden">
-        <Carousel />
+        <CarouselContainer />
       </div>
     </section>
   );
