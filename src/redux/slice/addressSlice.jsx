@@ -20,6 +20,8 @@ export const createAddress = createAsyncThunk(
           },
         }
       );
+      console.log(token.userId);
+      console.log("Response data:", response.data);
       return response.data;
     } catch (error) {
       console.error(
