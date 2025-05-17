@@ -4,12 +4,39 @@ import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
 import { formatStripePrice } from "../utils/formatStripePrice";
 import { getPricingLabel } from "../utils/pricingLabel";
 
-const CartItem = ({ item }) => {
+const CartItem = ({ item, showToast }) => {
   const dispatch = useDispatch();
 
+  const handleUpdateQuantity = (newQuantity) => {
+    showToast(
+      `Quantité mise à jour (${newQuantity}) pour ${item.name}`,
+      "success"
+    );
+    dispatch(
+      updateQuantity({
+        id: item.id,
+        pricingModel: item.pricingModel,
+        quantity: newQuantity,
+      })
+    );
+  };
+
+  const handleRemove = () => {
+    showToast(`${item.name} supprimé du panier`, "error");
+
+    dispatch(
+      removeFromCart({
+        id: item.id,
+        pricingModel: item.pricingModel,
+      })
+    );
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center bg-white shadow-md p-4 rounded-lg">
-      {/* Image + Détails produit */}
+    <div className="relative grid grid-cols-1 sm:grid-cols-4 gap-4 items-center bg-white shadow-md p-4 rounded-lg">
+      {/* Toast local à la carte */}
+
+      {/* Image + détails */}
       <div className="flex items-center space-x-4 col-span-1">
         <img
           src={item.imageUrl}
@@ -30,13 +57,7 @@ const CartItem = ({ item }) => {
         <button
           className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg text-lg"
           onClick={() =>
-            dispatch(
-              updateQuantity({
-                id: item.id,
-                pricingModel: item.pricingModel,
-                quantity: item.quantity - 1,
-              })
-            )
+            item.quantity > 1 && handleUpdateQuantity(item.quantity - 1)
           }
           disabled={item.quantity <= 1}
         >
@@ -45,15 +66,7 @@ const CartItem = ({ item }) => {
         <span className="px-4 py-2 border rounded-lg">{item.quantity}</span>
         <button
           className="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-lg text-lg"
-          onClick={() =>
-            dispatch(
-              updateQuantity({
-                id: item.id,
-                pricingModel: item.pricingModel,
-                quantity: item.quantity + 1,
-              })
-            )
-          }
+          onClick={() => handleUpdateQuantity(item.quantity + 1)}
         >
           +
         </button>
@@ -63,14 +76,7 @@ const CartItem = ({ item }) => {
       <div className="col-span-1 flex justify-center">
         <button
           className="text-red-600 underline text-sm sm:text-base"
-          onClick={() =>
-            dispatch(
-              removeFromCart({
-                id: item.id,
-                pricingModel: item.pricingModel,
-              })
-            )
-          }
+          onClick={handleRemove}
         >
           Supprimer
         </button>
@@ -93,6 +99,7 @@ CartItem.propTypes = {
     imageUrl: PropTypes.string,
     quantity: PropTypes.number.isRequired,
   }).isRequired,
+  showToast: PropTypes.func.isRequired,
 };
 
 export default CartItem;
