@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { formatStripePrice } from "../utils/formatstripePrice";
 
 const ProductInfo = ({ product }) => {
   const isAvailable = product.active;
@@ -8,7 +9,7 @@ const ProductInfo = ({ product }) => {
       <h1 className="text-3xl font-bold text-primary">{product.name}</h1>
       <p className="mt-4 text-gray-600">{product.description}</p>
       <span className="block mt-4 text-2xl font-semibold text-green-600">
-        {product.amount ? `${product.amount / 100}€` : ""}
+        {product.amount ? `${formatStripePrice(product.amount)}` : ""}
       </span>
       <span
         className={`block mt-2 text-sm font-semibold ${
