@@ -20,4 +20,7 @@ export const API_ROUTES = {
   CARD: {
     BY_USER: (userId) => `${API_BASE}/card?user_id=${userId}`,
   },
+  CAROUSEL: {
+    GET: `http://localhost:8082/api/v1/carousel`,
+  },
 };
