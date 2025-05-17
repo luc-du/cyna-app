@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
 
 const CategoryHeader = ({ element, children }) => {
+  console.log(element);
   return (
     <div className="text-center my-6">
       <div className="relative">
         <img
-          src={element.imageUrl}
+          src={element.images[0].url}
           alt={element.name}
           className="w-full max-h-96 object-cover rounded-lg shadow-md"
         />
@@ -21,7 +22,7 @@ const CategoryHeader = ({ element, children }) => {
 };
 CategoryHeader.propTypes = {
   element: PropTypes.shape({
-    imageUrl: PropTypes.string.isRequired,
+    images: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,
