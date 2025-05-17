@@ -1,15 +1,19 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import AddressFieldGroup from "./AddressFieldGroup";
 import AddressFormActions from "./AddressFormActions";
 
 const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
+  const userId = useSelector((state) => state.auth.slice);
+
   const [form, setForm] = useState({
     name: "",
     postcode: "",
     city: "",
     country: "",
     url: "",
+    userId: userId,
     ...initialData,
   });
   const [error, setError] = useState(null);
