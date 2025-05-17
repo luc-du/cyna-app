@@ -8,39 +8,27 @@ const ProductCTA = ({ product }) => {
 
   if (!product) return null;
 
-  // ❌Provisoirement commenté en attente d'accord sur le default price et les variantes - voir collègues et CDC
-  // // 1.Récup. du pricing par défaut
-  // const defaultPricing = MOCK_PricingOptions.find(
-  //   (p) => p.id === product.defaultPricing
-  // );
-
-  // if (!defaultPricing) {
-  //   console.error(`Aucune option tarifaire par défaut pour ${product.name}`);
-  //   return null;
-  // }
-
-  // 2️.Fonction d'ajout au panier
   const handleAddToCart = () => {
     dispatch(
       addToCart({
-        serviceId: product.id,
-        categoryId: product.categoryId,
-        // pricingId: defaultPricing.id,
+        id: product.id,
         name: product.name,
-        imageUrl: product.imageUrl,
-        // price: defaultPricing.price,
-        // duration: defaultPricing.name,
+        brand: product.brand,
+        imageUrl: product.images?.[0]?.url || "",
+        pricingModel: product.pricingModel,
+        price: product.amount,
       })
     );
-    // console.log(`Ajouté : ${product.name} (${defaultPricing.name}) au panier`);
   };
+
+  const isAvailable = product.status === "AVAILABLE";
 
   return (
     <div className="flex items-center justify-center mt-6">
       <button
-        disabled={!product.available}
+        disabled={!isAvailable}
         className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition ${
-          product.available
+          isAvailable
             ? "bg-primary hover:bg-CTAHover"
             : "bg-gray-400 cursor-not-allowed"
         }`}
@@ -52,15 +40,19 @@ const ProductCTA = ({ product }) => {
   );
 };
 
-// 3️.Vérif. des props
 ProductCTA.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    categoryId: PropTypes.number.isRequired,
-    available: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired,
-    defaultPricing: PropTypes.number.isRequired,
+    brand: PropTypes.string.isRequired,
+    pricingModel: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string.isRequired,
+      })
+    ),
   }).isRequired,
 };
 

@@ -30,7 +30,7 @@ const CategoryDetails = () => {
     <div className="max-w-7xl w-full my-6 mx-auto p-4">
       <NavigateButton
         handleClick={() => navigate("/categories")}
-        label="Liste des produits"
+        label="⬅️Liste des catégories"
       />
 
       <CategoryHeader element={category}>

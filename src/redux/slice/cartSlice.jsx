@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useToast } from "../../hooks/useToast";
 
-// 1️.Chargement du panier - Fix du total depuis localStorage
+// 1. LocalStorage - chargement
 const loadFromLocalStorage = () => {
   try {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -13,7 +12,7 @@ const loadFromLocalStorage = () => {
   }
 };
 
-// 2️.Sauvegarde dans localStorage
+// 2. LocalStorage - sauvegarde
 const saveCartToLocalStorage = (cart, total) => {
   try {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -23,45 +22,45 @@ const saveCartToLocalStorage = (cart, total) => {
   }
 };
 
-// 3️.Calcul du total du panier
+// 3. Total dynamique
 const calculateTotal = (items) => {
   return items.reduce((acc, item) => {
     return (
-      acc + (item.price !== "Sur demande" ? item.price * item.quantity : 0)
+      acc + (typeof item.price === "number" ? item.price * item.quantity : 0)
     );
   }, 0);
 };
 
-// 4️.Init. du state avec les valeurs de localStorage
+// 4. État initial
 const { cart, total } = loadFromLocalStorage();
 const initialState = {
   items: cart,
-  total: total,
+  total,
 };
 
-// 5️.Slice
+// 5. Slice Redux
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    /* 5.1.Ajouter un service avec une option de pricing */
+    // ➕ Ajouter au panier
     addToCart: (state, action) => {
-      const { serviceId, pricingId, name, imageUrl, price, duration } =
-        action.payload;
+      const { id, name, brand, imageUrl, pricingModel, price } = action.payload;
+
       const existingItem = state.items.find(
-        (item) => item.serviceId === serviceId && item.pricingId === pricingId
+        (item) => item.id === id && item.pricingModel === pricingModel
       );
 
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
         state.items.push({
-          serviceId,
-          pricingId,
+          id,
           name,
+          brand,
           imageUrl,
+          pricingModel,
           price,
-          duration,
           quantity: 1,
         });
       }
@@ -70,11 +69,11 @@ const cartSlice = createSlice({
       saveCartToLocalStorage(state.items, state.total);
     },
 
-    /* 5.2.Modifier la quantité */
+    // 🔄 Modifier quantité
     updateQuantity: (state, action) => {
-      const { serviceId, pricingId, quantity } = action.payload;
+      const { id, pricingModel, quantity } = action.payload;
       const item = state.items.find(
-        (item) => item.serviceId === serviceId && item.pricingId === pricingId
+        (item) => item.id === id && item.pricingModel === pricingModel
       );
 
       if (item) {
@@ -85,19 +84,18 @@ const cartSlice = createSlice({
       saveCartToLocalStorage(state.items, state.total);
     },
 
-    /* 5.3.Supprimer un élément */
+    // ❌ Supprimer un item
     removeFromCart: (state, action) => {
-      const { serviceId, pricingId } = action.payload;
+      const { id, pricingModel } = action.payload;
       state.items = state.items.filter(
-        (item) =>
-          !(item.serviceId === serviceId && item.pricingId === pricingId)
+        (item) => !(item.id === id && item.pricingModel === pricingModel)
       );
 
       state.total = calculateTotal(state.items);
       saveCartToLocalStorage(state.items, state.total);
     },
 
-    /* 5.4.Vider le panier */
+    // 🗑️ Vider le panier
     clearCart: (state) => {
       state.items = [];
       state.total = 0;

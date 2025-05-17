@@ -10,13 +10,12 @@ const AddToCartButton = ({ product, pricing }) => {
   const handleAddToCart = () => {
     dispatch(
       addToCart({
-        serviceId: product.id,
-        categoryId: product.categoryId,
-        pricingId: pricing.id,
+        id: product.id,
         name: product.name,
-        imageUrl: product.imageUrl,
-        price: pricing.price,
-        duration: pricing.name,
+        brand: product.brand,
+        imageUrl: product.images?.[0]?.url,
+        pricingModel: product.pricingModel,
+        price: product.amount,
       })
     );
     console.log(`Ajouté : ${product.name} (${pricing.name}) au panier`);
@@ -46,17 +45,20 @@ const AddToCartButton = ({ product, pricing }) => {
 
 AddToCartButton.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    categoryId: PropTypes.number.isRequired,
-    available: PropTypes.bool.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string,
+    brand: PropTypes.string.isRequired,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string,
+      })
+    ),
+    pricingModel: PropTypes.string,
+    amount: PropTypes.number,
+    available: PropTypes.bool,
   }).isRequired,
   pricing: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string,
+    name: PropTypes.string,
   }).isRequired,
 };
 

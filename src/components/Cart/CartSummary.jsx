@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import CTAButton from "../ui/buttons/CTAButton";
+import { formatStripePrice } from "../utils/formatStripePrice";
 
 const CartSummary = ({ total, cartLength }) => {
   return (
@@ -10,14 +11,16 @@ const CartSummary = ({ total, cartLength }) => {
       </p>
       <p className="flex justify-between text-lg">
         <span>Montant H.T :</span>{" "}
-        <span>{(total / 1.196 / 1000).toFixed(2)}€</span>
+        {/* <span>{(total / 1.196 / 1000).toFixed(2)}€</span> */}
+        <span>{formatStripePrice(total / 1.196)}</span>
       </p>
       <p className="flex justify-between text-lg">
         <span>TVA (19.6%) :</span>{" "}
-        <span>{((total - total / 1.196) / 1000).toFixed(2)}€</span>{" "}
+        <span>{formatStripePrice(total - total / 1.196)}</span>{" "}
       </p>
       <p className="flex justify-between text-xl font-bold mt-2">
-        <span>Total T.T.C :</span> <span>{total.toFixed(2) / 1000}€</span>
+        <span>Total T.T.C :</span>
+        <span>{formatStripePrice(total)}</span>{" "}
       </p>
 
       {/* ✅ Code promo */}
