@@ -14,7 +14,7 @@ const CarouselContainer = () => {
 
         const formattedSlides = response.data.map((item, index) => ({
           id: item.id,
-          imageUrl: item.imageUrl, // fallback temporaire
+          imageUrl: item.imageUrl,
           title: item.title,
           description: item.text,
           ctaText: item.ctaText || "Voir nos produits",
