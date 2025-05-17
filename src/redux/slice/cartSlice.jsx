@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useToast } from "../../hooks/useToast";
 
 // 1️.Chargement du panier - Fix du total depuis localStorage
 const loadFromLocalStorage = () => {

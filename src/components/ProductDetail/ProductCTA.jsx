@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { MOCK_PricingOptions } from "../../mock/MOCKS_DATA";
 import { addToCart } from "../../redux/slice/cartSlice";
 
 const ProductCTA = ({ product }) => {
@@ -9,15 +8,16 @@ const ProductCTA = ({ product }) => {
 
   if (!product) return null;
 
-  // 1.Récup. du pricing par défaut
-  const defaultPricing = MOCK_PricingOptions.find(
-    (p) => p.id === product.defaultPricing
-  );
+  // ❌Provisoirement commenté en attente d'accord sur le default price et les variantes - voir collègues et CDC
+  // // 1.Récup. du pricing par défaut
+  // const defaultPricing = MOCK_PricingOptions.find(
+  //   (p) => p.id === product.defaultPricing
+  // );
 
-  if (!defaultPricing) {
-    console.error(`Aucune option tarifaire par défaut pour ${product.name}`);
-    return null;
-  }
+  // if (!defaultPricing) {
+  //   console.error(`Aucune option tarifaire par défaut pour ${product.name}`);
+  //   return null;
+  // }
 
   // 2️.Fonction d'ajout au panier
   const handleAddToCart = () => {
@@ -25,14 +25,14 @@ const ProductCTA = ({ product }) => {
       addToCart({
         serviceId: product.id,
         categoryId: product.categoryId,
-        pricingId: defaultPricing.id,
+        // pricingId: defaultPricing.id,
         name: product.name,
         imageUrl: product.imageUrl,
-        price: defaultPricing.price,
-        duration: defaultPricing.name,
+        // price: defaultPricing.price,
+        // duration: defaultPricing.name,
       })
     );
-    console.log(`Ajouté : ${product.name} (${defaultPricing.name}) au panier`);
+    // console.log(`Ajouté : ${product.name} (${defaultPricing.name}) au panier`);
   };
 
   return (
