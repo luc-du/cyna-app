@@ -6,13 +6,14 @@ const ProductCard = ({ item }) => {
     item.images?.[0]?.url ||
     "https://via.placeholder.com/300x200?text=Pas+d'image";
 
-  const isAvailable = item.status === "AVAILABLE";
+  const isAvailable = item.active;
+  const promotion = item.promo;
 
   return (
     <div
       id="card_product"
       className={`${
-        isAvailable
+        item.active
           ? "bg-white rounded-lg shadow-md hover:shadow-2xl transition transform"
           : "bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed"
       }`}
@@ -24,7 +25,16 @@ const ProductCard = ({ item }) => {
       />
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-
+        {promotion && (
+          <div
+            id="promo"
+            className="w-full flex items-center justify-center mt-2"
+          >
+            <p className="block text-sm font-semibold text-center text-violet-600">
+              🎉 Promotion
+            </p>
+          </div>
+        )}
         <div className="flex flex-col items-end justify-end">
           <span
             className={`block text-sm font-semibold m-2 ${
@@ -34,7 +44,6 @@ const ProductCard = ({ item }) => {
             {isAvailable ? "Disponible" : "Indisponible"}
           </span>
         </div>
-
         <div className="flex items-center justify-center my-2">
           {isAvailable && (
             <CTAButton
@@ -53,7 +62,8 @@ ProductCard.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
+    promo: PropTypes.bool.isRequired,
     images: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number,

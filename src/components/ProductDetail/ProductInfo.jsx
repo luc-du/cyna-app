@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 const ProductInfo = ({ product }) => {
-  const isAvailable = product.status === "AVAILABLE";
+  const isAvailable = product.active;
 
   return (
     <div className="mt-6 text-center">
@@ -12,7 +12,7 @@ const ProductInfo = ({ product }) => {
       </span>
       <span
         className={`block mt-2 text-sm font-semibold ${
-          isAvailable ? "text-green-500" : "text-red-500"
+          product.active ? "text-green-500" : "text-red-500"
         }`}
       >
         {isAvailable ? "Disponible immédiatement" : "Indisponible"}
@@ -28,7 +28,7 @@ ProductInfo.propTypes = {
     description: PropTypes.string.isRequired,
     amount: PropTypes.number,
     pricingModel: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
     images: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,
