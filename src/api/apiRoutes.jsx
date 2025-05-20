@@ -28,4 +28,7 @@ export const API_ROUTES = {
   CATEGORIES: {
     GET: `http://localhost:8082/api/v1/categories`,
   },
+  PRODUCTS: {
+    TOP_PRODUCTS: `http://localhost:8082/api/v1/products/top-products`,
+  },
 };
