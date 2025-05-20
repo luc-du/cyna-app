@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { API_ROUTES } from "../../api/apiRoutes";
 import CTAButton from "../ui/buttons/CTAButton";
 
-const PresentationSection = () => {
+const PromoSection = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -51,4 +51,4 @@ const PresentationSection = () => {
   );
 };
 
-export default PresentationSection;
+export default PromoSection;
