@@ -2,55 +2,76 @@ import PropTypes from "prop-types";
 import CTAButton from "../ui/buttons/CTAButton";
 
 const ProductCard = ({ item }) => {
+  const imageUrl =
+    item.images?.[0]?.url ||
+    "https://via.placeholder.com/300x200?text=Pas+d'image";
+
+  const isAvailable = item.active;
+  const promotion = item.promo;
+
   return (
     <div
       id="card_product"
       className={`${
-        item.available
+        item.active
           ? "bg-white rounded-lg shadow-md hover:shadow-2xl transition transform"
           : "bg-gray-300 text-gray-500 opacity-50 cursor-not-allowed"
       }`}
-      key={item.id}
     >
       <img
-        src={item.imageUrl}
+        src={imageUrl}
         alt={item.name}
         className="w-full h-40 object-cover rounded-t-lg"
       />
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-
+        {promotion && (
+          <div
+            id="promo"
+            className="w-full flex items-center justify-center mt-2"
+          >
+            <p className="block text-sm font-semibold text-center text-violet-600">
+              🎉 Promotion
+            </p>
+          </div>
+        )}
         <div className="flex flex-col items-end justify-end">
           <span
             className={`block text-sm font-semibold m-2 ${
-              item.available ? "text-green-600" : "text-red-600"
+              isAvailable ? "text-green-600" : "text-red-600"
             }`}
           >
-            {item.available ? "Disponible" : "Indisponible"}
+            {isAvailable ? "Disponible" : "Indisponible"}
           </span>
         </div>
         <div className="flex items-center justify-center my-2">
-          {item.available ? (
+          {isAvailable && (
             <CTAButton
               link={`/products/${item.id}`}
               label="Voir le produit"
-              style={`bg-orange-500`}
+              style="bg-orange-500"
             />
-          ) : (
-            ""
           )}
         </div>
       </div>
     </div>
   );
 };
+
 ProductCard.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    imageUrl: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    price: PropTypes.number,
-    available: PropTypes.bool.isRequired,
+    active: PropTypes.bool.isRequired,
+    promo: PropTypes.bool.isRequired,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        url: PropTypes.string,
+        uploadDate: PropTypes.string,
+      })
+    ),
   }).isRequired,
 };
 

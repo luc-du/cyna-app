@@ -1,21 +1,14 @@
-import { MOCK_Services } from "../mock/MOCKS_DATA";
-
 const useSortedServices = (element) => {
   if (!element?.services) return [];
 
-  // Filtrer les services correspondant aux IDs dans `element.services`
-  const filteredServices = MOCK_Services.filter((service) =>
-    element.services.includes(service.id)
-  );
-
   // Trier les services par disponibilité et priorité
-  const sortedServices = [...filteredServices].sort((a, b) => {
-    if (a.available === b.available) {
-      return a.priorite - b.priorite;
-    } else {
-      return b.available - a.available;
-    }
-  });
+  const sortedServices = [...(element.products || [])].sort((a, b) =>
+    a.status === "AVAILABLE" && b.status !== "AVAILABLE"
+      ? -1
+      : a.status !== "AVAILABLE" && b.status === "AVAILABLE"
+      ? 1
+      : 0
+  );
 
   return sortedServices;
 };
