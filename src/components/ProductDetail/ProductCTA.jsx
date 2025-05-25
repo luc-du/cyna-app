@@ -1,46 +1,38 @@
 import PropTypes from "prop-types";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { MOCK_PricingOptions } from "../../mock/MOCKS_DATA";
+import { useToast } from "../../hooks/useToast";
 import { addToCart } from "../../redux/slice/cartSlice";
 
 const ProductCTA = ({ product }) => {
   const dispatch = useDispatch();
+  const { showToast, ToastComponent } = useToast();
 
   if (!product) return null;
 
-  // 1.Récup. du pricing par défaut
-  const defaultPricing = MOCK_PricingOptions.find(
-    (p) => p.id === product.defaultPricing
-  );
-
-  if (!defaultPricing) {
-    console.error(`Aucune option tarifaire par défaut pour ${product.name}`);
-    return null;
-  }
-
-  // 2️.Fonction d'ajout au panier
   const handleAddToCart = () => {
     dispatch(
       addToCart({
-        serviceId: product.id,
-        categoryId: product.categoryId,
-        pricingId: defaultPricing.id,
+        id: product.id,
         name: product.name,
-        imageUrl: product.imageUrl,
-        price: defaultPricing.price,
-        duration: defaultPricing.name,
+        brand: product.brand,
+        imageUrl: product.images?.[0]?.url || "",
+        pricingModel: product.pricingModel,
+        price: product.amount,
       })
     );
-    console.log(`Ajouté : ${product.name} (${defaultPricing.name}) au panier`);
+
+    showToast(`✔️ ${product.name} ajouté au panier`);
   };
 
+  const isAvailable = product.active === true;
+
   return (
-    <div className="flex items-center justify-center mt-6">
+    <div className="flex items-center justify-center mt-6 relative">
       <button
-        disabled={!product.available}
+        disabled={!isAvailable}
         className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition ${
-          product.available
+          isAvailable
             ? "bg-primary hover:bg-CTAHover"
             : "bg-gray-400 cursor-not-allowed"
         }`}
@@ -48,19 +40,25 @@ const ProductCTA = ({ product }) => {
       >
         <FaCartPlus /> <span className="ml-2">Ajouter au panier</span>
       </button>
+
+      <ToastComponent />
     </div>
   );
 };
 
-// 3️.Vérif. des props
 ProductCTA.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    categoryId: PropTypes.number.isRequired,
-    available: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired,
-    defaultPricing: PropTypes.number.isRequired,
+    brand: PropTypes.string.isRequired,
+    pricingModel: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+    active: PropTypes.bool.isRequired,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string.isRequired,
+      })
+    ),
   }).isRequired,
 };
 
