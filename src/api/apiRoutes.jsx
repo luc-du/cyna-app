@@ -13,8 +13,9 @@ export const API_ROUTES = {
     DELETE: (id) => `${API_BASE}/user/${id}`,
   },
   ADDRESS: {
-    CREATE: () => `${API_BASE}/address`,
-    DELETE: (id) => `${API_BASE}/address/${id}`,
+    POST: `http://localhost:8081/api/v1/address`,
+    PATCH: (id) => `http://localhost:8081/api/v1/address/${id}`,
+    DELETE: (id) => `http://localhost:8081/api/v1/address/${id}`,
     BY_USER: (userId) => `${API_BASE}/address?user_id=${userId}`,
   },
   CARD: {

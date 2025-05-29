@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,12 +43,15 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`/api/v1/user/${user.id}/avatar`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.patch(
+        `http://localhost:8081/api/v1/user/${user.id}/profiles`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       dispatch(fetchUserProfile());
     } catch (error) {
@@ -56,29 +60,74 @@ const Profile = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <main
+      className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6"
+      aria-label="Page de profil utilisateur"
+      tabIndex={-1}
+    >
       {loading ? (
-        <p>Chargement des informations...</p>
+        <p role="status" aria-live="polite">
+          Chargement des informations...
+        </p>
       ) : user ? (
-        <div className="bg-white p-6 shadow-lg rounded-lg w-full max-w-md">
-          <h1 className="text-3xl font-bold text-center mb-4">
+        <section
+          className="bg-white p-6 shadow-lg rounded-lg w-full max-w-md"
+          aria-labelledby="profile-title"
+        >
+          <h1
+            id="profile-title"
+            className="text-3xl font-bold text-center mb-4"
+            tabIndex={0}
+          >
             Profil utilisateur
           </h1>
           <ProfileHeader data={user} onUpload={handleAvatarUpload} />
           <ProfileSection data={user} />
 
-          <div id="container-details-section" className="mt-4 py-4 text-left">
+          <div
+            id="container-details-section"
+            className="mt-4 py-4 text-left"
+            aria-label="Détails du profil"
+          >
             <AddressSection data={user} />
             <PaymentMethodsSection data={user} />
             <AccountStatus data={user} />
             <LogoutButton handleClick={handleLogout} />
           </div>
-        </div>
+        </section>
       ) : (
-        <p>Impossible de récupérer les informations de l'utilisateur.</p>
+        <p role="alert">
+          Impossible de récupérer les informations de l'utilisateur.
+        </p>
       )}
-    </div>
+    </main>
   );
+};
+
+// PropTypes for child components
+ProfileHeader.propTypes = {
+  data: PropTypes.object.isRequired,
+  onUpload: PropTypes.func.isRequired,
+};
+
+ProfileSection.propTypes = {
+  data: PropTypes.object.isRequired,
+};
+
+AddressSection.propTypes = {
+  data: PropTypes.object.isRequired,
+};
+
+PaymentMethodsSection.propTypes = {
+  data: PropTypes.object.isRequired,
+};
+
+AccountStatus.propTypes = {
+  data: PropTypes.object.isRequired,
+};
+
+LogoutButton.propTypes = {
+  handleClick: PropTypes.func.isRequired,
 };
 
 export default Profile;
