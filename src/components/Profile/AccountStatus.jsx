@@ -7,6 +7,7 @@ const AccountStatus = ({ data }) => {
   // 3.Others
   let content;
   if (!data || data === undefined) {
+    console;
     content =
       "Erreur lors de la récupération des informations de l'utilisateur";
   } else {
@@ -26,15 +27,6 @@ const AccountStatus = ({ data }) => {
           }`}
         >
           {data.emailVerified ? "✔ Email vérifié" : "❌ Email non vérifié"}
-        </p>
-        <p
-          className={`font-semibold ${
-            data.accountNonLocked ? "text-green-600" : "text-red-600"
-          }`}
-        >
-          {data.accountNonLocked
-            ? "✔ Compte non verrouillé"
-            : "❌ Compte verrouillé"}
         </p>
         <div className="w-full flex items-center justify-end">
           <CTAButton

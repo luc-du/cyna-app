@@ -2,24 +2,20 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
 
-// CREATE
+// POST
 export const createAddress = createAsyncThunk(
-  "address/create",
+  "address/POST",
   async (addressData, { rejectWithValue }) => {
     console.log(addressData);
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        API_ROUTES.ADDRESS.CREATE(),
-        addressData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(API_ROUTES.ADDRESS.POST, addressData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       console.log(token.userId);
       console.log("Response data:", response.data);
       return response.data;
@@ -104,7 +100,7 @@ const addressSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Create address
+      // POST address
       .addCase(createAddress.pending, (state) => {
         state.loading = true;
         state.error = null;
