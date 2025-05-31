@@ -17,11 +17,7 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders();
-      console.log("fetchCategories headers:", headers);
-      const response = await axios.get(CATEGORY_API_BASE_URL, {
-        headers,
-      });
+      const response = await axios.get(API_ROUTES.CATEGORIES.GET, {});
       console.log("From categorySlice", response.data);
       return response.data;
     } catch (error) {
@@ -63,10 +59,10 @@ export const searchCategories = createAsyncThunk(
 
       // Try the search endpoint if search term is long enough
       const response = await fetch(
-        `${CATEGORY_API_BASE_URL}/search?name=${encodeURIComponent(name)}`,
-        {
-          headers: getAuthHeaders(),
-        }
+        `${CATEGORY_API_BASE_URL}/search?name=${encodeURIComponent(name)}`
+        // {
+        //   headers: getAuthHeaders(),
+        // }
       );
 
       if (!response.ok) {
@@ -167,10 +163,7 @@ export const deleteCategory = createAsyncThunk(
   "categories/delete",
   async (id, { rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders();
-      await axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {
-        headers,
-      });
+      await axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {});
       return id;
     } catch (error) {
       if (error.message === "No token found") {
@@ -185,13 +178,8 @@ export const deleteMultipleCategories = createAsyncThunk(
   "categories/deleteMultiple",
   async (ids, { rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders();
       await Promise.all(
-        ids.map((id) =>
-          axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {
-            headers,
-          })
-        )
+        ids.map((id) => axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {}))
       );
       return ids;
     } catch (error) {
@@ -207,12 +195,9 @@ export const fetchCategoryDetails = createAsyncThunk(
   "categories/fetchDetails",
   async (categoryId, { rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders();
       const response = await axios.get(
         API_ROUTES.CATEGORIES.GET_BY_ID(categoryId),
-        {
-          headers,
-        }
+        {}
       );
       return response.data;
     } catch (error) {
@@ -228,8 +213,7 @@ export const fetchProducts = createAsyncThunk(
   "products/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders();
-      const response = await axios.get("/api/v1/products", { headers });
+      const response = await axios.get("/api/v1/products");
       return response.data;
     } catch (error) {
       if (error.response?.data?.message) {
@@ -241,6 +225,28 @@ export const fetchProducts = createAsyncThunk(
 );
 
 // Slice
+/**
+ * Slice Redux Toolkit pour la gestion des catégories.
+ *
+ * Ce slice gère l'état des catégories, y compris le chargement, les erreurs,
+ * la récupération, la recherche, la création, la mise à jour et la suppression de catégories.
+ *
+ * Structure de l'état initial :
+ * - categories : Tableau des catégories.
+ * - loading : Booléen indiquant si une opération est en cours.
+ * - error : Message d'erreur éventuel.
+ *
+ * ExtraReducers :
+ * - fetchCategories : Gère la récupération de toutes les catégories.
+ * - searchCategories : Gère la recherche de catégories selon un critère.
+ * - createCategory : Déclenche le rechargement des catégories après création.
+ * - updateCategory : Déclenche le rechargement des catégories après mise à jour.
+ * - deleteCategory : Supprime une catégorie de la liste.
+ * - deleteMultipleCategories : Supprime plusieurs catégories de la liste.
+ * - fetchCategoryDetails : Met à jour une catégorie avec ses détails.
+ *
+ * @module categorySlice
+ */
 const categorySlice = createSlice({
   name: "categories",
   initialState: {
