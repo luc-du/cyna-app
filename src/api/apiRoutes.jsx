@@ -47,3 +47,5 @@ export const API_ROUTES = {
     GET: `${PROTOCOL}://${HOST}:${PORT_PRODUCTS}${API_BASE}/products`,
   },
 };
+
+/* Hello world */
