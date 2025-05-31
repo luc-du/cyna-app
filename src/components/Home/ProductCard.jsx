@@ -2,18 +2,28 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  console.log("from product card", product);
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+    <div
+      className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+      role="region"
+      aria-label={`Carte du produit ${product.name}`}
+      tabIndex={0}
+    >
       <img
         src={product.imageUrl}
         alt={product.name}
         className="w-full h-40 object-cover"
+        loading="lazy"
       />
       <div className="p-4 text-center">
-        <h3 className="text-md font-semibold text-gray-800">{product.name}</h3>
+        <h3 className="text-md font-semibold text-gray-800" tabIndex={0}>
+          {product.name}
+        </h3>
         <Link
           to={product.link}
           className="mt-2 inline-block text-blue-500 font-semibold hover:underline hover:text-blue-700 transition"
+          aria-label={`Voir le produit ${product.name}`}
         >
           Voir le produit
         </Link>

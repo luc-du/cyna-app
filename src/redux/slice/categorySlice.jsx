@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
-import { MOCK_Categories } from "../../mock/MOCKS_DATA";
+import { MOCK_Categories, MOCK_Services } from "../../mock/MOCKS_DATA";
 
 // Constants
 const CATEGORY_API_BASE_URL = "/api/v1/categories";
@@ -308,4 +308,4 @@ const categorySlice = createSlice({
   },
 });
 
-export default categorySlice.reducer;
+export const categoryReducer = categorySlice.reducer;
