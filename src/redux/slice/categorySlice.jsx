@@ -5,13 +5,6 @@ import { API_ROUTES } from "../../api/apiRoutes";
 // Constants
 const CATEGORY_API_BASE_URL = "/api/v1/categories";
 
-// Helper functions
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No token found");
-  return { Authorization: `Bearer ${token}` };
-};
-
 // Async thunks
 export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
