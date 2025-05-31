@@ -16,7 +16,7 @@ export default function Categories() {
   }, [dispatch, categories]);
 
   if (loading) return <p>Chargement...</p>;
-  if (error) return <p>Erreur : {error}</p>;
+  if (error) console.warn(error);
 
   return <GridCategories data={categories} />;
 }

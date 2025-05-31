@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
+import { MOCK_Categories } from "../../mock/MOCKS_DATA";
 
 // Constants
 const CATEGORY_API_BASE_URL = "/api/v1/categories";
@@ -11,7 +12,6 @@ export const fetchCategories = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(API_ROUTES.CATEGORIES.GET, {});
-      console.log("From categorySlice", response.data);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -19,9 +19,11 @@ export const fetchCategories = createAsyncThunk(
         if (error.response.data && error.response.data.message) {
           return rejectWithValue(error.response.data.message);
         }
-      }
-      if (error.message === "No token found") {
-        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
+        console.warn(
+          "Fallback sur MOCK_Categories suite à une erreur :",
+          error.message
+        );
+        return rejectWithValue(MOCK_Categories);
       }
       return rejectWithValue("Failed to fetch categories");
     }
@@ -259,8 +261,9 @@ const categorySlice = createSlice({
         state.categories = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
+        state.categories = action.payload || [];
         state.loading = false;
-        state.error = action.payload;
+        state.error = "Échec API, fallback mock utilisé.";
       })
       .addCase(searchCategories.pending, (state) => {
         state.loading = true;
