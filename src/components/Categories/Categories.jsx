@@ -10,8 +10,10 @@ export default function Categories() {
   );
 
   useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    if (!categories || categories.length === 0) {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categories]);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Erreur : {error}</p>;
