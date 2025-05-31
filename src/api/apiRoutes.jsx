@@ -44,6 +44,6 @@ export const API_ROUTES = {
       `${PROTOCOL}://${HOST}:${PORT_CATEGORIES}${API_BASE}/categories/${id}`,
   },
   PRODUCTS: {
-    GET: `http://localhost:8082/api/v1/products`,
+    GET: `${PROTOCOL}://${HOST}:${PORT_PRODUCTS}${API_BASE}/products`,
   },
 };

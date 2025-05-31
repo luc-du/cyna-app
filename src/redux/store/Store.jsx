@@ -3,6 +3,7 @@ import addressReducer from "../slice/addressSlice";
 import authReducer from "../slice/authSlice";
 import cartReducer from "../slice/cartSlice";
 import { categoryReducer } from "../slice/categorySlice";
+import searchReducer from "../slice/searchSlice";
 import { topProductsReducer } from "../slice/topProductsSlice";
 
 const store = configureStore({
@@ -12,6 +13,7 @@ const store = configureStore({
     address: addressReducer,
     categories: categoryReducer,
     topProducts: topProductsReducer,
+    search: searchReducer,
   },
 });
 
