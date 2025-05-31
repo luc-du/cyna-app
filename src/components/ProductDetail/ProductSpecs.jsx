@@ -2,14 +2,20 @@ import PropTypes from "prop-types";
 import { getPricingLabel } from "../utils/pricingLabel";
 
 const ProductSpecs = ({ product }) => {
-  console.log(product);
   return (
     <>
-      <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-        <h2 className="text-xl font-bold text-center text-primary mb-2">
+      <section
+        className="mt-6 p-4 bg-gray-100 rounded-lg"
+        aria-labelledby="product-specs-heading"
+        tabIndex={-1}
+      >
+        <h2
+          id="product-specs-heading"
+          className="text-xl font-bold text-center text-primary mb-2"
+        >
           Caractéristiques techniques
         </h2>
-        <ul className="text-sm">
+        <ul className="text-sm" aria-label="Spécifications du produit">
           <li>
             <strong>Modèle tarifaire :</strong>{" "}
             {getPricingLabel(product.pricingModel)}
@@ -18,7 +24,7 @@ const ProductSpecs = ({ product }) => {
             <strong>Marque :</strong> {product.brand}
           </li>
         </ul>
-      </div>
+      </section>
     </>
   );
 };

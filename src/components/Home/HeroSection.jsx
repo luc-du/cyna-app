@@ -4,9 +4,14 @@ const HeroSection = () => {
   return (
     <section
       id="heroSection"
-      className="w-full flex flex-col items-center justify-center   p-10"
+      aria-label="Hero section with featured content"
+      className="w-full flex flex-col items-center justify-center p-10"
     >
-      <div className="w-full flex flex-col items-center justify-center bg-primaryBackground rounded-md overflow-hidden">
+      <div
+        className="w-full flex flex-col items-center justify-center bg-primaryBackground rounded-md overflow-hidden"
+        role="region"
+        aria-label="Featured carousel"
+      >
         <CarouselContainer />
       </div>
     </section>
