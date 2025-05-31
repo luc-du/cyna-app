@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_ROUTES } from "../../api/apiRoutes";
 
 // Constants
 const CATEGORY_API_BASE_URL = "/api/v1/categories";
@@ -208,7 +209,7 @@ export const fetchCategoryDetails = createAsyncThunk(
     try {
       const headers = getAuthHeaders();
       const response = await axios.get(
-        `${CATEGORY_API_BASE_URL}/${categoryId}`,
+        API_ROUTES.CATEGORIES.GET_BY_ID(categoryId),
         {
           headers,
         }

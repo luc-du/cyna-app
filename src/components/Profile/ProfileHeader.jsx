@@ -20,14 +20,33 @@ const ProfileHeader = ({ data, onUpload }) => {
   return (
     <div className="flex flex-col items-center mb-4">
       {!data ? (
-        <p>Erreur lors de la récupération des infos utilisateur</p>
+        <p role="alert">Erreur lors de la récupération des infos utilisateur</p>
       ) : (
         <>
           <img
             src={data.urlProfile || MenDefaultAvatar}
-            alt={`Photo de profil de ${data?.firstname}${data?.lastname}`}
-            title={`Photo de profil de ${data?.firstname}${data?.lastname}`}
+            alt={
+              data.firstname || data.lastname
+                ? `Photo de profil de ${data?.firstname ?? ""} ${
+                    data?.lastname ?? ""
+                  }`.trim()
+                : "Photo de profil"
+            }
+            title={
+              data.firstname || data.lastname
+                ? `Photo de profil de ${data?.firstname ?? ""} ${
+                    data?.lastname ?? ""
+                  }`.trim()
+                : "Photo de profil"
+            }
             className="w-24 h-24 rounded-full border"
+            aria-label={
+              data.firstname || data.lastname
+                ? `Photo de profil de ${data?.firstname ?? ""} ${
+                    data?.lastname ?? ""
+                  }`.trim()
+                : "Photo de profil"
+            }
           />
           <input
             ref={fileInputRef}
@@ -35,11 +54,14 @@ const ProfileHeader = ({ data, onUpload }) => {
             accept="image/*"
             onChange={handleFileChange}
             className="hidden"
+            aria-label="Changer la photo de profil"
+            tabIndex={-1}
           />
           <CTAButton
             label="Modifier"
             className="cta-profile-style"
             handleClick={handleClick}
+            aria-label="Modifier la photo de profil"
           />
         </>
       )}
