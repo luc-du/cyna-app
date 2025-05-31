@@ -1,11 +1,4 @@
-const PROTOCOL = "http";
-const HOST = "localhost";
 const API_BASE = "/api/v1";
-
-const PORT_ADDRESS = 8082;
-const PORT_CATEGORIES = 8082;
-const PORT_CAROUSEL = 8082;
-const PORT_PRODUCTS = 8082;
 
 export const API_ROUTES = {
   AUTH: {
@@ -13,37 +6,30 @@ export const API_ROUTES = {
     SIGNIN: `${API_BASE}/auth/signin`,
     VALIDATE: `${API_BASE}/auth/validate`,
   },
-
   USER: {
     BY_ID: (id) => `${API_BASE}/user/${id}`,
     ALL: `${API_BASE}/user`,
     SEARCH: (query) => `${API_BASE}/user/search?name=${query}`,
     DELETE: (id) => `${API_BASE}/user/${id}`,
   },
-
   ADDRESS: {
-    POST: `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address`,
-    PATCH: (id) =>
-      `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address/${id}`,
-    DELETE: (id) =>
-      `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address/${id}`,
-    BY_USER: (userId) =>
-      `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address?user_id=${userId}`,
+    POST: `http://localhost:8081/api/v1/address`,
+    PATCH: (id) => `http://localhost:8081/api/v1/address/${id}`,
+    DELETE: (id) => `http://localhost:8081/api/v1/address/${id}`,
+    BY_USER: (userId) => `${API_BASE}/address?user_id=${userId}`,
   },
-
   CARD: {
     BY_USER: (userId) => `${API_BASE}/card?user_id=${userId}`,
   },
 
+  /* HOMEPAGE */
   CAROUSEL: {
-    GET: `${PROTOCOL}://${HOST}:${PORT_CAROUSEL}${API_BASE}/carousel`,
+    GET: `http://localhost:8082/api/v1/carousel`,
   },
   CATEGORIES: {
-    GET: `${PROTOCOL}://${HOST}:${PORT_CATEGORIES}${API_BASE}/categories`,
-    GET_BY_ID: (id) =>
-      `${PROTOCOL}://${HOST}:${PORT_CATEGORIES}${API_BASE}/categories/${id}`,
+    GET: `http://localhost:8082/api/v1/categories`,
   },
   PRODUCTS: {
-    GET: `${PROTOCOL}://${HOST}:${PORT_PRODUCTS}${API_BASE}/products`,
+    TOP_PRODUCTS: `http://localhost:8082/api/v1/products/top-products`,
   },
 };

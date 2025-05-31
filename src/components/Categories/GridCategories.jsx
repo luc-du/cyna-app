@@ -7,6 +7,7 @@ const GridCategories = ({ data }) => {
   // 3.Others
   // 4.Render
   return (
+
     <>
       <div
         id="containerGridCategories"

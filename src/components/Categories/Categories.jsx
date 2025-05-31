@@ -10,13 +10,11 @@ export default function Categories() {
   );
 
   useEffect(() => {
-    if (!categories || categories.length === 0) {
-      dispatch(fetchCategories());
-    }
-  }, [dispatch, categories]);
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   if (loading) return <p>Chargement...</p>;
-  if (error) console.warn(error);
+  if (error) return <p>Erreur : {error}</p>;
 
   return <GridCategories data={categories} />;
 }
