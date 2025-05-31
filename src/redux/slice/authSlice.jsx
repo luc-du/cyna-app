@@ -3,25 +3,19 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../../api/apiRoutes";
 
-/**
- * Fonctions utilitaires pour gérer le token dans le localStorage
- */
-
-// Stocke le token dans le localStorage
+// Helper functions for localStorage
 const setTokenInLocalStorage = (token) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("token", token);
   }
 };
 
-// Supprime le token du localStorage
 const removeTokenFromLocalStorage = () => {
   if (typeof window !== "undefined") {
     localStorage.removeItem("token");
   }
 };
 
-// Récupère le token depuis le localStorage
 const getTokenFromLocalStorage = () => {
   if (typeof window !== "undefined") {
     return localStorage.getItem("token");
@@ -29,24 +23,15 @@ const getTokenFromLocalStorage = () => {
   return null;
 };
 
-/**
- * Thunks asynchrones pour les opérations d'authentification
- */
-
-/* Inscription de l'utilisateur */
+/* Signup de user */
 export const registerUser = createAsyncThunk(
   "auth/register",
-  /**
-   * @param {Object} userData - Données du nouvel utilisateur
-   * @param {Object} thunkAPI - Outils Redux Toolkit
-   */
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(API_ROUTES.AUTH.SIGNUP, userData);
       setTokenInLocalStorage(response.data.token);
       return response.data;
     } catch (error) {
-      // Gestion d'une erreur d'email déjà utilisé
       if (error.response?.data?.message?.includes("Duplicate entry")) {
         return rejectWithValue("Cet email est déjà utilisé.");
       }
@@ -57,13 +42,9 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-/* Connexion de l'utilisateur */
+/* Login user */
 export const loginUser = createAsyncThunk(
   "auth/login",
-  /**
-   * @param {Object} credentials - Identifiants de connexion
-   * @param {Object} thunkAPI - Outils Redux Toolkit
-   */
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
@@ -79,13 +60,9 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-/* Vérification de la validité du token */
+/* Check du token */
 export const validateToken = createAsyncThunk(
   "auth/validateToken",
-  /**
-   * @param {void}
-   * @param {Object} thunkAPI - Outils Redux Toolkit
-   */
   async (_, { rejectWithValue }) => {
     try {
       const token = getTokenFromLocalStorage();
@@ -103,20 +80,15 @@ export const validateToken = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      // Suppression du token invalide
-      removeTokenFromLocalStorage();
+      removeTokenFromLocalStorage(); // Remove invalid token
       return rejectWithValue(error.response?.data || "Token invalide");
     }
   }
 );
 
-/* Récupération des informations du profil utilisateur */
+/* Récupérer les informations du profil utilisateur */
 export const fetchUserProfile = createAsyncThunk(
   "auth/fetchUserProfile",
-  /**
-   * @param {void}
-   * @param {Object} thunkAPI - Outils Redux Toolkit
-   */
   async (_, { rejectWithValue }) => {
     try {
       const token = getTokenFromLocalStorage();
@@ -124,8 +96,9 @@ export const fetchUserProfile = createAsyncThunk(
         throw new Error("Token non disponible");
       }
 
-      // Décodage du token JWT pour obtenir l'ID utilisateur
+      // Décryptage du token
       const decodedToken = jwtDecode(token);
+
       const userId = decodedToken.jti;
       console.log(userId);
 
@@ -146,13 +119,9 @@ export const fetchUserProfile = createAsyncThunk(
   }
 );
 
-/* Mise à jour des informations du profil utilisateur */
+/* Mise à jour des info du profil utilisateur */
 export const updateUserProfile = createAsyncThunk(
   "auth/updateUserProfile",
-  /**
-   * @param {Object} param0 - Contient userId et profileData
-   * @param {Object} thunkAPI - Outils Redux Toolkit
-   */
   async ({ userId, profileData }, { rejectWithValue }) => {
     try {
       const token = getTokenFromLocalStorage();
@@ -177,45 +146,36 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
-/**
- * Slice Redux pour l'authentification
- */
-
-// État initial du slice d'authentification
+/* Slice */
 const initialState = {
-  user: null, // Données utilisateur
-  userId: null, // ID utilisateur
-  isAuthenticated: !!getTokenFromLocalStorage(), // Authentifié si un token est présent
-  loading: false, // Indique si une opération est en cours
-  error: null, // Message d'erreur éventuel
+  user: null,
+  userId: null,
+  isAuthenticated: !!getTokenFromLocalStorage(), // Initialize based on token presence
+  loading: false,
+  error: null,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // Déconnexion de l'utilisateur
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
       removeTokenFromLocalStorage();
     },
-    // Mise à jour du statut d'authentification
     setAuth: (state, action) => {
       state.isAuthenticated = !!action.payload;
     },
-    // Mise à jour des données utilisateur
     setUser: (state, action) => {
       state.user = action.payload;
     },
-    // Mise à jour de l'ID utilisateur
     setUserId: (state, action) => {
       state.userId = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Inscription réussie
       .addCase(registerUser.fulfilled, (state, action) => {
         const { token } = action.payload;
         const decoded = jwtDecode(token);
@@ -224,11 +184,9 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.error = null;
       })
-      // Inscription échouée
       .addCase(registerUser.rejected, (state, action) => {
         state.error = action.payload;
       })
-      // Connexion réussie
       .addCase(loginUser.fulfilled, (state, action) => {
         const { token } = action.payload;
         const decoded = jwtDecode(token);
@@ -237,32 +195,26 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.error = null;
       })
-      // Connexion échouée
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload;
       })
-      // Validation du token réussie
       .addCase(validateToken.fulfilled, (state) => {
         state.isAuthenticated = true;
       })
-      // Validation du token échouée
       .addCase(validateToken.rejected, (state) => {
         state.isAuthenticated = false;
         state.user = null;
         state.userId = null;
       })
-      // Récupération du profil utilisateur réussie
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.user = action.payload;
         state.error = null;
       })
-      // Récupération du profil utilisateur échouée
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.error = action.payload;
       });
   },
 });
 
-// Export des actions et du reducer
 export const { logout, setAuth, setUser, setUserId } = authSlice.actions;
 export default authSlice.reducer;

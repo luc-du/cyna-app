@@ -39,7 +39,6 @@ const Profile = () => {
 
   const handleAvatarUpload = async (file) => {
     const formData = new FormData();
-    // Try using 'file' as the key, or the exact field name expected by your backend
     formData.append("file", file);
 
     try {
