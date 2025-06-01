@@ -1,8 +1,9 @@
-import PropTypes from "prop-types";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useAuthEffect } from "../hooks/useAuthEffect";
 import { fetchUserProfile, logout } from "../redux/slice/authSlice";
 import AccountStatus from "./Profile/AccountStatus";
 import AddressSection from "./Profile/AddressSection";
@@ -12,18 +13,11 @@ import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
 
 const Profile = () => {
-  const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
+  const { user, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Redirection si pas authentifié
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    } else {
-      dispatch(fetchUserProfile());
-    }
-  }, [isAuthenticated, dispatch, navigate]);
+  useAuthEffect(); //mise en place du hook auth en place de ma simple redirection
 
   // Rechargement du profil complet (utile si user.id évolue)
   useEffect(() => {
