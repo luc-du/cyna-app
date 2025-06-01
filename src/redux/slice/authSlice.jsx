@@ -58,9 +58,13 @@ export const loginUser = createAsyncThunk(
       setToken(data.token);
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Email ou mot de passe incorrect !"
-      );
+      let message = "Email ou mot de passe incorrect !";
+      if (error.response?.data?.message?.includes("Account not activate")) {
+        message = "Votre compte n'est pas encore activé.";
+      } else if (error.response?.data?.message) {
+        message = error.response.data.message;
+      }
+      return rejectWithValue(message);
     }
   }
 );
@@ -206,8 +210,9 @@ const authSlice = createSlice({
         state.userId = decoded.jti;
         state.user = action.payload;
         state.isAuthenticated = true;
-        state.error = null;
+        state.error = null; //suppression des messages d'error persistants
       })
+
       // Connexion échouée
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload;

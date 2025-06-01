@@ -11,6 +11,8 @@ export const API_ROUTES = {
     ALL: `${API_BASE}/user`,
     SEARCH: (query) => `${API_BASE}/user/search?name=${query}`,
     DELETE: (id) => `${API_BASE}/user/${id}`,
+    PATCH: (id) => `http://localhost:8081/api/v1/user/${id}`,
+    UPLOAD_PROFILE: (id) => `http://localhost:8081/api/v1/user/${id}/profiles`,
   },
   ADDRESS: {
     POST: `http://localhost:8081/api/v1/address`,

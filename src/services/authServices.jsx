@@ -56,7 +56,7 @@ export const AuthService = {
    */
   updateProfile: async (userId, data) => {
     const token = getToken();
-    return axios.patch(API_ROUTES.USER.BY_ID(userId), data, {
+    return axios.patch(API_ROUTES.USER.PATCH(userId), data, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -69,11 +69,22 @@ export const AuthService = {
    * @param {string} userId
    * @param {File} file
    */
+  // uploadAvatar: async (userId, file) => {
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+
+  //   return apiClient.patch(API_ROUTES.USER.PATCH(userId), formData, {
+  //     // headers: {
+  //     //   "Content-Type": "multipart/form-data",
+  //     // },
+  //   });
+  // },
+
   uploadAvatar: async (userId, file) => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("profile", file); // nom du champ conforme au DTO Java
 
-    return apiClient.patch(`/user/${userId}/profiles`, formData, {
+    return apiClient.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
