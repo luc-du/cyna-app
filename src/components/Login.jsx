@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import cynaLogo from "../assets/logo.png";
-import { useToast } from "../hooks/useToast";
 import { loginUser } from "../redux/slice/authSlice";
+import { useGlobalToast } from "./GlobalToastProvider";
 
 const Login = () => {
   // 1.States:
@@ -11,7 +11,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error, loading } = useSelector((state) => state.auth);
-  const { showToast, ToastComponent } = useToast();
+  const { showToast } = useGlobalToast();
 
   // 2.Functions:
   const handleChange = (e) => {
@@ -24,7 +24,7 @@ const Login = () => {
 
     if (loginUser.fulfilled.match(resultAction)) {
       console.log(`Token reçu : ${resultAction.payload.token}`);
-      showToast("Adresse supprimée");
+      showToast("Authentification réussie", "success");
       navigate("/profile");
     }
   };
@@ -32,7 +32,6 @@ const Login = () => {
   // 3.Render:
   return (
     <>
-      <ToastComponent />
       <div className="w-full flex items-center justify-center min-h-screen bg-gray-100">
         <form
           className="w-full max-w-md bg-white rounded-xl shadow-md px-10 py-8 flex flex-col gap-6"
@@ -102,3 +101,5 @@ const Login = () => {
 };
 
 export default Login;
+
+// hello
