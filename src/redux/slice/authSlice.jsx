@@ -210,8 +210,9 @@ const authSlice = createSlice({
         state.userId = decoded.jti;
         state.user = action.payload;
         state.isAuthenticated = true;
-        state.error = null;
+        state.error = null; //suppression des messages d'error persistants
       })
+
       // Connexion échouée
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload;
