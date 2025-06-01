@@ -11,7 +11,6 @@ import { validateToken, logout } from "../redux/slice/authSlice";
  * Exemple d'utilisation :
  *   useAuthEffect();
  *
- * Ce hook ne prend aucun argument et ne retourne rien.
  */
 export const useAuthEffect = () => {
   const dispatch = useDispatch();
