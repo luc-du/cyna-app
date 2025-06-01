@@ -11,7 +11,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error, loading } = useSelector((state) => state.auth);
-  // const { showToast, ToastComponent } = useToast();
   const { showToast } = useGlobalToast();
 
   // 2.Functions:
@@ -33,7 +32,6 @@ const Login = () => {
   // 3.Render:
   return (
     <>
-      {/* <ToastComponent /> */}
       <div className="w-full flex items-center justify-center min-h-screen bg-gray-100">
         <form
           className="w-full max-w-md bg-white rounded-xl shadow-md px-10 py-8 flex flex-col gap-6"
