@@ -16,7 +16,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // Récupère l'état d'authentification depuis le store Redux
-  const { error, loading } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
   // Hook personnalisé pour afficher des notifications
   const { showToast } = useGlobalToast();
 
@@ -82,13 +82,6 @@ const Login = () => {
           onChange={handleChange}
           required
         />
-
-        {/* Affichage des erreurs éventuelles */}
-        {error && (
-          <p className="text-red-500 text-sm">
-            {typeof error === "string" ? error : JSON.stringify(error)}
-          </p>
-        )}
 
         {/* Bouton de soumission */}
         <button

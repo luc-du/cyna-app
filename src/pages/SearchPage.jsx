@@ -1,5 +1,5 @@
-import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 import ProductCard from "../components/Home/ProductCard";
 import EmptyState from "../components/ui/EmptyState";
 import Loader from "../components/ui/Loader";

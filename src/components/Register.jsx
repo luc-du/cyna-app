@@ -120,11 +120,9 @@ const Register = () => {
             aria-hidden="true"
           />
         </div>
-
         <h1 className="text-center text-2xl font-bold text-gray-900">
           Créez votre compte
         </h1>
-
         {/* Champ prénom */}
         <label htmlFor="firstname" className="sr-only">
           Prénom
@@ -215,20 +213,18 @@ const Register = () => {
           required
           autoComplete="new-password"
         />
-
         {/* Affichage de l'erreur de mot de passe */}
         {passwordError && (
           <p className="text-red-500 text-sm" role="alert">
             {passwordError}
           </p>
         )}
-        {/* Affichage de l'erreur globale */}
+        {/* Affichage de l'erreur globale
         {error && (
           <p className="text-red-500 text-sm" role="alert">
             {typeof error === "string" ? error : JSON.stringify(error)}
           </p>
-        )}
-
+        )} */}
         {/* Bouton de soumission */}
         <button
           type="submit"

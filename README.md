@@ -136,7 +136,7 @@ npm run format
 ## ❌ Issues
 
 - Feature auth/profile/avatar => pb d'exposition - impossible de récupérer l'avatar sans toucher au BE mais envoi ok
-  - [voir notes](./docs/PROFILE_AVATAR.md)
+  - [voir notes](./docs/SESSION010625.md.md)
 
 ---
 

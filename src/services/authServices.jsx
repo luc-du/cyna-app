@@ -56,7 +56,7 @@ export const AuthService = {
    */
   updateProfile: async (userId, data) => {
     const token = getToken();
-    return axios.patch(API_ROUTES.USER.PATCH(userId), data, {
+    return axios.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), data, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

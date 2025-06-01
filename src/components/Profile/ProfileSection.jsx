@@ -7,25 +7,50 @@ import {
   updateUserProfile,
 } from "../../redux/slice/authSlice";
 import CTAButton from "../ui/buttons/CTAButton";
+import ModalOverlay from "../ui/ModalOverlay";
 import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 
+/**
+ * ProfileSection
+ * Composant affichant et permettant la modification des informations personnelles de l'utilisateur.
+ *
+ * @component
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.data - Données de l'utilisateur à afficher.
+ * @returns {JSX.Element}
+ */
 const ProfileSection = ({ data }) => {
-  // 1.States:
+  // 1. États :
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
 
   const { showToast, ToastComponent } = useToast();
 
-  // 2.Functions:
+  // 2. Fonctions :
+
+  /**
+   * Active le mode édition.
+   * @function
+   */
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  /**
+   * Annule le mode édition.
+   * @function
+   */
   const handleCancelEdit = () => {
     setIsEditing(false);
   };
 
+  /**
+   * Sauvegarde les modifications du profil utilisateur.
+   * @async
+   * @function
+   * @param {Object} formData - Données du formulaire à sauvegarder.
+   */
   const handleSaveProfile = async (formData) => {
     try {
       await dispatch(
@@ -40,77 +65,113 @@ const ProfileSection = ({ data }) => {
     }
   };
 
+  /**
+   * Traduit le rôle utilisateur en français.
+   * @function
+   * @param {string} value - Rôle utilisateur.
+   * @returns {string}
+   */
   const mapUserRole = (value) => {
-    if (value === "User") {
+    if (value === "USER") {
       return "Membre";
     } else {
       return "Administrateur";
     }
   };
 
+  // 3. Affichage pendant le chargement ou absence de données
   if (!data || loading) {
     return (
-      <div id="personal-informations" className="container-profile-section">
+      <div
+        id="personal-informations"
+        className="container-profile-section"
+        aria-busy="true"
+        aria-live="polite"
+      >
         <p>Chargement des informations...</p>
       </div>
     );
   }
 
-  // 4.Render:
+  // 4. Rendu principal :
   return (
     <>
+      {/* Composant Toast pour les notifications */}
       <ToastComponent />
-      <div id="personal-informations" className="container-profile-section">
-        <h2 className="text-xl mb-4">Informations personnelles</h2>
+      <div
+        id="personal-informations"
+        className="container-profile-section"
+        aria-labelledby="profile-section-title"
+        tabIndex={-1}
+      >
+        <div className="container-profile-section">
+          <h2 className="text-xl mb-4" id="personal-info-title">
+            Informations personnelles
+          </h2>
 
-        {isEditing ? (
-          <PersonalInfoForm
-            userData={data}
-            onSave={handleSaveProfile}
-            onCancel={handleCancelEdit}
-          />
-        ) : (
-          <>
-            <p>
-              <strong>Nom :</strong> {data.firstname} {data.lastname}
-            </p>
-            <p>
-              <strong>Email :</strong> {data.email}
-            </p>
-            <p>
-              <strong>Téléphone :</strong>{" "}
-              {data.phone
-                ? data.phone.toString().startsWith("0")
-                  ? data.phone
-                  : `0${data.phone}`
-                : "Non renseigné"}
-            </p>
-            <p>
-              <strong>Status :</strong>{" "}
-              {mapUserRole(
-                data?.roles?.slice(0, 1) + data?.roles?.slice(1).toLowerCase()
-              )}
-            </p>
+          <p>
+            <strong>Nom :</strong> <span aria-label="Nom">{data.lastname}</span>
+          </p>
+          <p>
+            <strong>Prénom :</strong>{" "}
+            <span aria-label="Prénom">{data.firstname}</span>
+          </p>
+          <p>
+            <strong>Email :</strong>{" "}
+            <span aria-label="Adresse email">{data.email}</span>
+          </p>
+          <p>
+            <strong>Téléphone :</strong>{" "}
+            <span aria-label="Numéro de téléphone">
+              {data.phone ? 0 + data.phone : "Non renseigné"}
+            </span>
+          </p>
+          <p>
+            <strong>Status :</strong>{" "}
+            <span aria-label="Statut utilisateur">
+              {mapUserRole(data.roles)}
+            </span>
+          </p>
 
-            <div className="container-cta mt-4">
-              <CTAButton
-                label="Modifier"
-                className="cta-profile-style"
-                handleClick={handleEditClick}
-              />
-            </div>
-          </>
+          <div className="container-cta mt-4">
+            <CTAButton
+              label="Modifier"
+              className="cta-profile-style"
+              handleClick={handleEditClick}
+              aria-label="Modifier les informations personnelles"
+            />
+          </div>
+        </div>
+
+        {/* Modal d'édition des informations personnelles */}
+        {isEditing && (
+          <ModalOverlay
+            onClose={handleCancelEdit}
+            aria-modal="true"
+            role="dialog"
+            aria-labelledby="edit-profile-title"
+            tabIndex={-1}
+          >
+            <PersonalInfoForm
+              userData={data}
+              onSave={handleSaveProfile}
+              onCancel={handleCancelEdit}
+            />
+          </ModalOverlay>
         )}
       </div>
     </>
   );
 };
 
+/**
+ * Définition des PropTypes pour la validation des props du composant ProfileSection.
+ */
 ProfileSection.propTypes = {
   data: PropTypes.shape({
-    id: PropTypes.number,
-    firstname: PropTypes.string,
-    lastname: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    firstname: PropTypes.string.isRequired,
+    lastname: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     phone: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     roles: PropTypes.string.isRequired,

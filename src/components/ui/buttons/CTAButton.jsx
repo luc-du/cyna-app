@@ -25,7 +25,7 @@ const CTAButton = ({ className, link, label, handleClick }) => {
 CTAButton.propTypes = {
   className: PropTypes.string,
   handleClick: PropTypes.func,
-  link: PropTypes.string.isRequired,
+  link: PropTypes.string,
   label: PropTypes.string.isRequired,
 };
 
