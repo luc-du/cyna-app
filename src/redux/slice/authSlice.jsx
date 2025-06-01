@@ -2,32 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../../api/apiRoutes";
-
-/**
- * Fonctions utilitaires pour gérer le token dans le localStorage
- */
-
-// Stocke le token dans le localStorage
-const setTokenInLocalStorage = (token) => {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("token", token);
-  }
-};
-
-// Supprime le token du localStorage
-const removeTokenFromLocalStorage = () => {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("token");
-  }
-};
-
-// Récupère le token depuis le localStorage
-const getTokenFromLocalStorage = () => {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem("token");
-  }
-  return null;
-};
+import {
+  clearToken,
+  getToken,
+  setToken,
+} from "../../components/utils/authStorage";
 
 /**
  * Thunks asynchrones pour les opérations d'authentification
@@ -43,7 +22,7 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(API_ROUTES.AUTH.SIGNUP, userData);
-      setTokenInLocalStorage(response.data.token);
+      setToken(response.data.token);
       return response.data;
     } catch (error) {
       // Gestion d'une erreur d'email déjà utilisé
@@ -67,7 +46,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
-      setTokenInLocalStorage(response.data.token);
+      setToken(response.data.token);
       console.log(`Token reçu : ${response.data.token}`);
       alert("Vous êtes authentifié !");
       return response.data;
@@ -88,7 +67,7 @@ export const validateToken = createAsyncThunk(
    */
   async (_, { rejectWithValue }) => {
     try {
-      const token = getTokenFromLocalStorage();
+      const token = getToken();
       if (!token) {
         throw new Error("Token non disponible");
       }
@@ -104,7 +83,7 @@ export const validateToken = createAsyncThunk(
       return response.data;
     } catch (error) {
       // Suppression du token invalide
-      removeTokenFromLocalStorage();
+      clearToken();
       return rejectWithValue(error.response?.data || "Token invalide");
     }
   }
@@ -119,7 +98,7 @@ export const fetchUserProfile = createAsyncThunk(
    */
   async (_, { rejectWithValue }) => {
     try {
-      const token = getTokenFromLocalStorage();
+      const token = getToken();
       if (!token) {
         throw new Error("Token non disponible");
       }
@@ -155,7 +134,7 @@ export const updateUserProfile = createAsyncThunk(
    */
   async ({ userId, profileData }, { rejectWithValue }) => {
     try {
-      const token = getTokenFromLocalStorage();
+      const token = getToken();
       const response = await axios.patch(
         API_ROUTES.USER.BY_ID(userId),
         profileData,
@@ -185,11 +164,31 @@ export const updateUserProfile = createAsyncThunk(
 const initialState = {
   user: null, // Données utilisateur
   userId: null, // ID utilisateur
-  isAuthenticated: !!getTokenFromLocalStorage(), // Authentifié si un token est présent
+  isAuthenticated: !!getToken(), // Authentifié si un token est présent
   loading: false, // Indique si une opération est en cours
   error: null, // Message d'erreur éventuel
 };
 
+/**
+ * Slice Redux pour la gestion de l'authentification utilisateur.
+ *
+ * Ce slice gère l'état d'authentification, les informations utilisateur, l'ID utilisateur,
+ * ainsi que les erreurs liées à l'inscription, la connexion, la validation du token et la récupération du profil utilisateur.
+ *
+ * Actions synchrones :
+ * - logout : Déconnecte l'utilisateur et réinitialise l'état d'authentification.
+ * - setAuth : Met à jour le statut d'authentification.
+ * - setUser : Met à jour les données de l'utilisateur.
+ * - setUserId : Met à jour l'ID de l'utilisateur.
+ *
+ * Actions asynchrones (extraReducers) :
+ * - registerUser : Gère l'inscription de l'utilisateur (succès/échec).
+ * - loginUser : Gère la connexion de l'utilisateur (succès/échec).
+ * - validateToken : Valide le token d'authentification (succès/échec).
+ * - fetchUserProfile : Récupère le profil utilisateur (succès/échec).
+ *
+ * @module authSlice
+ */
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -198,7 +197,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      removeTokenFromLocalStorage();
+      clearToken();
     },
     // Mise à jour du statut d'authentification
     setAuth: (state, action) => {
