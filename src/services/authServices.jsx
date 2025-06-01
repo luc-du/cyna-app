@@ -31,13 +31,7 @@ export const AuthService = {
    */
   validate: async () => {
     const token = getToken();
-    return axios.post(
-      API_ROUTES.AUTH.VALIDATE,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    return axios.post(API_ROUTES.AUTH.VALIDATE, { token });
   },
 
   /**
