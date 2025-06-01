@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAuthEffect } from "../hooks/useAuthEffect";
+import { useAutoLogout } from "../hooks/useAutoLogout";
 import { fetchUserProfile, logout } from "../redux/slice/authSlice";
 import AccountStatus from "./Profile/AccountStatus";
 import AddressSection from "./Profile/AddressSection";
@@ -18,6 +19,7 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useAuthEffect(); //mise en place du hook auth en place de ma simple redirection
+  useAutoLogout(); //mise en place de la redirection lors de la destruction du token
 
   // Rechargement du profil complet (utile si user.id évolue)
   useEffect(() => {
