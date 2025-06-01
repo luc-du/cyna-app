@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
-import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useAuthEffect } from "../hooks/useAuthEffect";
+import { useAutoLogout } from "../hooks/useAutoLogout";
 import { fetchUserProfile, logout } from "../redux/slice/authSlice";
+import { AuthService } from "../services/authServices";
 import AccountStatus from "./Profile/AccountStatus";
 import AddressSection from "./Profile/AddressSection";
 import LogoutButton from "./Profile/LogoutButton";
@@ -11,26 +13,35 @@ import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
 import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
 
+/**
+ * Composant de page de profil utilisateur.
+ *
+ * @component
+ * @description
+ * Affiche les informations du profil utilisateur, y compris l'avatar, les détails personnels,
+ * l'adresse, les méthodes de paiement et le statut du compte. Permet également la déconnexion
+ * et le changement d'avatar. Ce composant gère l'accessibilité via des rôles ARIA, des labels,
+ * et la gestion du focus pour une meilleure expérience utilisateur.
+ *
+ * @accessibilité
+ * - Utilise des rôles ARIA (`role="status"`, `role="alert"`) pour informer les technologies d'assistance.
+ * - Utilise des labels ARIA (`aria-label`, `aria-labelledby`) pour décrire les sections.
+ * - Gère le focus avec `tabIndex` pour permettre la navigation clavier.
+ *
+ * @returns {JSX.Element} La page de profil utilisateur.
+ */
 const Profile = () => {
-  const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Redirection si pas authentifié
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    } else {
-      dispatch(fetchUserProfile());
-    }
-  }, [isAuthenticated, dispatch, navigate]);
+  useAuthEffect(); // vérifie le token et redirige sinon
+  useAutoLogout(); // auto-déconnexion à expiration
 
-  // Rechargement du profil complet (utile si user.id évolue)
+  const { user, loading } = useSelector((state) => state.auth);
+
   useEffect(() => {
-    if (user?.id) {
-      dispatch(fetchUserProfile(user.id));
-    }
-  }, [user?.id, dispatch]);
+    if (!user) dispatch(fetchUserProfile());
+  }, [user, dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -38,24 +49,11 @@ const Profile = () => {
   };
 
   const handleAvatarUpload = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const token = localStorage.getItem("token");
-      await axios.patch(
-        `http://localhost:8081/api/v1/user/${user.id}/profiles`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      await AuthService.uploadAvatar(user.id, file);
       dispatch(fetchUserProfile());
     } catch (error) {
-      console.error("Erreur lors de l'upload d'avatar :", error);
+      console.error("Erreur upload avatar :", error);
     }
   };
 
@@ -81,6 +79,7 @@ const Profile = () => {
           >
             Profil utilisateur
           </h1>
+
           <ProfileHeader data={user} onUpload={handleAvatarUpload} />
           <ProfileSection data={user} />
 
@@ -97,37 +96,22 @@ const Profile = () => {
         </section>
       ) : (
         <p role="alert">
-          Impossible de récupérer les informations de l'utilisateur.
+          Impossible de récupérer les informations utilisateur.
         </p>
       )}
     </main>
   );
 };
 
-// PropTypes for child components
+// PropTypes pour tous les composants enfants
 ProfileHeader.propTypes = {
   data: PropTypes.object.isRequired,
   onUpload: PropTypes.func.isRequired,
 };
-
-ProfileSection.propTypes = {
-  data: PropTypes.object.isRequired,
-};
-
-AddressSection.propTypes = {
-  data: PropTypes.object.isRequired,
-};
-
-PaymentMethodsSection.propTypes = {
-  data: PropTypes.object.isRequired,
-};
-
-AccountStatus.propTypes = {
-  data: PropTypes.object.isRequired,
-};
-
-LogoutButton.propTypes = {
-  handleClick: PropTypes.func.isRequired,
-};
+ProfileSection.propTypes = { data: PropTypes.object.isRequired };
+AddressSection.propTypes = { data: PropTypes.object.isRequired };
+PaymentMethodsSection.propTypes = { data: PropTypes.object.isRequired };
+AccountStatus.propTypes = { data: PropTypes.object.isRequired };
+LogoutButton.propTypes = { handleClick: PropTypes.func.isRequired };
 
 export default Profile;

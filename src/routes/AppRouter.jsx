@@ -1,6 +1,9 @@
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
+import Dashboard from "../components/Dashboard";
+import PrivateRoute from "../components/guards/PrivateRoute";
 import ProductList from "../components/ProductList";
+import ProtectedRoute from "../components/ProtectedRoute";
 import CartPage from "../pages/CartPage";
 import CategoriesPage from "../pages/CategoriesPage";
 import CategoryPage from "../pages/CategoryPage";
@@ -41,21 +44,19 @@ const AppRouter = () => {
         <Route path="/forgot_password" element={<ForgotPasswordPage />} />
 
         {/* Profile */}
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/edit-profile" element={<LoginPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/edit-profile" element={<LoginPage />} />
+        </Route>
+
+        <Route element={<ProtectedRoute roles={["ADMIN", "USER"]} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
 
         <Route path="/search" element={<SearchPage />} />
 
         <Route path="/contact" element={<ContactPage />} />
 
-        {/* <Route
-          path="/profile"
-          element={<PrivateRoute component={<ProfilePage />} />}
-        />
-        <Route
-          path="/admin"
-          element={<PrivateRoute component={<AdminDashboard />} />}
-        /> */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Provider>

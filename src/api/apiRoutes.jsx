@@ -2,9 +2,9 @@ const API_BASE = "/api/v1";
 
 export const API_ROUTES = {
   AUTH: {
-    SIGNUP: `${API_BASE}/auth/signup`,
-    SIGNIN: `${API_BASE}/auth/signin`,
-    VALIDATE: `${API_BASE}/auth/validate`,
+    SIGNIN: `http://localhost:8081/api/v1/auth/signin`,
+    SIGNUP: `http://localhost:8081/api/v1/auth/signup`,
+    VALIDATE: `http://localhost:8081/api/v1/auth/validate`,
   },
   USER: {
     BY_ID: (id) => `${API_BASE}/user/${id}`,
