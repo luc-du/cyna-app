@@ -2,9 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import addressReducer from "../slice/addressSlice";
 import authReducer from "../slice/authSlice";
 import cartReducer from "../slice/cartSlice";
-import { categoryReducer } from "../slice/categorySlice";
-import searchReducer from "../slice/searchSlice";
-import { topProductsReducer } from "../slice/topProductsSlice";
+import categoryReducer from "../slice/categorySlice";
 
 const store = configureStore({
   reducer: {
@@ -12,8 +10,6 @@ const store = configureStore({
     auth: authReducer,
     address: addressReducer,
     categories: categoryReducer,
-    topProducts: topProductsReducer,
-    search: searchReducer,
   },
 });
 

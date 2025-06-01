@@ -14,7 +14,8 @@ const PromoSection = () => {
         const firstSlide = response.data[0];
         setTitle(firstSlide.title);
         setDescription(firstSlide.text);
-      } catch {
+      } catch (err) {
+        console.error("Erreur lors du chargement de la présentation :", err);
         setTitle("Pure player en cybersécurité pour PME et MSP");
         setDescription(
           "Cyna est spécialisée dans la vente de solutions de sécurité SaaS innovantes telles que SOC, EDR et XDR. Notre plateforme e-commerce internationale permet aux entreprises d’accéder à des services de protection avancée."
@@ -26,30 +27,16 @@ const PromoSection = () => {
   }, []);
 
   return (
-    <section
-      className="w-full bg-gray-100 py-10 px-6 rounded-lg md:px-20 text-center"
-      aria-labelledby="promo-title"
-      aria-describedby="promo-description"
-      role="region"
-    >
-      <h1
-        id="promo-title"
-        className="text-3xl md:text-4xl font-extrabold text-primaryBackground"
-        tabIndex={-1}
-      >
+    <section className="w-full bg-gray-100 py-10 px-6 rounded-lg md:px-20 text-center ">
+      <h1 className="text-3xl md:text-4xl font-extrabold text-primaryBackground">
         {title}
       </h1>
-      <p
-        id="promo-description"
-        className="mt-4 text-gray-700 text-lg md:text-xl max-w-3xl mx-auto"
-      >
+      <p className="mt-4 text-gray-700 text-lg md:text-xl max-w-3xl mx-auto">
         {description}
       </p>
       <div
         id="containerCTA"
         className="w-full flex flex-col lg:flex-row items-center justify-center gap-6 mt-6"
-        role="group"
-        aria-label="Call to action buttons"
       >
         <CTAButton link="/categories" label="Découvrir nos produits" />
         <CTAButton
