@@ -1,31 +1,37 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-import { API_ROUTES } from "../../api/apiRoutes";
-import {
-  clearToken,
-  getToken,
-  setToken,
-} from "../../components/utils/authStorage";
-
 /**
- * Thunks asynchrones pour les opérations d'authentification
+ * Slice Redux pour la gestion de l'authentification utilisateur.
+ *
+ * Ce fichier contient :
+ * - Les thunks asynchrones pour l'inscription, la connexion, la validation du token,
+ *   la récupération et la mise à jour du profil utilisateur.
+ * - Le slice Redux pour gérer l'état d'authentification, l'utilisateur courant,
+ *   l'identifiant utilisateur, les erreurs et le chargement.
+ *
+ * Utilise Redux Toolkit et AuthService pour centraliser la logique d'authentification.
  */
 
-/* Inscription de l'utilisateur */
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { jwtDecode } from "jwt-decode";
+import { AuthService } from "../../services/authService";
+import { clearToken, getToken, setToken } from "../../utils/authStorage";
+
+/**
+ * Thunks asynchrones utilisant le service d'authentification centralisé
+ */
+
+// Inscription utilisateur
 export const registerUser = createAsyncThunk(
   "auth/register",
   /**
-   * @param {Object} userData - Données du nouvel utilisateur
-   * @param {Object} thunkAPI - Outils Redux Toolkit
+   * @param {Object} userData - Données d'inscription de l'utilisateur
+   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
    */
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(API_ROUTES.AUTH.SIGNUP, userData);
-      setToken(response.data.token);
-      return response.data;
+      const data = await AuthService.register(userData);
+      setToken(data.token);
+      return data;
     } catch (error) {
-      // Gestion d'une erreur d'email déjà utilisé
       if (error.response?.data?.message?.includes("Duplicate entry")) {
         return rejectWithValue("Cet email est déjà utilisé.");
       }
@@ -36,20 +42,18 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-/* Connexion de l'utilisateur */
+// Connexion utilisateur
 export const loginUser = createAsyncThunk(
   "auth/login",
   /**
    * @param {Object} credentials - Identifiants de connexion
-   * @param {Object} thunkAPI - Outils Redux Toolkit
+   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
    */
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
-      setToken(response.data.token);
-      console.log(`Token reçu : ${response.data.token}`);
-      alert("Vous êtes authentifié !");
-      return response.data;
+      const data = await AuthService.login(credentials);
+      setToken(data.token);
+      return data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data || "Email ou mot de passe incorrect !"
@@ -58,66 +62,38 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-/* Vérification de la validité du token */
+// Validation du token d'authentification
 export const validateToken = createAsyncThunk(
   "auth/validateToken",
   /**
-   * @param {void}
-   * @param {Object} thunkAPI - Outils Redux Toolkit
+   * @param {void} _ - Non utilisé
+   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
    */
   async (_, { rejectWithValue }) => {
     try {
       const token = getToken();
-      if (!token) {
-        throw new Error("Token non disponible");
-      }
-
-      const response = await axios.post(
-        API_ROUTES.AUTH.VALIDATE,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      return response.data;
+      if (!token) throw new Error("Token manquant");
+      await AuthService.validate();
+      return true;
     } catch (error) {
-      // Suppression du token invalide
       clearToken();
       return rejectWithValue(error.response?.data || "Token invalide");
     }
   }
 );
 
-/* Récupération des informations du profil utilisateur */
+// Récupération du profil utilisateur
 export const fetchUserProfile = createAsyncThunk(
   "auth/fetchUserProfile",
   /**
-   * @param {void}
-   * @param {Object} thunkAPI - Outils Redux Toolkit
+   * @param {void} _ - Non utilisé
+   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
    */
   async (_, { rejectWithValue }) => {
     try {
-      const token = getToken();
-      if (!token) {
-        throw new Error("Token non disponible");
-      }
-
-      // Décodage du token JWT pour obtenir l'ID utilisateur
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.jti;
-      console.log(userId);
-
-      const response = await axios.get(API_ROUTES.USER.BY_ID(userId), {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      return response.data;
+      const res = await AuthService.fetchProfile();
+      return res.data;
     } catch (error) {
-      console.error(
-        "Erreur API (profil) :",
-        error.response?.data || error.message
-      );
       return rejectWithValue(
         error.response?.data || "Impossible de récupérer le profil utilisateur"
       );
@@ -125,29 +101,18 @@ export const fetchUserProfile = createAsyncThunk(
   }
 );
 
-/* Mise à jour des informations du profil utilisateur */
+// Mise à jour du profil utilisateur
 export const updateUserProfile = createAsyncThunk(
   "auth/updateUserProfile",
   /**
-   * @param {Object} param0 - Contient userId et profileData
-   * @param {Object} thunkAPI - Outils Redux Toolkit
+   * @param {Object} param0 - Objet contenant userId et profileData
+   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
    */
   async ({ userId, profileData }, { rejectWithValue }) => {
     try {
-      const token = getToken();
-      const response = await axios.patch(
-        API_ROUTES.USER.BY_ID(userId),
-        profileData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response.data;
+      const res = await AuthService.updateProfile(userId, profileData);
+      return res.data;
     } catch (error) {
-      console.error("Erreur lors de la mise à jour du profil :", error);
       return rejectWithValue(
         error.response?.data?.message ||
           "Erreur lors de la mise à jour du profil"
@@ -157,57 +122,60 @@ export const updateUserProfile = createAsyncThunk(
 );
 
 /**
- * Slice Redux pour l'authentification
+ * État initial du slice d'authentification
+ * @typedef {Object} AuthState
+ * @property {Object|null} user - Données utilisateur
+ * @property {string|null} userId - Identifiant utilisateur
+ * @property {boolean} isAuthenticated - Statut d'authentification
+ * @property {boolean} loading - Statut de chargement
+ * @property {string|null} error - Message d'erreur éventuel
  */
-
-// État initial du slice d'authentification
 const initialState = {
-  user: null, // Données utilisateur
-  userId: null, // ID utilisateur
-  isAuthenticated: !!getToken(), // Authentifié si un token est présent
-  loading: false, // Indique si une opération est en cours
-  error: null, // Message d'erreur éventuel
+  user: null,
+  userId: null,
+  isAuthenticated: !!getToken(),
+  loading: false,
+  error: null,
 };
 
 /**
- * Slice Redux pour la gestion de l'authentification utilisateur.
- *
- * Ce slice gère l'état d'authentification, les informations utilisateur, l'ID utilisateur,
- * ainsi que les erreurs liées à l'inscription, la connexion, la validation du token et la récupération du profil utilisateur.
- *
- * Actions synchrones :
- * - logout : Déconnecte l'utilisateur et réinitialise l'état d'authentification.
- * - setAuth : Met à jour le statut d'authentification.
- * - setUser : Met à jour les données de l'utilisateur.
- * - setUserId : Met à jour l'ID de l'utilisateur.
- *
- * Actions asynchrones (extraReducers) :
- * - registerUser : Gère l'inscription de l'utilisateur (succès/échec).
- * - loginUser : Gère la connexion de l'utilisateur (succès/échec).
- * - validateToken : Valide le token d'authentification (succès/échec).
- * - fetchUserProfile : Récupère le profil utilisateur (succès/échec).
- *
- * @module authSlice
+ * Slice Redux - Authentification
  */
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // Déconnexion de l'utilisateur
+    /**
+     * Déconnexion de l'utilisateur
+     * @param {AuthState} state
+     */
     logout: (state) => {
       state.user = null;
+      state.userId = null;
       state.isAuthenticated = false;
       clearToken();
     },
-    // Mise à jour du statut d'authentification
+    /**
+     * Mise à jour du statut d'authentification
+     * @param {AuthState} state
+     * @param {Object} action
+     */
     setAuth: (state, action) => {
       state.isAuthenticated = !!action.payload;
     },
-    // Mise à jour des données utilisateur
+    /**
+     * Mise à jour des données utilisateur
+     * @param {AuthState} state
+     * @param {Object} action
+     */
     setUser: (state, action) => {
       state.user = action.payload;
     },
-    // Mise à jour de l'ID utilisateur
+    /**
+     * Mise à jour de l'identifiant utilisateur
+     * @param {AuthState} state
+     * @param {Object} action
+     */
     setUserId: (state, action) => {
       state.userId = action.payload;
     },
@@ -219,27 +187,29 @@ const authSlice = createSlice({
         const { token } = action.payload;
         const decoded = jwtDecode(token);
         state.userId = decoded.jti;
-        state.isAuthenticated = true;
         state.user = action.payload;
+        state.isAuthenticated = true;
         state.error = null;
       })
       // Inscription échouée
       .addCase(registerUser.rejected, (state, action) => {
         state.error = action.payload;
       })
+
       // Connexion réussie
       .addCase(loginUser.fulfilled, (state, action) => {
         const { token } = action.payload;
         const decoded = jwtDecode(token);
         state.userId = decoded.jti;
-        state.isAuthenticated = true;
         state.user = action.payload;
+        state.isAuthenticated = true;
         state.error = null;
       })
       // Connexion échouée
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload;
       })
+
       // Validation du token réussie
       .addCase(validateToken.fulfilled, (state) => {
         state.isAuthenticated = true;
@@ -250,18 +220,18 @@ const authSlice = createSlice({
         state.user = null;
         state.userId = null;
       })
-      // Récupération du profil utilisateur réussie
+
+      // Récupération du profil réussie
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.user = action.payload;
         state.error = null;
       })
-      // Récupération du profil utilisateur échouée
+      // Récupération du profil échouée
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.error = action.payload;
       });
   },
 });
 
-// Export des actions et du reducer
 export const { logout, setAuth, setUser, setUserId } = authSlice.actions;
 export default authSlice.reducer;
