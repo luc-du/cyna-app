@@ -62,3 +62,5 @@ ProductCard.propTypes = {
 EmptyState.propTypes = {
   message: PropTypes.string.isRequired,
 };
+
+/* hello */
