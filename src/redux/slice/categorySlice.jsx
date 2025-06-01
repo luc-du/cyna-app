@@ -1,20 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
-import { MOCK_Categories } from "../../mock/MOCKS_DATA";
 
-// Constantes
+// Constants
 const CATEGORY_API_BASE_URL = "/api/v1/categories";
 
-/**
- * Récupère toutes les catégories depuis l'API.
- * Utilise un fallback sur les données mockées en cas d'échec.
- */
+// Helper functions
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No token found");
+  return { Authorization: `Bearer ${token}` };
+};
+
+// Async thunks
 export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.CATEGORIES.GET, {});
+      const headers = getAuthHeaders();
+      console.log("fetchCategories headers:", headers);
+      const response = await axios.get(CATEGORY_API_BASE_URL, {
+        headers,
+      });
+      console.log("From categorySlice", response.data);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -22,33 +29,25 @@ export const fetchCategories = createAsyncThunk(
         if (error.response.data && error.response.data.message) {
           return rejectWithValue(error.response.data.message);
         }
-        // Fallback sur les données mockées en cas d'erreur API
-        console.warn(
-          "Fallback sur MOCK_Categories suite à une erreur :",
-          error.message
-        );
-        return rejectWithValue(MOCK_Categories);
+      }
+      if (error.message === "No token found") {
+        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
       }
       return rejectWithValue("Failed to fetch categories");
     }
   }
 );
 
-/**
- * Recherche des catégories par nom.
- * Si le terme de recherche est trop court, filtre côté client.
- * Sinon, utilise l'endpoint de recherche de l'API.
- */
 export const searchCategories = createAsyncThunk(
   "categories/searchCategories",
   async (name, { rejectWithValue, dispatch }) => {
     try {
-      // Si le terme de recherche est trop court, filtrage côté client
+      // If search term is too short, grab all categories instead of using the search endpoint
       if (name.length < 3) {
         console.log("Search term too short, filtering categories client-side");
         const allCategories = await dispatch(fetchCategories()).unwrap();
 
-        // Filtrage des catégories côté frontend
+        // Filter categories in the frontend based on the search term
         const searchTerm = name.toLowerCase();
         return Array.isArray(allCategories)
           ? allCategories.filter(
@@ -61,12 +60,12 @@ export const searchCategories = createAsyncThunk(
           : [];
       }
 
-      // Utilisation de l'endpoint de recherche si le terme est assez long
+      // Try the search endpoint if search term is long enough
       const response = await fetch(
-        `${CATEGORY_API_BASE_URL}/search?name=${encodeURIComponent(name)}`
-        // {
-        //   headers: getAuthHeaders(),
-        // }
+        `${CATEGORY_API_BASE_URL}/search?name=${encodeURIComponent(name)}`,
+        {
+          headers: getAuthHeaders(),
+        }
       );
 
       if (!response.ok) {
@@ -74,7 +73,7 @@ export const searchCategories = createAsyncThunk(
           `Category search endpoint returned ${response.status}: ${response.statusText}`
         );
 
-        // Fallback sur le filtrage côté client
+        // Fall back to client-side filtering
         const allCategories = await dispatch(fetchCategories()).unwrap();
         const searchTerm = name.toLowerCase();
 
@@ -93,16 +92,12 @@ export const searchCategories = createAsyncThunk(
       return Array.isArray(data) ? data : [];
     } catch (error) {
       console.error("Search category error:", error);
-      // Retourne un tableau vide pour éviter les erreurs UI
+      // Return empty array instead of rejecting to prevent UI errors
       return [];
     }
   }
 );
 
-/**
- * Crée une nouvelle catégorie via l'API.
- * Nécessite un token d'authentification.
- */
 export const createCategory = createAsyncThunk(
   "categories/createCategory",
   async (categoryData, { rejectWithValue }) => {
@@ -131,10 +126,6 @@ export const createCategory = createAsyncThunk(
   }
 );
 
-/**
- * Met à jour une catégorie existante via l'API.
- * Nécessite un token d'authentification.
- */
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
   async ({ categoryId, formData }, { rejectWithValue }) => {
@@ -142,7 +133,8 @@ export const updateCategory = createAsyncThunk(
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token found");
 
-      // S'assure que la description est bien incluse dans formData
+      // Make sure the description is properly included in formData
+      // The backend expects 'description' as a param just like 'name'
 
       const response = await fetch(`/api/v1/categories/${categoryId}`, {
         method: "PUT",
@@ -153,7 +145,7 @@ export const updateCategory = createAsyncThunk(
       });
 
       if (!response.ok) {
-        // Récupère un message d'erreur détaillé si possible
+        // Try to get more detailed error messages
         const errorText = await response.text();
         throw new Error(errorText || "Failed to update category");
       }
@@ -170,14 +162,14 @@ export const updateCategory = createAsyncThunk(
   }
 );
 
-/**
- * Supprime une catégorie via l'API.
- */
 export const deleteCategory = createAsyncThunk(
   "categories/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {});
+      const headers = getAuthHeaders();
+      await axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {
+        headers,
+      });
       return id;
     } catch (error) {
       if (error.message === "No token found") {
@@ -188,15 +180,17 @@ export const deleteCategory = createAsyncThunk(
   }
 );
 
-/**
- * Supprime plusieurs catégories via l'API.
- */
 export const deleteMultipleCategories = createAsyncThunk(
   "categories/deleteMultiple",
   async (ids, { rejectWithValue }) => {
     try {
+      const headers = getAuthHeaders();
       await Promise.all(
-        ids.map((id) => axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {}))
+        ids.map((id) =>
+          axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {
+            headers,
+          })
+        )
       );
       return ids;
     } catch (error) {
@@ -208,16 +202,16 @@ export const deleteMultipleCategories = createAsyncThunk(
   }
 );
 
-/**
- * Récupère les détails d'une catégorie spécifique via l'API.
- */
 export const fetchCategoryDetails = createAsyncThunk(
   "categories/fetchDetails",
   async (categoryId, { rejectWithValue }) => {
     try {
+      const headers = getAuthHeaders();
       const response = await axios.get(
-        API_ROUTES.CATEGORIES.GET_BY_ID(categoryId),
-        {}
+        `${CATEGORY_API_BASE_URL}/${categoryId}`,
+        {
+          headers,
+        }
       );
       return response.data;
     } catch (error) {
@@ -229,14 +223,12 @@ export const fetchCategoryDetails = createAsyncThunk(
   }
 );
 
-/**
- * Récupère tous les produits via l'API.
- */
 export const fetchProducts = createAsyncThunk(
   "products/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/v1/products");
+      const headers = getAuthHeaders();
+      const response = await axios.get("/api/v1/products", { headers });
       return response.data;
     } catch (error) {
       if (error.response?.data?.message) {
@@ -247,27 +239,7 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-// Slice Redux Toolkit pour la gestion des catégories
-/**
- * Ce slice gère l'état des catégories, y compris le chargement, les erreurs,
- * la récupération, la recherche, la création, la mise à jour et la suppression de catégories.
- *
- * Structure de l'état initial :
- * - categories : Tableau des catégories.
- * - loading : Booléen indiquant si une opération est en cours.
- * - error : Message d'erreur éventuel.
- *
- * ExtraReducers :
- * - fetchCategories : Gère la récupération de toutes les catégories.
- * - searchCategories : Gère la recherche de catégories selon un critère.
- * - createCategory : Déclenche le rechargement des catégories après création.
- * - updateCategory : Déclenche le rechargement des catégories après mise à jour.
- * - deleteCategory : Supprime une catégorie de la liste.
- * - deleteMultipleCategories : Supprime plusieurs catégories de la liste.
- * - fetchCategoryDetails : Met à jour une catégorie avec ses détails.
- *
- * @module categorySlice
- */
+// Slice
 const categorySlice = createSlice({
   name: "categories",
   initialState: {
@@ -278,7 +250,6 @@ const categorySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Gestion de la récupération de toutes les catégories
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -288,11 +259,9 @@ const categorySlice = createSlice({
         state.categories = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
-        state.categories = action.payload || [];
         state.loading = false;
-        state.error = "Échec API, fallback mock utilisé.";
+        state.error = action.payload;
       })
-      // Gestion de la recherche de catégories
       .addCase(searchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -306,28 +275,26 @@ const categorySlice = createSlice({
         state.error = action.payload || "Search failed";
         state.categories = [];
       })
-      // Après création, déclenche le rechargement des catégories
       .addCase(createCategory.fulfilled, (state, action) => {
+        // Reload categories after creation to get the updated list with IDs
         state.loading = true;
       })
-      // Après mise à jour, déclenche le rechargement des catégories
       .addCase(updateCategory.fulfilled, (state) => {
+        // Reload categories after update to get the updated list
         state.loading = true;
       })
-      // Suppression d'une catégorie de la liste
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.categories = state.categories.filter(
           (category) => category.id !== action.payload
         );
       })
-      // Suppression de plusieurs catégories de la liste
       .addCase(deleteMultipleCategories.fulfilled, (state, action) => {
         state.categories = state.categories.filter(
           (category) => !action.payload.includes(category.id)
         );
       })
-      // Mise à jour d'une catégorie avec ses détails
       .addCase(fetchCategoryDetails.fulfilled, (state, action) => {
+        // Find the category in state and update it with detailed data
         const index = state.categories.findIndex(
           (cat) => cat.id === action.payload.id
         );
@@ -338,5 +305,4 @@ const categorySlice = createSlice({
   },
 });
 
-// Export du reducer pour intégration dans le store Redux
-export const categoryReducer = categorySlice.reducer;
+export default categorySlice.reducer;
