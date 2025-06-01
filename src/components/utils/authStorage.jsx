@@ -1,3 +1,5 @@
+import { jwtDecode } from "jwt-decode";
+
 let memoryToken = null;
 
 /**
@@ -28,6 +30,15 @@ export const getToken = () => {
     return token;
   }
   return null;
+};
+
+export const decodeToken = (token) => {
+  try {
+    return jwtDecode(token);
+  } catch (error) {
+    console.error("Token invalide :", error);
+    return null;
+  }
 };
 
 /**
