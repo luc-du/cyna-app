@@ -12,6 +12,7 @@ import LogoutButton from "./Profile/LogoutButton";
 import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
 import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
+import { useGlobalToast } from "./GlobalToastProvider";
 
 /**
  * Composant de page de profil utilisateur.
@@ -33,6 +34,7 @@ import ProfileSection from "./Profile/ProfileSection";
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const showToast = useGlobalToast();
 
   useAuthEffect(); // vérifie le token et redirige sinon
   useAutoLogout(); // auto-déconnexion à expiration
@@ -49,14 +51,20 @@ const Profile = () => {
   };
 
   const handleAvatarUpload = async (file) => {
+    if (!user?.id) {
+      console.warn("Utilisateur non chargé, annulation de l'upload avatar.");
+      return;
+    }
+
     try {
-      await AuthService.uploadAvatar(user.id, file);
-      dispatch(fetchUserProfile());
+      await AuthService.uploadAvatar(user.id, file); // FormData géré dans le service
+      await dispatch(fetchUserProfile());
+      showToast("Avatar mis à jour avec succès !", "success");
     } catch (error) {
       console.error("Erreur upload avatar :", error);
+      showToast("Erreur lors de la mise à jour de l'avatar", "error");
     }
   };
-
   return (
     <main
       className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6"
