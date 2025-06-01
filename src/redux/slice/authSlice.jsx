@@ -12,9 +12,12 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
-import { AuthService } from "../../services/authService";
-import { clearToken, getToken, setToken } from "../../utils/authStorage";
-
+import {
+  clearToken,
+  getToken,
+  setToken,
+} from "../../components/utils/authStorage";
+import { AuthService } from "../../services/authServices";
 /**
  * Thunks asynchrones utilisant le service d'authentification centralisé
  */

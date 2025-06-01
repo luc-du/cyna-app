@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
-import { getToken } from "../utils/authStorage";
+import { getToken } from "../components/utils/authStorage";
 
 export const AuthService = {
   /**

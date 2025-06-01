@@ -2,9 +2,8 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { clearToken, getToken } from "../components/utils/authStorage";
 import { logout } from "../redux/slice/authSlice";
-import { clearToken, getToken } from "../utils/authStorage";
-
 /**
  * Hook personnalisé pour la déconnexion automatique de l'utilisateur.
  *
