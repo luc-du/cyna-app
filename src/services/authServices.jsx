@@ -2,6 +2,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
 import { getToken } from "../components/utils/authStorage";
+import apiClient from "./axiosConfig";
 
 export const AuthService = {
   /**
@@ -65,6 +66,22 @@ export const AuthService = {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+      },
+    });
+  },
+
+  /**
+   * Upload d’un avatar utilisateur
+   * @param {string} userId
+   * @param {File} file
+   */
+  uploadAvatar: async (userId, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return apiClient.patch(`/user/${userId}/profiles`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
     });
   },
