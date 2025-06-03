@@ -11,15 +11,19 @@ const CategoriesGrid = () => {
   );
 
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (!Array.isArray(categories) || categories.length === 0) {
       dispatch(fetchCategories());
     }
   }, [dispatch, categories]);
 
-  const mappedCategories = categories.map((cat) => ({
+  const safeCategories = Array.isArray(categories) ? categories : [];
+  const mappedCategories = safeCategories.map((cat) => ({
     id: cat.id,
     name: cat.name,
-    imageUrl: cat.images?.[0]?.url || "/assets/images/placeholder-category.jpg",
+    imageUrl:
+      Array.isArray(cat.images) && cat.images.length > 0
+        ? cat.images[0].url
+        : "/assets/images/placeholder-category.jpg",
     url: cat.id.toString(),
   }));
 
@@ -40,6 +44,7 @@ const CategoriesGrid = () => {
         besoins.
       </p>
 
+      {/* Indicateur de chargement */}
       {loading && (
         <p
           className="text-center text-blue-500 mt-4"
@@ -49,9 +54,16 @@ const CategoriesGrid = () => {
           Chargement...
         </p>
       )}
+
       {error && (
         <p className="text-center text-red-500 mt-4" role="alert">
           {error}
+        </p>
+      )}
+
+      {!loading && !error && mappedCategories.length === 0 && (
+        <p className="text-center text-gray-600 mt-4" role="status">
+          Aucune catégorie disponible pour le moment.
         </p>
       )}
 
