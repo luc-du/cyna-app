@@ -1,0 +1,1238 @@
+{
+  "info": {
+    "name": "API Collection from Swagger - 03062025",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection generated from the provided Swagger definition"
+  },
+  "item": [
+    {
+      "name": "Stripe Controller",
+      "description": "Endpoints related to Stripe subscriptions and payments",
+      "item": [
+        {
+          "name": "Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Stripe-Signature",
+                "value": "",
+                "description": "Signature header from Stripe"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "\"<webhook payload>\""
+            },
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/webhook",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "webhook"]
+            }
+          },
+          "response": [],
+          "description": "Receive Stripe webhook events"
+        },
+        {
+          "name": "Cancel Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priceId\": \"\",\n  \"customerId\": \"\",\n  \"quantity\": 0\n}"
+            },
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/subscription/cancel",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "subscription", "cancel"]
+            }
+          },
+          "response": [],
+          "description": "Cancel an existing subscription"
+        },
+        {
+          "name": "Add Payment Method",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"\",\n  \"type\": \"\",\n  \"number\": 0,\n  \"month\": 0,\n  \"year\": 0,\n  \"cvc\": 0\n}"
+            },
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/payment-method",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "payment-method"]
+            }
+          },
+          "response": [],
+          "description": "Add a new payment method"
+        },
+        {
+          "name": "Create Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priceId\": \"\",\n  \"customerId\": \"\",\n  \"quantity\": 0\n}"
+            },
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/create-subscription",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "create-subscription"]
+            }
+          },
+          "response": [],
+          "description": "Create a new subscription"
+        },
+        {
+          "name": "Create Price",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priceId\": \"\",\n  \"currency\": \"\",\n  \"amount\": 0,\n  \"productId\": \"\",\n  \"productName\": \"\",\n  \"description\": \"\",\n  \"pricingModel\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/create-price",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "create-price"]
+            }
+          },
+          "response": [],
+          "description": "Create a new price object"
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 0,\n  \"name\": \"\",\n  \"email\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/create-customer",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "create-customer"]
+            }
+          },
+          "response": [],
+          "description": "Create a new customer"
+        },
+        {
+          "name": "Update Subscription",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priceId\": \"\",\n  \"customerId\": \"\",\n  \"quantity\": 0\n}"
+            },
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/subscriptionId",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "subscriptionId"]
+            }
+          },
+          "response": [],
+          "description": "Update an existing subscription"
+        },
+        {
+          "name": "Get Subscription By CustomerId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions?customerId={{customerId}}",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions"],
+              "query": [
+                {
+                  "key": "customerId",
+                  "value": "{{customerId}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Retrieve subscriptions by customer ID"
+        },
+        {
+          "name": "Get Subscription By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/{{id}}",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a subscription by its ID"
+        },
+        {
+          "name": "Delete Subscription",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/{{id}}",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Delete a subscription by its ID"
+        },
+        {
+          "name": "Generate Ephemeral Key",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/{{customerId}}/ephemeral-key",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": [
+                "api",
+                "v1",
+                "subscriptions",
+                "{{customerId}}",
+                "ephemeral-key"
+              ]
+            }
+          },
+          "response": [],
+          "description": "Generate an ephemeral key for a customer"
+        },
+        {
+          "name": "Customer Portal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/{{customerId}}/customer-portal",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": [
+                "api",
+                "v1",
+                "subscriptions",
+                "{{customerId}}",
+                "customer-portal"
+              ]
+            }
+          },
+          "response": [],
+          "description": "Generate a link to the customer portal"
+        },
+        {
+          "name": "Get Top Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/top-products?top={{top}}",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "top-products"],
+              "query": [
+                {
+                  "key": "top",
+                  "value": "{{top}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Retrieve top-selling products"
+        },
+        {
+          "name": "Get Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/config",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", "config"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve subscription-related configuration"
+        },
+        {
+          "name": "List All Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{stripeBaseUrl}}/api/v1/subscriptions/",
+              "host": ["{{stripeBaseUrl}}"],
+              "path": ["api", "v1", "subscriptions", ""]
+            }
+          },
+          "response": [],
+          "description": "List all subscriptions"
+        }
+      ]
+    },
+    {
+      "name": "Category Controller",
+      "description": "Endpoints related to categories",
+      "item": [
+        {
+          "name": "Get Category By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{categoryBaseUrl}}/api/v1/categories/{{categoryId}}",
+              "host": ["{{categoryBaseUrl}}"],
+              "path": ["api", "v1", "categories", "{{categoryId}}"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a category by its ID"
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{categoryBaseUrl}}/api/v1/categories/{{categoryId}}?name={{name}}",
+              "host": ["{{categoryBaseUrl}}"],
+              "path": ["api", "v1", "categories", "{{categoryId}}"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "{{name}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Update an existing category name"
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{categoryBaseUrl}}/api/v1/categories/{{categoryId}}",
+              "host": ["{{categoryBaseUrl}}"],
+              "path": ["api", "v1", "categories", "{{categoryId}}"]
+            }
+          },
+          "response": [],
+          "description": "Delete a category by its ID"
+        },
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{categoryBaseUrl}}/api/v1/categories",
+              "host": ["{{categoryBaseUrl}}"],
+              "path": ["api", "v1", "categories"]
+            }
+          },
+          "response": [],
+          "description": "List all categories"
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"name\": \"\",\n  \"description\": \"\",\n  \"images\": [],\n  \"productList\": []\n}"
+            },
+            "url": {
+              "raw": "{{categoryBaseUrl}}/api/v1/categories?categoryDto={{categoryDto}}",
+              "host": ["{{categoryBaseUrl}}"],
+              "path": ["api", "v1", "categories"],
+              "query": [
+                {
+                  "key": "categoryDto",
+                  "value": "{{categoryDto}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Create a new category"
+        },
+        {
+          "name": "Search Categories by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{categoryBaseUrl}}/api/v1/categories/search?name={{name}}",
+              "host": ["{{categoryBaseUrl}}"],
+              "path": ["api", "v1", "categories", "search"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "{{name}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Search categories by name"
+        }
+      ]
+    },
+    {
+      "name": "Product Controller",
+      "description": "Endpoints related to products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a list of all products"
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"priceId\": \"\",\n  \"name\": \"\",\n  \"brand\": \"\",\n  \"description\": \"\",\n  \"caracteristics\": \"\",\n  \"pricingModel\": \"\",\n  \"amount\": 0,\n  \"categoryId\": 0,\n  \"images\": [],\n  \"status\": \"\",\n  \"active\": true,\n  \"promo\": false\n}"
+            },
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products?productdto={{productDto}}",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products"],
+              "query": [
+                {
+                  "key": "productdto",
+                  "value": "{{productDto}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Create a new product"
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"priceId\": \"\",\n  \"name\": \"\",\n  \"brand\": \"\",\n  \"description\": \"\",\n  \"caracteristics\": \"\",\n  \"pricingModel\": \"\",\n  \"amount\": 0,\n  \"categoryId\": 0,\n  \"images\": [],\n  \"status\": \"\",\n  \"active\": true,\n  \"promo\": false\n}"
+            },
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products?productdto={{productDto}}",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products"],
+              "query": [
+                {
+                  "key": "productdto",
+                  "value": "{{productDto}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Update an existing product"
+        },
+        {
+          "name": "Get Product By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products/{{productId}}",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products", "{{productId}}"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a product by its ID"
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products/{{productId}}",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products", "{{productId}}"]
+            }
+          },
+          "response": [],
+          "description": "Delete a product by its ID"
+        },
+        {
+          "name": "Get Top Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products/top-products?top={{top}}&promo={{promo}}&active={{active}}",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products", "top-products"],
+              "query": [
+                {
+                  "key": "top",
+                  "value": "{{top}}"
+                },
+                {
+                  "key": "promo",
+                  "value": "{{promo}}"
+                },
+                {
+                  "key": "active",
+                  "value": "{{active}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Retrieve top products (optionally filtered by promotion and active status)"
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products/search?keyword={{keyword}}&page={{page}}&size={{size}}",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products", "search"],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "{{keyword}}"
+                },
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Search products by keyword with pagination"
+        },
+        {
+          "name": "List Products with Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productBaseUrl}}/api/v1/products/pagination?page={{page}}&size={{size}}&categoriesIds={{categoriesIds}}&promoOnly={{promoOnly}}&sort={{sort}}",
+              "host": ["{{productBaseUrl}}"],
+              "path": ["api", "v1", "products", "pagination"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "{{page}}"
+                },
+                {
+                  "key": "size",
+                  "value": "{{size}}"
+                },
+                {
+                  "key": "categoriesIds",
+                  "value": "{{categoriesIds}}"
+                },
+                {
+                  "key": "promoOnly",
+                  "value": "{{promoOnly}}"
+                },
+                {
+                  "key": "sort",
+                  "value": "{{sort}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "List products with advanced pagination and filtering"
+        }
+      ]
+    },
+    {
+      "name": "Carousel Controller",
+      "description": "Endpoints related to carousel items",
+      "item": [
+        {
+          "name": "List Carousels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{carouselBaseUrl}}/api/v1/carousel?limits={{limits}}",
+              "host": ["{{carouselBaseUrl}}"],
+              "path": ["api", "v1", "carousel"],
+              "query": [
+                {
+                  "key": "limits",
+                  "value": "{{limits}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a list of carousel items, optionally limited in number"
+        },
+        {
+          "name": "Create Carousel Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"title\": \"\",\n  \"text\": \"\",\n  \"image\": \"<binary>\",\n  \"productId\": 0,\n  \"categoryId\": 0\n}"
+            },
+            "url": {
+              "raw": "{{carouselBaseUrl}}/api/v1/carousel",
+              "host": ["{{carouselBaseUrl}}"],
+              "path": ["api", "v1", "carousel"]
+            }
+          },
+          "response": [],
+          "description": "Create a new carousel item"
+        },
+        {
+          "name": "Update Carousel Item",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"title\": \"\",\n  \"text\": \"\",\n  \"image\": \"<binary>\",\n  \"productId\": 0,\n  \"categoryId\": 0\n}"
+            },
+            "url": {
+              "raw": "{{carouselBaseUrl}}/api/v1/carousel",
+              "host": ["{{carouselBaseUrl}}"],
+              "path": ["api", "v1", "carousel"]
+            }
+          },
+          "response": [],
+          "description": "Update an existing carousel item"
+        },
+        {
+          "name": "Get Carousel By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{carouselBaseUrl}}/api/v1/carousel/{{id}}",
+              "host": ["{{carouselBaseUrl}}"],
+              "path": ["api", "v1", "carousel", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a carousel item by its ID"
+        },
+        {
+          "name": "Delete Carousel By Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{carouselBaseUrl}}/api/v1/carousel/{{id}}",
+              "host": ["{{carouselBaseUrl}}"],
+              "path": ["api", "v1", "carousel", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Delete a carousel item by its ID"
+        }
+      ]
+    },
+    {
+      "name": "User Controller",
+      "description": "Endpoints related to user management",
+      "item": [
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/validate",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "validate"]
+            }
+          },
+          "response": [],
+          "description": "Validate a JWT token"
+        },
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstname\": \"\",\n  \"lastname\": \"\",\n  \"email\": \"\",\n  \"role\": \"\",\n  \"password\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/signup",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "signup"]
+            }
+          },
+          "response": [],
+          "description": "Register a new user"
+        },
+        {
+          "name": "Signin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/signin",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "signin"]
+            }
+          },
+          "response": [],
+          "description": "Authenticate a user"
+        },
+        {
+          "name": "Password Forgot (by userId)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"firstname\": \"\",\n  \"lastname\": \"\",\n  \"email\": \"\",\n  \"role\": \"\",\n  \"password\": \"\",\n  \"emailVerified\": false\n}"
+            },
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/password-forgot/{{userId}}",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "password-forgot", "{{userId}}"]
+            }
+          },
+          "response": [],
+          "description": "Request a password reset by user ID"
+        },
+        {
+          "name": "Validate Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/validate-email?email={{email}}",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "validate-email"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Validate that an email is not already in use"
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/verify-email?email={{email}}",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "verify-email"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Send a verification link to an email"
+        },
+        {
+          "name": "Validate Account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/validate-account?email={{email}}",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "validate-account"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Check if an account is already verified"
+        },
+        {
+          "name": "Password Forgot (by email)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{authBaseUrl}}/api/v1/auth/password-forgot?email={{email}}",
+              "host": ["{{authBaseUrl}}"],
+              "path": ["api", "v1", "auth", "password-forgot"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Request a password reset by email"
+        },
+        {
+          "name": "List All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{userBaseUrl}}/api/v1/user",
+              "host": ["{{userBaseUrl}}"],
+              "path": ["api", "v1", "user"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a list of all users"
+        },
+        {
+          "name": "Get User By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{userBaseUrl}}/api/v1/user/{{id}}",
+              "host": ["{{userBaseUrl}}"],
+              "path": ["api", "v1", "user", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve a user by their ID"
+        },
+        {
+          "name": "Delete User By Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{userBaseUrl}}/api/v1/user/{{id}}",
+              "host": ["{{userBaseUrl}}"],
+              "path": ["api", "v1", "user", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Delete a user by their ID"
+        },
+        {
+          "name": "Update User By Id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"customerId\": \"\",\n  \"firstname\": \"\",\n  \"lastname\": \"\",\n  \"email\": \"\",\n  \"phone\": 0,\n  \"role\": \"\",\n  \"profile\": \"<binary>\",\n  \"enabled\": true,\n  \"password\": \"\",\n  \"emailVerified\": false\n}"
+            },
+            "url": {
+              "raw": "{{userBaseUrl}}/api/v1/user/{{id}}",
+              "host": ["{{userBaseUrl}}"],
+              "path": ["api", "v1", "user", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Update user details by ID"
+        },
+        {
+          "name": "Upload User Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{userBaseUrl}}/api/v1/user/{{id}}/profiles?userDto={{userDto}}",
+              "host": ["{{userBaseUrl}}"],
+              "path": ["api", "v1", "user", "{{id}}", "profiles"],
+              "query": [
+                {
+                  "key": "userDto",
+                  "value": "{{userDto}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Upload or update a user's profile"
+        },
+        {
+          "name": "Update User Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"customerId\": \"\",\n  \"firstname\": \"\",\n  \"lastname\": \"\",\n  \"email\": \"\",\n  \"phone\": 0,\n  \"role\": \"\",\n  \"profile\": \"<binary>\",\n  \"enabled\": true,\n  \"password\": \"<newPassword>\",\n  \"emailVerified\": false\n}"
+            },
+            "url": {
+              "raw": "{{userBaseUrl}}/api/v1/user/{{id}}/password",
+              "host": ["{{userBaseUrl}}"],
+              "path": ["api", "v1", "user", "{{id}}", "password"]
+            }
+          },
+          "response": [],
+          "description": "Update a user's password"
+        },
+        {
+          "name": "Search Users by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{userBaseUrl}}/api/v1/user/search?name={{name}}",
+              "host": ["{{userBaseUrl}}"],
+              "path": ["api", "v1", "user", "search"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "{{name}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Search users by their name"
+        }
+      ]
+    },
+    {
+      "name": "Address Controller",
+      "description": "Endpoints related to addresses",
+      "item": [
+        {
+          "name": "List All Addresses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{addressBaseUrl}}/api/v1/address",
+              "host": ["{{addressBaseUrl}}"],
+              "path": ["api", "v1", "address"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve all addresses"
+        },
+        {
+          "name": "Create Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"name\": \"\",\n  \"postcode\": \"\",\n  \"city\": \"\",\n  \"country\": \"\",\n  \"userId\": 0,\n  \"customerId\": \"\",\n  \"url\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{addressBaseUrl}}/api/v1/address",
+              "host": ["{{addressBaseUrl}}"],
+              "path": ["api", "v1", "address"]
+            }
+          },
+          "response": [],
+          "description": "Create a new address"
+        },
+        {
+          "name": "Get Address By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{addressBaseUrl}}/api/v1/address/{{id}}",
+              "host": ["{{addressBaseUrl}}"],
+              "path": ["api", "v1", "address", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Retrieve an address by its ID"
+        },
+        {
+          "name": "Update Address By Id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"name\": \"\",\n  \"postcode\": \"\",\n  \"city\": \"\",\n  \"country\": \"\",\n  \"userId\": 0,\n  \"customerId\": \"\",\n  \"url\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{addressBaseUrl}}/api/v1/address/{{id}}",
+              "host": ["{{addressBaseUrl}}"],
+              "path": ["api", "v1", "address", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Update an existing address"
+        },
+        {
+          "name": "Delete Address By Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{addressBaseUrl}}/api/v1/address/{{id}}",
+              "host": ["{{addressBaseUrl}}"],
+              "path": ["api", "v1", "address", "{{id}}"]
+            }
+          },
+          "response": [],
+          "description": "Delete an address by its ID"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "stripeBaseUrl",
+      "value": "http://localhost:8083"
+    },
+    {
+      "key": "categoryBaseUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "productBaseUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "carouselBaseUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "authBaseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "userBaseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "addressBaseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "customerId",
+      "value": ""
+    },
+    {
+      "key": "id",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "limits",
+      "value": "10"
+    },
+    {
+      "key": "top",
+      "value": "10"
+    },
+    {
+      "key": "promo",
+      "value": "true"
+    },
+    {
+      "key": "active",
+      "value": "true"
+    },
+    {
+      "key": "keyword",
+      "value": ""
+    },
+    {
+      "key": "page",
+      "value": "0"
+    },
+    {
+      "key": "size",
+      "value": "6"
+    },
+    {
+      "key": "categoriesIds",
+      "value": ""
+    },
+    {
+      "key": "promoOnly",
+      "value": "false"
+    },
+    {
+      "key": "sort",
+      "value": "desc"
+    },
+    {
+      "key": "name",
+      "value": ""
+    },
+    {
+      "key": "categoryDto",
+      "value": ""
+    },
+    {
+      "key": "productDto",
+      "value": ""
+    },
+    {
+      "key": "userDto",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": ""
+    }
+  ]
+}

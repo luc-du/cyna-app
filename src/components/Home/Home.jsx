@@ -12,7 +12,7 @@ const Home = () => {
       aria-label="Homepage main content"
     >
       <HeroSection />
-      <section aria-label="Promotions">
+      {/* <section aria-label="Promotions">
         <PromoSection />
       </section>
       <section aria-label="Categories">
@@ -20,7 +20,7 @@ const Home = () => {
       </section>
       <section aria-label="Top Products">
         <TopProductsGrid />
-      </section>
+      </section> */}
     </main>
   );
 };

@@ -1,7 +1,10 @@
 import PropTypes from "prop-types";
+import { getCategoryImageUrl } from "../utils/mediaService";
 
 const CategoryHeader = ({ element, children }) => {
   console.log(element);
+  const imageUrl = getCategoryImageUrl(element.images);
+
   return (
     <div className="text-center my-6">
       <div className="relative">

@@ -1,51 +1,188 @@
-const PROTOCOL = "http";
-const HOST = "localhost";
-const API_BASE = "/api/v1";
+import { getApiUrl } from "../components/utils/api";
 
-const PORT_ADDRESS = 8082;
-const PORT_CATEGORIES = 8082;
-const PORT_CAROUSEL = 8082;
-const PORT_PRODUCTS = 8082;
+const AUTH_HOST = import.meta.env.VITE_API_HOST_AUTH;
+const SUBSCRIPTION_HOST = import.meta.env.VITE_API_HOST_SUBSCRIPTION;
+const PRODUCTS_HOST = import.meta.env.VITE_API_HOST_PRODUCTS;
+const CATEGORIES_HOST = import.meta.env.VITE_API_HOST_CATEGORIES;
+const CAROUSEL_HOST = import.meta.env.VITE_API_HOST_CAROUSEL;
 
 export const API_ROUTES = {
+  // ─── AUTHENTIFICATION ─────────────────────────────────────────────────────
   AUTH: {
-    SIGNIN: `http://localhost:8081/api/v1/auth/signin`,
-    SIGNUP: `http://localhost:8081/api/v1/auth/signup`,
-    VALIDATE: `http://localhost:8081/api/v1/auth/validate`,
+    SIGNIN: getApiUrl(AUTH_HOST, "/auth/signin"),
+    SIGNUP: getApiUrl(AUTH_HOST, "/auth/signup"),
+    VALIDATE: getApiUrl(AUTH_HOST, "/auth/validate"),
+    VERIFY_EMAIL: (email) =>
+      getApiUrl(
+        AUTH_HOST,
+        `/auth/verify-email?email=${encodeURIComponent(email)}`
+      ),
+    VALIDATE_EMAIL: (email) =>
+      getApiUrl(
+        AUTH_HOST,
+        `/auth/validate-email?email=${encodeURIComponent(email)}`
+      ),
+    VALIDATE_ACCOUNT: (email) =>
+      getApiUrl(
+        AUTH_HOST,
+        `/auth/validate-account?email=${encodeURIComponent(email)}`
+      ),
+    PASSWORD_FORGOT_BY_ID: (userId) =>
+      getApiUrl(AUTH_HOST, `/auth/password-forgot/${userId}`),
+    PASSWORD_FORGOT_BY_EMAIL: (email) =>
+      getApiUrl(
+        AUTH_HOST,
+        `/auth/password-forgot?email=${encodeURIComponent(email)}`
+      ),
   },
 
+  // ─── UTILISATEUR ───────────────────────────────────────────────────────────
   USER: {
-    BY_ID: (id) => `${API_BASE}/user/${id}`,
-    ALL: `${API_BASE}/user`,
-    SEARCH: (query) => `${API_BASE}/user/search?name=${query}`,
-    DELETE: (id) => `${API_BASE}/user/${id}`,
-    PATCH: (id) => `http://localhost:8081/api/v1/user/${id}`,
-    UPLOAD_PROFILE: (id) => `http://localhost:8081/api/v1/user/${id}/profiles`,
+    BY_ID: (id) => getApiUrl(AUTH_HOST, `/user/${id}`),
+    ALL: getApiUrl(AUTH_HOST, "/user"),
+    SEARCH: (name) =>
+      getApiUrl(AUTH_HOST, `/user/search?name=${encodeURIComponent(name)}`),
+    DELETE: (id) => getApiUrl(AUTH_HOST, `/user/${id}`),
+    PATCH: (id) => getApiUrl(AUTH_HOST, `/user/${id}`),
+    UPDATE_PASSWORD: (id) => getApiUrl(AUTH_HOST, `/user/${id}/password`),
+    UPLOAD_PROFILE: (id) => getApiUrl(AUTH_HOST, `/user/${id}/profiles`),
   },
 
+  // ─── ADRESSE ───────────────────────────────────────────────────────────────
   ADDRESS: {
-    POST: `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address`,
-    PATCH: (id) =>
-      `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address/${id}`,
-    DELETE: (id) =>
-      `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address/${id}`,
-    BY_USER: (userId) =>
-      `${PROTOCOL}://${HOST}:${PORT_ADDRESS}${API_BASE}/address?user_id=${userId}`,
+    ALL: getApiUrl(AUTH_HOST, "/address"),
+    CREATE: getApiUrl(AUTH_HOST, "/address"),
+    BY_ID: (id) => getApiUrl(AUTH_HOST, `/address/${id}`),
+    PATCH: (id) => getApiUrl(AUTH_HOST, `/address/${id}`),
+    DELETE: (id) => getApiUrl(AUTH_HOST, `/address/${id}`),
   },
 
-  CARD: {
-    BY_USER: (userId) => `${API_BASE}/card?user_id=${userId}`,
+  // ─── SUBSCRIPTIONS / STRIPE ─────────────────────────────────────────────────
+  SUBSCRIPTION: {
+    CREATE_CUSTOMER: getApiUrl(
+      SUBSCRIPTION_HOST,
+      "/subscriptions/create-customer"
+    ),
+    CREATE_PRICE: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/create-price"),
+    CREATE_SUBSCRIPTION: getApiUrl(
+      SUBSCRIPTION_HOST,
+      "/subscriptions/create-subscription"
+    ),
+    CANCEL_SUBSCRIPTION: getApiUrl(
+      SUBSCRIPTION_HOST,
+      "/subscriptions/subscription/cancel"
+    ),
+    UPDATE_SUBSCRIPTION: (subscriptionId) =>
+      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/subscriptionId`),
+    GET_BY_CUSTOMER: (customerId) =>
+      getApiUrl(
+        SUBSCRIPTION_HOST,
+        `/subscriptions?customerId=${encodeURIComponent(customerId)}`
+      ),
+    GET_BY_ID: (id) => getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/${id}`),
+    DELETE_SUBSCRIPTION: (id) =>
+      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/${id}`),
+    EPHEMERAL_KEY: (customerId) =>
+      getApiUrl(
+        SUBSCRIPTION_HOST,
+        `/subscriptions/${encodeURIComponent(customerId)}/ephemeral-key`
+      ),
+    CUSTOMER_PORTAL: (customerId) =>
+      getApiUrl(
+        SUBSCRIPTION_HOST,
+        `/subscriptions/${encodeURIComponent(customerId)}/customer-portal`
+      ),
+    GET_TOP_PRODUCTS: (top) =>
+      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/top-products?top=${top}`),
+    WEBHOOK: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/webhook"),
+    CONFIG: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/config"),
   },
 
-  CAROUSEL: {
-    GET: `${PROTOCOL}://${HOST}:${PORT_CAROUSEL}${API_BASE}/carousel`,
-  },
+  // ─── CATEGORIES ─────────────────────────────────────────────────────────────
   CATEGORIES: {
-    GET: `${PROTOCOL}://${HOST}:${PORT_CATEGORIES}${API_BASE}/categories`,
-    GET_BY_ID: (id) =>
-      `${PROTOCOL}://${HOST}:${PORT_CATEGORIES}${API_BASE}/categories/${id}`,
+    ALL: getApiUrl(CATEGORIES_HOST, "/categories"),
+    BY_ID: (id) => getApiUrl(CATEGORIES_HOST, `/categories/${id}`),
+    CREATE: getApiUrl(CATEGORIES_HOST, "/categories"),
+    UPDATE: (id, name) =>
+      getApiUrl(
+        CATEGORIES_HOST,
+        `/categories/${id}?name=${encodeURIComponent(name)}`
+      ),
+    DELETE: (id) => getApiUrl(CATEGORIES_HOST, `/categories/${id}`),
+    SEARCH: (name) =>
+      getApiUrl(
+        CATEGORIES_HOST,
+        `/categories/search?name=${encodeURIComponent(name)}`
+      ),
+    //GESTION DES IMAGES POUR UNE CATEGORIE
+    ADD_IMAGES: (categoryId) =>
+      getApiUrl(CATEGORIES_HOST, `/categories/${categoryId}/images`),
+    DELETE_IMAGES: (categoryId) =>
+      getApiUrl(CATEGORIES_HOST, `/categories/${categoryId}/images`),
   },
+
+  // ─── PRODUITS ───────────────────────────────────────────────────────────────
   PRODUCTS: {
-    GET: `${PROTOCOL}://${HOST}:${PORT_PRODUCTS}${API_BASE}/products`,
+    ALL: getApiUrl(PRODUCTS_HOST, "/products"),
+    PAGINATION: ({
+      page = 0,
+      size = 6,
+      categoriesIds = [],
+      promoOnly = false,
+      sort = "desc",
+    } = {}) => {
+      const params = new URLSearchParams();
+      params.set("page", page);
+      params.set("size", size);
+      if (categoriesIds.length) {
+        categoriesIds.forEach((id) => params.append("categoriesIds", id));
+      }
+      if (promoOnly) {
+        params.set("promoOnly", promoOnly);
+      }
+      if (sort) {
+        params.set("sort", sort);
+      }
+      return getApiUrl(
+        PRODUCTS_HOST,
+        `/products/pagination?${params.toString()}`
+      );
+    },
+    SEARCH: ({ keyword = "", page = 0, size = 6 } = {}) => {
+      const params = new URLSearchParams();
+      if (keyword) params.set("keyword", keyword);
+      params.set("page", page);
+      params.set("size", size);
+      return getApiUrl(PRODUCTS_HOST, `/products/search?${params.toString()}`);
+    },
+    BY_ID: (productId) => getApiUrl(PRODUCTS_HOST, `/products/${productId}`),
+    CREATE: getApiUrl(PRODUCTS_HOST, "/products"),
+    UPDATE: (productId) => getApiUrl(PRODUCTS_HOST, `/products/${productId}`),
+    DELETE: (productId) => getApiUrl(PRODUCTS_HOST, `/products/${productId}`),
+    GET_TOP_PRODUCTS: ({ top = 10, promo = true, active = true } = {}) => {
+      const params = new URLSearchParams();
+      params.set("top", top);
+      if (promo !== undefined) params.set("promo", promo);
+      if (active !== undefined) params.set("active", active);
+      return getApiUrl(
+        PRODUCTS_HOST,
+        `/products/top-products?${params.toString()}`
+      );
+    },
+    // GESTION DES IMAGES D’UN PRODUIT
+    ADD_IMAGES: (productId) =>
+      getApiUrl(PRODUCTS_HOST, `/products/${productId}/images`), // PATCH attend tableau d’IDs en query/body
+    DELETE_IMAGES: (productId) =>
+      getApiUrl(PRODUCTS_HOST, `/products/${productId}/images`),
+  },
+
+  // ─── CAROUSEL ───────────────────────────────────────────────────────────────
+  CAROUSEL: {
+    ALL: (limits = 10) =>
+      getApiUrl(CAROUSEL_HOST, `/carousel?limits=${limits}`),
+    CREATE: getApiUrl(CAROUSEL_HOST, "/carousel"),
+    UPDATE: getApiUrl(CAROUSEL_HOST, "/carousel"),
+    DELETE: (id) => getApiUrl(CAROUSEL_HOST, `/carousel/${id}`),
+    BY_ID: (id) => getApiUrl(CAROUSEL_HOST, `/carousel/${id}`),
   },
 };

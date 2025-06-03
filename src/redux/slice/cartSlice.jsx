@@ -95,7 +95,7 @@ const cartSlice = createSlice({
       saveCartToLocalStorage(state.items, state.total);
     },
 
-    // 🗑️ Vider le panier
+    // Vider le panier
     clearCart: (state) => {
       state.items = [];
       state.total = 0;

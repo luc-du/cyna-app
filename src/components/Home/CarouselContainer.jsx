@@ -1,6 +1,6 @@
-import axios from "axios";
+// src/components/Home/CarouselContainer.jsx
 import { useEffect, useState } from "react";
-import { API_ROUTES } from "../../api/apiRoutes";
+import { fetchCarouselSlides } from "../../services/homeService";
 import Carousel from "./Carousel";
 
 const CarouselContainer = () => {
@@ -8,11 +8,10 @@ const CarouselContainer = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSlides = async () => {
-      try {
-        const response = await axios.get(API_ROUTES.CAROUSEL.GET);
-
-        const formattedSlides = response.data.map((item, index) => ({
+    fetchCarouselSlides()
+      .then((data) => {
+        // on reformate si besoin
+        const formatted = data.map((item) => ({
           id: item.id,
           imageUrl: item.imageUrl,
           title: item.title,
@@ -20,16 +19,12 @@ const CarouselContainer = () => {
           ctaText: item.ctaText || "Voir nos produits",
           ctaLink: item.ctaLink || "/categories",
         }));
-
-        setSlides(formattedSlides);
-      } catch (err) {
-        console.error("Erreur récupération carrousel :", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSlides();
+        setSlides(formatted);
+      })
+      .catch((err) => {
+        console.error("Erreur récup carrousel :", err);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
