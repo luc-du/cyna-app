@@ -13,7 +13,7 @@ const MAX_TOP_PRODUCTS = 4; // ou la valeur que vous souhaitez
  */
 export const fetchTopProducts = createAsyncThunk(
   "topProducts/fetchTopProducts",
-  async (_, thunkAPI) => {
+  async () => {
     try {
       // Appel à l'API pour récupérer tous les produits
       const response = await axios.get(API_ROUTES.PRODUCTS.GET_TOP_PRODUCTS);

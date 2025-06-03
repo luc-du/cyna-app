@@ -1,97 +1,89 @@
 // src/components/ProductDetail/ProductDetails.jsx
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { fetchProductById } from "../../redux/slice/productSlice";
 import ProductCarousel from "./ProductCarousel";
 import ProductCTA from "./ProductCTA";
 import ProductInfo from "./ProductInfo";
-import ProductPricing from "./ProductPricing";
 import ProductSpecs from "./ProductSpecs";
 
 /**
- * ProductDetails
+ * ProductDetails :
+ * - Récupère le productId depuis les params de l’URL.
+ * - Lance fetchProductById(productId) si besoin.
+ * - Affiche :
+ *   1) Un message “Chargement…” pendant la requête.
+ *   2) Une redirection vers /404 si l’API renvoie une erreur ou si le produit reste null après chargement.
+ *   3) Sinon, le détail complet du produit.
  *
- * - Récupère `productId` depuis les paramètres d’URL.
- * - Charge (via Redux) le détail du produit en appelant `fetchProductById`.
- * - Tant que l’appel est en cours, affiche un loader.
- * - En cas d’erreur, affiche un message d’erreur.
- * - Si aucun produit n’est trouvé (donnée `item` restée `null`), affiche « Produit non trouvé ».
- *
- * Accessibilité & ARIA :
- * - Le conteneur principal utilise `role="main"`.
- * - Chaque section (carousel, info, specs…) possède un `aria-label` ou un titre caché (`sr-only`).
+ * Accessibilité :
+ * - role="main" sur le conteneur principal.
+ * - Chaque section a son aria-label / aria-labelledby.
+ * - Les titres <h2> sont rendus “sr-only” pour les lecteurs d’écran.
  */
 const ProductDetails = () => {
   const { productId } = useParams();
   const dispatch = useDispatch();
 
+  // On récupère item/loading/error depuis le slice product
   const {
     item: product,
-    loadingItem: loading,
-    errorItem: error,
+    loading,
+    error,
   } = useSelector((state) => state.products);
 
+  // Si pas encore chargé ou si l’ID a changé, on déclenche la requête
   useEffect(() => {
-    if (!product) {
+    if (!product || product.id !== Number(productId)) {
       dispatch(fetchProductById(productId));
     }
-  }, [dispatch, product, productId]);
+  }, [dispatch, productId, product]);
 
-  // Affiche un loader pendant la requête
+  // 1) Tant que ça charge : on affiche un loader
   if (loading) {
     return (
       <main role="main" className="max-w-6xl mx-auto p-6">
-        <p role="status" className="text-center text-gray-600">
+        <p
+          role="status"
+          aria-live="polite"
+          className="text-center text-gray-600"
+        >
           Chargement du produit...
         </p>
       </main>
     );
   }
 
-  // Si une erreur est survenue
+  // 2) Si l’API a renvoyé une erreur (y compris 404 côté backend) : on redirige vers /404
   if (error) {
-    return (
-      <main role="main" className="max-w-6xl mx-auto p-6">
-        <p role="alert" className="text-center text-red-500">
-          {error}
-        </p>
-      </main>
-    );
+    return <Navigate to="/404" replace />;
   }
 
-  // Si, après chargement, aucun produit n’a été trouvé
+  // 3) Une fois la requête terminée (loading false + pas d’erreur), si product est toujours null :
+  //    cela signifie “Produit introuvable” ⇒ on redirige vers /404
   if (!product) {
-    return (
-      <main
-        role="main"
-        className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
-      >
-        <h2 className="text-2xl text-center">Produit non trouvé ⁉️</h2>
-      </main>
-    );
+    return <Navigate to="/404" replace />;
   }
 
-  // À ce stade, `product` est disponible et contient au moins un tableau `images`
-  const imageUrls = Array.isArray(product.images)
-    ? product.images.map((img) => img.url)
-    : [];
-
+  // 4) Sinon, le produit est bien récupéré : on affiche son détail
   return (
     <main
       role="main"
-      className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+      className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg space-y-8"
       aria-labelledby="product-title"
     >
-      {/* Titre caché pour lecteurs d’écran */}
+      {/* Titre caché pour les lecteurs d’écran */}
       <h1 id="product-title" className="sr-only">
-        Détails du produit : {product.name}
+        Détails du produit {product.name}
       </h1>
 
       {/* Carousel d’images */}
       <section aria-label="Galerie d’images du produit" className="mb-8">
-        {/* Si `imageUrls` est vide, le carousel affiche un placeholder interne */}
-        <ProductCarousel images={imageUrls} delayTransitionImage={5000} />
+        <ProductCarousel
+          images={product.images?.map((img) => img.url) || []}
+          delayTransitionImage={5000}
+        />
       </section>
 
       {/* Informations principales du produit */}
@@ -110,20 +102,12 @@ const ProductDetails = () => {
         <ProductSpecs product={product} />
       </section>
 
-      {/* Call to Action pour achat / abonnement */}
+      {/* Call to Action pour acheter / s’abonner */}
       <section aria-labelledby="product-cta-heading" className="mb-8">
         <h2 id="product-cta-heading" className="sr-only">
           Action principale
         </h2>
         <ProductCTA product={product} />
-      </section>
-
-      {/* Options de tarification */}
-      <section aria-labelledby="product-pricing-heading">
-        <h2 id="product-pricing-heading" className="sr-only">
-          Options de tarification
-        </h2>
-        <ProductPricing product={product} />
       </section>
     </main>
   );

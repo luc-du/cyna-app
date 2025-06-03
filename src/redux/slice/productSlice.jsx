@@ -61,9 +61,7 @@ const productSlice = createSlice({
     loadingList: false,
     errorList: null,
   },
-  reducers: {
-    // (aucun reducer « normal » pour l'instant)
-  },
+  reducers: {},
   extraReducers: (builder) => {
     // ---------- fetchProducts (liste de produits) ----------
     builder
@@ -103,8 +101,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductById.rejected, (state, action) => {
         state.loadingItem = false;
-        state.errorItem =
-          action.payload || "Erreur inconnue lors du fetchProductById";
+        state.errorItem = action.payload || "Erreur inconnue";
         state.item = null;
       });
   },

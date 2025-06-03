@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchCategoryDetails } from "../../redux/slice/categorySlice";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";
@@ -18,7 +17,7 @@ const CategoryDetails = () => {
 
   useEffect(() => {
     if (!category) {
-      dispatch(fetchCategoryDetails(categoryId));
+      // dispatch(fetchCategoryDetails(categoryId));
     }
   }, [categoryId, category, dispatch]);
 
