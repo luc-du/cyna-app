@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
+import Placeholder from "../../assets/images/empty-box.jpg";
 import CTAButton from "../ui/buttons/CTAButton";
 import { getCategoryImageUrl } from "../utils/mediaService";
 
 const ProductCard = ({ item }) => {
   console.log(item);
 
-  const imageUrl =
-    getCategoryImageUrl(item.images.url) ||
-    "https://via.placeholder.com/300x200?text=Pas+d'image";
+  const imageUrl = getCategoryImageUrl(item.images.url) || Placeholder;
 
   const isAvailable = item.active;
   const promotion = item.promo;

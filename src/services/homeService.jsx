@@ -8,7 +8,7 @@ import { API_ROUTES } from "../api/apiRoutes";
 export const fetchCarouselSlides = () => {
   return axios
     .get(API_ROUTES.CAROUSEL.ALL(/* facultatif : nombre de slides */))
-    .then((res) => res.data); // on renvoie directement le tableau d'objets
+    .then((res) => res.data);
 };
 
 /**

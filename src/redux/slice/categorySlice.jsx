@@ -245,6 +245,29 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+/**
+ * Récupère un produit unique depuis l'API, à partir de son productId.
+ * Utilise la route dynamique API_ROUTES.PRODUCTS.BY_ID(productId).
+ * En cas d’erreur, on rejette avec un message ou un fallback éventuel.
+ */
+export const fetchProductById = createAsyncThunk(
+  "product/fetchById",
+  async (productId, { rejectWithValue }) => {
+    try {
+      // Appel à la route /api/v1/products/:productId
+      const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(productId));
+      return response.data;
+    } catch (error) {
+      // Si l’API renvoie un message d’erreur, on le transmet
+      if (error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
+      // Sinon, on renvoie un message générique
+      return rejectWithValue("Échec de la récupération du produit");
+    }
+  }
+);
+
 // Slice Redux Toolkit pour la gestion des catégories
 /**
  * Ce slice gère l'état des catégories, y compris le chargement, les erreurs,
