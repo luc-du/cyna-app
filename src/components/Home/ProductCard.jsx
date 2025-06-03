@@ -2,6 +2,19 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  const imageSrc =
+    product.imageUrl ||
+    (Array.isArray(product.images) &&
+      product.images.length > 0 &&
+      product.images[0].url) ||
+    "/assets/images/placeholder-product.jpg";
+
+  const productLink =
+    product.link ||
+    (typeof product.id === "number" || typeof product.id === "string"
+      ? `/products/${product.id}`
+      : "#");
+
   return (
     <div
       className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
@@ -10,10 +23,7 @@ const ProductCard = ({ product }) => {
       tabIndex={0}
     >
       <img
-        src={
-          product.imageUrl ||
-          (product.images && product.images[0] && product.images[0].url)
-        }
+        src={imageSrc}
         alt={product.name}
         className="w-full h-40 object-cover"
         loading="lazy"
@@ -23,13 +33,7 @@ const ProductCard = ({ product }) => {
           {product.name}
         </h3>
         <Link
-          to={
-            product.link ||
-            (Array.isArray(product.id) &&
-              product.id[0] &&
-              `products/${product.id}`) ||
-            (typeof product.id === "number" && `/products/${product.id}`)
-          }
+          to={productLink}
           className="mt-2 inline-block text-blue-500 font-semibold hover:underline hover:text-blue-700 transition"
           aria-label={`Voir le produit ${product.name}`}
         >
@@ -39,22 +43,18 @@ const ProductCard = ({ product }) => {
     </div>
   );
 };
+
 ProductCard.propTypes = {
   product: PropTypes.shape({
-    imageUrl: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     name: PropTypes.string.isRequired,
-    link: PropTypes.string,
-    id: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.array,
-      PropTypes.number,
-      PropTypes.object,
-    ]),
+    imageUrl: PropTypes.string,
     images: PropTypes.arrayOf(
       PropTypes.shape({
-        url: PropTypes.string,
+        url: PropTypes.string.isRequired,
       })
     ),
+    link: PropTypes.string,
   }).isRequired,
 };
 

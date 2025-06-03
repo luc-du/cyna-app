@@ -15,6 +15,9 @@ const TopProductsGrid = () => {
     dispatch(fetchTopProducts());
   }, [dispatch]);
 
+  // On s’assure que topProducts est toujours un tableau avant le map
+  const safeTopProducts = Array.isArray(topProducts) ? topProducts : [];
+
   return (
     <section
       className="w-full py-10 px-6 rounded-lg md:px-20 bg-gray-100"
@@ -34,6 +37,7 @@ const TopProductsGrid = () => {
         Découvrez les solutions les plus demandées par nos clients.
       </p>
 
+      {/* Indicateur de chargement */}
       {loading && (
         <p
           className="text-center text-blue-500 mt-4"
@@ -43,6 +47,8 @@ const TopProductsGrid = () => {
           Chargement...
         </p>
       )}
+
+      {/* Affichage de l’erreur */}
       {error && (
         <p
           className="text-center text-red-500 mt-4"
@@ -53,17 +59,25 @@ const TopProductsGrid = () => {
         </p>
       )}
 
+      {/* Si ni chargement, ni erreur, ni produits */}
+      {!loading && !error && safeTopProducts.length === 0 && (
+        <p className="text-center text-gray-600 mt-4" role="status">
+          Aucun produit en vedette pour le moment.
+        </p>
+      )}
+
+      {/* Grille des top produits */}
       <div
         className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6"
         role="list"
         aria-label="Liste des top produits"
         tabIndex={0}
       >
-        {topProducts.map((product) => (
+        {safeTopProducts.map((product) => (
           <div
             role="listitem"
             key={product.id}
-            aria-label={`Produit: ${product.name}`}
+            aria-label={`Produit : ${product.name}`}
             tabIndex={0}
           >
             <ProductCard product={product} />

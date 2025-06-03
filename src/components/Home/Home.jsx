@@ -1,5 +1,6 @@
 import CategoriesGrid from "../Home/CategoriesGrid";
 import HeroSection from "./HeroSection";
+import TopProductsGrid from "./TopProductsGrid";
 const Home = () => {
   return (
     <main
@@ -12,9 +13,9 @@ const Home = () => {
       <section aria-label="Categories">
         <CategoriesGrid />
       </section>
-      {/* <section aria-label="Top Products">
+      <section aria-label="Top Products">
         <TopProductsGrid />
-      </section> */}
+      </section>
     </main>
   );
 };

@@ -153,6 +153,7 @@ npm run format
 ## Dossiers liés
 
 - [Documentation authentification (MD)](./docs/AUTH.md)
+- [Documentation rreacto homepage (MD)](./docs/SPRT050+.refacto-HomePAge%20-%20update_route.md)
 - [Dépôt backend Spring Boot (privé GitLab CE)](http://git.ce.cyna/backend-cyna)
 - [Documentation Swagger](http://localhost:8082/swagger-ui.html)
 - [Documentation du projet (PDF)](./docs/CDC_Projet_Cyna.pdf)
