@@ -1,25 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
-import { MOCK_Services } from "../../mock/MOCKS_DATA";
+import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 
 /**
  * Nombre maximum de produits à afficher dans le top produits.
  */
-const MAX_TOP_PRODUCTS = 4;
-
+const MAX_TOP_PRODUCTS = 4; // ou la valeur que vous souhaitez
 /**
  * Action asynchrone pour récupérer les produits en promotion et actifs depuis l'API.
- * En cas d'échec, utilise des données mockées comme solution de repli.
+ * En cas d'échec, renvoie directement un fallback issu de MOCK_TOP_PRODUCTS.
  */
 export const fetchTopProducts = createAsyncThunk(
   "topProducts/fetchTopProducts",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       // Appel à l'API pour récupérer tous les produits
-      const response = await axios.get(API_ROUTES.PRODUCTS.GET);
+      const response = await axios.get(API_ROUTES.PRODUCTS.GET_TOP_PRODUCTS);
 
-      // Filtrer les produits en promotion et actifs, puis les mapper au format attendu
+      // Filtrer les produits en promo et actifs, mapper au format attendu
       const mapped = response.data
         .filter((prod) => prod.promo === true && prod.active === true)
         .slice(0, MAX_TOP_PRODUCTS)
@@ -33,13 +32,32 @@ export const fetchTopProducts = createAsyncThunk(
           link: `/products/${prod.id}`,
         }));
 
-      // Retourner la liste des produits mappés
+      // Si la liste filtrée est vide, on renvoie également le fallback
+      if (mapped.length === 0) {
+        console.warn(
+          "fetchTopProducts: réponse vide de l'API, utilisation du fallback mock."
+        );
+        return MOCK_TOP_PRODUCTS.filter((p) => p.promo === true)
+          .slice(0, MAX_TOP_PRODUCTS)
+          .map((p) => ({
+            id: p.id,
+            name: p.name,
+            amount: p.amount,
+            promo: p.promo,
+            imageUrl: p.imageUrl || "/assets/images/placeholder-product.jpg",
+            link: `/products/${p.id}`,
+          }));
+      }
+
       return mapped;
     } catch (err) {
-      // En cas d'erreur, utiliser les données mockées comme fallback
-      console.warn("Top products: fallback mock (or error)", err);
+      // En cas d'erreur réseau / 500 / etc., on utilise le mock
+      console.warn(
+        "fetchTopProducts: erreur API, fallback sur MOCK_TOP_PRODUCTS",
+        err
+      );
 
-      const fallback = MOCK_Services.filter((p) => p.promo === true)
+      return MOCK_TOP_PRODUCTS.filter((p) => p.promo === true)
         .slice(0, MAX_TOP_PRODUCTS)
         .map((p) => ({
           id: p.id,
@@ -49,8 +67,6 @@ export const fetchTopProducts = createAsyncThunk(
           imageUrl: p.imageUrl || "/assets/images/placeholder-product.jpg",
           link: `/products/${p.id}`,
         }));
-
-      return rejectWithValue(fallback);
     }
   }
 );
@@ -83,6 +99,7 @@ const topProductsSlice = createSlice({
         state.items = action.payload || [];
         state.loading = false;
         state.error = "Échec API - fallback mock utilisé.";
+        state.items = MOCK_TOP_PRODUCTS;
       });
   },
 });

@@ -15,7 +15,6 @@ const TopProductsGrid = () => {
     dispatch(fetchTopProducts());
   }, [dispatch]);
 
-  // On s’assure que topProducts est toujours un tableau avant le map
   const safeTopProducts = Array.isArray(topProducts) ? topProducts : [];
 
   return (

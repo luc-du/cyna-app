@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
-import { MOCK_Categories } from "../../mock/MOCKS_DATA";
+import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
 
 // Constantes
 const CATEGORY_API_BASE_URL = "/api/v1/categories";
@@ -14,7 +14,10 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.CATEGORIES.GET, {});
+      const response = await axios.get(API_ROUTES.CATEGORIES.ALL, {});
+      if (!Array.isArray(response.data) || response.data.length === 0) {
+        return (response.data = MOCK_CATEGORIES);
+      }
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -22,14 +25,9 @@ export const fetchCategories = createAsyncThunk(
         if (error.response.data && error.response.data.message) {
           return rejectWithValue(error.response.data.message);
         }
-        // Fallback sur les données mockées en cas d'erreur API
-        console.warn(
-          "Fallback sur MOCK_Categories suite à une erreur :",
-          error.message
-        );
-        return rejectWithValue(MOCK_Categories);
+        console.error("fetchCategories: erreur API, fallback sur mock.", error);
+        return MOCK_CATEGORIES;
       }
-      return rejectWithValue("Failed to fetch categories");
     }
   }
 );
@@ -41,7 +39,7 @@ export const fetchCategories = createAsyncThunk(
  */
 export const searchCategories = createAsyncThunk(
   "categories/searchCategories",
-  async (name, { rejectWithValue, dispatch }) => {
+  async (name, { dispatch }) => {
     try {
       // Si le terme de recherche est trop court, filtrage côté client
       if (name.length < 3) {
@@ -291,6 +289,7 @@ const categorySlice = createSlice({
         state.categories = action.payload || [];
         state.loading = false;
         state.error = "Échec API, fallback mock utilisé.";
+        state.categories = MOCK_CATEGORIES;
       })
       // Gestion de la recherche de catégories
       .addCase(searchCategories.pending, (state) => {
@@ -307,7 +306,7 @@ const categorySlice = createSlice({
         state.categories = [];
       })
       // Après création, déclenche le rechargement des catégories
-      .addCase(createCategory.fulfilled, (state, action) => {
+      .addCase(createCategory.fulfilled, (state) => {
         state.loading = true;
       })
       // Après mise à jour, déclenche le rechargement des catégories

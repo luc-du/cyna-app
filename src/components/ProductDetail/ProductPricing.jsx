@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { MOCK_PricingOptions } from "../../mock/MOCKS_DATA.jsx";
+import { MOCK_PRICING_OPTIONS } from "../../mock/MOCKS_DATA.jsx";
 import CardProductPricing from "./CardProductPricing.jsx";
 
 const ProductPricing = ({ product }) => {
@@ -9,7 +9,7 @@ const ProductPricing = ({ product }) => {
 
   // 1.State :
   // 2.Functions:
-  const pricingOptions = MOCK_PricingOptions;
+  const pricingOptions = MOCK_PRICING_OPTIONS;
 
   const sortedPricingOptions = pricingOptions.sort((a, b) => {
     if (a.available === b.available) {
