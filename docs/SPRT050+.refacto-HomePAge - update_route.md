@@ -379,11 +379,6 @@ const Home = () => {
       {/* Section “Hero” avec le carrousel */}
       <HeroSection />
 
-      {/* Section Promotions (statique ou dynamique selon PromoSection) */}
-      <section aria-label="Promotions">
-        <PromoSection />
-      </section>
-
       {/* Section CategoriesGrid */}
       <section aria-label="Categories">
         <CategoriesGrid />
