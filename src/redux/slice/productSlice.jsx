@@ -24,7 +24,7 @@ export const fetchProducts = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       }
       // Sinon, on rejette avec les mocks
-      return rejectWithValue("vide");
+      return rejectWithValue(MOCK_TOP_PRODUCTS);
     }
   }
 );
@@ -38,8 +38,11 @@ export const fetchProductById = createAsyncThunk(
   async (productId, { rejectWithValue }) => {
     try {
       const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(productId));
+      console.log(productId);
+
       return response.data;
     } catch (error) {
+      console.error("❌ Erreur API fetchProductById:", error.response);
       if (error.response?.data?.message) {
         return rejectWithValue(error.response.data.message);
       }

@@ -33,7 +33,7 @@ const CategoryProductList = ({ element }) => {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {resolvedProducts.map((product) => (
-          <ProductCard key={product.id} item={product} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </section>
