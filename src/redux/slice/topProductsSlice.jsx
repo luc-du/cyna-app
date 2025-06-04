@@ -15,58 +15,38 @@ export const fetchTopProducts = createAsyncThunk(
   "topProducts/fetchTopProducts",
   async () => {
     try {
-      // Appel à l'API pour récupérer tous les produits
-      const response = await axios.get(API_ROUTES.PRODUCTS.GET_TOP_PRODUCTS);
+      const response = await axios.get(
+        API_ROUTES.PRODUCTS.GET_TOP_PRODUCTS({
+          top: MAX_TOP_PRODUCTS,
+          promo: true,
+          active: true,
+        })
+      );
 
-      // Filtrer les produits en promo et actifs, mapper au format attendu
-      const mapped = response.data
-        .filter((prod) => prod.promo === true && prod.active === true)
-        .slice(0, MAX_TOP_PRODUCTS)
-        .map((prod) => ({
-          id: prod.id,
-          name: prod.name,
-          amount: prod.amount,
-          promo: prod.promo,
-          imageUrl:
-            prod.images?.[0]?.url || "/assets/images/placeholder-product.jpg",
-          link: `/products/${prod.id}`,
-        }));
+      const mapped = response.data.slice(0, MAX_TOP_PRODUCTS).map((prod) => ({
+        id: prod.id,
+        name: prod.name,
+        amount: prod.amount,
+        promo: prod.promo,
+        imageUrl:
+          prod.images?.[0]?.url || "/assets/images/placeholder-product.jpg",
+        link: `/products/${prod.id}`,
+      }));
 
-      // Si la liste filtrée est vide, on renvoie également le fallback
       if (mapped.length === 0) {
         console.warn(
           "fetchTopProducts: réponse vide de l'API, utilisation du fallback mock."
         );
-        return MOCK_TOP_PRODUCTS.filter((p) => p.promo === true)
-          .slice(0, MAX_TOP_PRODUCTS)
-          .map((p) => ({
-            id: p.id,
-            name: p.name,
-            amount: p.amount,
-            promo: p.promo,
-            imageUrl: p.imageUrl || "/assets/images/placeholder-product.jpg",
-            link: `/products/${p.id}`,
-          }));
+        return MOCK_TOP_PRODUCTS.slice(0, MAX_TOP_PRODUCTS);
       }
 
       return mapped;
     } catch (err) {
-      // En cas d'erreur réseau / 500 / etc., on utilise le mock
       console.warn(
         "fetchTopProducts: erreur API, fallback sur MOCK_TOP_PRODUCTS",
         err
       );
-
-      return MOCK_TOP_PRODUCTS.filter((p) => p.promo === true)
-        .slice(0, MAX_TOP_PRODUCTS)
-        .map((p) => ({
-          id: p.id,
-          name: p.name,
-          amount: p.amount,
-          promo: p.promo,
-          imageUrl: p.imageUrl || "/assets/images/placeholder-product.jpg",
-          link: `/products/${p.id}`,
-        }));
+      return MOCK_TOP_PRODUCTS.slice(0, MAX_TOP_PRODUCTS);
     }
   }
 );

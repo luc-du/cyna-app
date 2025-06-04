@@ -1,46 +1,56 @@
+// src/components/Pages/CardCategory.jsx
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
+/**
+ * CardCategory
+ *
+ * - Affiche la vignette d'une catégorie, avec image + titre.
+ */
 const CardCategory = ({ element }) => {
-  const { id, name, description, images } = element;
-  const navigate = useNavigate();
+  // Détermine l'URL : ici on suppose que “element.id” suffit
+  const categoryLink = `/categories/${element.id}`;
 
-  const imageUrl =
-    images?.[0]?.url || "https://via.placeholder.com/300x200?text=Aucune+image";
-
-  const handleClick = () => {
-    navigate(`/categories/${id}`);
-  };
+  const imageSrc =
+    (Array.isArray(element.images) && element.images[0]?.url) ||
+    "/assets/images/placeholder-category.jpg";
 
   return (
-    <div
-      onClick={handleClick}
-      className="bg-white rounded-xl shadow p-4 flex flex-col items-center cursor-pointer hover:shadow-lg transition"
+    <Link
+      to={categoryLink}
+      className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+      role="region"
+      aria-label={`Catégorie : ${element.name}`}
+      tabIndex={0}
     >
       <img
-        src={imageUrl}
-        alt={`Illustration de la catégorie ${name}`}
-        className="w-full h-48 object-cover rounded-lg mb-4"
+        src={imageSrc}
+        alt={element.name}
+        loading="lazy"
+        className="w-full h-40 object-cover"
       />
-      <h2 className="text-lg font-bold mb-2">{name}</h2>
-      <p className="text-sm text-gray-600 text-center">{description}</p>
-    </div>
+      <div className="p-4 text-center">
+        <h3 className="text-lg font-semibold text-gray-800">{element.name}</h3>
+        {element.description && (
+          <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+            {element.description}
+          </p>
+        )}
+      </div>
+    </Link>
   );
 };
 
 CardCategory.propTypes = {
   element: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     name: PropTypes.string.isRequired,
-    description: PropTypes.string,
     images: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
         url: PropTypes.string,
-        uploadDate: PropTypes.string,
       })
     ),
+    description: PropTypes.string,
   }).isRequired,
 };
 
