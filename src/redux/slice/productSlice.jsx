@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
+import { processProductData } from "../../components/utils/productUtils";
 import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 
 /**
@@ -33,20 +34,27 @@ export const fetchProducts = createAsyncThunk(
  * Récupère un produit unique depuis l'API à partir de son productId.
  * Si l'appel échoue, on rejette avec un message d'erreur.
  */
+/**
+ * Récupère un produit par ID.
+ */
 export const fetchProductById = createAsyncThunk(
-  "product/fetchById",
+  "products/fetchById",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(productId));
-      console.log(productId);
-
-      return response.data;
-    } catch (error) {
-      console.error("❌ Erreur API fetchProductById:", error.response);
-      if (error.response?.data?.message) {
-        return rejectWithValue(error.response.data.message);
+      const id = Number(productId);
+      if (isNaN(id)) {
+        return rejectWithValue("ID produit invalide");
       }
-      return rejectWithValue("Échec de la récupération du produit");
+      const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(id));
+      console.log("url fetchProductByID", API_ROUTES.PRODUCTS.BY_ID(id));
+
+      return processProductData(response.data);
+    } catch (error) {
+      const status = error?.response?.status;
+      if (status === 400 || status === 404) {
+        return rejectWithValue("Produit introuvable ou requête invalide");
+      }
+      return rejectWithValue("Erreur serveur");
     }
   }
 );

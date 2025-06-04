@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { getPricingModel } from "../utils/getMockData.jsx";
 import { getPricingLabel } from "../utils/pricingLabel";
 
 const ProductSpecs = ({ product }) => {
@@ -18,10 +19,12 @@ const ProductSpecs = ({ product }) => {
         <ul className="text-sm" aria-label="Spécifications du produit">
           <li>
             <strong>Modèle tarifaire :</strong>{" "}
-            {getPricingLabel(product.pricingModel)}
+            {product.pricingModel
+              ? getPricingLabel(product.pricingModel)
+              : getPricingModel(product.defaultPricing)}
           </li>
           <li>
-            <strong>Marque :</strong> {product.brand}
+            <strong>Marque :</strong> {product.brand ? product.brand : "Cyna"}
           </li>
         </ul>
       </section>
@@ -32,6 +35,7 @@ const ProductSpecs = ({ product }) => {
 ProductSpecs.propTypes = {
   product: PropTypes.shape({
     pricingModel: PropTypes.string.isRequired,
+    defaultPricing: PropTypes.string.isRequired,
     brand: PropTypes.string.isRequired,
     priceId: PropTypes.string.isRequired,
     amount: PropTypes.number.isRequired,

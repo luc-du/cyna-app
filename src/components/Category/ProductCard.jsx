@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import Placeholder from "../../assets/images/empty-box.jpg";
 import CTAButton from "../ui/buttons/CTAButton";
+import { getPromo } from "../utils/getMockData";
 import { getCategoryImageUrl } from "../utils/mediaService";
 
 const ProductCard = ({ item }) => {
@@ -9,7 +10,7 @@ const ProductCard = ({ item }) => {
   const imageUrl = getCategoryImageUrl(item.images.url) || Placeholder;
 
   const isAvailable = item.active;
-  const promotion = item.promo;
+  const promotion = item.promo || getPromo(item.id);
 
   return (
     <div
@@ -32,9 +33,7 @@ const ProductCard = ({ item }) => {
             id="promo"
             className="w-full flex items-center justify-center mt-2"
           >
-            <p className="block text-sm font-semibold text-center text-violet-600">
-              🎉 Promotion
-            </p>
+            <p className="block text-sm font-semibold text-center text-violet-600"></p>
           </div>
         )}
         <div className="flex flex-col items-end justify-end">

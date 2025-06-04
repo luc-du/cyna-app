@@ -16,7 +16,8 @@ const ProductCTA = ({ product }) => {
         id: product.id,
         name: product.name,
         brand: product.brand,
-        imageUrl: product.images?.[0]?.url || "",
+        imageUrl:
+          product.images?.[0]?.url || "/assets/images/default-product.jpg",
         pricingModel: product.pricingModel,
         price: product.amount,
       })
@@ -25,7 +26,7 @@ const ProductCTA = ({ product }) => {
     showToast(`✔️ ${product.name} ajouté au panier`);
   };
 
-  const isAvailable = product.active === true;
+  const isAvailable = (product.active = true);
 
   return (
     <div className="flex items-center justify-center mt-6 relative">
