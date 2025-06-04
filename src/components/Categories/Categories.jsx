@@ -1,54 +1,68 @@
-// src/components/Pages/Categories.jsx
-
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slice/categorySlice";
 import CategorySearch from "./CategorySearch";
 import GridCategories from "./GridCategories";
 
+/**
+ * Page principale des catégories.
+ * - Affichage initial (BE ou mock)
+ * - Affichage dynamique selon la recherche
+ * - Réaffichage automatique si input vidé
+ */
 export default function Categories() {
   const dispatch = useDispatch();
-  const {
-    categories,
-    loading: categoriesLoading,
-    error: categoriesError,
-    searchResults,
-  } = useSelector((state) => state.categories);
+  const { list, loading, error, searchResults, isSearchMode } = useSelector(
+    (state) => state.categories
+  );
 
-  // Au montage, on charge toutes les catégories si ce n’est pas déjà fait
+  // Évite plusieurs dispatch au montage
+  const hasFetchedOnce = useRef(false);
+
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (!hasFetchedOnce.current) {
+      hasFetchedOnce.current = true;
       dispatch(fetchCategories());
     }
-  }, [dispatch, categories]);
+  }, [dispatch]);
 
-  if (categoriesLoading) {
-    return <p className="text-center my-10">Chargement des catégories…</p>;
+  // Détermine quelle data afficher
+  let dataToDisplay = [];
+
+  if (isSearchMode) {
+    // Mode recherche : afficher les résultats de recherche (même si vide)
+    dataToDisplay = searchResults;
+  } else {
+    // Mode normal : afficher la liste principale (qui contient déjà le fallback mock)
+    dataToDisplay = list || [];
   }
-  if (categoriesError) {
-    return (
-      <p className="text-center my-10 text-red-500">
-        Erreur lors de la récupération : {categoriesError}
-      </p>
-    );
-  }
 
-  // Si la recherche retourne au moins un élément, on affiche searchResults
-  // Sinon, on affiche toutes les catégories
-  const dataToDisplay =
-    Array.isArray(searchResults) && searchResults.length > 0
-      ? searchResults
-      : categories || [];
-
+  // Rendu conditionnel
   return (
     <main role="main" className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold text-center mb-6">Catégories</h1>
 
-      {/* Composant de recherche */}
+      {/* Barre de recherche */}
       <CategorySearch />
 
-      {/* Grille de cartes de catégories */}
-      <GridCategories data={dataToDisplay} />
+      {/* Affichage conditionnel */}
+      {loading ? (
+        <p className="text-center mt-10">Chargement des catégories…</p>
+      ) : error && !list.length ? (
+        <p className="text-center mt-10 text-red-500">
+          Erreur de récupération : {error}
+        </p>
+      ) : dataToDisplay.length > 0 ? (
+        <GridCategories data={dataToDisplay} />
+      ) : isSearchMode ? (
+        <p className="text-center mt-10 text-gray-500">
+          Aucune catégorie ne correspond à votre recherche.
+        </p>
+      ) : (
+        <p className="text-center mt-10 text-gray-500">
+          Aucune catégorie à afficher.
+        </p>
+      )}
     </main>
   );
 }

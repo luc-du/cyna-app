@@ -24,7 +24,7 @@ export const fetchProducts = createAsyncThunk(
         return rejectWithValue(error.response.data.message);
       }
       // Sinon, on rejette avec les mocks
-      return rejectWithValue(MOCK_TOP_PRODUCTS);
+      return rejectWithValue("vide");
     }
   }
 );

@@ -1,308 +1,166 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_ROUTES } from "../../api/apiRoutes";
+import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
 
-// Constants
-const CATEGORY_API_BASE_URL = "/api/v1/categories";
+// ─── Async Thunks ─────────────────────────────────────────────
 
-// Helper functions
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No token found");
-  return { Authorization: `Bearer ${token}` };
-};
-
-// Async thunks
+/**
+ * Récupère toutes les catégories.
+ * Fallback MOCK_CATEGORIES en cas d'erreur serveur.
+ */
 export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders();
-      console.log("fetchCategories headers:", headers);
-      const response = await axios.get(CATEGORY_API_BASE_URL, {
-        headers,
-      });
-      console.log("From categorySlice", response.data);
-      return response.data;
+      const response = await axios.get(API_ROUTES.CATEGORIES.ALL);
+      const data = response.data;
+
+      if (!Array.isArray(data) || data.length === 0) {
+        return rejectWithValue(MOCK_CATEGORIES); // Fallback mock si vide
+      }
+
+      return data;
     } catch (error) {
-      if (error.response) {
-        console.error("fetchCategories error response:", error.response);
-        if (error.response.data && error.response.data.message) {
-          return rejectWithValue(error.response.data.message);
-        }
-      }
-      if (error.message === "No token found") {
-        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
-      }
-      return rejectWithValue("Failed to fetch categories");
+      return rejectWithValue(MOCK_CATEGORIES); // Fallback mock si erreur
     }
   }
 );
 
+/**
+ * Recherche une ou plusieurs catégories.
+ * Fallback locale si le backend retourne une liste vide.
+ */
 export const searchCategories = createAsyncThunk(
-  "categories/searchCategories",
-  async (name, { rejectWithValue, dispatch }) => {
+  "categories/search",
+  async (name, { rejectWithValue }) => {
     try {
-      // If search term is too short, grab all categories instead of using the search endpoint
-      if (name.length < 3) {
-        console.log("Search term too short, filtering categories client-side");
-        const allCategories = await dispatch(fetchCategories()).unwrap();
+      const response = await axios.get(API_ROUTES.CATEGORIES.SEARCH(name));
+      const data = response.data;
 
-        // Filter categories in the frontend based on the search term
-        const searchTerm = name.toLowerCase();
-        return Array.isArray(allCategories)
-          ? allCategories.filter(
-              (category) =>
-                (category.name &&
-                  category.name.toLowerCase().includes(searchTerm)) ||
-                (category.description &&
-                  category.description.toLowerCase().includes(searchTerm))
-            )
-          : [];
-      }
-
-      // Try the search endpoint if search term is long enough
-      const response = await fetch(
-        `${CATEGORY_API_BASE_URL}/search?name=${encodeURIComponent(name)}`,
-        {
-          headers: getAuthHeaders(),
-        }
-      );
-
-      if (!response.ok) {
-        console.warn(
-          `Category search endpoint returned ${response.status}: ${response.statusText}`
+      if (!Array.isArray(data) || data.length === 0) {
+        const fallback = MOCK_CATEGORIES.filter((cat) =>
+          cat.name.toLowerCase().includes(name.toLowerCase())
         );
-
-        // Fall back to client-side filtering
-        const allCategories = await dispatch(fetchCategories()).unwrap();
-        const searchTerm = name.toLowerCase();
-
-        return Array.isArray(allCategories)
-          ? allCategories.filter(
-              (category) =>
-                (category.name &&
-                  category.name.toLowerCase().includes(searchTerm)) ||
-                (category.description &&
-                  category.description.toLowerCase().includes(searchTerm))
-            )
-          : [];
+        return fallback;
       }
 
-      const data = await response.json();
-      return Array.isArray(data) ? data : [];
-    } catch (error) {
-      console.error("Search category error:", error);
-      // Return empty array instead of rejecting to prevent UI errors
-      return [];
-    }
-  }
-);
-
-export const createCategory = createAsyncThunk(
-  "categories/createCategory",
-  async (categoryData, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
-      const response = await fetch("/api/v1/categories", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: categoryData,
-      });
-      if (!response.ok) {
-        throw new Error("Failed to create category");
-      }
-      return await response.text();
-    } catch (error) {
-      if (error.message === "No token found") {
-        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
-      }
+      return data || MOCK_CATEGORIES;
+    } catch (err) {
       return rejectWithValue(
-        error instanceof Error ? error.message : "Failed to create category"
+        err?.response?.data?.message ||
+          "Erreur lors de la recherche de catégories"
       );
     }
   }
 );
 
-export const updateCategory = createAsyncThunk(
-  "categories/updateCategory",
-  async ({ categoryId, formData }, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
-
-      // Make sure the description is properly included in formData
-      // The backend expects 'description' as a param just like 'name'
-
-      const response = await fetch(`/api/v1/categories/${categoryId}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        // Try to get more detailed error messages
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to update category");
-      }
-
-      return await response.text();
-    } catch (error) {
-      if (error.message === "No token found") {
-        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
-      }
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Failed to update category"
-      );
-    }
-  }
-);
-
-export const deleteCategory = createAsyncThunk(
-  "categories/delete",
-  async (id, { rejectWithValue }) => {
-    try {
-      const headers = getAuthHeaders();
-      await axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {
-        headers,
-      });
-      return id;
-    } catch (error) {
-      if (error.message === "No token found") {
-        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
-      }
-      return rejectWithValue("Failed to delete category");
-    }
-  }
-);
-
-export const deleteMultipleCategories = createAsyncThunk(
-  "categories/deleteMultiple",
-  async (ids, { rejectWithValue }) => {
-    try {
-      const headers = getAuthHeaders();
-      await Promise.all(
-        ids.map((id) =>
-          axios.delete(`${CATEGORY_API_BASE_URL}/${id}`, {
-            headers,
-          })
-        )
-      );
-      return ids;
-    } catch (error) {
-      if (error.message === "No token found") {
-        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
-      }
-      return rejectWithValue("Failed to delete categories");
-    }
-  }
-);
-
-export const fetchCategoryDetails = createAsyncThunk(
-  "categories/fetchDetails",
+/**
+ * Récupère une catégorie par ID.
+ */
+export const fetchCategoryById = createAsyncThunk(
+  "categories/fetchById",
   async (categoryId, { rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders();
-      const response = await axios.get(
-        `${CATEGORY_API_BASE_URL}/${categoryId}`,
-        {
-          headers,
-        }
-      );
-      return response.data;
-    } catch (error) {
-      if (error.message === "No token found") {
-        return rejectWithValue("Token manquant, veuillez vous reconnecter.");
+      const res = await axios.get(API_ROUTES.CATEGORIES.BY_ID(categoryId));
+      return res.data;
+    } catch (err) {
+      if (err.response?.data?.message) {
+        return rejectWithValue(err.response.data.message);
       }
-      return rejectWithValue("Failed to fetch category details");
+      return rejectWithValue("Impossible de récupérer cette catégorie.");
     }
   }
 );
 
-export const fetchProducts = createAsyncThunk(
-  "products/fetchAll",
-  async (_, { rejectWithValue }) => {
-    try {
-      const headers = getAuthHeaders();
-      const response = await axios.get("/api/v1/products", { headers });
-      return response.data;
-    } catch (error) {
-      if (error.response?.data?.message) {
-        return rejectWithValue(error.response.data.message);
-      }
-      return rejectWithValue("Échec de la récupération des produits");
-    }
-  }
-);
+// ─── Slice ───────────────────────────────────────────────────
 
-// Slice
 const categorySlice = createSlice({
   name: "categories",
   initialState: {
-    categories: [],
+    list: [],
     loading: false,
     error: null,
+
+    searchResults: [],
+    loadingSearch: false,
+    errorSearch: null,
+    isSearchMode: false,
+
+    selectedCategory: null,
+    loadingSelected: false,
+    errorSelected: null,
   },
-  reducers: {},
+  reducers: {
+    clearSearchResults: (state) => {
+      state.searchResults = [];
+      state.errorSearch = null;
+      state.isSearchMode = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
+
+      // ─── fetchCategories ─────────────────────────────────────────────
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.list = [];
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload;
+        state.list = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+
+        // 🎯 Cas du fallback mock : l'erreur contient un tableau de catégories
+        if (Array.isArray(action.payload)) {
+          state.list = action.payload;
+          state.error = "Fallback mock appliqué (serveur vide ou erreur)";
+        } else {
+          state.list = [];
+          state.error =
+            action.payload ||
+            "Erreur inconnue lors du chargement des catégories";
+        }
       })
+
+      // ─── fetchCategoryById ───────────────────────────────────────────
+      .addCase(fetchCategoryById.pending, (state) => {
+        state.loadingSelected = true;
+        state.errorSelected = null;
+        state.selectedCategory = null;
+      })
+      .addCase(fetchCategoryById.fulfilled, (state, action) => {
+        state.loadingSelected = false;
+        state.selectedCategory = action.payload;
+      })
+      .addCase(fetchCategoryById.rejected, (state, action) => {
+        state.loadingSelected = false;
+        state.errorSelected = action.payload || "Erreur lors du chargement.";
+        state.selectedCategory = null;
+      })
+
+      // ─── searchCategories ───────────────────────────────────────────
       .addCase(searchCategories.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.loadingSearch = true;
+        state.errorSearch = null;
+        state.isSearchMode = true;
       })
       .addCase(searchCategories.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categories = Array.isArray(action.payload) ? action.payload : [];
+        state.loadingSearch = false;
+        state.searchResults = action.payload;
+        state.isSearchMode = true;
       })
       .addCase(searchCategories.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "Search failed";
-        state.categories = [];
-      })
-      .addCase(createCategory.fulfilled, (state, action) => {
-        // Reload categories after creation to get the updated list with IDs
-        state.loading = true;
-      })
-      .addCase(updateCategory.fulfilled, (state) => {
-        // Reload categories after update to get the updated list
-        state.loading = true;
-      })
-      .addCase(deleteCategory.fulfilled, (state, action) => {
-        state.categories = state.categories.filter(
-          (category) => category.id !== action.payload
-        );
-      })
-      .addCase(deleteMultipleCategories.fulfilled, (state, action) => {
-        state.categories = state.categories.filter(
-          (category) => !action.payload.includes(category.id)
-        );
-      })
-      .addCase(fetchCategoryDetails.fulfilled, (state, action) => {
-        // Find the category in state and update it with detailed data
-        const index = state.categories.findIndex(
-          (cat) => cat.id === action.payload.id
-        );
-        if (index !== -1) {
-          state.categories[index] = action.payload;
-        }
+        state.loadingSearch = false;
+        state.searchResults = [];
+        state.errorSearch = action.payload;
+        state.isSearchMode = true;
       });
   },
 });
 
+export const { clearSearchResults } = categorySlice.actions;
 export default categorySlice.reducer;

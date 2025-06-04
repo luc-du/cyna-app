@@ -1,27 +1,43 @@
-import PropTypes from "prop-types";
-import { sortProductsByPriority } from "../utils/sortProductByPriority";
-import ProductCard from "./ProductCard";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchProductById } from "../../redux/slice/productSlice";
+// import Loader from "../components/ui/Loader";
 
-const CategoryProductList = ({ element }) => {
-  const products = element.products || [];
-  const sortedProducts = sortProductsByPriority(products);
+/**
+ * Page de détail d’un produit.
+ * Redirige vers une page 404 si l’identifiant est invalide.
+ */
+const ProductDetails = () => {
+  const { productId } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { item, loadingItem, errorItem } = useSelector(
+    (state) => state.products
+  );
+
+  useEffect(() => {
+    dispatch(fetchProductById(productId));
+  }, [productId, dispatch]);
+
+  useEffect(() => {
+    if (errorItem) {
+      navigate("/404", { replace: true });
+    }
+  }, [errorItem, navigate]);
+
+  // if (loadingItem) return <Loader />;
+  if (loadingItem) return "Chargement";
+  if (!item) return null;
 
   return (
-    <main className="mt-6">
-      <h2>Produits et Services</h2>
-      <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {sortedProducts.map((item) => (
-          <ProductCard item={item} key={item.id} />
-        ))}
-      </section>
-    </main>
+    <div className="max-w-5xl mx-auto p-6">
+      <h1 className="text-2xl font-bold">{item.name}</h1>
+      <p className="text-gray-600">{item.description}</p>
+      {/* Ajoute les images, spécifications, CTA, etc. */}
+    </div>
   );
 };
 
-CategoryProductList.propTypes = {
-  element: PropTypes.shape({
-    products: PropTypes.array.isRequired,
-  }).isRequired,
-};
-
-export default CategoryProductList;
+export default ProductDetails;

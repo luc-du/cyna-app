@@ -1,5 +1,3 @@
-// src/components/Pages/GridCategories.jsx
-
 import PropTypes from "prop-types";
 import CardCategory from "./CardCategory";
 
