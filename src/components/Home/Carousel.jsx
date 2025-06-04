@@ -12,7 +12,7 @@ const mockSlides = [
     title: "Protection avancée pour vos PME",
     description: "Découvrez nos solutions EDR, SOC et XDR.",
     ctaText: "Voir nos produits",
-    ctaLink: "/categories",
+    ctaLink: "/products",
   },
   {
     id: 2,

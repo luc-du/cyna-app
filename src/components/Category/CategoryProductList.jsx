@@ -1,27 +1,47 @@
 import PropTypes from "prop-types";
-import { sortProductsByPriority } from "../utils/sortProductByPriority";
-import ProductCard from "./ProductCard";
-
+import { MOCK_SERVICES } from "../../mock/MOCKS_DATA";
+import ProductCard from "../Home/ProductCard";
+/**
+ * Affiche les produits d'une catégorie, en mode hybride (backend ou mock)
+ */
 const CategoryProductList = ({ element }) => {
-  const products = element.products || [];
-  const sortedProducts = sortProductsByPriority(products);
+  // Gestion sécurité
+  if (!element) return null;
+
+  const servicesIds = element.services ?? [];
+
+  // Si la catégorie vient du backend avec un champ `products` directement intégré
+  const fromBackend =
+    Array.isArray(element.products) && element.products.length > 0;
+
+  const resolvedProducts = fromBackend
+    ? element.products
+    : MOCK_SERVICES.filter((service) => servicesIds.includes(service.id));
+
+  if (!resolvedProducts.length) {
+    return (
+      <p className="text-center mt-6 text-gray-500">
+        Aucun produit ou service associé à cette catégorie.
+      </p>
+    );
+  }
 
   return (
-    <main className="mt-6">
-      <h2>Produits et Services</h2>
-      <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {sortedProducts.map((item) => (
-          <ProductCard item={item} key={item.id} />
+    <section className="mt-10">
+      <h2 className="text-xl font-semibold mb-4 text-center">
+        Produits associés
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {resolvedProducts.map((product) => (
+          <ProductCard key={product.id} product={product} />
         ))}
-      </section>
-    </main>
+      </div>
+    </section>
   );
 };
 
 CategoryProductList.propTypes = {
-  element: PropTypes.shape({
-    products: PropTypes.array.isRequired,
-  }).isRequired,
+  element: PropTypes.object,
 };
 
 export default CategoryProductList;

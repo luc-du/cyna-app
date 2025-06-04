@@ -1,27 +1,43 @@
-import {
-  default as edr,
-  default as edrProtection,
-} from "../assets/images/edr.jpg";
-import {
-  default as placeholder3,
-  default as threatIntelligence,
-} from "../assets/images/identity.jpg";
-import placeholder from "../assets/images/siem.jpg";
-import {
-  default as cynaSocEntreprise,
-  default as cynaSocStandard,
-  default as soc,
-  default as socStandard,
-} from "../assets/images/soc.jpg";
-import socPremium from "../assets/images/socPremium.jpg";
-import {
-  default as placeholder2,
-  default as siemAnalytics,
-} from "../assets/images/technology.jpg";
-import {
-  default as xdr,
-  default as xdrAdvanced,
-} from "../assets/images/xdr.jpg";
+import { indexImages } from "../assets/indexImages";
+
+const [
+  cert, // indexImages[0]
+  cloud, // indexImages[1]
+  edr, // indexImages[2]
+  edrPremium, // indexImages[3]
+  emptyBox, // indexImages[4]
+  idImg, // indexImages[5]
+  identity, // indexImages[6]
+  security, // indexImages[7]
+  siem, // indexImages[8]
+  soc, // indexImages[9]
+  socPremium, // indexImages[10]
+  technology, // indexImages[11]
+  xdr, // indexImages[12]
+  xdrPremium, // indexImages[13]
+  cynaItLogo, // indexImages[14]
+  logoCynaWhite, // indexImages[15]
+  logoPng, // indexImages[16]
+] = indexImages;
+
+/*
+  3) Si vous aviez auparavant plusieurs alias pointant sur le même fichier,
+     il suffit de réassigner les variables qui vous intéressent.
+     Par exemple, on considérait autrefois :
+     import edr from "./edr.jpg";
+     import edrProtection from "./edr.jpg";
+     → on veut maintenant que `edrProtection` pointe sur la même URL qu’`edr`
+*/
+const edrProtection = edr;
+const placeholder3 = identity; // anciennement importé depuis identity.jpg
+const threatIntelligence = identity; // idem
+const placeholder = siem; // anciennement importé depuis siem.jpg
+const cynaSocEntreprise = soc; // on décide que cynaSocEntreprise = soc.jpg
+const cynaSocStandard = soc; // idem
+const socStandard = soc; // idem
+const placeholder2 = technology; // anciennement importé depuis technology.jpg
+const siemAnalytics = technology; // idem
+const xdrAdvanced = xdr; // idem
 
 /**
  * MOCK_CATEGORIES
@@ -30,14 +46,17 @@ import {
  *  - name: string
  *  - url: string
  *  - images: [ { url: string } ]
- *  - description: string (optionnel, utilisé ailleurs)
+ *  - description: string (optionnel)
  */
 export const MOCK_CATEGORIES = [
   {
     id: 1,
     name: "SOC & SIEM",
     url: "1",
-    images: [{ url: placeholder }],
+    images: [
+      { url: placeholder }, // siem.jpg
+      { url: placeholder3 }, // identity.jpg
+    ],
     description:
       "Le SOC (Security Operations Center) fonctionne en synergie avec le SIEM (Security Information and Event Management) pour surveiller, détecter et répondre aux incidents de sécurité.",
     services: [1, 2], // Référence vers les services
@@ -46,7 +65,10 @@ export const MOCK_CATEGORIES = [
     id: 2,
     name: "EDR & XDR",
     url: "2",
-    images: [{ url: placeholder2 }],
+    images: [
+      { url: placeholder2 }, // technology.jpg
+      { url: placeholder }, // siem.jpg
+    ],
     description:
       "Les solutions EDR (Endpoint Detection and Response) et XDR (Extended Detection and Response) offrent une protection proactive contre les menaces avancées.",
     services: [3, 4],
@@ -55,7 +77,9 @@ export const MOCK_CATEGORIES = [
     id: 3,
     name: "CYNA SOC",
     url: "3",
-    images: [{ url: placeholder3 }],
+    images: [
+      { url: placeholder3 }, // identity.jpg
+    ],
     description:
       "Le CYNA SOC est une solution de sécurité de nouvelle génération basée sur une architecture cloud-native.",
     services: [5, 6],
@@ -68,27 +92,26 @@ export const MOCK_CATEGORIES = [
  *  - id: number
  *  - name: string
  *  - images: [ { url: string } ] ou imageUrl: string
- *  - link: string (facultatif, si on souhaite diriger vers une page produit)
+ *  - link: string (facultatif)
  *
- * Ici, on récupère les mêmes objets que MOCK_SERVICES, on choisit certains services comme “top produits”.
+ * Ici, on récupère les mêmes objets que MOCK_SERVICES, on choisit certains
+ * services comme “top produits”.
  */
-// src/data/mocks.js
-
 export const MOCK_TOP_PRODUCTS = [
   {
     id: 1,
     name: "SOC Standard",
     amount: 199.99,
     promo: true,
-    imageUrl: socStandard,
+    imageUrl: socStandard, // soc.jpg
     link: "/products/1",
   },
   {
     id: 2,
     name: "SOC Premium",
     amount: 299.99,
-    promo: true,
-    imageUrl: socPremium,
+    promo: false,
+    imageUrl: socPremium, // socPremium.jpg
     link: "/products/2",
   },
   {
@@ -96,7 +119,7 @@ export const MOCK_TOP_PRODUCTS = [
     name: "EDR Protection",
     amount: 149.99,
     promo: false,
-    imageUrl: edrProtection,
+    imageUrl: edrProtection, // edr.jpg
     link: "/products/3",
   },
   {
@@ -104,7 +127,7 @@ export const MOCK_TOP_PRODUCTS = [
     name: "XDR Advanced",
     amount: 249.99,
     promo: true,
-    imageUrl: xdrAdvanced,
+    imageUrl: xdrAdvanced, // xdr.jpg
     link: "/products/4",
   },
   {
@@ -112,7 +135,7 @@ export const MOCK_TOP_PRODUCTS = [
     name: "CYNA SOC Std",
     amount: 219.99,
     promo: true,
-    imageUrl: cynaSocStandard,
+    imageUrl: cynaSocStandard, // soc.jpg
     link: "/products/5",
   },
   {
@@ -120,7 +143,7 @@ export const MOCK_TOP_PRODUCTS = [
     name: "CYNA SOC Entreprise",
     amount: 499.99,
     promo: false,
-    imageUrl: cynaSocEntreprise,
+    imageUrl: cynaSocEntreprise, // soc.jpg
     link: "/products/6",
   },
   {
@@ -128,7 +151,7 @@ export const MOCK_TOP_PRODUCTS = [
     name: "SIEM Analytics",
     amount: 179.99,
     promo: true,
-    imageUrl: siemAnalytics,
+    imageUrl: siemAnalytics, // technology.jpg
     link: "/products/7",
   },
   {
@@ -136,7 +159,7 @@ export const MOCK_TOP_PRODUCTS = [
     name: "Threat Intelligence",
     amount: 209.99,
     promo: false,
-    imageUrl: threatIntelligence,
+    imageUrl: threatIntelligence, // identity.jpg
     link: "/products/8",
   },
 ];
@@ -151,10 +174,13 @@ export const MOCK_SERVICES = [
     id: 1,
     name: "SOC Standard",
     categoryId: 1,
-    images: [{ url: soc }],
+    images: [
+      { url: soc }, // soc.jpg
+      { url: socPremium }, // socPremium.jpg
+    ],
     description:
       "Service de surveillance continue et de réponse aux incidents en temps réel.",
-    available: false,
+    available: true,
     defaultPricing: 1,
     pricingIds: [1, 2, 3],
     keyCharacteristics: {
@@ -168,7 +194,9 @@ export const MOCK_SERVICES = [
     id: 2,
     name: "SOC Premium",
     categoryId: 1,
-    images: [{ url: socPremium }],
+    images: [
+      { url: socPremium }, // socPremium.jpg
+    ],
     description:
       "Version avancée du SOC avec des analyses approfondies et réponse automatisée.",
     available: true,
@@ -185,7 +213,9 @@ export const MOCK_SERVICES = [
     id: 3,
     name: "EDR Protection",
     categoryId: 2,
-    images: [{ url: edr }],
+    images: [
+      { url: edr }, // edr.jpg
+    ],
     description: "Détection et réponse aux menaces ciblant les terminaux.",
     available: false,
     defaultPricing: 1,
@@ -201,7 +231,9 @@ export const MOCK_SERVICES = [
     id: 4,
     name: "XDR Advanced",
     categoryId: 2,
-    images: [{ url: xdr }],
+    images: [
+      { url: xdr }, // xdr.jpg
+    ],
     description:
       "Gestion centralisée des menaces sur l’ensemble des environnements.",
     available: true,
@@ -218,7 +250,9 @@ export const MOCK_SERVICES = [
     id: 5,
     name: "CYNA SOC Standard",
     categoryId: 3,
-    images: [{ url: placeholder2 }],
+    images: [
+      { url: placeholder2 }, // technology.jpg
+    ],
     description: "Surveillance de sécurité cloud-native avec support 24/7.",
     available: true,
     defaultPricing: 1,
@@ -234,7 +268,9 @@ export const MOCK_SERVICES = [
     id: 6,
     name: "CYNA SOC Entreprise",
     categoryId: 3,
-    images: [{ url: placeholder3 }],
+    images: [
+      { url: placeholder3 }, // identity.jpg
+    ],
     description:
       "Solution SOC dédiée aux grandes entreprises, avec personnalisation avancée.",
     available: true,
@@ -258,7 +294,7 @@ export const MOCK_PRICING_OPTIONS = [
   {
     id: 1,
     name: "Mensuel",
-    price: 29.99,
+    price: 30000, //stripe prix en cts
     available: true,
     description: "Paiement mensuel pour une flexibilité maximale.",
   },

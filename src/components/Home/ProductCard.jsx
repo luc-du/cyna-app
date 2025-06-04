@@ -1,61 +1,92 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { getPromo } from "../utils/getMockData";
 
+/**
+ * ProductCard
+ * Affiche une carte produit/service avec image, nom et prix.
+ * Protège contre les objets incomplets ou mal formés.
+ */
 const ProductCard = ({ product }) => {
-  const imageSrc =
-    product.imageUrl ||
-    (Array.isArray(product.images) &&
-      product.images.length > 0 &&
-      product.images[0].url) ||
-    "/assets/images/placeholder-product.jpg";
+  if (!product || !product.id || !product.name) {
+    console.warn("ProductCard – product mal formé :", product);
+    return null;
+  }
 
-  const productLink =
-    product.link ||
-    (typeof product.id === "number" || typeof product.id === "string"
-      ? `/products/${product.id}`
-      : "#");
+  // Gestion des images - adapter selon le format du BE
+  const image = (() => {
+    if (product.imageUrl) {
+      return product.imageUrl;
+    }
+
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      const firstImage = product.images[0];
+      if (typeof firstImage === "string") {
+        return firstImage;
+      }
+      // Si c'est un objet avec url
+      if (firstImage?.url) {
+        return firstImage.url;
+      }
+    }
+
+    return "/assets/images/default-product.jpg";
+  })();
+
+  // S'assurer que l'ID est une string pour l'URL
+  const productId = String(product.id);
+  const promotion = product.promo || getPromo(product.id);
 
   return (
-    <div
-      className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
-      role="region"
-      aria-label={`Carte du produit ${product.name}`}
-      tabIndex={0}
+    <Link
+      to={`/products/${productId}`}
+      className="block shadow-md rounded-lg overflow-hidden hover:shadow-xl transition"
+      aria-label={`Voir les détails de ${product.name}`}
     >
       <img
-        src={imageSrc}
+        src={image}
         alt={product.name}
         className="w-full h-40 object-cover"
-        loading="lazy"
+        onError={(e) => {
+          e.target.src = "/assets/images/default-product.jpg";
+        }}
       />
-      <div className="p-4 text-center">
-        <h3 className="text-md font-semibold text-gray-800" tabIndex={0}>
-          {product.name}
-        </h3>
-        <Link
-          to={productLink}
-          className="mt-2 inline-block text-blue-500 font-semibold hover:underline hover:text-blue-700 transition"
-          aria-label={`Voir le produit ${product.name}`}
-        >
-          Voir le produit
-        </Link>
+      <div className="p-4">
+        <h3 className="text-lg font-semibold">{product.name}</h3>
+        {promotion && (
+          <div
+            id="promo"
+            className="w-full flex items-center justify-center mt-2"
+          >
+            <p className="block text-sm font-semibold text-center text-violet-600">
+              {promotion}
+            </p>
+          </div>
+        )}
+
+        <p className="text-gray-600">
+          {typeof product.amount === "number" && product.amount > 0
+            ? `${product.amount.toFixed(2)} €`
+            : "Prix sur demande"}
+        </p>
+        {product.brand && (
+          <p className="text-sm text-gray-500 mt-1">Marque: {product.brand}</p>
+        )}
       </div>
-    </div>
+    </Link>
   );
 };
 
 ProductCard.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
+    promo: PropTypes.bool,
+    brand: PropTypes.string,
     imageUrl: PropTypes.string,
-    images: PropTypes.arrayOf(
-      PropTypes.shape({
-        url: PropTypes.string.isRequired,
-      })
-    ),
-    link: PropTypes.string,
-  }).isRequired,
+    images: PropTypes.array,
+    amount: PropTypes.number,
+  }),
 };
 
 export default ProductCard;

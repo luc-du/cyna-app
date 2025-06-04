@@ -34,9 +34,6 @@ export const fetchTopProducts = (
 
 /**
  * Récupère les promotions (par exemple : produits en promo).
- * -> Sur ton API, on n’a pas d’endpoint "promo only", mais on peut faire :
- *    GET /products/pagination?promoOnly=true&page=0&size=…
- * À adapter si tu as un endpoint spécifique pour les promos.
  */
 export const fetchPromoProducts = (options = { page: 0, size: 6 }) => {
   const { page, size } = options;

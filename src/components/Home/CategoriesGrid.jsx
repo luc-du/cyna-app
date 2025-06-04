@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA"; // Assure-toi d'avoir ce mock disponible
 import { fetchCategories } from "../../redux/slice/categorySlice";
 import CategoryCard from "./CategoryCard";
 
@@ -16,7 +16,17 @@ const CategoriesGrid = () => {
     }
   }, [dispatch, categories]);
 
-  const safeCategories = Array.isArray(categories) ? categories : [];
+  // Gestion du fallback avec avertissement console
+  const safeCategories =
+    Array.isArray(categories) && categories.length > 0
+      ? categories
+      : (() => {
+          console.warn(
+            "Fallback utilisé : affichage des catégories mockées sur HomePage (CategoriesGrid)"
+          );
+          return MOCK_CATEGORIES;
+        })();
+
   const mappedCategories = safeCategories.map((cat) => ({
     id: cat.id,
     name: cat.name,
@@ -80,13 +90,6 @@ const CategoriesGrid = () => {
   );
 };
 
-export default CategoriesGrid;
+CategoriesGrid.propTypes = {};
 
-CategoryCard.propTypes = {
-  category: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-  }).isRequired,
-};
+export default CategoriesGrid;
