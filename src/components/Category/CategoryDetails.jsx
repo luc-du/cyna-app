@@ -1,62 +1,68 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
+import { fetchCategoryById } from "../../redux/slice/categorySlice";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";
-import CategoryProductList from "./CategoryProductList";
 
-/**
- * Affiche les détails d'une catégorie à partir de son ID.
- * Redirige vers la liste des catégories en cas d'erreur ou ID invalide.
- */
 const CategoryDetails = () => {
+  const { categoryId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { categoryId } = useParams();
+  const hasTriedLocalFallback = useRef(false);
 
-  // Conversion en nombre pour matcher l'ID de la catégorie dans le store
-  const parsedId = parseInt(categoryId);
+  const {
+    selectedCategory,
+    loadingSelected,
+    errorSelected,
+    list: fullList,
+  } = useSelector((state) => state.categories);
 
-  // Si l'ID n'est pas un entier valide, redirection immédiate
+  // Si aucune catégorie sélectionnée, on tente de la récupérer (BE ou mock)
   useEffect(() => {
-    if (isNaN(parsedId)) {
-      navigate("/categories", { replace: true });
+    if (!selectedCategory || selectedCategory.id?.toString() !== categoryId) {
+      const fallback = [...fullList, ...MOCK_CATEGORIES].find(
+        (cat) => cat.id?.toString() === categoryId
+      );
+
+      if (fallback) {
+        dispatch({
+          type: "categories/fetchById/fulfilled",
+          payload: fallback,
+        });
+        hasTriedLocalFallback.current = true;
+      } else {
+        dispatch(fetchCategoryById(categoryId));
+        hasTriedLocalFallback.current = false;
+      }
     }
-  }, [parsedId, navigate]);
+  }, [categoryId, dispatch, selectedCategory, fullList]);
 
-  // Récupération de la liste des catégories en store
-  const categoryList = useSelector((state) => state.categories.list);
-
-  // Recherche de la catégorie dans le state global
-  const category = categoryList.find((cat) => cat.id === parsedId);
-
-  // Redirection fallback si non trouvée
+  // Redirection 404 en cas d’échec
   useEffect(() => {
-    if (!category) {
-      console.warn(`Aucune catégorie trouvée pour l'ID ${categoryId}`);
-      navigate("*", { replace: true });
+    if (!loadingSelected && errorSelected && !selectedCategory) {
+      navigate("/404");
     }
-  }, [category, categoryId, navigate]);
+  }, [loadingSelected, errorSelected, selectedCategory, navigate]);
 
-  if (!category) {
-    return (
-      <p className="text-center mt-10 text-gray-600" role="status">
-        Chargement ou redirection...
-      </p>
-    );
+  if (loadingSelected || !selectedCategory) {
+    return <p className="text-center mt-10">Chargement de la catégorie…</p>;
   }
 
   return (
     <div className="max-w-7xl w-full my-6 mx-auto p-4">
       <NavigateButton
         handleClick={() => navigate("/categories")}
-        label="⬅️ Retour aux catégories"
+        label="⬅️ Liste des catégories"
       />
-      <CategoryHeader element={category}>
-        <CategoryDescription element={category} />
+
+      <CategoryHeader element={selectedCategory}>
+        <CategoryDescription element={selectedCategory} />
       </CategoryHeader>
-      <CategoryProductList element={category} />
+
+      {/* <CategoryProductList element={selectedCategory} /> */}
     </div>
   );
 };

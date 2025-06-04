@@ -17,12 +17,12 @@ export const fetchCategories = createAsyncThunk(
       const data = response.data;
 
       if (!Array.isArray(data) || data.length === 0) {
-        return rejectWithValue(MOCK_CATEGORIES); // Fallback mock si vide
+        return rejectWithValue(MOCK_CATEGORIES);
       }
 
       return data;
     } catch (error) {
-      return rejectWithValue(MOCK_CATEGORIES); // Fallback mock si erreur
+      return rejectWithValue(MOCK_CATEGORIES);
     }
   }
 );
