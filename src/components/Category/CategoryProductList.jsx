@@ -1,43 +1,47 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { fetchProductById } from "../../redux/slice/productSlice";
-// import Loader from "../components/ui/Loader";
-
+import PropTypes from "prop-types";
+import { MOCK_SERVICES } from "../../mock/MOCKS_DATA";
+import ProductCard from "../Home/ProductCard";
 /**
- * Page de détail d’un produit.
- * Redirige vers une page 404 si l’identifiant est invalide.
+ * Affiche les produits d'une catégorie, en mode hybride (backend ou mock)
  */
-const ProductDetails = () => {
-  const { productId } = useParams();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const CategoryProductList = ({ element }) => {
+  // Gestion sécurité
+  if (!element) return null;
 
-  const { item, loadingItem, errorItem } = useSelector(
-    (state) => state.products
-  );
+  const servicesIds = element.services ?? [];
 
-  useEffect(() => {
-    dispatch(fetchProductById(productId));
-  }, [productId, dispatch]);
+  // Si la catégorie vient du backend avec un champ `products` directement intégré
+  const fromBackend =
+    Array.isArray(element.products) && element.products.length > 0;
 
-  useEffect(() => {
-    if (errorItem) {
-      navigate("/404", { replace: true });
-    }
-  }, [errorItem, navigate]);
+  const resolvedProducts = fromBackend
+    ? element.products
+    : MOCK_SERVICES.filter((service) => servicesIds.includes(service.id));
 
-  // if (loadingItem) return <Loader />;
-  if (loadingItem) return "Chargement";
-  if (!item) return null;
+  if (!resolvedProducts.length) {
+    return (
+      <p className="text-center mt-6 text-gray-500">
+        Aucun produit ou service associé à cette catégorie.
+      </p>
+    );
+  }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold">{item.name}</h1>
-      <p className="text-gray-600">{item.description}</p>
-      {/* Ajoute les images, spécifications, CTA, etc. */}
-    </div>
+    <section className="mt-10">
+      <h2 className="text-xl font-semibold mb-4 text-center">
+        Produits associés
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {resolvedProducts.map((product) => (
+          <ProductCard key={product.id} item={product} />
+        ))}
+      </div>
+    </section>
   );
 };
 
-export default ProductDetails;
+CategoryProductList.propTypes = {
+  element: PropTypes.object,
+};
+
+export default CategoryProductList;

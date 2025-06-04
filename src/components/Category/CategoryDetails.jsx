@@ -6,6 +6,7 @@ import { fetchCategoryById } from "../../redux/slice/categorySlice";
 import NavigateButton from "../ui/buttons/NavigateButton";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";
+import CategoryProductList from "./CategoryProductList";
 
 const CategoryDetails = () => {
   const { categoryId } = useParams();
@@ -62,7 +63,7 @@ const CategoryDetails = () => {
         <CategoryDescription element={selectedCategory} />
       </CategoryHeader>
 
-      {/* <CategoryProductList element={selectedCategory} /> */}
+      <CategoryProductList element={selectedCategory} />
     </div>
   );
 };

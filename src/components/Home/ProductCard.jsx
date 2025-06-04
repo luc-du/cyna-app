@@ -1,61 +1,48 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
-  const imageSrc =
-    product.imageUrl ||
-    (Array.isArray(product.images) &&
-      product.images.length > 0 &&
-      product.images[0].url) ||
-    "/assets/images/placeholder-product.jpg";
+/**
+ * ProductCard
+ * Affiche une carte produit/service avec image, nom et prix.
+ * Protège contre les objets incomplets ou mal formés.
+ */
+const ProductCard = ({ item }) => {
+  if (!item || !item.id || !item.name) {
+    console.warn("ProductCard – item mal formé :", item);
+    return null;
+  }
 
-  const productLink =
-    product.link ||
-    (typeof product.id === "number" || typeof product.id === "string"
-      ? `/products/${product.id}`
-      : "#");
+  const image =
+    item.imageUrl ||
+    item.images?.[0]?.url ||
+    "/assets/images/default-product.jpg";
 
   return (
-    <div
-      className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
-      role="region"
-      aria-label={`Carte du produit ${product.name}`}
-      tabIndex={0}
+    <Link
+      to={`/products/${item.id}`}
+      className="block shadow-md rounded-lg overflow-hidden hover:shadow-xl transition"
     >
-      <img
-        src={imageSrc}
-        alt={product.name}
-        className="w-full h-40 object-cover"
-        loading="lazy"
-      />
-      <div className="p-4 text-center">
-        <h3 className="text-md font-semibold text-gray-800" tabIndex={0}>
-          {product.name}
-        </h3>
-        <Link
-          to={productLink}
-          className="mt-2 inline-block text-blue-500 font-semibold hover:underline hover:text-blue-700 transition"
-          aria-label={`Voir le produit ${product.name}`}
-        >
-          Voir le produit
-        </Link>
+      <img src={image} alt={item.name} className="w-full h-40 object-cover" />
+      <div className="p-4">
+        <h3 className="text-lg font-semibold">{item.name}</h3>
+        <p className="text-gray-600">
+          {typeof item.amount === "number"
+            ? `${item.amount} €`
+            : "Prix sur demande"}
+        </p>
       </div>
-    </div>
+    </Link>
   );
 };
 
 ProductCard.propTypes = {
-  product: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
     imageUrl: PropTypes.string,
-    images: PropTypes.arrayOf(
-      PropTypes.shape({
-        url: PropTypes.string.isRequired,
-      })
-    ),
-    link: PropTypes.string,
-  }).isRequired,
+    images: PropTypes.array,
+    amount: PropTypes.number,
+  }),
 };
 
 export default ProductCard;
