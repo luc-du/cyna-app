@@ -1,77 +1,95 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA"; // Assure-toi d'avoir ce mock disponible
 import { fetchCategories } from "../../redux/slice/categorySlice";
-import CategorySearch from "../Categories/CategorySearch";
-import GridCategories from "../Categories/GridCategories";
+import CategoryCard from "./CategoryCard";
 
-/**
- * Page principale des catégories.
- * - Affichage initial (BE ou mock)
- * - Affichage dynamique selon la recherche
- * - Réaffichage automatique si input vidé
- */
-export default function Categories() {
+const CategoriesGrid = () => {
   const dispatch = useDispatch();
-  const { list, loading, error, searchResults } = useSelector(
+  const { categories, loading, error } = useSelector(
     (state) => state.categories
   );
 
-  // Évite plusieurs dispatch au montage
-  const hasFetchedOnce = useRef(false);
-
   useEffect(() => {
-    if (!hasFetchedOnce.current) {
-      hasFetchedOnce.current = true;
+    if (!Array.isArray(categories) || categories.length === 0) {
       dispatch(fetchCategories());
     }
-  }, [dispatch]);
+  }, [dispatch, categories]);
 
-  // Détermine quelle data afficher
-  let dataToDisplay = [];
-  let isSearchMode = false;
+  // Gestion du fallback avec avertissement console
+  const safeCategories =
+    Array.isArray(categories) && categories.length > 0
+      ? categories
+      : (() => {
+          console.warn(
+            "Fallback utilisé : affichage des catégories mockées sur HomePage (CategoriesGrid)"
+          );
+          return MOCK_CATEGORIES;
+        })();
 
-  // Si searchResults existe et n'est pas vide, on est en mode recherche
-  if (Array.isArray(searchResults) && searchResults.length > 0) {
-    dataToDisplay = searchResults;
-    isSearchMode = true;
-  }
-  // Si searchResults est un tableau vide, on est en mode recherche sans résultats
-  else if (Array.isArray(searchResults) && searchResults.length === 0) {
-    dataToDisplay = [];
-    isSearchMode = true;
-  }
-  // Sinon, on affiche la liste principale (list contient déjà le fallback mock si nécessaire)
-  else {
-    dataToDisplay = list || [];
-    isSearchMode = false;
-  }
+  const mappedCategories = safeCategories.map((cat) => ({
+    id: cat.id,
+    name: cat.name,
+    imageUrl:
+      Array.isArray(cat.images) && cat.images.length > 0
+        ? cat.images[0].url
+        : "/assets/images/placeholder-category.jpg",
+    url: cat.id.toString(),
+  }));
 
-  // Rendu conditionnel
   return (
-    <main role="main" className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-center mb-6">Catégories</h1>
+    <section
+      className="w-full py-10 px-6 md:px-20"
+      aria-labelledby="categories-heading"
+      role="region"
+    >
+      <h2
+        id="categories-heading"
+        className="text-2xl md:text-3xl font-bold text-center text-primaryBackground"
+      >
+        Nos Catégories
+      </h2>
+      <p className="text-center text-gray-600 mt-2">
+        Découvrez nos différentes solutions de cybersécurité adaptées à vos
+        besoins.
+      </p>
 
-      {/* Barre de recherche */}
-      <CategorySearch />
-
-      {/* Affichage conditionnel */}
-      {loading ? (
-        <p className="text-center mt-10">Chargement des catégories…</p>
-      ) : error && !Array.isArray(list) ? (
-        <p className="text-center mt-10 text-red-500">
-          Erreur de récupération : {error}
-        </p>
-      ) : dataToDisplay.length > 0 ? (
-        <GridCategories data={dataToDisplay} />
-      ) : isSearchMode ? (
-        <p className="text-center mt-10 text-gray-500">
-          Aucune catégorie ne correspond à votre recherche.
-        </p>
-      ) : (
-        <p className="text-center mt-10 text-gray-500">
-          Aucune catégorie à afficher.
+      {/* Indicateur de chargement */}
+      {loading && (
+        <p
+          className="text-center text-blue-500 mt-4"
+          role="status"
+          aria-live="polite"
+        >
+          Chargement...
         </p>
       )}
-    </main>
+
+      {error && (
+        <p className="text-center text-red-500 mt-4" role="alert">
+          {error}
+        </p>
+      )}
+
+      {!loading && !error && mappedCategories.length === 0 && (
+        <p className="text-center text-gray-600 mt-4" role="status">
+          Aucune catégorie disponible pour le moment.
+        </p>
+      )}
+
+      <div
+        className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-6"
+        role="list"
+        aria-label="Liste des catégories"
+      >
+        {mappedCategories.map((category) => (
+          <CategoryCard key={category.id} category={category} />
+        ))}
+      </div>
+    </section>
   );
-}
+};
+
+CategoriesGrid.propTypes = {};
+
+export default CategoriesGrid;
