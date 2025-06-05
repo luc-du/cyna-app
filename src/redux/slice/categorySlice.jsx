@@ -91,17 +91,50 @@ export const searchCategories = createAsyncThunk(
  */
 export const fetchCategoryById = createAsyncThunk(
   "categories/fetchById",
-  async (categoryId, { rejectWithValue }) => {
+  async (categoryId, { getState, rejectWithValue }) => {
+    const state = getState().categories; // accès à state.categories
+    const fullList = state.list || [];
+
+    // 1. Si la catégorie est déjà dans fullList, on la renvoie direct
+    const existInState = fullList.find(
+      (cat) => cat.id?.toString() === categoryId
+    );
+    if (existInState) {
+      // On renvoie l’objet existant sans passer par l’API
+      return existInState;
+    }
+
+    // 2. Sinon, on tente l’appel HTTP
     try {
-      const res = await categoryService.getCategoryById(categoryId);
-      return res.data;
+      const response = await categoryService.getCategoryById(categoryId);
+      const data = response.data;
+      return data;
     } catch (err) {
-      const msg = err.response?.data?.message || SEARCH_UNKNOWN_ERROR;
-      return rejectWithValue(msg);
+      // Si 404 ou autre, on essaie fallback local dans MOCK_CATEGORIES
+      const status = err.response?.status;
+      if (status === 404 || status === 400) {
+        const fallback = MOCK_CATEGORIES.find(
+          (cat) => cat.id?.toString() === categoryId
+        );
+        if (fallback) {
+          return fallback;
+        } else {
+          return rejectWithValue("Catégorie introuvable"); //404
+        }
+      }
+      // Erreur réseau ou autre
+      const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
+      // On regarde quand même si on a un fallback partiel
+      const fallback = MOCK_CATEGORIES.find(
+        (cat) => cat.id?.toString() === categoryId
+      );
+      if (fallback) {
+        return fallback;
+      }
+      return rejectWithValue(msg || SEARCH_UNKNOWN_ERROR);
     }
   }
 );
-
 // ─── Slice ───────────────────────────────────────────────────
 
 const categorySlice = createSlice({
@@ -156,6 +189,7 @@ const categorySlice = createSlice({
       })
 
       // ─── fetchCategoryById ───────────────────────────────────────────
+      // ─── fetchCategoryById ──────────────────────────────────────────────────
       .addCase(fetchCategoryById.pending, (state) => {
         state.loadingSelected = true;
         state.errorSelected = null;
@@ -171,7 +205,6 @@ const categorySlice = createSlice({
         state.errorSelected = action.payload || SEARCH_UNKNOWN_ERROR;
         state.selectedCategory = null;
       })
-
       // ─── searchCategories ───────────────────────────────────────────
       .addCase(searchCategories.pending, (state) => {
         state.loadingSearch = true;
