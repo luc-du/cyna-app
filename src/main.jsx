@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App.jsx";
 import { GlobalToastProvider } from "./components/GlobalToastProvider.jsx";
 import "./index.css";
-import store from "./redux/store/Store"; // ici
+import store from "./redux/store/Store";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

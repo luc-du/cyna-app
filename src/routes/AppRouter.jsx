@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
 import PrivateRoute from "../components/guards/PrivateRoute";
-import ProductList from "../components/ProductList";
+import ProductList from "../components/Products/ProductList";
 import ProtectedRoute from "../components/ProtectedRoute";
 import CartPage from "../pages/CartPage";
 import CategoriesPage from "../pages/CategoriesPage";
@@ -29,7 +29,7 @@ const AppRouter = () => {
         {/* Categories et produits/services */}
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/categories/:categoryId" element={<CategoryPage />} />
-        <Route path="products" element={<ProductList />} />
+        <Route path="/products" element={<ProductList />} />
         <Route path="/products/:productId" element={<ProductPage />} />
         <Route path="/product:id" element={<ProductPage />} />
 

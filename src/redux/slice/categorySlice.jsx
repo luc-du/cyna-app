@@ -1,13 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
+import {
+  FALLBACK_API_MESSAGE,
+  FALLBACK_STATE_DEFAULT,
+  FALLBACK_STATE_PREFIX,
+  SEARCH_UNKNOWN_ERROR,
+} from "../../components/utils/errorMessages";
 import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
 
 // ─── Async Thunks ─────────────────────────────────────────────
 
 /**
  * Récupère toutes les catégories.
- * Fallback MOCK_CATEGORIES en cas d'erreur serveur.
+ * Fallback MOCK_CATEGORIES en cas d’erreur réseau/serveur ou tableau vide.
  */
 export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
@@ -16,20 +22,31 @@ export const fetchCategories = createAsyncThunk(
       const response = await axios.get(API_ROUTES.CATEGORIES.ALL);
       const data = response.data;
 
+      // Si le backend renvoie un tableau vide ou non-tableau → fallback
       if (!Array.isArray(data) || data.length === 0) {
-        return rejectWithValue(MOCK_CATEGORIES);
+        return rejectWithValue({
+          isFallback: true,
+          fallback: MOCK_CATEGORIES,
+          message: undefined,
+        });
       }
 
       return data;
-    } catch (error) {
-      return rejectWithValue(MOCK_CATEGORIES);
+    } catch (err) {
+      // En cas d’erreur réseau/serveur → fallback avec message approprié
+      const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
+      return rejectWithValue({
+        isFallback: true,
+        fallback: MOCK_CATEGORIES,
+        message: msg,
+      });
     }
   }
 );
 
 /**
  * Recherche une ou plusieurs catégories.
- * Fallback locale si le backend retourne une liste vide.
+ * Fallback locale si le backend retourne une liste vide ou en cas d’erreur.
  */
 export const searchCategories = createAsyncThunk(
   "categories/search",
@@ -38,25 +55,37 @@ export const searchCategories = createAsyncThunk(
       const response = await axios.get(API_ROUTES.CATEGORIES.SEARCH(name));
       const data = response.data;
 
+      // Si pas de résultats côté backend → fallback local filtré
       if (!Array.isArray(data) || data.length === 0) {
         const fallback = MOCK_CATEGORIES.filter((cat) =>
           cat.name.toLowerCase().includes(name.toLowerCase())
         );
-        return fallback;
+        return rejectWithValue({
+          isFallback: true,
+          fallback,
+          message: undefined,
+        });
       }
 
-      return data || MOCK_CATEGORIES;
+      return data;
     } catch (err) {
-      return rejectWithValue(
-        err?.response?.data?.message ||
-          "Erreur lors de la recherche de catégories"
+      // En cas d’erreur réseau/serveur → fallback local filtré avec message
+      const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
+      const fallback = MOCK_CATEGORIES.filter((cat) =>
+        cat.name.toLowerCase().includes(name.toLowerCase())
       );
+      return rejectWithValue({
+        isFallback: true,
+        fallback,
+        message: msg,
+      });
     }
   }
 );
 
 /**
  * Récupère une catégorie par ID.
+ * Pas de fallback pour un élément unique, on renvoie juste l’erreur si besoin.
  */
 export const fetchCategoryById = createAsyncThunk(
   "categories/fetchById",
@@ -65,10 +94,8 @@ export const fetchCategoryById = createAsyncThunk(
       const res = await axios.get(API_ROUTES.CATEGORIES.BY_ID(categoryId));
       return res.data;
     } catch (err) {
-      if (err.response?.data?.message) {
-        return rejectWithValue(err.response.data.message);
-      }
-      return rejectWithValue("Impossible de récupérer cette catégorie.");
+      const msg = err.response?.data?.message || SEARCH_UNKNOWN_ERROR;
+      return rejectWithValue(msg);
     }
   }
 );
@@ -110,19 +137,20 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.list = action.payload;
+        state.error = null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
+        const payload = action.payload;
 
-        // 🎯 Cas du fallback mock : l'erreur contient un tableau de catégories
-        if (Array.isArray(action.payload)) {
-          state.list = action.payload;
-          state.error = "Fallback mock appliqué (serveur vide ou erreur)";
+        if (payload?.isFallback) {
+          state.list = payload.fallback;
+          state.error = payload.message
+            ? `${FALLBACK_STATE_PREFIX}${payload.message}`
+            : FALLBACK_STATE_DEFAULT;
         } else {
           state.list = [];
-          state.error =
-            action.payload ||
-            "Erreur inconnue lors du chargement des catégories";
+          state.error = payload || SEARCH_UNKNOWN_ERROR;
         }
       })
 
@@ -135,10 +163,11 @@ const categorySlice = createSlice({
       .addCase(fetchCategoryById.fulfilled, (state, action) => {
         state.loadingSelected = false;
         state.selectedCategory = action.payload;
+        state.errorSelected = null;
       })
       .addCase(fetchCategoryById.rejected, (state, action) => {
         state.loadingSelected = false;
-        state.errorSelected = action.payload || "Erreur lors du chargement.";
+        state.errorSelected = action.payload || SEARCH_UNKNOWN_ERROR;
         state.selectedCategory = null;
       })
 
@@ -147,16 +176,27 @@ const categorySlice = createSlice({
         state.loadingSearch = true;
         state.errorSearch = null;
         state.isSearchMode = true;
+        state.searchResults = [];
       })
       .addCase(searchCategories.fulfilled, (state, action) => {
         state.loadingSearch = false;
         state.searchResults = action.payload;
+        state.errorSearch = null;
         state.isSearchMode = true;
       })
       .addCase(searchCategories.rejected, (state, action) => {
         state.loadingSearch = false;
-        state.searchResults = [];
-        state.errorSearch = action.payload;
+        const payload = action.payload;
+
+        if (payload?.isFallback) {
+          state.searchResults = payload.fallback;
+          state.errorSearch = payload.message
+            ? `${FALLBACK_STATE_PREFIX}${payload.message}`
+            : FALLBACK_STATE_DEFAULT;
+        } else {
+          state.searchResults = [];
+          state.errorSearch = payload || SEARCH_UNKNOWN_ERROR;
+        }
         state.isSearchMode = true;
       });
   },

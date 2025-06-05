@@ -1,38 +1,10 @@
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
-import edr from "../../assets/images/edr.jpg";
-import xdr from "../../assets/images/xdr.jpg";
+import { MOCKSLIDES } from "../../mock/MOCKS_DATA";
 
 // En attendant - backend => Simulation des données du back-office (remplacé par un fetch API)
-const mockSlides = [
-  {
-    id: 1,
-    imageUrl: edr,
-    title: "Protection avancée pour vos PME",
-    description: "Découvrez nos solutions EDR, SOC et XDR.",
-    ctaText: "Voir nos produits",
-    ctaLink: "/products",
-  },
-  {
-    id: 2,
-    imageUrl: xdr,
-    title: "Cybersécurité de nouvelle génération",
-    description:
-      "Protégez votre infrastructure avec des outils SaaS performants.",
-    ctaText: "En savoir plus",
-    ctaLink: "/about",
-  },
-  {
-    id: 3,
-    imageUrl: xdr,
-    title: "Cybersécurité de nouvelle génération",
-    description:
-      "Protégez votre infrastructure avec des outils SaaS performants.",
-    ctaText: "En savoir plus",
-    ctaLink: "/about",
-  },
-];
+const mockSlides = MOCKSLIDES;
 
 const Carousel = ({ slides, delayTransitionImage }) => {
   const [currentIndex, setCurrentIndex] = useState(0);

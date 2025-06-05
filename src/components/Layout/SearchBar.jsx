@@ -1,7 +1,13 @@
+// src/components/SearchBar.jsx
 import { useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { clearSearch, setQuery } from "../../redux/slice/searchSlice";
+import {
+  clearSearch,
+  searchProducts,
+  setQuery,
+} from "../../redux/slice/searchSlice";
 
 const DEBOUNCE_DELAY = 300;
 
@@ -15,36 +21,54 @@ export default function SearchBar() {
   useEffect(() => {
     const timer = setTimeout(() => {
       const trimmed = inputValue.trim();
-
       if (trimmed !== "") {
         dispatch(setQuery(trimmed));
-
-        // Ne redirige que si on n’est pas déjà sur la page de résultats
+        dispatch(searchProducts({ keyword: trimmed, page: 0, size: 6 }));
         if (location.pathname !== "/search") {
           navigate("/search");
         }
+      }
+      if (trimmed === "") {
+        dispatch(clearSearch());
       }
     }, DEBOUNCE_DELAY);
 
     return () => clearTimeout(timer);
   }, [inputValue, dispatch, navigate, location]);
 
-  // Réinitialise la recherche si on quitte la page /search
+  // Réinitialise la recherche si on quitte /search
   useEffect(() => {
     if (location.pathname !== "/search") {
-      setInputValue(""); // vide le champ visuel
-      dispatch(clearSearch()); // vide le store Redux
+      setInputValue("");
+      dispatch(clearSearch());
     }
   }, [location.pathname, dispatch]);
 
+  // effacer en un clic
+  const handleClear = () => {
+    setInputValue("");
+    dispatch(clearSearch());
+  };
+
   return (
-    <input
-      type="text"
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      placeholder="Rechercher un produit ou service..."
-      className="hidden lg:block w-40 px-3 py-1 border rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-primary"
-      aria-label="Champ de recherche de produit"
-    />
+    <div className="relative hidden lg:block">
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Rechercher un produit ou service..."
+        className="w-64 px-3 py-1 border rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-primary"
+        aria-label="Champ de recherche de produit"
+      />
+      {inputValue && (
+        <button
+          onClick={handleClear}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-red-700 focus:outline-none"
+          aria-label="Effacer la recherche"
+        >
+          <FaTimes />
+        </button>
+      )}
+    </div>
   );
 }

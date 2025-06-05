@@ -4,8 +4,9 @@ import { getPromo } from "../utils/getMockData";
 
 /**
  * ProductCard
- * Affiche une carte produit/service avec image, nom et prix.
- * Protège contre les objets incomplets ou mal formés.
+ * Affiche une carte produit/service avec image, nom, prix et marque.
+ * Ne s’affiche pas si le produit est mal formé (sans id ou sans nom).
+ * La carte prend 100 % de la hauteur disponible (pour homogénéiser dans un grid/flex parent).
  */
 const ProductCard = ({ product }) => {
   if (!product || !product.id || !product.name) {
@@ -13,64 +14,69 @@ const ProductCard = ({ product }) => {
     return null;
   }
 
-  // Gestion des images - adapter selon le format du BE
+  // Récupération de l'URL de l'image selon le format renvoyé par le BE
   const image = (() => {
     if (product.imageUrl) {
       return product.imageUrl;
     }
-
     if (Array.isArray(product.images) && product.images.length > 0) {
       const firstImage = product.images[0];
       if (typeof firstImage === "string") {
         return firstImage;
       }
-      // Si c'est un objet avec url
       if (firstImage?.url) {
         return firstImage.url;
       }
     }
-
+    // fallback si aucune image n'est trouvée
     return "/assets/images/default-product.jpg";
   })();
 
-  // S'assurer que l'ID est une string pour l'URL
+  // On force l’ID en string pour la construction de l’URL
   const productId = String(product.id);
-  const promotion = product.promo || getPromo(product.id);
+  const promotion = getPromo(product.id);
 
   return (
     <Link
       to={`/products/${productId}`}
-      className="block shadow-md rounded-lg overflow-hidden hover:shadow-xl transition"
+      className="
+        block
+        shadow-md
+        rounded-lg
+        overflow-hidden
+        hover:shadow-xl
+        transition
+        h-full            /* occupe toute la hauteur disponible */
+        flex
+        flex-col
+      "
       aria-label={`Voir les détails de ${product.name}`}
     >
-      <img
-        src={image}
-        alt={product.name}
-        className="w-full h-40 object-cover"
-        onError={(e) => {
-          e.target.src = "/assets/images/default-product.jpg";
-        }}
-      />
-      <div className="p-4">
-        <h3 className="text-lg font-semibold">{product.name}</h3>
-        {promotion && (
-          <div
-            id="promo"
-            className="w-full flex items-center justify-center mt-2"
-          >
-            <p className="block text-sm font-semibold text-center text-violet-600">
-              {promotion}
-            </p>
-          </div>
-        )}
+      <div className="w-full">
+        <img
+          src={image}
+          alt={product.name}
+          className="w-full h-40 md:h-48 object-cover flex-shrink-0"
+          onError={(e) => {
+            e.target.src = "/assets/images/default-product.jpg";
+          }}
+        />
+      </div>
 
-        <p className="text-gray-600">
-          {typeof product.amount === "number" && product.amount > 0
-            ? `${product.amount.toFixed(2)} €`
-            : "Prix sur demande"}
-        </p>
+      <div className="flex flex-col flex-1 justify-between gap-2 p-4">
+        <div>
+          <h3 className="text-lg font-semibold">{product.name}</h3>
+          <h4 className="mb-4 text-center text-green-500 font-medium">
+            {promotion}
+          </h4>
+          <p className="text-gray-600">
+            {typeof product.amount === "number" && product.amount > 0
+              ? `${product.amount.toFixed(2)} €`
+              : "Prix sur demande"}
+          </p>
+        </div>
         {product.brand && (
-          <p className="text-sm text-gray-500 mt-1">Marque: {product.brand}</p>
+          <p className="text-sm text-gray-500 mt-1">Marque : {product.brand}</p>
         )}
       </div>
     </Link>
