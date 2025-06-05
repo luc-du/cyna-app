@@ -1,6 +1,6 @@
+// features/category/categorySlice.js
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
@@ -8,6 +8,7 @@ import {
   SEARCH_UNKNOWN_ERROR,
 } from "../../components/utils/errorMessages";
 import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
+import categoryService from "../../services/categoryService"; // <-- on importe le service
 
 // ─── Async Thunks ─────────────────────────────────────────────
 
@@ -19,7 +20,8 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.CATEGORIES.ALL);
+      // on appelle désormais categoryService plutôt que axios + API_ROUTES
+      const response = await categoryService.getAllCategories();
       const data = response.data;
 
       // Si le backend renvoie un tableau vide ou non-tableau → fallback
@@ -52,7 +54,7 @@ export const searchCategories = createAsyncThunk(
   "categories/search",
   async (name, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.CATEGORIES.SEARCH(name));
+      const response = await categoryService.searchCategories(name);
       const data = response.data;
 
       // Si pas de résultats côté backend → fallback local filtré
@@ -91,7 +93,7 @@ export const fetchCategoryById = createAsyncThunk(
   "categories/fetchById",
   async (categoryId, { rejectWithValue }) => {
     try {
-      const res = await axios.get(API_ROUTES.CATEGORIES.BY_ID(categoryId));
+      const res = await categoryService.getCategoryById(categoryId);
       return res.data;
     } catch (err) {
       const msg = err.response?.data?.message || SEARCH_UNKNOWN_ERROR;
@@ -127,7 +129,6 @@ const categorySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       // ─── fetchCategories ─────────────────────────────────────────────
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;

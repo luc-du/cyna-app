@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
@@ -9,6 +7,9 @@ import {
 } from "../../components/utils/errorMessages";
 import { processProductData } from "../../components/utils/productUtils";
 import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
+import productService from "../../services/productService";
+
+// ─── Async Thunks ─────────────────────────────────────────────
 
 /**
  * Récupère la liste complète des produits depuis l'API.
@@ -18,7 +19,8 @@ export const fetchProducts = createAsyncThunk(
   "products/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.PRODUCTS.ALL());
+      // On utilise désormais productService.getAllProducts()
+      const response = await productService.getAllProducts();
       const data = response.data;
 
       // Si le backend renvoie un tableau vide ou non-tableau → fallback
@@ -54,7 +56,9 @@ export const fetchProductById = createAsyncThunk(
       if (isNaN(id)) {
         return rejectWithValue("ID produit invalide");
       }
-      const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(id));
+      // On appelle maintenant productService.getProductById(id)
+      const response = await productService.getProductById(id);
+      // On garde la transformation processProductData ici
       return processProductData(response.data);
     } catch (error) {
       const status = error?.response?.status;
@@ -74,9 +78,12 @@ export const searchProducts = createAsyncThunk(
   "products/search",
   async ({ keyword = "", page = 0, size = 6 }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        API_ROUTES.PRODUCTS.SEARCH({ keyword, page, size })
-      );
+      // On utilise productService.searchProducts({ … })
+      const response = await productService.searchProducts({
+        keyword,
+        page,
+        size,
+      });
       const data = response.data;
 
       // Si pas de données ou format inattendu → fallback
@@ -88,6 +95,7 @@ export const searchProducts = createAsyncThunk(
         });
       }
 
+      // On transforme ensuite chaque produit
       return data.products.map(processProductData);
     } catch (err) {
       const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
@@ -123,7 +131,9 @@ const productSlice = createSlice({
     currentPage: 1,
     totalPages: 1,
   },
-  reducers: {},
+  reducers: {
+    // Si vous avez d'autres actions synchrones, vous pouvez les ajouter ici.
+  },
   extraReducers: (builder) => {
     // ---------- fetchProducts (liste de produits) ----------
     builder
