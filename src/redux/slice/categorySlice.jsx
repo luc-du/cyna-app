@@ -22,6 +22,9 @@ export const fetchCategories = createAsyncThunk(
 
       return data;
     } catch (error) {
+      if (error.response?.data?.message) {
+        return rejectWithValue(error.response.data.message);
+      }
       return rejectWithValue(MOCK_CATEGORIES);
     }
   }

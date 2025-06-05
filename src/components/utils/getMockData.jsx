@@ -44,5 +44,5 @@ export const getPromo = (productId) => {
   const product = MOCK_TOP_PRODUCTS.find(
     (p) => String(p.id) === String(productId)
   );
-  return product?.promo ? "🎉Promotion en cours" : null;
+  return product.promo && "🎉Promotion en cours";
 };

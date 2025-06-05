@@ -13,18 +13,14 @@ export const fetchProducts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(API_ROUTES.PRODUCTS.ALL());
-      // Si la réponse est vide, on considère un fallback mock
       if (!Array.isArray(response.data) || response.data.length === 0) {
-        // On rejette pour passer dans la logique de fallback
         return rejectWithValue(MOCK_TOP_PRODUCTS);
       }
       return response.data;
     } catch (error) {
-      // S'il y a un message d'erreur venant du serveur, on le transmet
       if (error.response?.data?.message) {
         return rejectWithValue(error.response.data.message);
       }
-      // Sinon, on rejette avec les mocks
       return rejectWithValue(MOCK_TOP_PRODUCTS);
     }
   }
@@ -33,9 +29,6 @@ export const fetchProducts = createAsyncThunk(
 /**
  * Récupère un produit unique depuis l'API à partir de son productId.
  * Si l'appel échoue, on rejette avec un message d'erreur.
- */
-/**
- * Récupère un produit par ID.
  */
 export const fetchProductById = createAsyncThunk(
   "products/fetchById",
@@ -59,6 +52,32 @@ export const fetchProductById = createAsyncThunk(
   }
 );
 
+/*
+ * Recherche de produits par mot-clé.
+ * Si l'appel échoue, on rejette avec un tableau fallback (MOCK_TOP_PRODUCTS).
+ * On utilise un paramètre `page` pour la pagination.
+ */
+export const searchProducts = createAsyncThunk(
+  "products/search",
+  async ({ keyword = "", page = 0, size = 6 }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        API_ROUTES.PRODUCTS.SEARCH({ keyword, page, size })
+      );
+      if (!response.data || !Array.isArray(response.data.products)) {
+        return rejectWithValue(MOCK_TOP_PRODUCTS); // fallback mock
+      }
+
+      return response.data.products.map(processProductData); // nettoyage
+    } catch (err) {
+      if (err.response?.data?.message) {
+        return rejectWithValue(err.response.data.message);
+      }
+      return rejectWithValue(MOCK_TOP_PRODUCTS);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product",
   initialState: {
@@ -71,6 +90,15 @@ const productSlice = createSlice({
     list: [],
     loadingList: false,
     errorList: null,
+
+    // Recherche de produits
+    searchResults: [],
+    loadingSearch: false,
+    errorSearch: null,
+    isSearchMode: false,
+    // Pagination des résultats de recherche
+    currentPage: 1,
+    totalPages: 1,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -114,6 +142,28 @@ const productSlice = createSlice({
         state.loadingItem = false;
         state.errorItem = action.payload || "Erreur inconnue";
         state.item = null;
+      });
+
+    // ---------- searchProducts (recherche de produits) ----------
+    builder
+      .addCase(searchProducts.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(searchProducts.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.list = action.payload;
+      })
+      .addCase(searchProducts.rejected, (state, action) => {
+        state.loadingList = false;
+        if (Array.isArray(action.payload)) {
+          state.list = action.payload;
+          state.errorList = "Fallback mock utilisé (search)";
+        } else {
+          state.list = [];
+          state.errorList =
+            action.payload || "Erreur inconnue dans searchProducts";
+        }
       });
   },
 });
