@@ -1,6 +1,11 @@
+Intitulé du post: SPRT05.04/feature/search
+
 Objectifs:
 
-- contrôle, refacto si nécessaire du flow Categories > categories/id - products > products/id et consommation des routes dites défintives cf swagger document projet
+- Révision de la navBar/ que faire pour la feature recherche
+- implémenter la feature search priorité au be et fallback en MOCK (logique à implémenter dans le slice pour plus de praticité à retirer par la suite)
+- icone pour redirection vers la page search? voir CDC
+
 - cf documents ci-joints au projet
 - se référer au CDC du projet
 - appliquer les bonnes pratiques
@@ -43,6 +48,186 @@ export default store;
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
+import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
+
+// ─── Async Thunks ─────────────────────────────────────────────
+
+/\*\*
+
+- Récupère toutes les catégories.
+- Fallback MOCK*CATEGORIES en cas d'erreur serveur.
+  \*/
+  export const fetchCategories = createAsyncThunk(
+  "categories/fetchAll",
+  async (*, { rejectWithValue }) => {
+  try {
+  const response = await axios.get(API_ROUTES.CATEGORIES.ALL);
+  const data = response.data;
+
+        if (!Array.isArray(data) || data.length === 0) {
+          return rejectWithValue(MOCK_CATEGORIES);
+        }
+
+        return data;
+      } catch (error) {
+        if (error.response?.data?.message) {
+          return rejectWithValue(error.response.data.message);
+        }
+        return rejectWithValue(MOCK_CATEGORIES);
+      }
+
+  }
+  );
+
+/\*\*
+
+- Recherche une ou plusieurs catégories.
+- Fallback locale si le backend retourne une liste vide.
+  \*/
+  export const searchCategories = createAsyncThunk(
+  "categories/search",
+  async (name, { rejectWithValue }) => {
+  try {
+  const response = await axios.get(API_ROUTES.CATEGORIES.SEARCH(name));
+  const data = response.data;
+
+        if (!Array.isArray(data) || data.length === 0) {
+          const fallback = MOCK_CATEGORIES.filter((cat) =>
+            cat.name.toLowerCase().includes(name.toLowerCase())
+          );
+          return fallback;
+        }
+
+        return data || MOCK_CATEGORIES;
+      } catch (err) {
+        return rejectWithValue(
+          err?.response?.data?.message ||
+            "Erreur lors de la recherche de catégories"
+        );
+      }
+
+  }
+  );
+
+/\*\*
+
+- Récupère une catégorie par ID.
+  \*/
+  export const fetchCategoryById = createAsyncThunk(
+  "categories/fetchById",
+  async (categoryId, { rejectWithValue }) => {
+  try {
+  const res = await axios.get(API_ROUTES.CATEGORIES.BY_ID(categoryId));
+  return res.data;
+  } catch (err) {
+  if (err.response?.data?.message) {
+  return rejectWithValue(err.response.data.message);
+  }
+  return rejectWithValue("Impossible de récupérer cette catégorie.");
+  }
+  }
+  );
+
+// ─── Slice ───────────────────────────────────────────────────
+
+const categorySlice = createSlice({
+name: "categories",
+initialState: {
+list: [],
+loading: false,
+error: null,
+
+    searchResults: [],
+    loadingSearch: false,
+    errorSearch: null,
+    isSearchMode: false,
+
+    selectedCategory: null,
+    loadingSelected: false,
+    errorSelected: null,
+
+},
+reducers: {
+clearSearchResults: (state) => {
+state.searchResults = [];
+state.errorSearch = null;
+state.isSearchMode = false;
+},
+},
+extraReducers: (builder) => {
+builder
+
+      // ─── fetchCategories ─────────────────────────────────────────────
+      .addCase(fetchCategories.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.list = [];
+      })
+      .addCase(fetchCategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = action.payload;
+      })
+      .addCase(fetchCategories.rejected, (state, action) => {
+        state.loading = false;
+
+        // 🎯 Cas du fallback mock : l'erreur contient un tableau de catégories
+        if (Array.isArray(action.payload)) {
+          state.list = action.payload;
+          state.error = "Fallback mock appliqué (serveur vide ou erreur)";
+        } else {
+          state.list = [];
+          state.error =
+            action.payload ||
+            "Erreur inconnue lors du chargement des catégories";
+        }
+      })
+
+      // ─── fetchCategoryById ───────────────────────────────────────────
+      .addCase(fetchCategoryById.pending, (state) => {
+        state.loadingSelected = true;
+        state.errorSelected = null;
+        state.selectedCategory = null;
+      })
+      .addCase(fetchCategoryById.fulfilled, (state, action) => {
+        state.loadingSelected = false;
+        state.selectedCategory = action.payload;
+      })
+      .addCase(fetchCategoryById.rejected, (state, action) => {
+        state.loadingSelected = false;
+        state.errorSelected = action.payload || "Erreur lors du chargement.";
+        state.selectedCategory = null;
+      })
+
+      // ─── searchCategories ───────────────────────────────────────────
+      .addCase(searchCategories.pending, (state) => {
+        state.loadingSearch = true;
+        state.errorSearch = null;
+        state.isSearchMode = true;
+      })
+      .addCase(searchCategories.fulfilled, (state, action) => {
+        state.loadingSearch = false;
+        state.searchResults = action.payload;
+        state.isSearchMode = true;
+      })
+      .addCase(searchCategories.rejected, (state, action) => {
+        state.loadingSearch = false;
+        state.searchResults = [];
+        state.errorSearch = action.payload;
+        state.isSearchMode = true;
+      });
+
+},
+});
+
+export const { clearSearchResults } = categorySlice.actions;
+export default categorySlice.reducer;
+
+---
+
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { API_ROUTES } from "../../api/apiRoutes";
+import { processProductData } from "../../components/utils/productUtils";
 import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 
 /\*\*
@@ -55,18 +240,14 @@ import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
   async (*, { rejectWithValue }) => {
   try {
   const response = await axios.get(API_ROUTES.PRODUCTS.ALL());
-  // Si la réponse est vide, on considère un fallback mock
   if (!Array.isArray(response.data) || response.data.length === 0) {
-  // On rejette pour passer dans la logique de fallback
   return rejectWithValue(MOCK_TOP_PRODUCTS);
   }
   return response.data;
   } catch (error) {
-  // S'il y a un message d'erreur venant du serveur, on le transmet
   if (error.response?.data?.message) {
   return rejectWithValue(error.response.data.message);
   }
-  // Sinon, on rejette avec les mocks
   return rejectWithValue(MOCK_TOP_PRODUCTS);
   }
   }
@@ -78,17 +259,53 @@ import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 - Si l'appel échoue, on rejette avec un message d'erreur.
   \*/
   export const fetchProductById = createAsyncThunk(
-  "product/fetchById",
+  "products/fetchById",
   async (productId, { rejectWithValue }) => {
   try {
-  const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(productId));
-  return response.data;
-  } catch (error) {
-  if (error.response?.data?.message) {
-  return rejectWithValue(error.response.data.message);
+  const id = Number(productId);
+  if (isNaN(id)) {
+  return rejectWithValue("ID produit invalide");
   }
-  return rejectWithValue("Échec de la récupération du produit");
+  const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(id));
+  console.log("url fetchProductByID", API_ROUTES.PRODUCTS.BY_ID(id));
+
+        return processProductData(response.data);
+      } catch (error) {
+        const status = error?.response?.status;
+        if (status === 400 || status === 404) {
+          return rejectWithValue("Produit introuvable ou requête invalide");
+        }
+        return rejectWithValue("Erreur serveur");
+      }
+
   }
+  );
+
+/\*
+
+- Recherche de produits par mot-clé.
+- Si l'appel échoue, on rejette avec un tableau fallback (MOCK_TOP_PRODUCTS).
+- On utilise un paramètre `page` pour la pagination.
+  \*/
+  export const searchProducts = createAsyncThunk(
+  "products/search",
+  async ({ keyword = "", page = 0, size = 6 }, { rejectWithValue }) => {
+  try {
+  const response = await axios.get(
+  API_ROUTES.PRODUCTS.SEARCH({ keyword, page, size })
+  );
+  if (!response.data || !Array.isArray(response.data.products)) {
+  return rejectWithValue(MOCK_TOP_PRODUCTS); // fallback mock
+  }
+
+        return response.data.products.map(processProductData); // nettoyage
+      } catch (err) {
+        if (err.response?.data?.message) {
+          return rejectWithValue(err.response.data.message);
+        }
+        return rejectWithValue(MOCK_TOP_PRODUCTS);
+      }
+
   }
   );
 
@@ -104,6 +321,15 @@ errorItem: null,
     list: [],
     loadingList: false,
     errorList: null,
+
+    // Recherche de produits
+    searchResults: [],
+    loadingSearch: false,
+    errorSearch: null,
+    isSearchMode: false,
+    // Pagination des résultats de recherche
+    currentPage: 1,
+    totalPages: 1,
 
 },
 reducers: {},
@@ -150,58 +376,32 @@ action.payload || "Erreur inconnue lors du fetchProducts";
         state.item = null;
       });
 
+    // ---------- searchProducts (recherche de produits) ----------
+    builder
+      .addCase(searchProducts.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(searchProducts.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.list = action.payload;
+      })
+      .addCase(searchProducts.rejected, (state, action) => {
+        state.loadingList = false;
+        if (Array.isArray(action.payload)) {
+          state.list = action.payload;
+          state.errorList = "Fallback mock utilisé (search)";
+        } else {
+          state.list = [];
+          state.errorList =
+            action.payload || "Erreur inconnue dans searchProducts";
+        }
+      });
+
 },
 });
 
-## export default productSlice.reducer;
-
-// src/api/homeService.js
-import axios from "axios";
-import { API_ROUTES } from "../api/apiRoutes";
-/\*\*
-
-- Récupère les éléments du carousel (héros).
-- -> GET /carousel?limits=…
-  _/
-  export const fetchCarouselSlides = () => {
-  return axios
-  .get(API_ROUTES.CAROUSEL.ALL(/_ facultatif : nombre de slides \*/))
-  .then((res) => res.data);
-  };
-
-/\*\*
-
-- Récupère la liste des catégories à afficher (pour CategoriesGrid).
-- -> GET /categories
-  \*/
-  export const fetchCategories = () => {
-  return axios.get(API_ROUTES.CATEGORIES.ALL).then((res) => res.data);
-  };
-
-/\*\*
-
-- Récupère les "Top Products du moment" (pour TopProductsGrid).
-- -> GET /products/top-products?top=…
-  \*/
-  export const fetchTopProducts = (
-  options = { top: 10, promo: true, active: true }
-  ) => {
-  const { top, promo, active } = options;
-  return axios
-  .get(API_ROUTES.PRODUCTS.GET_TOP_PRODUCTS({ top, promo, active }))
-  .then((res) => res.data);
-  };
-
-/\*\*
-
-- Récupère les promotions (par exemple : produits en promo).
-  _/
-  export const fetchPromoProducts = (options = { page: 0, size: 6 }) => {
-  const { page, size } = options;
-  return axios
-  .get(API_ROUTES.PRODUCTS.PAGINATION({ page, size, promoOnly: true }))
-  .then((res) => res.data.products /_ selon le format Pagination \*/);
-  };
+export default productSlice.reducer;
 
 ---
 
@@ -396,192 +596,333 @@ BY_ID: (id) => getApiUrl(CAROUSEL_HOST, `/carousel/${id}`),
 
 ---
 
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearSearch, setQuery } from "../../redux/slice/searchSlice";
 
-const CategoryCard = ({ category }) => {
-return (
+const DEBOUNCE_DELAY = 300;
 
-<Link
-to={`/categories/${category.url}`}
-className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
-role="region"
-aria-label={`Catégorie : ${category.name}`} >
-<img
-        src={category.imageUrl}
-        alt={category.name}
-        loading="lazy"
-        className="w-full h-40 object-cover"
-      />
-<div className="p-4 text-center">
-<h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
-</div>
-</Link>
-);
-};
-
-CategoryCard.propTypes = {
-category: PropTypes.shape({
-url: PropTypes.string.isRequired,
-imageUrl: PropTypes.string.isRequired,
-name: PropTypes.string.isRequired,
-}).isRequired,
-};
-
-export default CategoryCard;
-
----
-
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import NavigateButton from "../ui/buttons/NavigateButton";
-import CategoryDescription from "./CategoryDescription";
-import CategoryHeader from "./CategoryHeader";
-import CategoryProductList from "./CategoryProductList";
-
-const CategoryDetails = () => {
-const navigate = useNavigate();
-const { categoryId } = useParams();
+export default function SearchBar() {
+const [inputValue, setInputValue] = useState("");
 const dispatch = useDispatch();
+const location = useLocation();
+const navigate = useNavigate();
 
-const category = useSelector((state) =>
-state.categories.categories.find((cat) => cat.id === parseInt(categoryId))
-);
-
+// Met à jour la recherche avec debounce
 useEffect(() => {
-if (!category) {
-// dispatch(fetchCategoryDetails(categoryId));
-}
-}, [categoryId, category, dispatch]);
+const timer = setTimeout(() => {
+const trimmed = inputValue.trim();
 
-if (!category) {
-return <p className="text-center mt-10">Chargement de la catégorie...</p>;
+      if (trimmed !== "") {
+        dispatch(setQuery(trimmed));
+
+        // Ne redirige que si on n’est pas déjà sur la page de résultats
+        if (location.pathname !== "/search") {
+          navigate("/search");
+        }
+      }
+    }, DEBOUNCE_DELAY);
+
+    return () => clearTimeout(timer);
+
+}, [inputValue, dispatch, navigate, location]);
+
+// Réinitialise la recherche si on quitte la page /search
+useEffect(() => {
+if (location.pathname !== "/search") {
+setInputValue(""); // vide le champ visuel
+dispatch(clearSearch()); // vide le store Redux
 }
+}, [location.pathname, dispatch]);
 
 return (
-
-<div className="max-w-7xl w-full my-6 mx-auto p-4">
-<NavigateButton
-handleClick={() => navigate("/categories")}
-label="⬅️Liste des catégories"
+<input
+type="text"
+value={inputValue}
+onChange={(e) => setInputValue(e.target.value)}
+placeholder="Rechercher un produit ou service..."
+className="hidden lg:block w-40 px-3 py-1 border rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-primary"
+aria-label="Champ de recherche de produit"
 />
-
-      <CategoryHeader element={category}>
-        <CategoryDescription element={category} />
-      </CategoryHeader>
-
-      <CategoryProductList element={category} />
-    </div>
-
 );
+}
+
+---
+
+certainement à revoir:
+// Feature : Recherche locale de produits en fallback du backend
+// Justification : La route `/products/search` retourne une erreur SQL car le FULLTEXT index est absent.
+// Cette solution temporaire permet d’assurer une recherche fluide sans patch backend, pour respecter les délais de soutenance.
+
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { API_ROUTES } from "../../api/apiRoutes";
+
+export const fetchAllProducts = createAsyncThunk(
+"search/fetchAllProducts",
+async () => {
+const response = await axios.get(API_ROUTES.PRODUCTS.GET);
+return response.data;
+}
+);
+
+const initialState = {
+allProducts: [],
+filtered: [],
+status: "idle", // idle | loading | succeeded | failed
+error: null,
+query: "",
 };
 
-export default CategoryDetails;
+/\*\*
+
+- Slice Redux pour la gestion de la recherche de produits.
+-
+- @namespace search
+- @property {Object} initialState - L'état initial du slice, incluant la requête de recherche, la liste des produits filtrés, etc.
+- @property {Function} setQuery - Action pour mettre à jour la requête de recherche et filtrer les produits correspondants.
+- @property {Function} clearSearch - Action pour réinitialiser la recherche et vider les résultats filtrés.
+- @property {Function} extraReducers - Gère les états asynchrones liés à la récupération de tous les produits (chargement, succès, échec).
+-
+- @example
+- dispatch(setQuery('ordinateur'));
+- dispatch(clearSearch());
+  \*/
+  const searchSlice = createSlice({
+  name: "search",
+  initialState,
+  reducers: {
+  setQuery: (state, action) => {
+  const query = action.payload.toLowerCase();
+  state.query = query;
+  state.filtered = state.allProducts.filter((product) =>
+  `${product.name} ${product.description} ${product.caracteristics}`
+  .toLowerCase()
+  .includes(query)
+  );
+  },
+
+      clearSearch: (state) => {
+        // Reset complet lors d’un changement de page (cf. SearchBar)
+        state.query = "";
+        state.filtered = [];
+      },
+
+  },
+  extraReducers: (builder) => {
+  builder
+  .addCase(fetchAllProducts.pending, (state) => {
+  state.status = "loading";
+  })
+  .addCase(fetchAllProducts.fulfilled, (state, action) => {
+  state.status = "succeeded";
+  state.allProducts = action.payload;
+  })
+  .addCase(fetchAllProducts.rejected, (state, action) => {
+  state.status = "failed";
+  state.error = action.error.message;
+  });
+  },
+  });
+
+export const { setQuery, clearSearch } = searchSlice.actions;
+export default searchSlice.reducer;
 
 ---
 
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import ProductCard from "../components/Home/ProductCard";
+import EmptyState from "../components/ui/EmptyState";
+import Loader from "../components/ui/Loader";
 
-const CategoryHeader = ({ element, children }) => {
-console.log(element);
+export default function SearchPage() {
+const { query, filtered, status, error } = useSelector(
+(state) => state.search
+);
+
+if (status === "loading")
+return <Loader aria-label="Chargement des résultats" />;
+
+if (error) {
+return (
+
+<div
+        className="text-center mt-10 text-red-600"
+        role="alert"
+        aria-live="assertive"
+      >
+Une erreur est survenue lors du chargement des produits.
+</div>
+);
+}
 
 return (
 
-<div className="text-center my-6">
-<div className="relative">
-<img
-          src={element.images[0].url}
-          alt={element.name}
-          className="w-full max-h-96 object-cover rounded-lg shadow-md"
-        />
-<div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-<h1 className="text-3xl font-bold text-white transition transform hover:scale-105 hover:shadow-2xl">
-{element.name}
-</h1>
-</div>{" "}
-</div>
-{children}
-</div>
+<main
+      className="container mx-auto px-4 py-8"
+      aria-labelledby="search-results-heading"
+    >
+<h2
+        id="search-results-heading"
+        className="text-2xl font-bold mb-4"
+        tabIndex={-1}
+      >
+Résultats pour : « {query} »
+</h2>
+
+      {filtered.length === 0 && query.trim() !== "" ? (
+        <EmptyState message="Aucun produit ne correspond à votre recherche." />
+      ) : (
+        <section
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          aria-label="Liste des produits"
+        >
+          {filtered.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </section>
+      )}
+    </main>
+
 );
-};
-CategoryHeader.propTypes = {
-element: PropTypes.shape({
-images: PropTypes.string.isRequired,
-name: PropTypes.string.isRequired,
-description: PropTypes.string.isRequired,
+}
+
+ProductCard.propTypes = {
+product: PropTypes.shape({
+id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 }).isRequired,
-children: PropTypes.node,
 };
 
-export default CategoryHeader;
+EmptyState.propTypes = {
+message: PropTypes.string.isRequired,
+};
 
 ---
 
-import PropTypes from "prop-types";
+import { useState } from "react";
+import { FaSearch, FaTimes } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../../../assets/logo-cyna-white.svg";
+import { setQuery } from "../../../redux/slice/searchSlice";
+import SearchBar from "../SearchBar";
+import CartBadge from "./CartBadge";
+import MobileMenu from "./MobileMenu";
+import NavbarLinks from "./NavbarLinks";
 
-const CategoryDescription = ({ element }) => {
+/\*\*
+
+- Composant Navbar
+-
+- Affiche la barre de navigation principale de l'application, incluant :
+- - Le logo de l'application
+- - Les liens de navigation pour la version desktop
+- - Une barre de recherche (desktop et mobile)
+- - Un badge de panier
+- - Un menu mobile avec overlay de recherche
+-
+- Fonctionnalités :
+- - Permet la recherche de produits ou services via une barre de recherche.
+- - Affiche un overlay de recherche optimisé pour mobile.
+- - Gère la navigation vers la page de résultats de recherche.
+- - Utilise Redux pour dispatcher la requête de recherche.
+-
+- @component
+- @returns {JSX.Element} Élément JSX représentant la barre de navigation.
+  \*/
+  export default function Navbar() {
+  const [showSearchOverlay, setShowSearchOverlay] = useState(false);
+  const [mobileInput, setMobileInput] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+const handleSearch = (value) => {
+setMobileInput(value);
+dispatch(setQuery(value.trim()));
+if (value.trim() !== "") navigate("/search");
+};
+
+const closeOverlay = () => {
+setMobileInput("");
+setShowSearchOverlay(false);
+};
+
 return (
 <>
-{" "}
+{/_ Logo _/}
 
-<h2>Description du service</h2>
-<p className="mt-2 text-gray-700">{element.description}</p>
-</>
+<Link to="/" className="flex-shrink-0" aria-label="Accueil Cyna">
+<img src={logo} alt="Cyna Logo" className="w-40 sm:w-40" />
+</Link>
+
+      {/* Desktop Navigation */}
+      <nav
+        className="hidden lg:flex items-center space-x-4"
+        aria-label="Navigation principale"
+      >
+        <NavbarLinks />
+        <SearchBar />
+      </nav>
+
+      {/* Cart Badge */}
+      <div className="flex items-center space-x-4" aria-label="Panier">
+        <CartBadge />
+      </div>
+
+      {/* Mobile Navigation */}
+      <div className="lg:hidden flex items-center space-x-4">
+        <button
+          className="text-white text-xl p-2"
+          onClick={() => setShowSearchOverlay(true)}
+          aria-label="Ouvrir la recherche"
+          aria-haspopup="dialog"
+          aria-controls="mobile-search-overlay"
+        >
+          <FaSearch />
+        </button>
+        <MobileMenu />
+      </div>
+
+      {/* Overlay de recherche mobile */}
+      {showSearchOverlay && (
+        <div
+          id="mobile-search-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Recherche mobile"
+          className="fixed inset-0 z-50 bg-white/70 backdrop-blur-md flex flex-col justify-center items-center px-6"
+        >
+          <style>{`body { overflow: hidden; }`}</style>
+
+          <button
+            onClick={closeOverlay}
+            className="absolute top-6 right-4 text-primary text-3xl p-2 bg-white rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-primary"
+            aria-label="Fermer la recherche"
+          >
+            <FaTimes />
+          </button>
+
+          <div className="w-full max-w-md">
+            <label htmlFor="mobile-search-input" className="sr-only">
+              Rechercher un produit ou service
+            </label>
+            <input
+              id="mobile-search-input"
+              type="text"
+              value={mobileInput}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder="Rechercher un produit ou service..."
+              className="w-full px-5 py-3 border border-gray-300 rounded-xl text-lg text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              autoFocus
+              role="searchbox"
+              aria-label="Rechercher un produit ou service"
+            />
+          </div>
+        </div>
+      )}
+    </>
+
 );
-};
-CategoryDescription.propTypes = {
-element: PropTypes.shape({
-description: PropTypes.string.isRequired,
-}).isRequired,
-};
-
-export default CategoryDescription;
-
----
-
-import PropTypes from "prop-types";
-import { sortProductsByPriority } from "../utils/sortProductByPriority";
-import ProductCard from "./ProductCard";
-
-const CategoryProductList = ({ element }) => {
-const products = element.products || [];
-const sortedProducts = sortProductsByPriority(products);
-
-return (
-
-<main className="mt-6">
-<h2>Produits et Services</h2>
-<section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-{sortedProducts.map((item) => (
-<ProductCard item={item} key={item.id} />
-))}
-</section>
-</main>
-);
-};
-
-CategoryProductList.propTypes = {
-element: PropTypes.shape({
-products: PropTypes.array.isRequired,
-}).isRequired,
-};
-
-export default CategoryProductList;
-
----
-
-@ vérifier si encore utile pour la mock oui
-
-export const sortProductsByPriority = (products) => {
-return [...products].sort((a, b) => {
-const priority = (p) => {
-if (p.active && p.promo) return 0;
-if (p.active) return 1;
-return 2;
-};
-
-    return priority(a) - priority(b);
-
-});
-};
+}

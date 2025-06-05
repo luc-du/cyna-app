@@ -327,3 +327,32 @@ export const MOCK_PRICING_OPTIONS = [
     description: "Tarification flexible pour les grandes entreprises.",
   },
 ];
+
+export const MOCKSLIDES = [
+  {
+    id: 1,
+    imageUrl: edr,
+    title: "Protection avancée pour vos PME",
+    description: "Découvrez nos solutions EDR, SOC et XDR.",
+    ctaText: "Voir nos produits",
+    ctaLink: "/products",
+  },
+  {
+    id: 2,
+    imageUrl: xdr,
+    title: "Cybersécurité de nouvelle génération",
+    description:
+      "Protégez votre infrastructure avec des outils SaaS performants.",
+    ctaText: "En savoir plus",
+    ctaLink: "/about",
+  },
+  {
+    id: 3,
+    imageUrl: xdr,
+    title: "Cybersécurité de nouvelle génération",
+    description:
+      "Protégez votre infrastructure avec des outils SaaS performants.",
+    ctaText: "En savoir plus",
+    ctaLink: "/about",
+  },
+];
