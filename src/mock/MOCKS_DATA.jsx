@@ -102,6 +102,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 1,
     name: "SOC Standard",
     amount: 199.99,
+    active: true, // Indique que le produit est actif
     promo: true,
     imageUrl: socStandard, // soc.jpg
     link: "/products/1",
@@ -110,6 +111,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 2,
     name: "SOC Premium",
     amount: 299.99,
+    active: false, // Indique que le produit est actif
     promo: false,
     imageUrl: socPremium, // socPremium.jpg
     link: "/products/2",
@@ -118,6 +120,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 3,
     name: "EDR Protection",
     amount: 149.99,
+    active: true, // Indique que le produit est actif
     promo: false,
     imageUrl: edrProtection, // edr.jpg
     link: "/products/3",
@@ -126,6 +129,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 4,
     name: "XDR Advanced",
     amount: 249.99,
+    active: true, // Indique que le produit est actif
     promo: true,
     imageUrl: xdrAdvanced, // xdr.jpg
     link: "/products/4",
@@ -134,6 +138,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 5,
     name: "CYNA SOC Std",
     amount: 219.99,
+    active: true, // Indique que le produit est actif
     promo: true,
     imageUrl: cynaSocStandard, // soc.jpg
     link: "/products/5",
@@ -142,6 +147,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 6,
     name: "CYNA SOC Entreprise",
     amount: 499.99,
+    active: true, // Indique que le produit est actif
     promo: false,
     imageUrl: cynaSocEntreprise, // soc.jpg
     link: "/products/6",
@@ -150,6 +156,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 7,
     name: "SIEM Analytics",
     amount: 179.99,
+    active: true, // Indique que le produit est actif
     promo: true,
     imageUrl: siemAnalytics, // technology.jpg
     link: "/products/7",
@@ -158,6 +165,7 @@ export const MOCK_TOP_PRODUCTS = [
     id: 8,
     name: "Threat Intelligence",
     amount: 209.99,
+    active: true, // Indique que le produit est actif
     promo: false,
     imageUrl: threatIntelligence, // identity.jpg
     link: "/products/8",
@@ -199,7 +207,7 @@ export const MOCK_SERVICES = [
     ],
     description:
       "Version avancée du SOC avec des analyses approfondies et réponse automatisée.",
-    available: true,
+    available: false,
     defaultPricing: 1,
     pricingIds: [1, 2, 5],
     keyCharacteristics: {
