@@ -1,5 +1,3 @@
-// features/category/categorySlice.js
-
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   FALLBACK_API_MESSAGE,
@@ -20,7 +18,6 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      // on appelle désormais categoryService plutôt que axios + API_ROUTES
       const response = await categoryService.getAllCategories();
       const data = response.data;
 
@@ -183,13 +180,12 @@ const categorySlice = createSlice({
             ? `${FALLBACK_STATE_PREFIX}${payload.message}`
             : FALLBACK_STATE_DEFAULT;
         } else {
-          state.list = [];
+          state.list = MOCK_CATEGORIES;
           state.error = payload || SEARCH_UNKNOWN_ERROR;
         }
       })
 
       // ─── fetchCategoryById ───────────────────────────────────────────
-      // ─── fetchCategoryById ──────────────────────────────────────────────────
       .addCase(fetchCategoryById.pending, (state) => {
         state.loadingSelected = true;
         state.errorSelected = null;

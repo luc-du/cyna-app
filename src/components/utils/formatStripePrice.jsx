@@ -1,6 +1,17 @@
 export const formatStripePrice = (amountInCents) => {
-  if (typeof amountInCents !== "number" || isNaN(amountInCents)) {
-    return "Prix indisponible";
+  // 1. Try to coerce/parse the input into a Number of cents
+  const cents =
+    typeof amountInCents === "number"
+      ? amountInCents
+      : parseFloat(amountInCents);
+
+  if (isNaN(cents) || cents < 0) {
+    return "Prix invalide";
   }
-  return (amountInCents / 100).toFixed(2).replace(".", ".") + " €";
+
+  const euros = (cents / 100).toFixed(2);
+
+  const withComma = euros.replace(".", ",");
+
+  return `${withComma} €`;
 };

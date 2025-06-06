@@ -1,6 +1,7 @@
 // src/components/Pages/CardCategory.jsx
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { placeHolder } from "../../assets/indexImages";
 
 /**
  * CardCategory
@@ -12,8 +13,7 @@ const CardCategory = ({ element }) => {
   const categoryLink = `/categories/${element.id}`;
 
   const imageSrc =
-    (Array.isArray(element.images) && element.images[0]?.url) ||
-    "/assets/images/placeholder-category.jpg";
+    (Array.isArray(element.images) && element.images[0]?.url) || placeHolder;
 
   return (
     <Link

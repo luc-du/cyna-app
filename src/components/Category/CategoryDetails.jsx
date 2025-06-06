@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchCategoryById } from "../../redux/slice/categorySlice"; // ou features/category/categorySlice
+import { fetchCategoryById } from "../../redux/slice/categorySlice";
+import Loader from "../ui/Loader";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";
 import CategoryProductList from "./CategoryProductList";
@@ -16,7 +17,6 @@ const CategoryDetails = () => {
   );
 
   useEffect(() => {
-    // On appelle simplement le thunk : la logique de fallback est dans le thunk
     dispatch(fetchCategoryById(categoryId));
   }, [dispatch, categoryId]);
 
@@ -28,7 +28,13 @@ const CategoryDetails = () => {
   }, [loadingSelected, errorSelected, selectedCategory, navigate]);
 
   if (loadingSelected || !selectedCategory) {
-    return <p className="text-center mt-10">Chargement de la catégorie…</p>;
+    return (
+      <div className="w-full flex items-center justify-center">
+        <p className="text-center mt-10">
+          <Loader message="Chargement de la catégorie…" />
+        </p>
+      </div>
+    );
   }
 
   return (

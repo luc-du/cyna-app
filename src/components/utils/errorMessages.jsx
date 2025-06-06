@@ -18,7 +18,8 @@ export const FALLBACK_STATE_PREFIX = "Attention : ";
  * Message par défaut à afficher dans le state si on est en fallback
  * mais que l’API n’a pas renvoyé de message explicite.
  */
-export const FALLBACK_STATE_DEFAULT = "Résultats limités (mode offline).";
+export const FALLBACK_STATE_DEFAULT =
+  "Résultats limités - B.D.D vide ou hors connexion (mode offline).";
 
 /**
  * Message par défaut en cas d’erreur “classique” (non-fallback)

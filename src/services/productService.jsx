@@ -6,7 +6,7 @@ import { API_ROUTES } from "../api/apiRoutes";
  * @returns {Promise<AxiosResponse>}
  */
 function getAllProducts() {
-  return axios.get(API_ROUTES.PRODUCTS.ALL());
+  return axios.get(API_ROUTES.PRODUCTS.ALL);
 }
 
 /**

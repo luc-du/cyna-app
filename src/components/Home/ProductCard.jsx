@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { placeHolder } from "../../assets/indexImages";
 import { getPromo } from "../utils/getMockData";
-
 /**
  * ProductCard
  * Affiche une carte produit/service avec image, nom, prix et marque.
@@ -15,22 +15,8 @@ const ProductCard = ({ product }) => {
   }
 
   // Récupération de l'URL de l'image selon le format renvoyé par le BE
-  const image = (() => {
-    if (product.imageUrl) {
-      return product.imageUrl;
-    }
-    if (Array.isArray(product.images) && product.images.length > 0) {
-      const firstImage = product.images[0];
-      if (typeof firstImage === "string") {
-        return firstImage;
-      }
-      if (firstImage?.url) {
-        return firstImage.url;
-      }
-    }
-    // fallback si aucune image n'est trouvée
-    return "/assets/images/default-product.jpg";
-  })();
+  const imageSrc =
+    (Array.isArray(product.images) && product.images[0]?.url) || placeHolder;
 
   // On force l’ID en string pour la construction de l’URL
   const productId = String(product.id);
@@ -46,7 +32,7 @@ const ProductCard = ({ product }) => {
         overflow-hidden
         hover:shadow-xl
         transition
-        h-full            /* occupe toute la hauteur disponible */
+        h-full            
         flex
         flex-col
       "
@@ -54,12 +40,9 @@ const ProductCard = ({ product }) => {
     >
       <div className="w-full">
         <img
-          src={image}
+          src={imageSrc}
           alt={product.name}
           className="w-full h-40 md:h-48 object-cover flex-shrink-0"
-          onError={(e) => {
-            e.target.src = "/assets/images/default-product.jpg";
-          }}
         />
       </div>
 

@@ -101,6 +101,7 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 1,
     name: "SOC Standard",
+    brand: "CYNA",
     amount: 199.99,
     active: true, // Indique que le produit est actif
     promo: true,
@@ -110,8 +111,9 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 2,
     name: "SOC Premium",
+    brand: "CYNA",
     amount: 299.99,
-    active: false, // Indique que le produit est actif
+    active: true, // Indique que le produit est actif
     promo: false,
     imageUrl: socPremium, // socPremium.jpg
     link: "/products/2",
@@ -119,6 +121,7 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 3,
     name: "EDR Protection",
+    brand: "CYNA",
     amount: 149.99,
     active: true, // Indique que le produit est actif
     promo: false,
@@ -128,6 +131,7 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 4,
     name: "XDR Advanced",
+    brand: "CYNA",
     amount: 249.99,
     active: true, // Indique que le produit est actif
     promo: true,
@@ -137,6 +141,7 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 5,
     name: "CYNA SOC Std",
+    brand: "CYNA",
     amount: 219.99,
     active: true, // Indique que le produit est actif
     promo: true,
@@ -146,6 +151,7 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 6,
     name: "CYNA SOC Entreprise",
+    brand: "CYNA",
     amount: 499.99,
     active: true, // Indique que le produit est actif
     promo: false,
@@ -155,6 +161,7 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 7,
     name: "SIEM Analytics",
+    brand: "CYNA",
     amount: 179.99,
     active: true, // Indique que le produit est actif
     promo: true,
@@ -164,6 +171,7 @@ export const MOCK_TOP_PRODUCTS = [
   {
     id: 8,
     name: "Threat Intelligence",
+    brand: "CYNA",
     amount: 209.99,
     active: true, // Indique que le produit est actif
     promo: false,
@@ -188,7 +196,8 @@ export const MOCK_SERVICES = [
     ],
     description:
       "Service de surveillance continue et de réponse aux incidents en temps réel.",
-    available: true,
+    active: true,
+    promo: true,
     defaultPricing: 1,
     pricingIds: [1, 2, 3],
     keyCharacteristics: {

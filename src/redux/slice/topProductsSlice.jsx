@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
+import { placeHolder } from "../../assets/indexImages";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
@@ -39,8 +40,7 @@ export const fetchTopProducts = createAsyncThunk(
         amount: prod.amount,
         promo: prod.promo,
         active: prod.active,
-        imageUrl:
-          prod.images?.[0]?.url || "/assets/images/placeholder-product.jpg",
+        imageUrl: prod.images?.[0]?.url || placeHolder,
         link: `/products/${prod.id}`,
       }));
 

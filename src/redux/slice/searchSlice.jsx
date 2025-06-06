@@ -1,12 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
-import {
-  FALLBACK_API_MESSAGE,
-  FALLBACK_STATE_DEFAULT,
-  FALLBACK_STATE_PREFIX,
-  SEARCH_UNKNOWN_ERROR,
-} from "../../components/utils/errorMessages";
+import { FALLBACK_API_MESSAGE } from "../../components/utils/errorMessages";
 import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 
 // ─── Async Thunk ──────────────────────────────────────────────────
@@ -187,15 +182,15 @@ const searchSlice = createSlice({
         state.loading = false;
         const payload = action.payload || {};
 
-        if (payload.isFallback) {
-          state.searchResults = payload.fallback;
-          state.error = payload.message
-            ? `${FALLBACK_STATE_PREFIX}${payload.message}`
-            : FALLBACK_STATE_DEFAULT;
-        } else {
-          state.searchResults = [];
-          state.error = payload.message || SEARCH_UNKNOWN_ERROR;
-        }
+        // if (payload.isFallback) {
+        //   state.searchResults = payload.fallback;
+        //   state.error = payload.message
+        //     ? `${FALLBACK_STATE_PREFIX}${payload.message}`
+        //     : FALLBACK_STATE_DEFAULT;
+        // } else {
+        //   state.searchResults = [];
+        //   state.error = payload.message || SEARCH_UNKNOWN_ERROR;
+        // }
       });
   },
 });

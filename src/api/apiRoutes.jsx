@@ -124,6 +124,7 @@ export const API_ROUTES = {
   // ─── PRODUITS ───────────────────────────────────────────────────────────────
   PRODUCTS: {
     ALL: getApiUrl(PRODUCTS_HOST, "/products"),
+    ALLWithPagination: getApiUrl(PRODUCTS_HOST, "/products"),
     PAGINATION: ({
       page = 0,
       size = 6,

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTopProducts } from "../../redux/slice/topProductsSlice";
+import Loader from "../ui/Loader";
 import ProductCard from "./ProductCard";
 
 const TopProductsGrid = () => {
@@ -45,6 +46,20 @@ const TopProductsGrid = () => {
         >
           Chargement...
         </p>
+      )}
+
+      {loading && (
+        <Loader
+          message={
+            <p
+              className="text-center text-blue-500 mt-4"
+              role="status"
+              aria-live="polite"
+            >
+              Chargement...
+            </p>
+          }
+        />
       )}
 
       {/* Affichage de l’erreur */}

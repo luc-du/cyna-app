@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slice/categorySlice";
+import Loader from "../ui/Loader";
 import CategorySearch from "./CategorySearch";
 import GridCategories from "./GridCategories";
 
@@ -37,6 +38,22 @@ export default function Categories() {
     dataToDisplay = list || [];
   }
 
+  {
+    !loading && !error && dataToDisplay.length === 0 && (
+      <p className="text-center text-gray-600 mt-4" role="status">
+        Aucune catégorie disponible pour le moment.
+      </p>
+    );
+  }
+
+  {
+    error && (
+      <p className="text-center text-red-500 mt-4" role="alert">
+        {error}
+      </p>
+    );
+  }
+
   // Rendu conditionnel
   return (
     <main role="main" className="max-w-4xl mx-auto p-6">
@@ -47,7 +64,10 @@ export default function Categories() {
 
       {/* Affichage conditionnel */}
       {loading ? (
-        <p className="text-center mt-10">Chargement des catégories…</p>
+        <>
+          <Loader aria-label="Chargement des résultats" />
+          <p className="text-center mt-10">Chargement des catégories…</p>
+        </>
       ) : error && !list.length ? (
         <p className="text-center mt-10 text-red-500">
           Erreur de récupération : {error}

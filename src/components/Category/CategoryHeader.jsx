@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-
+import { placeHolder } from "../../assets/indexImages";
 /**
  * En-tête visuel de la page de catégorie.
  */
@@ -8,7 +8,7 @@ const CategoryHeader = ({ element, children }) => {
     <div className="text-center my-6">
       <div className="relative">
         <img
-          src={element.images[0]?.url}
+          src={element.images[0]?.url || placeHolder} // Utilise la première image ou une image par défaut
           alt={`Illustration de ${element.name}`}
           className="w-full max-h-96 object-cover rounded-lg shadow-md"
         />

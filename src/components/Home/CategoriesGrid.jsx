@@ -1,41 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA"; // Assure-toi d'avoir ce mock disponible
 import { fetchCategories } from "../../redux/slice/categorySlice";
+import Loader from "../ui/Loader";
 import CategoryCard from "./CategoryCard";
 
 const CategoriesGrid = () => {
   const dispatch = useDispatch();
-  const { categories, loading, error } = useSelector(
-    (state) => state.categories
-  );
+  const {
+    list: categories,
+    loading,
+    error,
+  } = useSelector((state) => state.categories);
+
+  // Évite plusieurs dispatch au montage
+  const hasFetchedOnce = useRef(false);
 
   useEffect(() => {
-    if (!Array.isArray(categories) || categories.length === 0) {
+    if (!hasFetchedOnce.current) {
+      hasFetchedOnce.current = true;
       dispatch(fetchCategories());
     }
-  }, [dispatch, categories]);
+  }, [dispatch]);
 
-  // Gestion du fallback avec avertissement console
-  const safeCategories =
-    Array.isArray(categories) && categories.length > 0
-      ? categories
-      : (() => {
-          console.warn(
-            "Fallback utilisé : affichage des catégories mockées sur HomePage (CategoriesGrid)"
-          );
-          return MOCK_CATEGORIES;
-        })();
-
-  const mappedCategories = safeCategories.map((cat) => ({
-    id: cat.id,
-    name: cat.name,
-    imageUrl:
-      Array.isArray(cat.images) && cat.images.length > 0
-        ? cat.images[0].url
-        : "/assets/images/placeholder-category.jpg",
-    url: cat.id.toString(),
-  }));
+  // Détermine quelle data afficher
+  let dataToDisplay = categories || [];
 
   return (
     <section
@@ -56,13 +44,17 @@ const CategoriesGrid = () => {
 
       {/* Indicateur de chargement */}
       {loading && (
-        <p
-          className="text-center text-blue-500 mt-4"
-          role="status"
-          aria-live="polite"
-        >
-          Chargement...
-        </p>
+        <Loader
+          message={
+            <p
+              className="text-center text-blue-500 mt-4"
+              role="status"
+              aria-live="polite"
+            >
+              Chargement...
+            </p>
+          }
+        />
       )}
 
       {error && (
@@ -71,7 +63,7 @@ const CategoriesGrid = () => {
         </p>
       )}
 
-      {!loading && !error && mappedCategories.length === 0 && (
+      {!loading && !error && dataToDisplay.length === 0 && (
         <p className="text-center text-gray-600 mt-4" role="status">
           Aucune catégorie disponible pour le moment.
         </p>
@@ -82,7 +74,7 @@ const CategoriesGrid = () => {
         role="list"
         aria-label="Liste des catégories"
       >
-        {mappedCategories.map((category) => (
+        {dataToDisplay.map((category) => (
           <CategoryCard key={category.id} category={category} />
         ))}
       </div>
