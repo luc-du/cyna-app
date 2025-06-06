@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTopProducts } from "../../redux/slice/topProductsSlice";
-import Loader from "../ui/Loader";
+import DataStatus from "../shared/DataStatus";
 import ProductCard from "./ProductCard";
 
 const TopProductsGrid = () => {
@@ -37,49 +37,12 @@ const TopProductsGrid = () => {
         Découvrez les solutions les plus demandées par nos clients.
       </p>
 
-      {/* Indicateur de chargement */}
-      {loading && (
-        <p
-          className="text-center text-blue-500 mt-4"
-          role="status"
-          aria-live="polite"
-        >
-          Chargement...
-        </p>
-      )}
-
-      {loading && (
-        <Loader
-          message={
-            <p
-              className="text-center text-blue-500 mt-4"
-              role="status"
-              aria-live="polite"
-            >
-              Chargement...
-            </p>
-          }
-        />
-      )}
-
-      {/* Affichage de l’erreur */}
-      {error && (
-        <p
-          className="text-center text-red-500 mt-4"
-          role="alert"
-          aria-live="assertive"
-        >
-          {error}
-        </p>
-      )}
-
-      {/* Si ni chargement, ni erreur, ni produits */}
-      {!loading && !error && safeTopProducts.length === 0 && (
-        <p className="text-center text-gray-600 mt-4" role="status">
-          Aucun produit en vedette pour le moment.
-        </p>
-      )}
-
+      {/* Affichage du loader ou des erreurs */}
+      <DataStatus
+        loading={loading}
+        error={error}
+        dataLength={safeTopProducts.length}
+      />
       {/* Grille des top produits */}
       <div
         className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6"

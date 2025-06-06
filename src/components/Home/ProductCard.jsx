@@ -2,42 +2,33 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { placeHolder } from "../../assets/indexImages";
 import { getPromo } from "../utils/getMockData";
+
 /**
  * ProductCard
- * Affiche une carte produit/service avec image, nom, prix et marque.
- * Ne s’affiche pas si le produit est mal formé (sans id ou sans nom).
- * La carte prend 100 % de la hauteur disponible (pour homogénéiser dans un grid/flex parent).
+ * - Si product.active === false, on désactive le clic et on applique l’opacité réduite.
+ * - Si disabled === true, on n’affiche pas le lien.
+ * - Affiche l’indicateur promo si promo === true.
  */
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, disabled = false, linkTo }) => {
   if (!product || !product.id || !product.name) {
     console.warn("ProductCard – product mal formé :", product);
     return null;
   }
 
-  // Récupération de l'URL de l'image selon le format renvoyé par le BE
   const imageSrc =
     (Array.isArray(product.images) && product.images[0]?.url) || placeHolder;
 
-  // On force l’ID en string pour la construction de l’URL
-  const productId = String(product.id);
-  const promotion = getPromo(product.id);
+  const promotion = product.promo ? getPromo(product.id) : null;
+  const isActive = Boolean(product.active) && !disabled;
 
-  return (
-    <Link
-      to={`/products/${productId}`}
-      className="
-        block
-        shadow-md
-        rounded-lg
-        overflow-hidden
-        hover:shadow-xl
-        transition
-        h-full            
-        flex
-        flex-col
-      "
-      aria-label={`Voir les détails de ${product.name}`}
-    >
+  // Classe pour désactiver le clic et atténuer l’opacité si inactif
+  const containerClass = [
+    "shadow-md rounded-lg overflow-hidden h-full flex flex-col transition",
+    isActive ? "hover:shadow-xl" : "opacity-50 cursor-not-allowed",
+  ].join(" ");
+
+  const content = (
+    <>
       <div className="w-full">
         <img
           src={imageSrc}
@@ -45,13 +36,14 @@ const ProductCard = ({ product }) => {
           className="w-full h-40 md:h-48 object-cover flex-shrink-0"
         />
       </div>
-
       <div className="flex flex-col flex-1 justify-between gap-2 p-4">
         <div>
           <h3 className="text-lg font-semibold">{product.name}</h3>
-          <h4 className="mb-4 text-center text-green-500 font-medium">
-            {promotion}
-          </h4>
+          {promotion && (
+            <h4 className="mb-4 text-center text-green-500 font-medium">
+              {promotion}
+            </h4>
+          )}
           <p className="text-gray-600">
             {typeof product.amount === "number" && product.amount > 0
               ? `${product.amount.toFixed(2)} €`
@@ -62,6 +54,21 @@ const ProductCard = ({ product }) => {
           <p className="text-sm text-gray-500 mt-1">Marque : {product.brand}</p>
         )}
       </div>
+    </>
+  );
+
+  // Si disabled ou product.active === false, on n’enroule pas dans <Link>
+  if (!isActive || !linkTo) {
+    return <div className={containerClass}>{content}</div>;
+  }
+
+  return (
+    <Link
+      to={linkTo}
+      className={containerClass}
+      aria-label={`Voir les détails de ${product.name}`}
+    >
+      {content}
     </Link>
   );
 };
@@ -71,11 +78,18 @@ ProductCard.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
     promo: PropTypes.bool,
+    active: PropTypes.bool,
     brand: PropTypes.string,
-    imageUrl: PropTypes.string,
     images: PropTypes.array,
     amount: PropTypes.number,
-  }),
+  }).isRequired,
+  disabled: PropTypes.bool,
+  linkTo: PropTypes.string,
+};
+
+ProductCard.defaultProps = {
+  disabled: false,
+  linkTo: null,
 };
 
 export default ProductCard;

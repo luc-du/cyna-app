@@ -1,6 +1,7 @@
 // src/components/cart/CartItem.jsx
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import { placeHolder } from "../../assets/indexImages";
 import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
 import { formatStripePrice } from "../utils/formatStripePrice";
 import { getPricingLabel } from "../utils/pricingLabel";
@@ -61,7 +62,7 @@ const CartItem = ({ item, showToast }) => {
       {/* Image + détails */}
       <div className="flex items-center space-x-4 col-span-1">
         <img
-          src={item.imageUrl}
+          src={item.imageUrl || placeHolder}
           alt={`Image de ${item.name}`}
           className="w-16 h-16 object-cover rounded-lg"
         />

@@ -26,13 +26,13 @@ const CategoryCard = ({ category }) => {
 };
 CategoryCard.propTypes = {
   category: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     images: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string,
       })
     ),
-    imageUrl: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string,
     name: PropTypes.string.isRequired,
   }).isRequired,
 };

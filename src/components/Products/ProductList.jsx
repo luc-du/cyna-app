@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../../../src/components/ui/Loader";
 import { fetchProducts } from "../../redux/slice/productSlice";
 import ProductCard from "../Home/ProductCard";
+import DataStatus from "../shared/DataStatus";
 
 const ProductList = () => {
   const dispatch = useDispatch();
@@ -24,31 +24,12 @@ const ProductList = () => {
       </h1>
 
       {/* Loader */}
-      {loadingList && (
-        <Loader
-          message={
-            <p
-              role="status"
-              aria-live="polite"
-              className="text-center text-gray-600"
-            >
-              Chargement des produits...
-            </p>
-          }
-        />
-      )}
-
-      {/* Affichage d'une erreur si existante */}
-      {errorList && (
-        <p role="alert" className="text-center text-red-500 mb-4">
-          {errorList}
-        </p>
-      )}
-
-      {/* Si aucun produit après chargement et pas d'erreur */}
-      {!loadingList && !errorList && products.length === 0 && (
-        <p className="text-center text-gray-600">Aucun produit disponible.</p>
-      )}
+      <DataStatus
+        dataLength={products.length}
+        loading={loadingList}
+        emptyMessage="Aucun produit disponible."
+        error={errorList}
+      />
 
       {/* Affichage de la liste */}
       {products.length > 0 && (

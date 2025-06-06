@@ -1,27 +1,20 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCarouselSlides } from "../../redux/slice/carouselSlice";
+import DataStatus from "../shared/DataStatus";
 import Carousel from "./Carousel";
 
 const CarouselContainer = () => {
   const dispatch = useDispatch();
+  // Récupération des données du carrousel depuis le store
+  const { slides, loading, error } = useSelector((state) => state.carousel);
 
-  // On lit depuis le state Redux
-  const slides = useSelector((state) => state.carousel.slides);
-  const loading = useSelector((state) => state.carousel.loading);
-  const error = useSelector((state) => state.carousel.error);
-
+  // Effet pour charger les slides du carrousel au montage du composant
   useEffect(() => {
     dispatch(fetchCarouselSlides());
   }, [dispatch]);
 
-  if (loading) {
-    return (
-      <div className="w-full flex justify-center items-center h-96">
-        <p className="text-gray-600 text-lg">Chargement du carrousel...</p>
-      </div>
-    );
-  }
+  <DataStatus loading={loading} error={error} dataLength={slides.length} />;
 
   return (
     <div>

@@ -6,6 +6,7 @@ import {
   SEARCH_UNKNOWN_ERROR,
 } from "../../components/utils/errorMessages";
 import { processProductData } from "../../components/utils/productUtils";
+import sortProductsByPriority from "../../components/utils/sortProductByPriority";
 import { MOCK_SERVICES, MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 import productService from "../../services/productService";
 
@@ -17,7 +18,10 @@ export const fetchProducts = createAsyncThunk(
     try {
       const response = await productService.getAllProducts();
       const data = response.data;
-      return data;
+
+      const sortedData = sortProductsByPriority(data);
+
+      return sortedData;
     } catch (error) {
       const msg = error.response?.data?.message || FALLBACK_API_MESSAGE;
       return rejectWithValue({

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slice/categorySlice";
-import Loader from "../ui/Loader";
+import DataStatus from "../shared/DataStatus";
 import CategoryCard from "./CategoryCard";
 
 const CategoriesGrid = () => {
@@ -42,32 +42,11 @@ const CategoriesGrid = () => {
         besoins.
       </p>
 
-      {/* Indicateur de chargement */}
-      {loading && (
-        <Loader
-          message={
-            <p
-              className="text-center text-blue-500 mt-4"
-              role="status"
-              aria-live="polite"
-            >
-              Chargement...
-            </p>
-          }
-        />
-      )}
-
-      {error && (
-        <p className="text-center text-red-500 mt-4" role="alert">
-          {error}
-        </p>
-      )}
-
-      {!loading && !error && dataToDisplay.length === 0 && (
-        <p className="text-center text-gray-600 mt-4" role="status">
-          Aucune catégorie disponible pour le moment.
-        </p>
-      )}
+      <DataStatus
+        loading={loading}
+        error={error}
+        dataLength={dataToDisplay.length}
+      />
 
       <div
         className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-6"
@@ -81,7 +60,5 @@ const CategoriesGrid = () => {
     </section>
   );
 };
-
-CategoriesGrid.propTypes = {};
 
 export default CategoriesGrid;
