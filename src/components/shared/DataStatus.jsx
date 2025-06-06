@@ -1,4 +1,3 @@
-// src/components/shared/DataStatus.jsx
 import PropTypes from "prop-types";
 import Loader from "../../components/ui/Loader";
 

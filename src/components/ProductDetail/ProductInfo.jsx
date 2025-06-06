@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import { formatStripePrice } from "../utils/formatstripePrice";
-import { getMockPricing, getPromo } from "../utils/getMockData.jsx";
+import { getPromo } from "../utils/getMockData.jsx";
 
 const ProductInfo = ({ product }) => {
   const isAvailable = product.active;
@@ -16,9 +15,12 @@ const ProductInfo = ({ product }) => {
       </p>
       <p className="mt-4 text-gray-600">{promotion}</p>
       <span className="block mt-4 text-2xl font-semibold text-green-600">
-        {product.amount
+        {product.amount + "€"}{" "}
+        {/*classic price
+        {/* {product.amount
           ? `${formatStripePrice(product.amount)}`
-          : `${getMockPricing(product.defaultPricing)}`}
+          : `${getMockPricing(product.defaultPricing)}`} */}{" "}
+        {/* formatted price */}
       </span>
       <span
         className={`block mt-2 text-sm font-semibold ${

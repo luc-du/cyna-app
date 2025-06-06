@@ -36,7 +36,7 @@ export const fetchProducts = createAsyncThunk(
 export const fetchProductById = createAsyncThunk(
   "product/fetchById",
   async (productId, { getState, rejectWithValue }) => {
-    const state = getState().products; // ← on suppose que le slice est monté sous `products`
+    const state = getState().products; // ← le slice est monté sous `products`
     const fullList = state.list || [];
 
     // 1) Vérifier dans le cache (state.list)

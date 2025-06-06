@@ -40,7 +40,10 @@ const ProductList = () => {
         >
           {products.map((product) => (
             <li key={product.id} role="listitem">
-              <ProductCard product={product} />
+              <ProductCard
+                product={product}
+                linkTo={`/products/${product.id}`}
+              />
             </li>
           ))}
         </ul>
