@@ -35,7 +35,7 @@ const ProductInfo = ({ product }) => {
 
 ProductInfo.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     amount: PropTypes.number,

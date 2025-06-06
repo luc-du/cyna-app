@@ -34,11 +34,14 @@ const ProductSpecs = ({ product }) => {
 
 ProductSpecs.propTypes = {
   product: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    name: PropTypes.string.isRequired,
     pricingModel: PropTypes.string.isRequired,
     defaultPricing: PropTypes.string.isRequired,
     brand: PropTypes.string.isRequired,
     priceId: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
+    amount: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
   }).isRequired,
 };
 

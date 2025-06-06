@@ -7,7 +7,7 @@ import {
   updateAddress,
 } from "../../redux/slice/addressSlice";
 import { fetchUserProfile } from "../../redux/slice/authSlice";
-import CTAButton from "../ui/buttons/CTAButton";
+import CTAButton from "../shared/buttons/CTAButton";
 import AddressForm from "./Address/AddressForm";
 import AddressList from "./Address/AddressList";
 const AddressSection = () => {

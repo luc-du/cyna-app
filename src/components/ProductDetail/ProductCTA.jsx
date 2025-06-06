@@ -69,7 +69,7 @@ const ProductCTA = ({ product }) => {
 
 ProductCTA.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
     brand: PropTypes.string,
     pricingModel: PropTypes.string,

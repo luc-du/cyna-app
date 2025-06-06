@@ -23,6 +23,11 @@ const DataStatus = ({
     );
   }
 
+  if (error && typeof error === "object" && error.message) {
+    error = error.message;
+  }
+  // Si error est un objet, on extrait le message
+  // Sinon, on utilise l'erreur telle quelle
   if (error) {
     return (
       <p className="text-center text-red-500 mt-4" role="alert">

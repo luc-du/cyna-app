@@ -1,10 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { emptyBox } from "../../assets/indexImages";
-import { fetchCategories } from "../../redux/slice/categorySlice";
+import {
+  clearSearchResults,
+  fetchCategories,
+  searchCategories,
+} from "../../redux/slice/categorySlice";
 import DataStatus from "../shared/DataStatus";
 import NoResult from "../shared/NoResult";
-import CategorySearch from "./CategorySearch";
+import SearchBar from "../shared/SearchBar";
 import GridCategories from "./GridCategories";
 
 /**
@@ -31,14 +35,26 @@ export default function Categories() {
   // Détermine quelle data afficher
   const dataToDisplay = isSearchMode ? searchResults : list || [];
 
-  // On utilise DataStatus uniquement pour loading/error
+  // j' utilise DataStatus uniquement pour loading/error
   // Le cas "vide" est géré plus bas
   return (
     <main role="main" className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold text-center mb-6">Catégories</h1>
 
       {/* Barre de recherche */}
-      <CategorySearch />
+      <SearchBar
+        onSearch={(keyword) => {
+          dispatch(searchCategories(keyword));
+        }}
+        onClear={() => {
+          dispatch(clearSearchResults());
+        }}
+        placeholder="Rechercher une catégorie…"
+        minLength={3}
+        aria-label="Champ de recherche catégorie"
+        className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-3"
+        aria-required="true"
+      />
 
       {/* Loader ou message d'erreur via DataStatus */}
       <DataStatus
@@ -51,7 +67,7 @@ export default function Categories() {
 
       {/* Rendu conditionnel : 
           - Si chargement ou erreur (avec pas de données), DataStatus a déjà affiché un Loader ou un <p> d’erreur. 
-          - Sinon, on affiche la grille, NoResult ou message vide. */}
+          - Sinon, j' affiche la grille, NoResult ou message vide. */}
       {!loading && !error && (
         <>
           {dataToDisplay.length > 0 ? (

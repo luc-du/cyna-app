@@ -57,7 +57,7 @@ const TopProductsGrid = () => {
             aria-label={`Produit : ${product.name}`}
             tabIndex={0}
           >
-            <ProductCard product={product} />
+            <ProductCard product={product} linkTo={`/products/${product.id}`} />
           </div>
         ))}
       </div>

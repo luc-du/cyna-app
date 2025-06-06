@@ -36,7 +36,7 @@ export const fetchProducts = createAsyncThunk(
 export const fetchProductById = createAsyncThunk(
   "product/fetchById",
   async (productId, { getState, rejectWithValue }) => {
-    const state = getState().products; // ← le slice est monté sous `products`
+    const state = getState().products;
     const fullList = state.list || [];
 
     // 1) Vérifier dans le cache (state.list)
@@ -47,12 +47,12 @@ export const fetchProductById = createAsyncThunk(
       return processProductData(existInState);
     }
 
-    // 2) Appel à l’API
+    // 2) Appel à l'API
     try {
       const response = await productService.getProductById(productId);
       const data = response.data;
 
-      // 2a) Si l’API renvoie un 200 OK mais data est null / vide / mal formé
+      // 2a) Si l'API renvoie un 200 OK mais data est null / vide / mal formé
       if (!data || Object.keys(data).length === 0) {
         return rejectWithValue({
           code: "NOT_FOUND_DB",
@@ -64,7 +64,7 @@ export const fetchProductById = createAsyncThunk(
       return processProductData(data);
     } catch (err) {
       const status = err.response?.status;
-      // → 404 ou 400, on considère que le produit n’existe pas en BDD
+      // → 404 ou 400, on considère que le produit n'existe pas en BDD
       if (status === 404 || status === 400) {
         return rejectWithValue({
           code: "NOT_FOUND_DB",
@@ -141,7 +141,7 @@ export const searchProducts = createAsyncThunk(
 const productSlice = createSlice({
   name: "product",
   initialState: {
-    // Détail d’un produit unique
+    // Détail d'un produit unique
     item: null,
     loading: false,
     error: null,
@@ -168,6 +168,21 @@ const productSlice = createSlice({
       state.loadingList = false;
       state.errorList = null;
     },
+    clearSearchResults: (state) => {
+      state.searchResults = [];
+      state.isSearchMode = false;
+      state.errorSearch = null;
+      state.loadingSearch = false;
+    },
+    // Nouvelle action pour réinitialiser complètement la recherche
+    resetToProductList: (state) => {
+      state.searchResults = [];
+      state.isSearchMode = false;
+      state.errorSearch = null;
+      state.loadingSearch = false;
+      // Réinitialiser les états de la liste si nécessaire
+      state.errorList = null;
+    },
   },
   extraReducers: (builder) => {
     // ─── fetchProducts (liste de produits) ───────────────────────────────
@@ -175,7 +190,10 @@ const productSlice = createSlice({
       .addCase(fetchProducts.pending, (state) => {
         state.loadingList = true;
         state.errorList = null;
-        state.list = [];
+        // Ne pas vider la liste si on est en mode recherche pour éviter le scintillement
+        if (!state.isSearchMode) {
+          state.list = [];
+        }
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loadingList = false;
@@ -251,5 +269,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { setProductList } = productSlice.actions;
+export const { setProductList, clearSearchResults, resetToProductList } =
+  productSlice.actions;
 export default productSlice.reducer;

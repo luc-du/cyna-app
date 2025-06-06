@@ -9,7 +9,7 @@ import { getPromo } from "../utils/getMockData";
  * - Si disabled === true, on n’affiche pas le lien.
  * - Affiche l’indicateur promo si promo === true.
  */
-const ProductCard = ({ product, disabled = false, linkTo }) => {
+const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
   if (!product || !product.id || !product.name) {
     console.warn("ProductCard – product mal formé :", product);
     return null;
