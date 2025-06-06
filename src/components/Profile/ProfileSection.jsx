@@ -6,7 +6,7 @@ import {
   fetchUserProfile,
   updateUserProfile,
 } from "../../redux/slice/authSlice";
-import CTAButton from "../ui/buttons/CTAButton";
+import CTAButton from "../shared/buttons/CTAButton";
 import ModalOverlay from "../ui/ModalOverlay";
 import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 

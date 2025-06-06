@@ -16,8 +16,8 @@ const GridCategories = ({ data }) => {
       aria-label="Liste des catégories"
     >
       {Array.isArray(data) && data.length > 0 ? (
-        data.map((element) => (
-          <CardCategory element={element} key={element.id} />
+        data.map((category) => (
+          <CardCategory category={category} key={category.id} />
         ))
       ) : (
         <div className="col-span-full flex justify-center items-center p-10">

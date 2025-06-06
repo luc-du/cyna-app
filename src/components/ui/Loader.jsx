@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
  * Composant d'affichage d'un indicateur de chargement avec un message personnalisé.
  *
  * Props :
- * - message (string) : Message à afficher sous l'icône de chargement. Valeur par défaut : "Chargement en cours..."
+ * - message (string | node) : Message ou élément JSX à afficher sous l'icône.
+ *   Valeur par défaut : "Chargement en cours..."
  */
 export default function Loader({ message = "Chargement en cours..." }) {
   return (
@@ -34,13 +35,18 @@ export default function Loader({ message = "Chargement en cours..." }) {
           d="M4 12a8 8 0 018-8v8H4z"
         />
       </svg>
-      {/* Message de chargement */}
-      <p className="text-lg">{message}</p>
+
+      {/* Si message est une string, on l'affiche dans un <p>; sinon on rend directement le nœud JSX */}
+      {typeof message === "string" ? (
+        <p className="text-lg">{message}</p>
+      ) : (
+        message
+      )}
     </div>
   );
 }
 
 Loader.propTypes = {
-  /** Message à afficher sous l'icône de chargement */
-  message: PropTypes.string,
+  /** Message (string) ou élément JSX à afficher sous l'icône de chargement */
+  message: PropTypes.node,
 };

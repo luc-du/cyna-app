@@ -1,29 +1,27 @@
-// src/api/homeService.js
 import axios from "axios";
 import { API_ROUTES } from "../api/apiRoutes";
+
 /**
  * Récupère les éléments du carousel (héros).
- * -> GET /carousel?limits=…
+ * → GET /carousel?limits=…
  */
-export const fetchCarouselSlides = () => {
-  return axios
-    .get(API_ROUTES.CAROUSEL.ALL(/* facultatif : nombre de slides */))
-    .then((res) => res.data);
+export const getCarouselSlides = (limits = 10) => {
+  return axios.get(API_ROUTES.CAROUSEL.ALL(limits)).then((res) => res.data);
 };
 
 /**
  * Récupère la liste des catégories à afficher (pour CategoriesGrid).
- * -> GET /categories
+ * → GET /categories
  */
-export const fetchCategories = () => {
+export const getHomeCategories = () => {
   return axios.get(API_ROUTES.CATEGORIES.ALL).then((res) => res.data);
 };
 
 /**
  * Récupère les "Top Products du moment" (pour TopProductsGrid).
- * -> GET /products/top-products?top=…
+ * → GET /products/top-products?top=…
  */
-export const fetchTopProducts = (
+export const getTopProducts = (
   options = { top: 10, promo: true, active: true }
 ) => {
   const { top, promo, active } = options;
@@ -34,10 +32,11 @@ export const fetchTopProducts = (
 
 /**
  * Récupère les promotions (par exemple : produits en promo).
+ * → GET /products/pagination?page=…&size=…&promoOnly=true
  */
-export const fetchPromoProducts = (options = { page: 0, size: 6 }) => {
+export const getPromoProducts = (options = { page: 0, size: 6 }) => {
   const { page, size } = options;
   return axios
     .get(API_ROUTES.PRODUCTS.PAGINATION({ page, size, promoOnly: true }))
-    .then((res) => res.data.products /* selon le format Pagination */);
+    .then((res) => res.data.products);
 };

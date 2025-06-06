@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
@@ -8,30 +6,23 @@ import {
   SEARCH_UNKNOWN_ERROR,
 } from "../../components/utils/errorMessages";
 import { processProductData } from "../../components/utils/productUtils";
-import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
+import sortProductsByPriority from "../../components/utils/sortProductByPriority";
+import { MOCK_SERVICES, MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
+import productService from "../../services/productService";
 
-/**
- * Récupère la liste complète des produits depuis l'API.
- * Si l'appel échoue ou renvoie un tableau vide, on rejette avec un objet fallback.
- */
+// ─── Async Thunks ─────────────────────────────────────────────
+
 export const fetchProducts = createAsyncThunk(
   "products/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.PRODUCTS.ALL());
+      const response = await productService.getAllProducts();
       const data = response.data;
 
-      // Si le backend renvoie un tableau vide ou non-tableau → fallback
-      if (!Array.isArray(data) || data.length === 0) {
-        return rejectWithValue({
-          isFallback: true,
-          fallback: MOCK_TOP_PRODUCTS,
-          message: undefined,
-        });
-      }
-      return data;
+      const sortedData = sortProductsByPriority(data);
+
+      return sortedData;
     } catch (error) {
-      // En cas d’erreur réseau/serveur → fallback avec message approprié
       const msg = error.response?.data?.message || FALLBACK_API_MESSAGE;
       return rejectWithValue({
         isFallback: true,
@@ -42,44 +33,91 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-/**
- * Récupère un produit unique depuis l'API à partir de son productId.
- * Si l'appel échoue, on rejette avec un message d'erreur.
- */
 export const fetchProductById = createAsyncThunk(
-  "products/fetchById",
-  async (productId, { rejectWithValue }) => {
+  "product/fetchById",
+  async (productId, { getState, rejectWithValue }) => {
+    const state = getState().products;
+    const fullList = state.list || [];
+
+    // 1) Vérifier dans le cache (state.list)
+    const existInState = fullList.find(
+      (p) => String(p.id) === String(productId)
+    );
+    if (existInState) {
+      return processProductData(existInState);
+    }
+
+    // 2) Appel à l'API
     try {
-      const id = Number(productId);
-      if (isNaN(id)) {
-        return rejectWithValue("ID produit invalide");
+      const response = await productService.getProductById(productId);
+      const data = response.data;
+
+      // 2a) Si l'API renvoie un 200 OK mais data est null / vide / mal formé
+      if (!data || Object.keys(data).length === 0) {
+        return rejectWithValue({
+          code: "NOT_FOUND_DB",
+          message: "Aucun produit trouvé en base.",
+        });
       }
-      const response = await axios.get(API_ROUTES.PRODUCTS.BY_ID(id));
-      return processProductData(response.data);
-    } catch (error) {
-      const status = error?.response?.status;
-      if (status === 400 || status === 404) {
-        return rejectWithValue("Produit introuvable ou requête invalide");
+
+      // 2b) Sinon, on retourne le produit transformé
+      return processProductData(data);
+    } catch (err) {
+      const status = err.response?.status;
+      // → 404 ou 400, on considère que le produit n'existe pas en BDD
+      if (status === 404 || status === 400) {
+        return rejectWithValue({
+          code: "NOT_FOUND_DB",
+          message: "Produit introuvable.",
+        });
       }
-      return rejectWithValue(SEARCH_UNKNOWN_ERROR);
+
+      // → network error (axios)
+      const isNetworkError =
+        err.code === "ERR_NETWORK" ||
+        (err.message && err.message.toLowerCase().includes("network error"));
+
+      if (isNetworkError) {
+        const fallback = MOCK_SERVICES.find(
+          (p) => String(p.id) === String(productId)
+        );
+        if (fallback) {
+          return processProductData(fallback);
+        }
+        return rejectWithValue({
+          code: "OFFLINE_NO_MOCK",
+          message: "Hors-ligne et pas de mock disponible.",
+        });
+      }
+
+      // Autre erreur (500, timeout, etc.) : fallback partiel si mock dispo
+      const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
+      const fallback = MOCK_SERVICES.find(
+        (p) => String(p.id) === String(productId)
+      );
+      if (fallback) {
+        return processProductData(fallback);
+      }
+
+      return rejectWithValue({
+        code: "UNKNOWN_ERROR",
+        message: msg || SEARCH_UNKNOWN_ERROR,
+      });
     }
   }
 );
 
-/*
- * Recherche de produits par mot-clé.
- * Si l'appel échoue ou ne renvoie pas un tableau, on rejette avec un objet fallback.
- */
 export const searchProducts = createAsyncThunk(
   "products/search",
   async ({ keyword = "", page = 0, size = 6 }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        API_ROUTES.PRODUCTS.SEARCH({ keyword, page, size })
-      );
+      const response = await productService.searchProducts({
+        keyword,
+        page,
+        size,
+      });
       const data = response.data;
 
-      // Si pas de données ou format inattendu → fallback
       if (!data || !Array.isArray(data.products)) {
         return rejectWithValue({
           isFallback: true,
@@ -103,12 +141,13 @@ export const searchProducts = createAsyncThunk(
 const productSlice = createSlice({
   name: "product",
   initialState: {
-    // Détail d’un produit unique
+    // Détail d'un produit unique
     item: null,
-    loadingItem: false,
-    errorItem: null,
+    loading: false,
+    error: null,
+    errorCode: null,
 
-    // Liste complète des produits
+    // Liste complète des produits (cache)
     list: [],
     loadingList: false,
     errorList: null,
@@ -119,18 +158,42 @@ const productSlice = createSlice({
     errorSearch: null,
     isSearchMode: false,
 
-    // Pagination des résultats de recherche
+    // Pagination des résultats de recherche (si besoin)
     currentPage: 1,
     totalPages: 1,
   },
-  reducers: {},
+  reducers: {
+    setProductList: (state, action) => {
+      state.list = action.payload;
+      state.loadingList = false;
+      state.errorList = null;
+    },
+    clearSearchResults: (state) => {
+      state.searchResults = [];
+      state.isSearchMode = false;
+      state.errorSearch = null;
+      state.loadingSearch = false;
+    },
+    // Nouvelle action pour réinitialiser complètement la recherche
+    resetToProductList: (state) => {
+      state.searchResults = [];
+      state.isSearchMode = false;
+      state.errorSearch = null;
+      state.loadingSearch = false;
+      // Réinitialiser les états de la liste si nécessaire
+      state.errorList = null;
+    },
+  },
   extraReducers: (builder) => {
-    // ---------- fetchProducts (liste de produits) ----------
+    // ─── fetchProducts (liste de produits) ───────────────────────────────
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.loadingList = true;
         state.errorList = null;
-        state.list = [];
+        // Ne pas vider la liste si on est en mode recherche pour éviter le scintillement
+        if (!state.isSearchMode) {
+          state.list = [];
+        }
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loadingList = false;
@@ -140,7 +203,6 @@ const productSlice = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loadingList = false;
         const payload = action.payload || {};
-
         if (payload.isFallback) {
           state.list = payload.fallback;
           state.errorList = payload.message
@@ -152,50 +214,61 @@ const productSlice = createSlice({
         }
       });
 
-    // ---------- fetchProductById (détail d’un produit) ----------
+    // ─── fetchProductById ─────────────────────────────────────────────────
     builder
       .addCase(fetchProductById.pending, (state) => {
-        state.loadingItem = true;
-        state.errorItem = null;
+        state.loading = true;
+        state.error = null;
+        state.errorCode = null;
         state.item = null;
       })
       .addCase(fetchProductById.fulfilled, (state, action) => {
-        state.loadingItem = false;
+        state.loading = false;
         state.item = action.payload;
-        state.errorItem = null;
+        state.error = null;
+        state.errorCode = null;
       })
       .addCase(fetchProductById.rejected, (state, action) => {
-        state.loadingItem = false;
-        state.errorItem = action.payload || SEARCH_UNKNOWN_ERROR;
+        state.loading = false;
+        const payload = action.payload || {
+          code: "UNKNOWN_ERROR",
+          message: SEARCH_UNKNOWN_ERROR,
+        };
+        state.error = payload.message;
+        state.errorCode = payload.code;
         state.item = null;
       });
 
-    // ---------- searchProducts (recherche de produits) ----------
+    // ─── searchProducts (recherche de produits) ───────────────────────────
     builder
       .addCase(searchProducts.pending, (state) => {
-        state.loadingList = true;
-        state.errorList = null;
+        state.loadingSearch = true;
+        state.errorSearch = null;
+        state.isSearchMode = true;
       })
       .addCase(searchProducts.fulfilled, (state, action) => {
-        state.loadingList = false;
-        state.list = action.payload;
-        state.errorList = null;
+        state.loadingSearch = false;
+        state.searchResults = action.payload;
+        state.errorSearch = null;
+        state.isSearchMode = true;
       })
       .addCase(searchProducts.rejected, (state, action) => {
-        state.loadingList = false;
+        state.loadingSearch = false;
         const payload = action.payload || {};
-
         if (payload.isFallback) {
-          state.list = payload.fallback;
-          state.errorList = payload.message
+          state.searchResults = payload.fallback;
+          state.errorSearch = payload.message
             ? `${FALLBACK_STATE_PREFIX}${payload.message}`
             : FALLBACK_STATE_DEFAULT;
         } else {
-          state.list = [];
-          state.errorList = payload || SEARCH_UNKNOWN_ERROR;
+          state.searchResults = [];
+          state.errorSearch = payload || SEARCH_UNKNOWN_ERROR;
         }
+        state.isSearchMode = true;
       });
   },
 });
 
+export const { setProductList, clearSearchResults, resetToProductList } =
+  productSlice.actions;
 export default productSlice.reducer;

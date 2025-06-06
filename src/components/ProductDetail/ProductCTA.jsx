@@ -4,12 +4,26 @@ import { useDispatch } from "react-redux";
 import { useToast } from "../../hooks/useToast";
 import { addToCart } from "../../redux/slice/cartSlice";
 
+/**
+ * Composant CTA pour ajouter un produit au panier.
+ *
+ * @param {Object} props
+ * @param {Object} props.product - Objet produit, shape : { id, name, brand, amount, pricingModel, active, images }
+ * @returns {JSX.Element|null}
+ */
 const ProductCTA = ({ product }) => {
   const dispatch = useDispatch();
   const { showToast, ToastComponent } = useToast();
 
   if (!product) return null;
 
+  // Vérifier la disponibilité du produit
+  const isAvailable = product.active === true;
+
+  /**
+   * Ajoute l'article au panier Redux et affiche un toast de confirmation.
+   * @returns {void}
+   */
   const handleAddToCart = () => {
     dispatch(
       addToCart({
@@ -18,28 +32,34 @@ const ProductCTA = ({ product }) => {
         brand: product.brand,
         imageUrl:
           product.images?.[0]?.url || "/assets/images/default-product.jpg",
-        pricingModel: product.pricingModel,
-        price: product.amount,
+        pricingModel: product.pricingModel || "default",
+        price: typeof product.amount === "number" ? product.amount : 0,
       })
     );
-
-    showToast(`✔️ ${product.name} ajouté au panier`);
+    showToast(`✔️ ${product.name} ajouté au panier`, "success");
   };
-
-  const isAvailable = (product.active = true);
 
   return (
     <div className="flex items-center justify-center mt-6 relative">
       <button
+        type="button"
         disabled={!isAvailable}
+        aria-label={
+          isAvailable
+            ? `Ajouter au panier : ${product.name}`
+            : `Produit indisponible : ${product.name}`
+        }
         className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition ${
           isAvailable
-            ? "bg-primary hover:bg-CTAHover"
+            ? "bg-primary hover:bg-CTAHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             : "bg-gray-400 cursor-not-allowed"
         }`}
         onClick={handleAddToCart}
       >
-        <FaCartPlus /> <span className="ml-2">Ajouter au panier</span>
+        <FaCartPlus aria-hidden="true" />{" "}
+        <span className="ml-2">
+          {isAvailable ? "Ajouter au panier" : "Indisponible"}
+        </span>
       </button>
 
       <ToastComponent />
@@ -49,12 +69,12 @@ const ProductCTA = ({ product }) => {
 
 ProductCTA.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     name: PropTypes.string.isRequired,
-    brand: PropTypes.string.isRequired,
-    pricingModel: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
-    active: PropTypes.bool.isRequired,
+    brand: PropTypes.string,
+    pricingModel: PropTypes.string,
+    amount: PropTypes.number,
+    active: PropTypes.bool,
     images: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,

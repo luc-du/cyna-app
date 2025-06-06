@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
+import { placeHolder } from "../../assets/indexImages";
 import { MOCK_SERVICES } from "../../mock/MOCKS_DATA";
 import { fetchProductById } from "../../redux/slice/productSlice";
+import DataStatus from "../shared/DataStatus";
+import NoResult from "../shared/NoResult";
 import ProductCarousel from "./ProductCarousel";
 import ProductCTA from "./ProductCTA";
 import ProductInfo from "./ProductInfo";
@@ -18,48 +21,54 @@ const ProductDetails = () => {
     error,
   } = useSelector((state) => state.products);
 
-  // Validation du param ID (juste pour filtrer les cas manifestement invalides)
   const parsedId = Number(productId);
   const isValidId = !isNaN(parsedId) && parsedId > 0;
 
-  // Appel à l'API ou fallback
   useEffect(() => {
-    if (isValidId) {
-      // Vérifie si le produit est déjà celui attendu
-      if (!product || String(product.id) !== String(productId)) {
-        dispatch(fetchProductById(productId));
-      }
+    if (isValidId && (!product || String(product.id) !== productId)) {
+      dispatch(fetchProductById(productId));
     }
   }, [dispatch, productId, isValidId, product]);
 
-  // Fallback local en cas d'erreur ou de produit null après appel
+  // Fallback vers le mock si pas trouvé
   const fallbackProduct = MOCK_SERVICES.find(
     (p) => String(p.id) === String(productId)
   );
-
   const finalProduct = product ?? fallbackProduct;
 
-  console.log("From productDetail", finalProduct);
-
-  // Redirection 404 si rien à afficher
+  // Redirection si ID invalide ou erreur sans fallback
   if (!isValidId || (!loading && error && !finalProduct)) {
     return <Navigate to="/404" replace />;
   }
 
-  if (loading && !finalProduct) {
+  // Si on charge *et* qu’il n’y a pas encore de fallback, loader plein écran
+  if (loading && !fallbackProduct) {
     return (
-      <main role="main" className="max-w-6xl mx-auto p-6">
-        <p
-          role="status"
-          aria-live="polite"
-          className="text-center text-gray-600"
-        >
-          Chargement du produit...
-        </p>
+      <main role="main" className="max-w-6xl mx-auto p-6 flex justify-center">
+        <DataStatus loading={true} error={null} dataLength={0} />
       </main>
     );
   }
 
+  // Si post-charge, erreur persistante (DataStatus)
+  if (!loading && error && !finalProduct) {
+    return (
+      <main role="main" className="max-w-6xl mx-auto p-6">
+        <DataStatus loading={false} error={error} dataLength={0} />
+      </main>
+    );
+  }
+
+  // Si produit final inexistant (pas même de mock), on affiche NoResult
+  if (!finalProduct) {
+    return (
+      <main role="main" className="max-w-6xl mx-auto p-6">
+        <NoResult message="Produit introuvable." image={placeHolder} />
+      </main>
+    );
+  }
+
+  // Sinon on affiche les détails
   return (
     <main
       role="main"
@@ -71,12 +80,19 @@ const ProductDetails = () => {
           Détails du produit {finalProduct.name}
         </h1>
       )}
-      {/* Carousel d’images */}
+
       <section aria-label="Galerie d'images du produit" className="mb-8">
-        <ProductCarousel
-          images={finalProduct.images?.map((img) => img.url) || []}
-          delayTransitionImage={5000}
-        />
+        <div className="w-full flex items-center h-72 md:h-80 lg:h-96 overflow-hidden rounded-lg bg-gray-100">
+          <ProductCarousel
+            images={
+              finalProduct.images && finalProduct.images.length > 0
+                ? finalProduct.images.map((img) => img.url)
+                : [placeHolder, placeHolder, placeHolder]
+            }
+            fixedHeight="h-full"
+            delayTransitionImage={5000}
+          />
+        </div>
       </section>
 
       {/* Informations principales */}

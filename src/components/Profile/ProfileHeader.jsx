@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useRef } from "react";
 import MenDefaultAvatar from "../../assets/avatars/default-men.png";
-import CTAButton from "../ui/buttons/CTAButton";
+import CTAButton from "../shared/buttons/CTAButton";
 
 const ProfileHeader = ({ data, onUpload }) => {
   const fileInputRef = useRef();

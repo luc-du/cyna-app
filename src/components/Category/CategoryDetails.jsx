@@ -1,9 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
+import { emptyBox } from "../../assets/indexImages";
 import { fetchCategoryById } from "../../redux/slice/categorySlice";
-import NavigateButton from "../ui/buttons/NavigateButton";
+import DataStatus from "../shared/DataStatus";
+import NoResult from "../shared/NoResult";
+import Loader from "../ui/Loader";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";
 import CategoryProductList from "./CategoryProductList";
@@ -12,58 +14,66 @@ const CategoryDetails = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const hasTriedLocalFallback = useRef(false);
 
-  const {
-    selectedCategory,
-    loadingSelected,
-    errorSelected,
-    list: fullList,
-  } = useSelector((state) => state.categories);
+  const { selectedCategory, loadingSelected, errorSelected } = useSelector(
+    (state) => state.categories
+  );
 
-  // Si aucune catégorie sélectionnée, on tente de la récupérer (BE ou mock)
   useEffect(() => {
-    if (!selectedCategory || selectedCategory.id?.toString() !== categoryId) {
-      const fallback = [...fullList, ...MOCK_CATEGORIES].find(
-        (cat) => cat.id?.toString() === categoryId
-      );
+    dispatch(fetchCategoryById(categoryId));
+  }, [dispatch, categoryId]);
 
-      if (fallback) {
-        dispatch({
-          type: "categories/fetchById/fulfilled",
-          payload: fallback,
-        });
-        hasTriedLocalFallback.current = true;
-      } else {
-        dispatch(fetchCategoryById(categoryId));
-        hasTriedLocalFallback.current = false;
-      }
-    }
-  }, [categoryId, dispatch, selectedCategory, fullList]);
-
-  // Redirection 404 en cas d’échec
+  // Si l’API renvoie une erreur ET qu’on n’a pas de catégorie, on redirige
   useEffect(() => {
     if (!loadingSelected && errorSelected && !selectedCategory) {
       navigate("/404");
     }
   }, [loadingSelected, errorSelected, selectedCategory, navigate]);
 
-  if (loadingSelected || !selectedCategory) {
-    return <p className="text-center mt-10">Chargement de la catégorie…</p>;
+  // Tant que l’on charge, on affiche DataStatus (qui inclut le loader)
+  if (loadingSelected) {
+    return (
+      <div className="w-full flex items-center justify-center py-16">
+        <Loader message="Chargement de la catégorie…" />
+      </div>
+    );
   }
-
   return (
     <div className="max-w-7xl w-full my-6 mx-auto p-4">
-      <NavigateButton
-        handleClick={() => navigate("/categories")}
-        label="⬅️ Liste des catégories"
+      <button
+        onClick={() => navigate("/categories")}
+        className="mb-4 text-blue-600 hover:underline"
+      >
+        ⬅️ Liste des catégories
+      </button>
+
+      {/* DataStatus gère l’erreur persistante */}
+      <DataStatus
+        loading={false}
+        error={errorSelected}
+        dataLength={selectedCategory ? 1 : 0}
+        emptyMessage=""
+        aria-label="Statut de la catégorie"
       />
 
-      <CategoryHeader element={selectedCategory}>
-        <CategoryDescription element={selectedCategory} />
-      </CategoryHeader>
+      {selectedCategory && (
+        <>
+          <CategoryHeader element={selectedCategory}>
+            <CategoryDescription element={selectedCategory} />
+          </CategoryHeader>
 
-      <CategoryProductList element={selectedCategory} />
+          {/* Si la catégorie existe mais qu’elle n’a aucun produit, on affiche NoResult */}
+          {Array.isArray(selectedCategory.products) &&
+          selectedCategory.products.length > 0 ? (
+            <CategoryProductList element={selectedCategory} />
+          ) : (
+            <NoResult
+              message="Aucun produit dans cette catégorie."
+              image={emptyBox}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

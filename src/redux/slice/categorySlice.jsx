@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
@@ -8,6 +6,7 @@ import {
   SEARCH_UNKNOWN_ERROR,
 } from "../../components/utils/errorMessages";
 import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
+import categoryService from "../../services/categoryService"; // <-- on importe le service
 
 // ─── Async Thunks ─────────────────────────────────────────────
 
@@ -19,7 +18,7 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.CATEGORIES.ALL);
+      const response = await categoryService.getAllCategories();
       const data = response.data;
 
       // Si le backend renvoie un tableau vide ou non-tableau → fallback
@@ -52,7 +51,7 @@ export const searchCategories = createAsyncThunk(
   "categories/search",
   async (name, { rejectWithValue }) => {
     try {
-      const response = await axios.get(API_ROUTES.CATEGORIES.SEARCH(name));
+      const response = await categoryService.searchCategories(name);
       const data = response.data;
 
       // Si pas de résultats côté backend → fallback local filtré
@@ -89,17 +88,50 @@ export const searchCategories = createAsyncThunk(
  */
 export const fetchCategoryById = createAsyncThunk(
   "categories/fetchById",
-  async (categoryId, { rejectWithValue }) => {
+  async (categoryId, { getState, rejectWithValue }) => {
+    const state = getState().categories; // accès à state.categories
+    const fullList = state.list || [];
+
+    // 1. Si la catégorie est déjà dans fullList, on la renvoie direct
+    const existInState = fullList.find(
+      (cat) => cat.id?.toString() === categoryId
+    );
+    if (existInState) {
+      // On renvoie l’objet existant sans passer par l’API
+      return existInState;
+    }
+
+    // 2. Sinon, on tente l’appel HTTP
     try {
-      const res = await axios.get(API_ROUTES.CATEGORIES.BY_ID(categoryId));
-      return res.data;
+      const response = await categoryService.getCategoryById(categoryId);
+      const data = response.data;
+      return data;
     } catch (err) {
-      const msg = err.response?.data?.message || SEARCH_UNKNOWN_ERROR;
-      return rejectWithValue(msg);
+      // Si 404 ou autre, on essaie fallback local dans MOCK_CATEGORIES
+      const status = err.response?.status;
+      if (status === 404 || status === 400) {
+        const fallback = MOCK_CATEGORIES.find(
+          (cat) => cat.id?.toString() === categoryId
+        );
+        if (fallback) {
+          return fallback;
+        } else {
+          return rejectWithValue("Catégorie introuvable"); //404
+        }
+      }
+      // Erreur réseau ou autre
+      const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
+      // On regarde quand même si on a un fallback partiel
+      const fallback = MOCK_CATEGORIES.find(
+        (cat) => cat.id?.toString() === categoryId
+      );
+      if (fallback) {
+        return fallback;
+      }
+      return rejectWithValue(msg || SEARCH_UNKNOWN_ERROR);
     }
   }
 );
-
 // ─── Slice ───────────────────────────────────────────────────
 
 const categorySlice = createSlice({
@@ -127,7 +159,6 @@ const categorySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-
       // ─── fetchCategories ─────────────────────────────────────────────
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
@@ -149,7 +180,7 @@ const categorySlice = createSlice({
             ? `${FALLBACK_STATE_PREFIX}${payload.message}`
             : FALLBACK_STATE_DEFAULT;
         } else {
-          state.list = [];
+          state.list = MOCK_CATEGORIES;
           state.error = payload || SEARCH_UNKNOWN_ERROR;
         }
       })
@@ -170,7 +201,6 @@ const categorySlice = createSlice({
         state.errorSelected = action.payload || SEARCH_UNKNOWN_ERROR;
         state.selectedCategory = null;
       })
-
       // ─── searchCategories ───────────────────────────────────────────
       .addCase(searchCategories.pending, (state) => {
         state.loadingSearch = true;

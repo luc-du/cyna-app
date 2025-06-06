@@ -1,5 +1,5 @@
 import { MOCK_PRICING_OPTIONS, MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
-import { formatStripePrice } from "./formatstripePrice";
+import { formatStripePrice } from "./formatStripePrice";
 
 /**
  * Renvoie une chaîne prête à l’affichage :

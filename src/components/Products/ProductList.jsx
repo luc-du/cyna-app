@@ -1,39 +1,58 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts, searchProducts } from "../../redux/slice/productSlice";
+import {
+  fetchProducts,
+  resetToProductList,
+  searchProducts,
+} from "../../redux/slice/productSlice";
 import ProductCard from "../Home/ProductCard";
-import Pagination from "./Pagination";
-import ProductSearch from "./ProductSearch";
+import DataStatus from "../shared/DataStatus";
+import NoResult from "../shared/NoResult";
+import SearchBar from "../shared/SearchBar";
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const [localPage, setLocalPage] = useState(1);
 
   const {
     list: products,
-    searchResults,
     loadingList,
-    loadingSearch,
-    isSearchMode,
     errorList,
-    currentPage,
-    totalPages,
+    searchResults,
+    loadingSearch,
+    errorSearch,
+    isSearchMode,
   } = useSelector((state) => state.products);
 
-  const dataToDisplay = isSearchMode ? searchResults : products;
+  // 1) Chargement initial (éviter la boucle infinie)
+  useEffect(() => {
+    if ((!products || products.length === 0) && !loadingList && !errorList) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length, loadingList, errorList, products]);
 
-  const handlePageChange = (newPage) => {
-    setLocalPage(newPage);
-    if (isSearchMode) {
-      dispatch(searchProducts({ keyword: "", page: newPage }));
+  // 2) Détermine quel tableau afficher
+  const dataToDisplay = isSearchMode ? searchResults : products || [];
+
+  // 3) handleSearch et handleClear
+  const handleSearch = (term) => {
+    dispatch(searchProducts({ keyword: term, page: 0, size: 100 }));
+  };
+
+  const handleClear = () => {
+    dispatch(resetToProductList());
+
+    // Recharger la liste si vide ou en erreur
+    if (!products || products.length === 0 || errorList) {
+      dispatch(fetchProducts());
     }
   };
 
-  useEffect(() => {
-    if (!isSearchMode) {
-      dispatch(fetchProducts());
-    }
-  }, [dispatch, isSearchMode]);
+  // 4) États de chargement et d'erreur
+  const isLoading = isSearchMode ? loadingSearch : loadingList;
+  const currentError = isSearchMode ? errorSearch : errorList;
+  const emptyMessage = isSearchMode
+    ? "Aucun produit trouvé pour cette recherche."
+    : "Aucun produit disponible.";
 
   return (
     <main role="main" className="max-w-6xl mx-auto p-6">
@@ -41,49 +60,50 @@ const ProductList = () => {
         Catalogue des Produits
       </h1>
 
-      <ProductSearch onPageChange={handlePageChange} />
+      {/* Barre de recherche générique */}
+      <SearchBar
+        onSearch={handleSearch}
+        onClear={handleClear}
+        placeholder="Rechercher un produit…"
+        minLength={3}
+      />
 
-      {(loadingList || loadingSearch) && (
-        <p
-          role="status"
-          aria-live="polite"
-          className="text-center text-gray-600"
-        >
-          Chargement des produits...
-        </p>
-      )}
+      {/* Status unifié */}
+      <DataStatus
+        loading={isLoading}
+        error={currentError}
+        dataLength={dataToDisplay.length}
+        emptyMessage={emptyMessage}
+      />
 
-      {errorList && (
-        <p role="alert" className="text-center text-red-500 mb-4">
-          {errorList}
-        </p>
-      )}
-
-      {!loadingList && dataToDisplay.length === 0 && !errorList && (
-        <p className="text-center text-gray-600">Aucun produit trouvé.</p>
-      )}
-
-      {dataToDisplay.length > 0 && (
+      {/* Affichage de la grille */}
+      {!isLoading && dataToDisplay.length > 0 && (
         <ul
           role="list"
-          aria-label="Liste des produits"
+          aria-label={
+            isSearchMode ? "Résultats de la recherche" : "Liste des produits"
+          }
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6"
         >
           {dataToDisplay.map((product) => (
             <li key={product.id} role="listitem">
-              <ProductCard product={product} />
+              <ProductCard
+                product={product}
+                disabled={!product.active}
+                linkTo={product.active ? `/products/${product.id}` : null}
+              />
             </li>
           ))}
         </ul>
       )}
 
-      {isSearchMode && totalPages > 1 && (
-        <Pagination
-          localPage={localPage}
-          setLocalPage={setLocalPage}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+      {/* Message si pas de données */}
+      {!isLoading && dataToDisplay.length === 0 && (
+        <NoResult
+          message="Aucun produit trouvé."
+          role="status"
+          aria-live="polite"
+          aria-label="Aucun produit trouvé."
         />
       )}
     </main>

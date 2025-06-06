@@ -1,7 +1,5 @@
-/* 
-  Indexation des images pour éviter les imports sales
-*/
 import cynaItLogo from "./cyna_it_logo.jpeg";
+import emptyCartIcon from "./icons/emptyCart.svg";
 import cert from "./images/cert.jpg";
 import cloud from "./images/cloud.jpg";
 import edr from "./images/edr.jpg";
@@ -18,7 +16,11 @@ import xdr from "./images/xdr.jpg";
 import xdrPremium from "./images/xdrPremium.png";
 import logoCynaWhite from "./logo-cyna-white.svg";
 import logoPng from "./logo.png";
+import placeHolder from "./placeholder.svg";
 
+/**
+ * Tableau indexé de toutes les images pour import global
+ */
 export const indexImages = [
   cert,
   cloud,
@@ -37,4 +39,33 @@ export const indexImages = [
   cynaItLogo,
   logoCynaWhite,
   logoPng,
+  placeHolder,
 ];
+
+// Icônes spécifiques
+export const icons = [emptyCartIcon];
+
+/**
+ * Exports nommés pour chaque asset, si vous voulez y accéder individuellement
+ */
+export {
+  cert,
+  cloud,
+  cynaItLogo,
+  edr,
+  edrPremium,
+  emptyBox,
+  emptyCartIcon,
+  identity,
+  idImg,
+  logoCynaWhite,
+  logoPng,
+  placeHolder,
+  security,
+  siem,
+  soc,
+  socPremium,
+  technology,
+  xdr,
+  xdrPremium,
+};
