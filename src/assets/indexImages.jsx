@@ -1,6 +1,5 @@
-// indexImages.js
-
 import cynaItLogo from "./cyna_it_logo.jpeg";
+import emptyCartIcon from "./icons/emptyCart.svg";
 import cert from "./images/cert.jpg";
 import cloud from "./images/cloud.jpg";
 import edr from "./images/edr.jpg";
@@ -43,6 +42,9 @@ export const indexImages = [
   placeHolder,
 ];
 
+// Icônes spécifiques
+export const icons = [emptyCartIcon];
+
 /**
  * Exports nommés pour chaque asset, si vous voulez y accéder individuellement
  */
@@ -53,6 +55,7 @@ export {
   edr,
   edrPremium,
   emptyBox,
+  emptyCartIcon,
   identity,
   idImg,
   logoCynaWhite,

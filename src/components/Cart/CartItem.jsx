@@ -1,9 +1,7 @@
-// src/components/cart/CartItem.jsx
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { placeHolder } from "../../assets/indexImages";
 import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
-import { formatStripePrice } from "../utils/formatStripePrice";
+import { getImageSrc } from "../utils/getImageSrc";
 import { getPricingLabel } from "../utils/pricingLabel";
 
 /**
@@ -39,6 +37,7 @@ const CartItem = ({ item, showToast }) => {
     );
   };
 
+  const imageSrc = getImageSrc(item);
   /**
    * Supprime l'article du panier.
    * @returns {void}
@@ -62,7 +61,7 @@ const CartItem = ({ item, showToast }) => {
       {/* Image + détails */}
       <div className="flex items-center space-x-4 col-span-1">
         <img
-          src={item.imageUrl || placeHolder}
+          src={imageSrc}
           alt={`Image de ${item.name}`}
           className="w-16 h-16 object-cover rounded-lg"
         />
@@ -70,7 +69,9 @@ const CartItem = ({ item, showToast }) => {
           <h4 className="text-lg font-semibold">{item.name}</h4>
           <p className="text-gray-500">{getPricingLabel(item.pricingModel)}</p>
           <p className="text-gray-700">
-            Prix unitaire : {formatStripePrice(item.price)}
+            {/* 📌Prix unitaire : {formatStripePrice(item.price)}  */}{" "}
+            {/*StripePrice*/}
+            Prix unitaire : {item.price + " €"}
           </p>
         </div>
       </div>
@@ -120,7 +121,8 @@ const CartItem = ({ item, showToast }) => {
       {/* Total ligne */}
       <div className="text-right font-semibold sm:text-base text-sm">
         <span aria-label={`Total pour ${item.name}`}>
-          {formatStripePrice(item.price * item.quantity)}
+          {/* {formatStripePrice(item.price * item.quantity)} */}
+          {item.price * item.quantity + " €"}
         </span>
       </div>
     </div>
@@ -129,7 +131,8 @@ const CartItem = ({ item, showToast }) => {
 
 CartItem.propTypes = {
   item: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    active: PropTypes.bool,
     name: PropTypes.string.isRequired,
     pricingModel: PropTypes.string,
     price: PropTypes.number.isRequired,

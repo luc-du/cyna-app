@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import CTAButton from "../shared/buttons/CTAButton";
-import { formatStripePrice } from "../utils/formatStripePrice";
 
 /**
  * Composant affichant le résumé de la commande : nombre d’articles, montant HT, TVA, TTC, et zone de code promo.
@@ -24,13 +23,15 @@ const CartSummary = ({ total, cartLength }) => {
       <p className="flex justify-between text-lg">
         <span>Montant H.T :</span>{" "}
         <span aria-label={`Montant hors taxe : ${montantHT.toFixed(2)} euros`}>
-          {formatStripePrice(montantHT)}
+          {/* {formatStripePrice(montantHT)} */}
+          {montantHT.toFixed(2)} €
         </span>
       </p>
       <p className="flex justify-between text-lg">
         <span>TVA (19.6%) :</span>{" "}
         <span aria-label={`Montant de la TVA : ${tva.toFixed(2)} euros`}>
-          {formatStripePrice(tva)}
+          {/* {formatStripePrice(tva)} */}
+          {tva.toFixed(2)} €
         </span>
       </p>
       <p className="flex justify-between text-xl font-bold mt-2">
@@ -40,7 +41,8 @@ const CartSummary = ({ total, cartLength }) => {
             2
           )} euros`}
         >
-          {formatStripePrice(total)}
+          {/* {formatStripePrice(total)} */}
+          {total.toFixed(2)} €
         </span>
       </p>
 
@@ -61,11 +63,14 @@ const CartSummary = ({ total, cartLength }) => {
         </p>
       </div>
 
-      <CTAButton
-        label="Passer à la caisse"
-        link="/checkout"
-        style="w-full mt-6"
-      />
+      <div id="cart-actions" className="flex justify-end">
+        {/* Bouton de passage à la caisse */}
+        <CTAButton
+          label="Passer à la caisse"
+          link="/checkout"
+          style="w-full mt-6"
+        />
+      </div>
     </div>
   );
 };

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { emptyCartIcon } from "../../assets/indexImages";
 import { useToast } from "../../hooks/useToast";
 import { updateQuantity } from "../../redux/slice/cartSlice";
 import { syncCartWithServer } from "../../services/cartService";
+import CTAButton from "../shared/buttons/CTAButton";
 import CartActions from "./CartActions";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
@@ -43,7 +45,7 @@ const Cart = () => {
               dispatch(
                 updateQuantity({
                   id: newItem.id,
-                  pricingModel: newItem.pricingModel || "default",
+                  pricingModel: newItem.pricingModel,
                   quantity: newItem.quantity,
                 })
               );
@@ -86,9 +88,20 @@ const Cart = () => {
       )}
 
       {cart.length === 0 && !isSyncing ? (
-        <p className="text-lg text-center text-gray-500">
-          Votre panier est vide.
-        </p>
+        <div className="flex flex-col mt-6 gap-6 justify-center items-center h-64">
+          <img
+            src={emptyCartIcon}
+            alt="Panier vide"
+            className="inline-block w-32 h-32 mr-2"
+          />
+          <h3>Votre panier est vide.</h3>
+          <p className="text-lg text-center text-gray-500">
+            Ajoutez des articles pour commencer vos achats.
+          </p>
+          <div className="mt-2">
+            <CTAButton label="Commencer vos achats" link={"/products"} />
+          </div>
+        </div>
       ) : (
         <>
           {/* En-tête (Desktop) */}

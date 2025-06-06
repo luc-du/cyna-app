@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { placeHolder } from "../../assets/indexImages";
+import { getImageSrc } from "../utils/getImageSrc";
 
 /**
  * CardCategory
@@ -11,8 +11,8 @@ const CardCategory = ({ category }) => {
   // Détermine l'URL : ici on suppose que “element.id” suffit
   const categoryLink = `/categories/${category.id}`;
 
-  const imageSrc =
-    (Array.isArray(category.images) && category.images[0]?.url) || placeHolder;
+  // Récupère l'URL de l'image, ou une image par défaut si pas d'images
+  const imageSrc = getImageSrc(category);
 
   return (
     <Link
