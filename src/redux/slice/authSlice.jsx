@@ -1,245 +1,201 @@
-/**
- * Slice Redux pour la gestion de l'authentification utilisateur.
- *
- * Ce fichier contient :
- * - Les thunks asynchrones pour l'inscription, la connexion, la validation du token,
- *   la récupération et la mise à jour du profil utilisateur.
- * - Le slice Redux pour gérer l'état d'authentification, l'utilisateur courant,
- *   l'identifiant utilisateur, les erreurs et le chargement.
- *
- * Utilise Redux Toolkit et AuthService pour centraliser la logique d'authentification.
- */
-
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { jwtDecode } from "jwt-decode";
+import {
+  forgotPassword as forgotPasswordService,
+  login as loginService,
+  register as registerService,
+  validateToken as validateTokenService,
+  verifyEmail as verifyEmailService,
+} from "../../services/authServices";
+
 import {
   clearToken,
   getToken,
   setToken,
 } from "../../components/utils/authStorage";
-import { AuthService } from "../../services/authServices";
-/**
- * Thunks asynchrones utilisant le service d'authentification centralisé
- */
 
-// Inscription utilisateur
-export const registerUser = createAsyncThunk(
-  "auth/register",
-  /**
-   * @param {Object} userData - Données d'inscription de l'utilisateur
-   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
-   */
-  async (userData, { rejectWithValue }) => {
-    try {
-      const data = await AuthService.register(userData);
-      setToken(data.token);
-      return data;
-    } catch (error) {
-      if (error.response?.data?.message?.includes("Duplicate entry")) {
-        return rejectWithValue("Cet email est déjà utilisé.");
-      }
-      return rejectWithValue(
-        error.response?.data || "Erreur lors de l'inscription"
-      );
-    }
-  }
-);
+import {
+  AUTH_EMAIL_ALREADY_EXISTS_ERROR,
+  AUTH_EMAIL_VERIFICATION_FAILED,
+  AUTH_FORGOT_PASSWORD_ERROR,
+  AUTH_INVALID_CREDENTIALS_ERROR,
+  AUTH_LOGIN_ERROR,
+  AUTH_SIGNUP_ERROR,
+  AUTH_USER_NOT_FOUND_ERROR,
+  TOKEN_EXPIRED_ERROR,
+} from "../../components/utils/errorMessages";
 
-// Connexion utilisateur
-export const loginUser = createAsyncThunk(
-  "auth/login",
-  /**
-   * @param {Object} credentials - Identifiants de connexion
-   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
-   */
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const data = await AuthService.login(credentials);
-      setToken(data.token);
-      return data;
-    } catch (error) {
-      let message = "Email ou mot de passe incorrect !";
-      if (error.response?.data?.message?.includes("Account not activate")) {
-        message = "Votre compte n'est pas encore activé.";
-      } else if (error.response?.data?.message) {
-        message = error.response.data.message;
-      }
-      return rejectWithValue(message);
-    }
-  }
-);
-
-// Validation du token d'authentification
-export const validateToken = createAsyncThunk(
-  "auth/validateToken",
-  /**
-   * @param {void} _ - Non utilisé
-   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
-   */
-  async (_, { rejectWithValue }) => {
-    try {
-      const token = getToken();
-      if (!token) throw new Error("Token manquant");
-      await AuthService.validate();
-      return true;
-    } catch (error) {
-      clearToken();
-      return rejectWithValue(error.response?.data || "Token invalide");
-    }
-  }
-);
-
-// Récupération du profil utilisateur
-export const fetchUserProfile = createAsyncThunk(
-  "auth/fetchUserProfile",
-  /**
-   * @param {void} _ - Non utilisé
-   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
-   */
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await AuthService.fetchProfile();
-      return res.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Impossible de récupérer le profil utilisateur"
-      );
-    }
-  }
-);
-
-// Mise à jour du profil utilisateur
-export const updateUserProfile = createAsyncThunk(
-  "auth/updateUserProfile",
-  /**
-   * @param {Object} param0 - Objet contenant userId et profileData
-   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
-   */
-  async ({ userId, profileData }, { rejectWithValue }) => {
-    try {
-      const res = await AuthService.updateProfile(userId, profileData);
-      return res.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message ||
-          "Erreur lors de la mise à jour du profil"
-      );
-    }
-  }
-);
-
-/**
- * État initial du slice d'authentification
- * @typedef {Object} AuthState
- * @property {Object|null} user - Données utilisateur
- * @property {string|null} userId - Identifiant utilisateur
- * @property {boolean} isAuthenticated - Statut d'authentification
- * @property {boolean} loading - Statut de chargement
- * @property {string|null} error - Message d'erreur éventuel
- */
 const initialState = {
   user: null,
-  userId: null,
-  isAuthenticated: !!getToken(),
-  loading: false,
+  token: getToken() || null,
+  status: "idle",
   error: null,
 };
 
-/**
- * Slice Redux - Authentification
- */
+/// ──────────────────────────────────────────────
+/// THUNKS ASYNCHRONES
+/// ──────────────────────────────────────────────
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (credentials, thunkAPI) => {
+    try {
+      const data = await loginService(credentials);
+      setToken(data.token);
+      return data;
+    } catch (err) {
+      if (err.response?.status === 401) {
+        return thunkAPI.rejectWithValue(AUTH_INVALID_CREDENTIALS_ERROR);
+      }
+      return thunkAPI.rejectWithValue(AUTH_LOGIN_ERROR);
+    }
+  }
+);
+
+export const register = createAsyncThunk(
+  "auth/register",
+  async (formData, thunkAPI) => {
+    try {
+      const data = await registerService(formData);
+      return data;
+    } catch (err) {
+      if (err.response?.status === 409) {
+        return thunkAPI.rejectWithValue(AUTH_EMAIL_ALREADY_EXISTS_ERROR);
+      }
+      if (err.response?.status === 400) {
+        return thunkAPI.rejectWithValue(AUTH_SIGNUP_ERROR);
+      }
+      return thunkAPI.rejectWithValue(AUTH_SIGNUP_ERROR);
+    }
+  }
+);
+
+export const validateToken = createAsyncThunk(
+  "auth/validateToken",
+  async (_, thunkAPI) => {
+    try {
+      const data = await validateTokenService();
+      return data;
+    } catch (err) {
+      if (err.response?.status === 401) {
+        clearToken();
+        thunkAPI.dispatch(logout());
+        return thunkAPI.rejectWithValue(TOKEN_EXPIRED_ERROR);
+      }
+      return thunkAPI.rejectWithValue(TOKEN_EXPIRED_ERROR);
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email, thunkAPI) => {
+    try {
+      const data = await forgotPasswordService(email);
+      return data;
+    } catch (err) {
+      if (err.response?.status === 404) {
+        return thunkAPI.rejectWithValue(AUTH_USER_NOT_FOUND_ERROR);
+      }
+      return thunkAPI.rejectWithValue(AUTH_FORGOT_PASSWORD_ERROR);
+    }
+  }
+);
+
+export const verifyEmail = createAsyncThunk(
+  "auth/verifyEmail",
+  async (email, thunkAPI) => {
+    try {
+      const data = await verifyEmailService(email);
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err, AUTH_EMAIL_VERIFICATION_FAILED);
+    }
+  }
+);
+
+/// ──────────────────────────────────────────────
+/// SLICE
+/// ──────────────────────────────────────────────
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    /**
-     * Déconnexion de l'utilisateur
-     * @param {AuthState} state
-     */
     logout: (state) => {
       state.user = null;
-      state.userId = null;
-      state.isAuthenticated = false;
+      state.token = null;
       clearToken();
     },
-    /**
-     * Mise à jour du statut d'authentification
-     * @param {AuthState} state
-     * @param {Object} action
-     */
-    setAuth: (state, action) => {
-      state.isAuthenticated = !!action.payload;
-    },
-    /**
-     * Mise à jour des données utilisateur
-     * @param {AuthState} state
-     * @param {Object} action
-     */
-    setUser: (state, action) => {
-      state.user = action.payload;
-    },
-    /**
-     * Mise à jour de l'identifiant utilisateur
-     * @param {AuthState} state
-     * @param {Object} action
-     */
-    setUserId: (state, action) => {
-      state.userId = action.payload;
+    clearAuthError: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Inscription réussie
-      .addCase(registerUser.fulfilled, (state, action) => {
-        const { token } = action.payload;
-        const decoded = jwtDecode(token);
-        state.userId = decoded.jti;
-        state.user = action.payload;
-        state.isAuthenticated = true;
+      .addCase(login.pending, (state) => {
+        state.status = "loading";
         state.error = null;
       })
-      // Inscription échouée
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(login.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.status = "failed";
         state.error = action.payload;
       })
 
-      // Connexion réussie
-      .addCase(loginUser.fulfilled, (state, action) => {
-        const { token } = action.payload;
-        const decoded = jwtDecode(token);
-        state.userId = decoded.jti;
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null; //suppression des messages d'error persistants
+      .addCase(register.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
       })
-
-      // Connexion échouée
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(register.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.status = "failed";
         state.error = action.payload;
       })
 
-      // Validation du token réussie
-      .addCase(validateToken.fulfilled, (state) => {
-        state.isAuthenticated = true;
-      })
-      // Validation du token échouée
-      .addCase(validateToken.rejected, (state) => {
-        state.isAuthenticated = false;
-        state.user = null;
-        state.userId = null;
-      })
-
-      // Récupération du profil réussie
-      .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
+      .addCase(validateToken.pending, (state) => {
+        state.status = "loading";
         state.error = null;
       })
-      // Récupération du profil échouée
-      .addCase(fetchUserProfile.rejected, (state, action) => {
+      .addCase(validateToken.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload.user;
+      })
+      .addCase(validateToken.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(forgotPassword.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
+      .addCase(verifyEmail.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(verifyEmail.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.status = "failed";
         state.error = action.payload;
       });
   },
 });
 
-export const { logout, setAuth, setUser, setUserId } = authSlice.actions;
+export const { logout, clearAuthError } = authSlice.actions;
 export default authSlice.reducer;
