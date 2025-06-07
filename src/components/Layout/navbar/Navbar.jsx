@@ -1,5 +1,3 @@
-// src/components/Navbar/Navbar.jsx
-
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo-cyna-white.svg";
