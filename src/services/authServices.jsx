@@ -1,93 +1,81 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
-import { getToken } from "../components/utils/authStorage";
-import apiClient from "./axiosConfig";
+import {
+  AUTH_ACCOUNT_VALIDATION_ERROR,
+  AUTH_EMAIL_VERIFICATION_FAILED,
+  AUTH_FORGOT_PASSWORD_ERROR,
+  AUTH_INVALID_CREDENTIALS_ERROR,
+  AUTH_LOGIN_ERROR,
+  AUTH_SIGNUP_ERROR,
+} from "../components/utils/errorMessages";
 
-export const AuthService = {
-  /**
-   * Inscription d’un nouvel utilisateur
-   * @param {object} userData
-   * @returns {Promise<object>}
-   */
-  register: async (userData) => {
-    const response = await axios.post(API_ROUTES.AUTH.SIGNUP, userData);
-    return response.data;
-  },
-
-  /**
-   * Connexion utilisateur (login)
-   * @param {object} credentials
-   * @returns {Promise<object>}
-   */
-  login: async (credentials) => {
+/**
+ * Connexion utilisateur
+ * @param {Object} credentials { email, password }
+ * @returns {Promise<Object>}
+ */
+export const login = async (credentials) => {
+  try {
     const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
     return response.data;
-  },
+  } catch (err) {
+    if (err.response?.status === 401) {
+      throw new Error(AUTH_INVALID_CREDENTIALS_ERROR);
+    }
+    throw new Error(AUTH_LOGIN_ERROR);
+  }
+};
 
-  /**
-   * Validation de la session (token)
-   * @returns {Promise<object>}
-   */
-  validate: async () => {
-    const token = getToken();
-    return axios.post(API_ROUTES.AUTH.VALIDATE, { token });
-  },
+/**
+ * Inscription utilisateur
+ * @param {Object} payload { email, password, confirmPassword, etc. }
+ * @returns {Promise<Object>}
+ */
+export const register = async (payload) => {
+  try {
+    const response = await axios.post(API_ROUTES.AUTH.SIGNUP, payload);
+    return response.data;
+  } catch (err) {
+    throw new Error(AUTH_SIGNUP_ERROR, err);
+  }
+};
 
-  /**
-   * Récupération des infos du profil utilisateur
-   * @returns {Promise<object>}
-   */
-  fetchProfile: async () => {
-    const token = getToken();
-    const decoded = jwtDecode(token);
-    const userId = decoded.jti;
+/**
+ * Vérification du token JWT (appel sur route protégée)
+ * @returns {Promise<Object>}
+ */
+export const validateToken = async () => {
+  try {
+    const response = await axios.get(API_ROUTES.AUTH.VALIDATE);
+    return response.data;
+  } catch (err) {
+    throw new Error(AUTH_ACCOUNT_VALIDATION_ERROR, err);
+  }
+};
 
-    return axios.get(API_ROUTES.USER.BY_ID(userId), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-  },
+/**
+ * Requête de réinitialisation de mot de passe par email
+ * @param {string} email
+ * @returns {Promise<void>}
+ */
+export const forgotPassword = async (email) => {
+  try {
+    await axios.post(API_ROUTES.AUTH.PASSWORD_FORGOT_BY_EMAIL(email));
+  } catch (err) {
+    throw new Error(AUTH_FORGOT_PASSWORD_ERROR, err);
+  }
+};
 
-  /**
-   * Mise à jour du profil utilisateur
-   * @param {string} userId
-   * @param {object} data
-   * @returns {Promise<object>}
-   */
-  updateProfile: async (userId, data) => {
-    const token = getToken();
-    return axios.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-  },
-
-  /**
-   * Upload d’un avatar utilisateur
-   * @param {string} userId
-   * @param {File} file
-   */
-  // uploadAvatar: async (userId, file) => {
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-
-  //   return apiClient.patch(API_ROUTES.USER.PATCH(userId), formData, {
-  //     // headers: {
-  //     //   "Content-Type": "multipart/form-data",
-  //     // },
-  //   });
-  // },
-
-  uploadAvatar: async (userId, file) => {
-    const formData = new FormData();
-    formData.append("profile", file); // nom du champ conforme au DTO Java
-
-    return apiClient.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  },
+/**
+ * Validation de compte (token envoyé par mail)
+ * @param {string} email
+ * @returns {Promise<Object>}
+ */
+export const validateAccount = async (email) => {
+  try {
+    const response = await axios.get(API_ROUTES.AUTH.VALIDATE_ACCOUNT(email));
+    return response.data;
+  } catch (err) {
+    throw new Error(AUTH_EMAIL_VERIFICATION_FAILED, err);
+  }
 };
