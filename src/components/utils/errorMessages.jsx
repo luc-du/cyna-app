@@ -1,5 +1,3 @@
-// utils/errorMessages.js
-
 /**
  * Message utilisé lorsqu’on ne parvient pas à joindre l’API
  * et qu’on bascule en mode local (fallback).

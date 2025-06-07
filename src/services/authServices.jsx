@@ -1,61 +1,93 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
 import { getToken } from "../components/utils/authStorage";
+import apiClient from "./axiosConfig";
 
-/**
- * Envoie les identifiants pour authentification.
- *
- * @param {{ email: string, password: string }} credentials - Identifiants de connexion
- * @returns {Promise<Object>} - Données utilisateur + token JWT
- */
-export const login = async (credentials) => {
-  const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
-  return response.data;
-};
+export const AuthService = {
+  /**
+   * Inscription d’un nouvel utilisateur
+   * @param {object} userData
+   * @returns {Promise<object>}
+   */
+  register: async (userData) => {
+    const response = await axios.post(API_ROUTES.AUTH.SIGNUP, userData);
+    return response.data;
+  },
 
-/**
- * Enregistre un nouvel utilisateur.
- *
- * @param {Object} data - Données d'inscription
- * @returns {Promise<Object>} - Réponse de confirmation ou message
- */
-export const register = async (data) => {
-  const response = await axios.post(API_ROUTES.AUTH.SIGNUP, data);
-  return response.data;
-};
+  /**
+   * Connexion utilisateur (login)
+   * @param {object} credentials
+   * @returns {Promise<object>}
+   */
+  login: async (credentials) => {
+    const response = await axios.post(API_ROUTES.AUTH.SIGNIN, credentials);
+    return response.data;
+  },
 
-/**
- * Valide le token JWT stocké côté client.
- * Envoie un header Authorization avec le token.
- *
- * @returns {Promise<Object>} - Données de session si valide
- */
-export const validateToken = async () => {
-  const token = getToken();
-  const response = await axios.get(API_ROUTES.AUTH.VALIDATE, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data;
-};
+  /**
+   * Validation de la session (token)
+   * @returns {Promise<object>}
+   */
+  validate: async () => {
+    const token = getToken();
+    return axios.post(API_ROUTES.AUTH.VALIDATE, { token });
+  },
 
-/**
- * Envoie une demande de réinitialisation de mot de passe.
- *
- * @param {string} email - Email de l'utilisateur
- * @returns {Promise<Object>} - Message de succès ou d'erreur
- */
-export const forgotPassword = async (email) => {
-  const response = await axios.post(API_ROUTES.AUTH.PASSWORD_FORGOT(email));
-  return response.data;
-};
+  /**
+   * Récupération des infos du profil utilisateur
+   * @returns {Promise<object>}
+   */
+  fetchProfile: async () => {
+    const token = getToken();
+    const decoded = jwtDecode(token);
+    const userId = decoded.jti;
 
-/**
- * Vérifie si un email est déjà utilisé.
- *
- * @param {string} email - Email à vérifier
- * @returns {Promise<Object>} - Disponibilité ou non
- */
-export const verifyEmail = async (email) => {
-  const response = await axios.get(API_ROUTES.AUTH.VERIFY_EMAIL(email));
-  return response.data;
+    return axios.get(API_ROUTES.USER.BY_ID(userId), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  },
+
+  /**
+   * Mise à jour du profil utilisateur
+   * @param {string} userId
+   * @param {object} data
+   * @returns {Promise<object>}
+   */
+  updateProfile: async (userId, data) => {
+    const token = getToken();
+    return axios.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  },
+
+  /**
+   * Upload d’un avatar utilisateur
+   * @param {string} userId
+   * @param {File} file
+   */
+  // uploadAvatar: async (userId, file) => {
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+
+  //   return apiClient.patch(API_ROUTES.USER.PATCH(userId), formData, {
+  //     // headers: {
+  //     //   "Content-Type": "multipart/form-data",
+  //     // },
+  //   });
+  // },
+
+  uploadAvatar: async (userId, file) => {
+    const formData = new FormData();
+    formData.append("profile", file); // nom du champ conforme au DTO Java
+
+    return apiClient.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
 };
