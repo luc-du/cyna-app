@@ -77,9 +77,10 @@ const userSlice = createSlice({
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.error = action.payload;
       })
-      .addCase(updateUserProfile.pending, (state) => {
+      .addCase(updateUserProfile.pending, (state, action) => {
         state.loading = true;
         state.error = null;
+        state.profile = action.payload;
       })
 
       .addCase(updateUserProfile.fulfilled, (state, action) => {

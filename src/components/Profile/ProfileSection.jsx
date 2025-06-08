@@ -2,10 +2,8 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "../../hooks/useToast";
-import {
-  fetchUserProfile,
-  updateUserProfile,
-} from "../../redux/slice/authSlice";
+import { fetchUserProfile } from "../../redux/slice/userSlice";
+import { updateProfile } from "../../services/userService";
 import CTAButton from "../shared/buttons/CTAButton";
 import ModalOverlay from "../ui/ModalOverlay";
 import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
@@ -22,7 +20,7 @@ import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 const ProfileSection = ({ data }) => {
   // 1. États :
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const [isEditing, setIsEditing] = useState(false);
 
   const { showToast, ToastComponent } = useToast();
@@ -54,7 +52,7 @@ const ProfileSection = ({ data }) => {
   const handleSaveProfile = async (formData) => {
     try {
       await dispatch(
-        updateUserProfile({ userId: data.id, profileData: formData })
+        updateProfile({ userId: data.id, updates: formData })
       ).unwrap();
       await dispatch(fetchUserProfile());
       setIsEditing(false);

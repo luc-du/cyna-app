@@ -32,6 +32,28 @@ export const updateUserProfile = async (userId, updates) => {
 };
 
 /**
+ * Mise à jour du profil utilisateur
+ * @param {string} userId
+ * @param {object} data
+ * @returns {Promise<object>}
+ */
+
+export const updateProfile = async (userId, updates) => {
+  const token = getToken();
+  const response = await axios.patch(
+    API_ROUTES.USER.UPLOAD_PROFILE(userId),
+    updates,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data;
+};
+
+/**
  * Modifie le mot de passe d’un utilisateur.
  * @param {number|string} userId
  * @param {Object} payload - { currentPassword, newPassword }
@@ -52,16 +74,20 @@ export const updatePassword = async (userId, payload) => {
  * @returns {Promise<Object>}
  */
 export const uploadProfileImage = async (userId, file) => {
+  const token = getToken();
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("profile", file);
+
   const response = await axios.patch(
     API_ROUTES.USER.UPLOAD_PROFILE(userId),
     formData,
     {
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
     }
   );
+
   return response.data;
 };

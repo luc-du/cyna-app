@@ -6,7 +6,7 @@ import { useAuthEffect } from "../hooks/useAuthEffect";
 import { useAutoLogout } from "../hooks/useAutoLogout";
 import { logout } from "../redux/slice/authSlice";
 import { fetchUserProfile } from "../redux/slice/userSlice";
-import { AuthService } from "../services/authServices";
+import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
 import AccountStatus from "./Profile/AccountStatus";
 import AddressSection from "./Profile/AddressSection";
@@ -15,6 +15,7 @@ import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
 import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
 import DataStatus from "./shared/DataStatus";
+import { getToken } from "./utils/authStorage";
 
 /**
  * Composant de page de profil utilisateur.
@@ -36,7 +37,7 @@ import DataStatus from "./shared/DataStatus";
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const showToast = useGlobalToast();
+  const { showToast } = useGlobalToast();
 
   useAuthEffect(); // vérifie le token et redirige sinon
   useAutoLogout(); // auto-déconnexion à expiration
@@ -47,6 +48,8 @@ const Profile = () => {
     error,
   } = useSelector((state) => state.user);
 
+  console.log("[Avatar Upload] user.id:", user?.id);
+  console.log("[Avatar Upload] token:", getToken()?.slice(0, 20)); // vérifie qu’il est défini
   const loading = storeLoading || (!user && !error);
 
   useEffect(() => {
@@ -65,7 +68,7 @@ const Profile = () => {
     }
 
     try {
-      await AuthService.uploadAvatar(user.id, file); // FormData géré dans le service
+      await uploadProfileImage(user.id, file); // FormData géré dans le service
       await dispatch(fetchUserProfile());
       showToast("Avatar mis à jour avec succès !", "success");
     } catch (error) {
