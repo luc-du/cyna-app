@@ -56,3 +56,11 @@ export const AUTH_ACCOUNT_DELETION_ERROR =
 export const AUTH_UNAUTHORIZED_ERROR = "Accès non autorisé.";
 export const AUTH_USER_NOT_FOUND_ERROR =
   "Identifiants invalides ou utilisateur inexistant.";
+
+// --- Adresses ---
+export const ADDRESS_CREATE_ERROR =
+  "Erreur lors de la création de l'adresse. Veuillez réessayer.";
+export const ADDRESS_UPDATE_ERROR =
+  "Erreur lors de la mise à jour de l'adresse. Modifications non enregistrées.";
+export const ADDRESS_DELETE_ERROR =
+  "Erreur lors de la suppression de l'adresse. Veuillez réessayer plus tard.";

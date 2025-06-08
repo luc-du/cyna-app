@@ -105,6 +105,9 @@ const Profile = () => {
 
           <ProfileHeader data={user} onUpload={handleAvatarUpload} />
           <ProfileSection data={user} />
+          <>
+            <h1>PASSWORD SECTION</h1>A CREER
+          </>
 
           <div
             id="container-details-section"

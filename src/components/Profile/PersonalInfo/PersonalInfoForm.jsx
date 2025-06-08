@@ -2,6 +2,7 @@ import { Warning } from "postcss";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useGlobalToast } from "../../GlobalToastProvider";
+import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
  * Formulaire de mise à jour des informations personnelles.
@@ -149,19 +150,22 @@ const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
         <div className="flex gap-4">
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
+            className="cta-action"
             aria-label="Sauvegarder les informations personnelles"
           >
             Sauvegarder
           </button>
-          <button
+
+          <CTAButton
+            label="Annuler"
+            handleClick={onCancel}
             type="button"
             onClick={onCancel}
-            className="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition"
+            className="cta-secondary"
             aria-label="Annuler la modification"
           >
             Annuler
-          </button>
+          </CTAButton>
         </div>
       </div>
     </form>

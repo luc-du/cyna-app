@@ -92,7 +92,6 @@ const userSlice = createSlice({
         uploadProfileImage.fulfilled,
         (state, action) => {
           state.loading = false;
-          // Pas de modification directe du profil ?!
         }
       )
       .addCase(
