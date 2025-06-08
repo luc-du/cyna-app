@@ -14,6 +14,7 @@ import LogoutButton from "./Profile/LogoutButton";
 import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
 import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
+import DataStatus from "./shared/DataStatus";
 
 /**
  * Composant de page de profil utilisateur.
@@ -40,8 +41,13 @@ const Profile = () => {
   useAuthEffect(); // vérifie le token et redirige sinon
   useAutoLogout(); // auto-déconnexion à expiration
 
-  const { loading } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.user);
+  const {
+    user,
+    loading: storeLoading,
+    error,
+  } = useSelector((state) => state.user);
+
+  const loading = storeLoading || (!user && !error);
 
   useEffect(() => {
     if (!user) dispatch(fetchUserProfile());
@@ -73,11 +79,15 @@ const Profile = () => {
       aria-label="Page de profil utilisateur"
       tabIndex={-1}
     >
-      {loading ? (
-        <p role="status" aria-live="polite">
-          Chargement des informations...
-        </p>
-      ) : user ? (
+      <DataStatus
+        dataLength={user}
+        loading={loading}
+        loadingMessage="Chargement des données utilisateur en cours..."
+        error={error}
+        emptyMessage="Aucune information pour cet utilisateur."
+      />
+
+      {!loading && !error && user && (
         <section
           className="bg-white p-6 shadow-lg rounded-lg w-full max-w-md"
           aria-labelledby="profile-title"
@@ -104,10 +114,6 @@ const Profile = () => {
             <LogoutButton handleClick={handleLogout} />
           </div>
         </section>
-      ) : (
-        <p role="alert">
-          Impossible de récupérer les informations utilisateur.
-        </p>
       )}
     </main>
   );
