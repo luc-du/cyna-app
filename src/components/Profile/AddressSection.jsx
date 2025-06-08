@@ -13,7 +13,7 @@ import AddressList from "./Address/AddressList";
 const AddressSection = () => {
   // 1.States
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.user);
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
   const { showToast, ToastComponent } = useToast();
@@ -71,7 +71,6 @@ const AddressSection = () => {
     }
   };
 
-  // 🖼️ Render
   return (
     <>
       <ToastComponent />

@@ -4,15 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAuthEffect } from "../hooks/useAuthEffect";
 import { useAutoLogout } from "../hooks/useAutoLogout";
-import { fetchUserProfile, logout } from "../redux/slice/authSlice";
+import { logout } from "../redux/slice/authSlice";
+import { fetchUserProfile } from "../redux/slice/userSlice";
 import { AuthService } from "../services/authServices";
+import { useGlobalToast } from "./GlobalToastProvider";
 import AccountStatus from "./Profile/AccountStatus";
 import AddressSection from "./Profile/AddressSection";
 import LogoutButton from "./Profile/LogoutButton";
 import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
 import ProfileHeader from "./Profile/ProfileHeader";
 import ProfileSection from "./Profile/ProfileSection";
-import { useGlobalToast } from "./GlobalToastProvider";
 
 /**
  * Composant de page de profil utilisateur.
@@ -39,7 +40,8 @@ const Profile = () => {
   useAuthEffect(); // vérifie le token et redirige sinon
   useAutoLogout(); // auto-déconnexion à expiration
 
-  const { user, loading } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!user) dispatch(fetchUserProfile());

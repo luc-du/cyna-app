@@ -18,6 +18,7 @@ import {
   setToken,
 } from "../../components/utils/authStorage";
 import { AuthService } from "../../services/authServices";
+
 /**
  * Thunks asynchrones utilisant le service d'authentification centralisé
  */

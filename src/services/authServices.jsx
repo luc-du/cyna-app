@@ -1,5 +1,4 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
 import { getToken } from "../components/utils/authStorage";
 import apiClient from "./axiosConfig";
@@ -34,19 +33,20 @@ export const AuthService = {
     return axios.post(API_ROUTES.AUTH.VALIDATE, { token });
   },
 
-  /**
-   * Récupération des infos du profil utilisateur
-   * @returns {Promise<object>}
-   */
-  fetchProfile: async () => {
-    const token = getToken();
-    const decoded = jwtDecode(token);
-    const userId = decoded.jti;
+  /* 📌***user*** */
+  // /**
+  //  * Récupération des infos du profil utilisateur
+  //  * @returns {Promise<object>}
+  //  */
+  // fetchProfile: async () => {
+  //   const token = getToken();
+  //   const decoded = jwtDecode(token);
+  //   const userId = decoded.jti;
 
-    return axios.get(API_ROUTES.USER.BY_ID(userId), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-  },
+  //   return axios.get(API_ROUTES.USER.BY_ID(userId), {
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
+  // },
 
   /**
    * Mise à jour du profil utilisateur

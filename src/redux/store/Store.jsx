@@ -7,6 +7,7 @@ import categoryReducer from "../slice/categorySlice";
 import productReducer from "../slice/productSlice";
 import searchReducer from "../slice/searchSlice";
 import { topProductsReducer } from "../slice/topProductsSlice";
+import userReducer from "../slice/userSlice";
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     products: productReducer,
     topProducts: topProductsReducer,
     search: searchReducer,
+    user: userReducer,
   },
 });
 

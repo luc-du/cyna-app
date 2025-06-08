@@ -22,7 +22,7 @@ import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 const ProfileSection = ({ data }) => {
   // 1. États :
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.user);
   const [isEditing, setIsEditing] = useState(false);
 
   const { showToast, ToastComponent } = useToast();

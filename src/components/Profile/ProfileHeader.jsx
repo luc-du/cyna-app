@@ -4,6 +4,8 @@ import MenDefaultAvatar from "../../assets/avatars/default-men.png";
 import CTAButton from "../shared/buttons/CTAButton";
 
 const ProfileHeader = ({ data, onUpload }) => {
+  console.log(data);
+
   const fileInputRef = useRef();
 
   const handleClick = () => {

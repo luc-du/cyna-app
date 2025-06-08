@@ -1,13 +1,22 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
+import { getToken } from "../components/utils/authStorage";
 
 /**
  * Récupère les informations d’un utilisateur par son ID.
  * @param {number|string} userId
  * @returns {Promise<Object>}
  */
-export const getUserById = async (userId) => {
-  const response = await axios.get(API_ROUTES.USER.BY_ID(userId));
+export const getUserById = async () => {
+  const token = getToken();
+  const decoded = jwtDecode(token);
+  const userId = decoded.jti;
+
+  const response = await axios.get(API_ROUTES.USER.BY_ID(userId), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
   return response.data;
 };
 

@@ -52,7 +52,6 @@ export const uploadProfileImage = createAsyncThunk(
 );
 
 /* Slice */
-
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -69,18 +68,24 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUserProfile.pending, updateUserProfile.pending, (state) => {
+      // Récupération du profil réussie
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.error = null;
+      })
+      // Récupération du profil échouée
+      .addCase(fetchUserProfile.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(updateUserProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        fetchUserProfile.fulfilled,
-        updateUserProfile.fulfilled,
-        (state, action) => {
-          state.loading = false;
-          state.profile = action.payload;
-        }
-      )
+
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.profile = action.payload;
+      })
       .addCase(
         updateUserPassword.fulfilled,
         uploadProfileImage.fulfilled,
@@ -90,7 +95,6 @@ const userSlice = createSlice({
         }
       )
       .addCase(
-        fetchUserProfile.rejected,
         updateUserProfile.rejected,
         updateUserPassword.rejected,
         uploadProfileImage.rejected,
