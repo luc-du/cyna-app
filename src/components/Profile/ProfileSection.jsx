@@ -2,10 +2,13 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "../../hooks/useToast";
-import { fetchUserProfile } from "../../redux/slice/userSlice";
-import { updateProfile } from "../../services/userService";
+import {
+  fetchUserProfile,
+  updateUserProfile,
+} from "../../redux/slice/userSlice";
 import CTAButton from "../shared/buttons/CTAButton";
 import ModalOverlay from "../ui/ModalOverlay";
+import { formatPhone } from "../utils/formatPhone";
 import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 
 /**
@@ -50,13 +53,19 @@ const ProfileSection = ({ data }) => {
    * @param {Object} formData - Données du formulaire à sauvegarder.
    */
   const handleSaveProfile = async (formData) => {
+    console.log(formData);
+
     try {
+      console.log("[DISPATCH] updateUserProfile...");
+
       await dispatch(
-        updateProfile({ userId: data.id, updates: formData })
+        updateUserProfile({ userId: data.id, updates: formData })
       ).unwrap();
       await dispatch(fetchUserProfile());
       setIsEditing(false);
       showToast("Informations mises à jour !");
+      console.log("[DEBUG] handleSaveProfile called with:", formData);
+      console.log("Mise à jour effectuée👍");
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
       showToast("Erreur lors de la mise à jour du profil", "error");
@@ -121,7 +130,7 @@ const ProfileSection = ({ data }) => {
           <p>
             <strong>Téléphone :</strong>{" "}
             <span aria-label="Numéro de téléphone">
-              {data.phone ? 0 + data.phone : "Non renseigné"}
+              {data.phone ? formatPhone(data.phone) : "Non renseigné"}
             </span>
           </p>
           <p>

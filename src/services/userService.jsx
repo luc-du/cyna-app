@@ -26,30 +26,17 @@ export const getUserById = async () => {
  * @param {Object} updates
  * @returns {Promise<Object>}
  */
-export const updateUserProfile = async (userId, updates) => {
-  const response = await axios.patch(API_ROUTES.USER.PATCH(userId), updates);
-  return response.data;
-};
-
-/**
- * Mise à jour du profil utilisateur
- * @param {string} userId
- * @param {object} data
- * @returns {Promise<object>}
- */
-
 export const updateProfile = async (userId, updates) => {
   const token = getToken();
-  const response = await axios.patch(
-    API_ROUTES.USER.UPLOAD_PROFILE(userId),
-    updates,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  console.log("[SERVICE] PATCH data to:", API_ROUTES.USER.PATCH(userId));
+  console.log("[SERVICE] payload:", updates);
+
+  const response = await axios.patch(API_ROUTES.USER.PATCH(userId), updates, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
   return response.data;
 };
 

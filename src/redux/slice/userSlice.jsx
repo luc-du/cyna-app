@@ -22,7 +22,7 @@ export const updateUserProfile = createAsyncThunk(
   "user/updateProfile",
   async ({ userId, updates }, thunkAPI) => {
     try {
-      return await userService.updateUserProfile(userId, updates);
+      return await userService.updateProfile(userId, updates);
     } catch {
       return thunkAPI.rejectWithValue(AUTH_PROFILE_UPDATE_ERROR);
     }

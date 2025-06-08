@@ -24,7 +24,7 @@ const ProfileHeader = ({ data, onUpload }) => {
       ) : (
         <>
           <img
-            src={data.urlProfile || MenDefaultAvatar}
+            src={data.urlProfile ? data.urlProfile : MenDefaultAvatar}
             alt={
               data.firstname || data.lastname
                 ? `Photo de profil de ${data?.firstname ?? ""} ${
