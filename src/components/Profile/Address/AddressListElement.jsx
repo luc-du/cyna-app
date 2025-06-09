@@ -1,75 +1,67 @@
+// AddressListElement.jsx
 import PropTypes from "prop-types";
 import CTAButton from "../../shared/buttons/CTAButton";
 
-const AddressListElement = ({
-  address,
-  handleDeleteAddress,
-  setEditingAddress,
-  setShowForm,
-}) => {
-  return (
-    <>
-      <li key={address.id} className="flex flex-col gap-2">
-        <p>
-          <strong>Nom :</strong> <span>{address.name}</span>
-        </p>
-        <p>
-          <strong>Ville :</strong> <span>{address.city}</span>
-        </p>
-        <p>
-          <strong>Code postal :</strong> <span>{address.postcode}</span>
-        </p>
-        <p>
-          <strong>Pays :</strong> <span>{address.country}</span>
-        </p>
-        {address.url && (
-          <p>
-            <strong>
-              <a
-                href={address.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-violet-600"
-              >
-                Google map
-              </a>
-            </strong>
-          </p>
-        )}
-        <div className="w-full flex items-center gap-4 my-2 justify-end">
-          <CTAButton
-            label="Modifier"
-            handleClick={() => {
-              setEditingAddress(address);
-              setShowForm(true);
-            }}
-            className="cta-warning"
-            aria-label="Modifier l'adresse"
-          />
-          <CTAButton
-            label="Supprimer"
-            handleClick={() => handleDeleteAddress(address.id)}
-            className="cta-danger"
-            aria-label="Supprimer l'adresse"
-          />
-        </div>
-      </li>
-    </>
-  );
-};
+/**
+ * Élément représentant une adresse.
+ * @param {{ address: object, onEdit: func, onDelete: func }} props
+ */
+const AddressListElement = ({ address, onEdit, onDelete }) => (
+  <li className="flex flex-col gap-2 mb-4">
+    <p>
+      <strong>Nom :</strong> {address.name}
+    </p>
+    <p>
+      <strong>Ville :</strong> {address.city}
+    </p>
+    <p>
+      <strong>Code postal :</strong> {address.postcode}
+    </p>
+    <p>
+      <strong>Pays :</strong> {address.country}
+    </p>
+    {address.url && (
+      <p>
+        <strong>
+          <a
+            href={address.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-violet-600"
+          >
+            Google map
+          </a>
+        </strong>
+      </p>
+    )}
+    <div className="flex justify-end gap-4 mt-2">
+      <CTAButton
+        label="Modifier"
+        onClick={onEdit}
+        className="cta-warning"
+        aria-label="Modifier l'adresse"
+      />
+      <CTAButton
+        label="Supprimer"
+        onClick={onDelete}
+        className="cta-danger"
+        aria-label="Supprimer l'adresse"
+      />
+    </div>
+  </li>
+);
+
 AddressListElement.propTypes = {
   address: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    name: PropTypes.string,
-    city: PropTypes.string,
-    postcode: PropTypes.string,
-    country: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    postcode: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
     url: PropTypes.string,
   }).isRequired,
-  index: PropTypes.number.isRequired,
-  handleDeleteAddress: PropTypes.func.isRequired,
-  setEditingAddress: PropTypes.func.isRequired,
-  setShowForm: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default AddressListElement;

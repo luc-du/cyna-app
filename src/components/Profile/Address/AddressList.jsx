@@ -1,58 +1,46 @@
+// AddressList.jsx
 import PropTypes from "prop-types";
 import AddressListElement from "./AddressListElement";
 
-const AddressList = ({
-  user,
-  addresses,
-  handleDeleteAddress,
-  setEditingAddress,
-  setShowForm,
-}) => {
-  return (
-    <>
-      <h2 className="text-xl">Adresses</h2>
-      <div
-        id="address"
-        className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
-      >
-        <ul>
-          {user && addresses.length > 0 ? (
-            addresses.map((address) => (
-              <AddressListElement
-                key={address.id}
-                address={{
-                  ...address,
-                  postcode: String(address.postcode),
-                }}
-                index={address.id}
-                setEditingAddress={setEditingAddress}
-                handleDeleteAddress={handleDeleteAddress}
-                setShowForm={setShowForm}
-              />
-            ))
-          ) : (
-            <li>Non renseigné</li>
-          )}
-        </ul>
-      </div>
-    </>
-  );
-};
+/**
+ * Liste des adresses utilisateur.
+ * @param {{ addresses: array, onEdit: func, onDelete: func }} props
+ */
+const AddressList = ({ addresses, onEdit, onDelete }) => (
+  <div
+    id="address-list"
+    className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
+  >
+    {addresses.length > 0 ? (
+      <ul>
+        {addresses.map((addr) => (
+          <AddressListElement
+            key={addr.id}
+            address={addr}
+            onEdit={() => onEdit(addr)}
+            onDelete={() => onDelete(addr.id)}
+          />
+        ))}
+      </ul>
+    ) : (
+      <p>Non renseigné</p>
+    )}
+  </div>
+);
 
-AddressList.prototype = {
-  user: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  addresses: PropTypes.arrayOf({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    city: PropTypes.string.isRequired,
-    country: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    postcode: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    user_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  }),
-  handleDeleteAddress: PropTypes.func.isRequired,
-  setEditingAddress: PropTypes.func.isRequired,
-  setShowForm: PropTypes.func.isRequired,
+AddressList.propTypes = {
+  addresses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string.isRequired,
+      postcode: PropTypes.string.isRequired,
+      city: PropTypes.string.isRequired,
+      country: PropTypes.string.isRequired,
+      url: PropTypes.string,
+    })
+  ).isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default AddressList;

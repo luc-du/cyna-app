@@ -1,52 +1,40 @@
+// AddressForm.jsx
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import CTAButton from "../../shared/buttons/CTAButton";
 import AddressFieldGroup from "./AddressFieldGroup";
 
 /**
- * Formulaire d'adresse utilisateur affiché en modal.
+ * Formulaire pour ajouter ou modifier une adresse.
+ * @param {{ initialData?: object, userId: string|number, onSubmit: function, onCancel: function }} props
  */
-const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
-  const { profile } = useSelector((state) => state.user);
+const AddressForm = ({ initialData = {}, userId, onSubmit, onCancel }) => {
   const [form, setForm] = useState({
     name: "",
     postcode: "",
     city: "",
     country: "",
     url: "",
-    userId: profile?.id || null,
+    userId,
     ...initialData,
   });
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setForm((prev) => ({
-      ...prev,
-      ...initialData,
-      userId: profile?.id ?? prev.userId,
-    }));
-  }, [initialData, profile?.id]);
+    setForm((prev) => ({ ...prev, ...initialData, userId }));
+  }, [initialData, userId]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
     try {
       await onSubmit(form);
-      setForm({
-        name: "",
-        postcode: "",
-        city: "",
-        country: "",
-        url: "",
-        user_id: profile?.id,
-      });
-      onSuccess?.();
     } catch (err) {
-      setError(err?.message || "Erreur lors de la soumission.");
+      setError(err.message || "Erreur lors de la soumission.");
     }
   };
 
@@ -55,28 +43,35 @@ const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       role="dialog"
       aria-modal="true"
-      aria-label={
-        initialData?.id ? "Modifier une adresse" : "Ajouter une adresse"
-      }
+      aria-labelledby="address-form-title"
     >
       <form
-        onSubmit={handleSubmit}
+        onSubmit={submitForm}
         className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 flex flex-col gap-4"
       >
-        <h2 className="text-xl font-semibold text-center">
-          {initialData?.id ? "Modifier l'adresse" : "Ajouter une adresse"}
+        <h2
+          id="address-form-title"
+          className="text-xl font-semibold text-center"
+        >
+          {initialData.id ? "Modifier l'adresse" : "Ajouter une adresse"}
         </h2>
 
-        <AddressFieldGroup form={form} handleChange={handleChange} />
+        {error && (
+          <p role="alert" className="text-red-500">
+            {error}
+          </p>
+        )}
 
-        <div className="flex items-center justify-end gap-4 mt-4">
+        <AddressFieldGroup form={form} onChange={handleChange} />
+
+        <div className="flex justify-end gap-4 mt-4">
           <button type="submit" className="cta-action">
-            {initialData?.id ? "Modifier" : "Ajouter"}
+            {initialData.id ? "Modifier" : "Ajouter"}
           </button>
           <CTAButton
             type="button"
             label="Annuler"
-            handleClick={showForm}
+            onClick={onCancel}
             className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500 transition"
           />
         </div>
@@ -86,10 +81,17 @@ const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
 };
 
 AddressForm.propTypes = {
+  initialData: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string,
+    postcode: PropTypes.string,
+    city: PropTypes.string,
+    country: PropTypes.string,
+    url: PropTypes.string,
+  }),
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   onSubmit: PropTypes.func.isRequired,
-  onSuccess: PropTypes.func,
-  initialData: PropTypes.object,
-  showForm: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 export default AddressForm;

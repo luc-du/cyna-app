@@ -1,3 +1,5 @@
+// AddressSection.jsx
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,135 +10,115 @@ import {
 } from "../../redux/slice/addressSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
 import CTAButton from "../shared/buttons/CTAButton";
-import { ADDRESS_DELETE_ERROR } from "../utils/errorMessages";
-import {
-  ADDRESS_CREATE_SUCCESS,
-  ADDRESS_DELETE_SUCCESS,
-  ADDRESS_UPDATE_SUCCESS,
-} from "../utils/successMessages";
 import AddressForm from "./Address/AddressForm";
 import AddressList from "./Address/AddressList";
 
 /**
- * Section de gestion des adresses utilisateur (CRUD)
+ * Section de gestion des adresses utilisateur.
+ * @param {{ user: object }} props
+ * @returns JSX.Element
  */
-const AddressSection = () => {
+const AddressSection = ({ user }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
-  const { list, loading, error } = useSelector((state) => state.address);
-  const [showForm, setShowForm] = useState(false);
-  const [editingAddress, setEditingAddress] = useState(null);
+  const {
+    list: addresses,
+    loading,
+    error,
+  } = useSelector((state) => state.address);
+  const [isFormVisible, setFormVisible] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState(null);
   const { showToast } = useGlobalToast();
 
-  // Charger les adresses au montage du composant
+  // Load addresses when user changes
   useEffect(() => {
-    if (user?.id) {
-      dispatch(getUserAddresses(user.id));
-    }
+    if (user?.id) dispatch(getUserAddresses(user.id));
   }, [dispatch, user?.id]);
 
-  const toggleForm = () => {
-    setShowForm(!showForm);
-    if (!showForm) setEditingAddress(null);
+  const handleToggleForm = () => {
+    setCurrentAddress(null);
+    setFormVisible((visible) => !visible);
   };
 
-  const handleDeleteAddress = async (addressId) => {
-    const confirmed = window.confirm(
-      "Voulez-vous réellement supprimer cette adresse ?"
-    );
-    if (!confirmed) return;
-
+  const handleDelete = async (addressId) => {
+    if (!window.confirm("Voulez-vous réellement supprimer cette adresse ?"))
+      return;
     try {
       await dispatch(deleteAddress(addressId)).unwrap();
-      // Recharger les adresses après suppression
-      if (user?.id) {
-        await dispatch(getUserAddresses(user.id));
-      }
-      showToast(ADDRESS_DELETE_SUCCESS, "success");
-    } catch (error) {
-      console.error(ADDRESS_DELETE_ERROR, error);
+      await dispatch(getUserAddresses(user.id));
+      showToast("Adresse supprimée", "success");
+    } catch {
       showToast("Erreur lors de la suppression de l'adresse", "error");
     }
   };
 
   const handleSubmit = async (formData) => {
     try {
-      if (editingAddress) {
+      if (currentAddress) {
         await dispatch(
-          updateAddress({
-            addressId: editingAddress.id,
-            updatedData: { ...formData, userId: user.id },
-          })
+          updateAddress({ addressId: currentAddress.id, updatedData: formData })
         ).unwrap();
-        showToast(ADDRESS_UPDATE_SUCCESS, "success");
+        showToast("Adresse modifiée avec succès", "success");
       } else {
-        await dispatch(
-          createAddress({ ...formData, userId: user.id })
-        ).unwrap();
-        showToast(ADDRESS_CREATE_SUCCESS, "success");
+        await dispatch(createAddress(formData)).unwrap();
+        showToast("Adresse ajoutée avec succès", "success");
       }
-
-      // Recharger les adresses après création/modification
-      if (user?.id) {
-        await dispatch(getUserAddresses(user.id));
-      }
-      setShowForm(false);
-      setEditingAddress(null);
-    } catch (error) {
-      console.error("Erreur soumission formulaire adresse :", error);
+      await dispatch(getUserAddresses(user.id));
+      setFormVisible(false);
+    } catch {
       showToast("Erreur lors de l'enregistrement de l'adresse", "error");
     }
   };
 
-  // Affichage de debug pour vérifier les données
-  console.log("User ID:", user?.id);
-  console.log("Addresses list:", list);
-  console.log("Loading:", loading);
-  console.log("Error:", error);
-
   return (
     <section
-      className="relative w-full"
       aria-labelledby="address-section-title"
+      className="relative w-full"
     >
-      <h2 id="address-section-title" className="sr-only">
-        Gestion des adresses
+      <h2 id="address-section-title" className="text-xl font-semibold mb-2">
+        Adresses
       </h2>
 
-      {loading && <p>Chargement des adresses...</p>}
-      {error && <p className="text-red-500">Erreur: {error}</p>}
+      {loading && <p role="status">Chargement des adresses...</p>}
+      {error && (
+        <p role="alert" className="text-red-500">
+          Erreur: {error}
+        </p>
+      )}
 
       <AddressList
-        addresses={list}
-        handleDeleteAddress={handleDeleteAddress}
-        setEditingAddress={setEditingAddress}
-        setShowForm={setShowForm}
-        user={user}
+        addresses={addresses}
+        onEdit={(addr) => {
+          setCurrentAddress(addr);
+          setFormVisible(true);
+        }}
+        onDelete={handleDelete}
       />
 
-      <div className="w-full flex items-center justify-end mt-2">
+      <div className="flex justify-end mt-2">
         <CTAButton
           label="Ajouter une adresse"
           className="cta-success"
-          handleClick={toggleForm}
+          onClick={handleToggleForm}
           aria-label="Ajouter une nouvelle adresse"
         />
       </div>
 
-      {/* Overlay formulaire */}
-      {showForm && (
+      {isFormVisible && (
         <AddressForm
-          initialData={editingAddress}
+          initialData={currentAddress}
+          userId={user.id}
           onSubmit={handleSubmit}
-          onSuccess={() => {
-            setShowForm(false);
-            setEditingAddress(null);
-          }}
-          showForm={toggleForm}
+          onCancel={handleToggleForm}
         />
       )}
     </section>
   );
+};
+
+AddressSection.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }).isRequired,
 };
 
 export default AddressSection;

@@ -1,81 +1,73 @@
-import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import AddressSection from "../components/Profile/AddressSection";
+import ProfileHeader from "../components/Profile/ProfileHeader";
+import ProfileSection from "../components/Profile/ProfileSection";
+import DataStatus from "../components/shared/DataStatus";
 import { useAuthEffect } from "../hooks/useAuthEffect";
 import { useAutoLogout } from "../hooks/useAutoLogout";
 import { logout } from "../redux/slice/authSlice";
-import { fetchUserProfile } from "../redux/slice/userSlice";
+import { fetchUserProfile, updateUserProfile } from "../redux/slice/userSlice";
 import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
-import AccountStatus from "./Profile/AccountStatus";
-import AddressSection from "./Profile/AddressSection";
-import LogoutButton from "./Profile/LogoutButton";
-import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
-import ProfileHeader from "./Profile/ProfileHeader";
-import ProfileSection from "./Profile/ProfileSection";
-import DataStatus from "./shared/DataStatus";
-import { getToken } from "./utils/authStorage";
+import { AUTH_PROFILE_UPDATE_ERROR } from "./utils/errorMessages";
+import { PROFILE_UPDATE_SUCCESS } from "./utils/successMessages";
 
 /**
- * Composant de page de profil utilisateur.
- *
+ * Page de profil utilisateur
  * @component
- * @description
- * Affiche les informations du profil utilisateur, y compris l'avatar, les détails personnels,
- * l'adresse, les méthodes de paiement et le statut du compte. Permet également la déconnexion
- * et le changement d'avatar. Ce composant gère l'accessibilité via des rôles ARIA, des labels,
- * et la gestion du focus pour une meilleure expérience utilisateur.
- *
- * @accessibilité
- * - Utilise des rôles ARIA (`role="status"`, `role="alert"`) pour informer les technologies d'assistance.
- * - Utilise des labels ARIA (`aria-label`, `aria-labelledby`) pour décrire les sections.
- * - Gère le focus avec `tabIndex` pour permettre la navigation clavier.
- *
- * @returns {JSX.Element} La page de profil utilisateur.
  */
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showToast } = useGlobalToast();
 
-  useAuthEffect(); // vérifie le token et redirige sinon
-  useAutoLogout(); // auto-déconnexion à expiration
+  useAuthEffect();
+  useAutoLogout();
 
   const {
     user,
-    loading: storeLoading,
+    loading: isLoading,
     error,
   } = useSelector((state) => state.user);
+  const loading = isLoading || (!user && !error);
 
-  console.log("[Avatar Upload] user.id:", user?.id);
-  console.log("[Avatar Upload] token:", getToken()?.slice(0, 20)); // vérifie qu’il est défini
-  const loading = storeLoading || (!user && !error);
-
+  // Chargement du profil
   useEffect(() => {
     if (!user) dispatch(fetchUserProfile());
-  }, [user, dispatch]);
+  }, [dispatch, user]);
 
+  // Déconnexion
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
+  // Mise à jour de l'avatar
   const handleAvatarUpload = async (file) => {
-    if (!user?.id) {
-      console.warn("Utilisateur non chargé, annulation de l'upload avatar.");
-      return;
-    }
-
+    if (!user?.id) return;
     try {
-      await uploadProfileImage(user.id, file); // FormData géré dans le service
+      await uploadProfileImage(user.id, file);
       await dispatch(fetchUserProfile());
       showToast("Avatar mis à jour avec succès !", "success");
-    } catch (error) {
-      console.error("Erreur upload avatar :", error);
+    } catch {
       showToast("Erreur lors de la mise à jour de l'avatar", "error");
     }
   };
+
+  // Mise à jour des informations personnelles
+  const handleUpdateProfile = async (updates) => {
+    if (!user?.id) return;
+    try {
+      await dispatch(updateUserProfile({ userId: user.id, updates })).unwrap();
+      await dispatch(fetchUserProfile());
+      showToast(PROFILE_UPDATE_SUCCESS, "success");
+    } catch {
+      showToast(AUTH_PROFILE_UPDATE_ERROR, "error");
+    }
+  };
+
   return (
     <main
       className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6"
@@ -103,37 +95,34 @@ const Profile = () => {
             Profil utilisateur
           </h1>
 
-          <ProfileHeader data={user} onUpload={handleAvatarUpload} />
-          <ProfileSection data={user} />
-          <>
-            <h1>PASSWORD SECTION</h1>A CREER
-          </>
+          <ProfileHeader user={user} onAvatarUpload={handleAvatarUpload} />
+          <ProfileSection
+            userData={user}
+            onUpdateProfile={handleUpdateProfile}
+            showToast={showToast}
+          />
+
+          {/* Section mot de passe à créer */}
+          <div role="region" aria-label="Mot de passe"></div>
 
           <div
             id="container-details-section"
             className="mt-4 py-4 text-left"
             aria-label="Détails du profil"
           >
-            <AddressSection data={user} />
-            <PaymentMethodsSection data={user} />
-            <AccountStatus data={user} />
-            <LogoutButton handleClick={handleLogout} />
+            <AddressSection
+              user={user}
+              // onUpdateAddress={/* à implémenter */}
+              showToast={showToast}
+            />
+            {/* <PaymentMethodsSection user={user} /> */}
+            {/* <AccountStatus user={user} /> */}
+            {/* <LogoutButton onClick={handleLogout} /> */}
           </div>
         </section>
       )}
     </main>
   );
 };
-
-// PropTypes pour tous les composants enfants
-ProfileHeader.propTypes = {
-  data: PropTypes.object.isRequired,
-  onUpload: PropTypes.func.isRequired,
-};
-ProfileSection.propTypes = { data: PropTypes.object.isRequired };
-AddressSection.propTypes = { data: PropTypes.object.isRequired };
-PaymentMethodsSection.propTypes = { data: PropTypes.object.isRequired };
-AccountStatus.propTypes = { data: PropTypes.object.isRequired };
-LogoutButton.propTypes = { handleClick: PropTypes.func.isRequired };
 
 export default Profile;

@@ -1,7 +1,5 @@
-import { Warning } from "postcss";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { useGlobalToast } from "../../GlobalToastProvider";
 import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
@@ -33,8 +31,6 @@ const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
     }
   }, [userData]);
 
-  const { showToast } = useGlobalToast();
-
   /**
    * Gère la mise à jour des champs du formulaire.
    * @param {React.ChangeEvent<HTMLInputElement>} e
@@ -44,26 +40,36 @@ const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
   };
 
   /**
+   * Ajoute un préfixe "0" si nécessaire lors de la perte de focus.
+   */
+  const handlePhoneBlur = () => {
+    const { phone } = form;
+    // Si 9 chiffres sans 0 en tête, préfixe automatiquement
+    if (/^[1-9][0-9]{8}$/.test(phone)) {
+      setForm((prev) => ({ ...prev, phone: `0${phone}` }));
+    }
+  };
+
+  /**
    * Gère la soumission du formulaire.
    * @param {React.FormEvent<HTMLFormElement>} e
    */
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Validation des champs obligatoires
     if (!form.firstname || !form.lastname || !form.email) {
-      alert("Tous les champs obligatoires doivent être remplis.");
-      showToast("Tous les champs obligatoires doivent être remplis.", Warning);
-
+      onCancel();
       return;
     }
 
+    // Vérification email
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      alert("Adresse email invalide.");
       return;
     }
 
+    // Vérification téléphone (doit commencer par 0 et être suivi de 9 chiffres)
     if (form.phone && !/^0[1-9][0-9]{8}$/.test(form.phone)) {
-      alert("Numéro de téléphone invalide (format attendu : 0X XX XX XX XX).");
       return;
     }
 
@@ -136,6 +142,7 @@ const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
         placeholder="Téléphone (ex: 0601020304)"
         value={form.phone}
         onChange={handleChange}
+        onBlur={handlePhoneBlur}
         pattern="^0[1-9][0-9]{8}$"
         inputMode="numeric"
         className="input-style"
@@ -160,12 +167,9 @@ const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
             label="Annuler"
             handleClick={onCancel}
             type="button"
-            onClick={onCancel}
             className="cta-secondary"
             aria-label="Annuler la modification"
-          >
-            Annuler
-          </CTAButton>
+          />
         </div>
       </div>
     </form>
