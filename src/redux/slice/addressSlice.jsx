@@ -1,137 +1,151 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
+import {
+  ADDRESS_CREATE_ERROR,
+  ADDRESS_DELETE_ERROR,
+  ADDRESS_UPDATE_ERROR,
+  ADDRESSES_GET_ERROR,
+} from "../../components/utils/errorMessages";
+import {
+  ADDRESS_DELETE_SUCCESS,
+  ADDRESS_UPDATE_SUCCESS,
+} from "../../components/utils/successMessages";
+import * as addressService from "../../services/addressService";
 
-// POST
+// Créer une nouvelle adresse
 export const createAddress = createAsyncThunk(
-  "address/POST",
-  async (addressData, { rejectWithValue }) => {
-    console.log(addressData);
-
+  "address/create",
+  async (payload, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(API_ROUTES.ADDRESS.POST, addressData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(token.userId);
-      console.log("Response data:", response.data);
-      return response.data;
+      return await addressService.createAddress(payload);
     } catch (error) {
-      console.error(
-        "Erreur de création d'adresse :",
-        error.response?.data || error.message
-      );
-      return rejectWithValue(
-        error.response?.data?.message || "Erreur lors de l'ajout de l'adresse"
-      );
+      console.error(ADDRESS_CREATE_ERROR, error);
+      return thunkAPI.rejectWithValue(ADDRESS_CREATE_ERROR);
     }
   }
 );
 
-// READ
-/* simple fetch de user via le token */
+// Récupérer les addresses de user
+export const getUserAddresses = createAsyncThunk(
+  "address/fetchByUser",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await addressService.fetchUserAddresses(userId);
+      return response;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(ADDRESSES_GET_ERROR);
+    }
+  }
+);
 
-// UPDATE
+// Mettre à jour une adresse existante
 export const updateAddress = createAsyncThunk(
   "address/update",
-  async ({ addressId, updatedData }, { rejectWithValue }) => {
+  async ({ addressId, updatedData }, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.patch(
-        `${API_ROUTES.ADDRESS.DELETE(addressId)}`,
-        updatedData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response.data;
+      return await addressService.updateAddress(addressId, updatedData);
     } catch (error) {
-      console.error("Erreur de mise à jour :", error);
-      return rejectWithValue(
-        error.response?.data?.message || "Erreur lors de la mise à jour"
-      );
+      console.error(ADDRESS_UPDATE_ERROR, error);
+      return thunkAPI.rejectWithValue(ADDRESS_UPDATE_ERROR);
     }
   }
 );
 
-/* DELETE */
+// Supprimer une adresse
 export const deleteAddress = createAsyncThunk(
   "address/delete",
-  async (addressId, { rejectWithValue }) => {
+  async (addressId, thunkAPI) => {
     try {
-      const token = localStorage.getItem("token");
-
-      console.log("Suppression adresse ID :", addressId);
-      console.log("Token utilisé :", token);
-
-      await axios.delete(API_ROUTES.ADDRESS.DELETE(addressId), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      return addressId;
+      return await addressService.deleteAddress(addressId);
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Une erreur est survenue"
-      );
+      console.error(ADDRESS_DELETE_ERROR, error);
+      return thunkAPI.rejectWithValue(ADDRESS_DELETE_ERROR);
     }
   }
 );
 
-// État initial
-const initialState = {
-  list: [],
-  loading: false,
-  error: null,
-};
-
-// Slice Redux
 const addressSlice = createSlice({
   name: "address",
-  initialState,
-  reducers: {},
+  initialState: {
+    list: [],
+    loading: false,
+    error: null,
+    success: null,
+  },
+  reducers: {
+    clearAddressState: (state) => {
+      state.loading = false;
+      state.error = null;
+      state.success = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      // POST address
+      // createAddress
       .addCase(createAddress.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = null;
       })
-      .addCase(createAddress.fulfilled, (state, action) => {
+      .addCase(createAddress.fulfilled, (state) => {
         state.loading = false;
-        state.list.push(action.payload);
-        state.error = null;
+        state.success = "Adresse ajoutée avec succès.";
       })
       .addCase(createAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.success = null;
       })
 
-      // Delete address
-      .addCase(deleteAddress.pending, (state) => {
+      // getUserAddresses
+      .addCase(getUserAddresses.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteAddress.fulfilled, (state, action) => {
+      .addCase(getUserAddresses.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.list = state.list.filter(
-          (address) => address.id !== action.payload
-        );
         state.error = null;
+        state.list = payload;
+      })
+      .addCase(getUserAddresses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.list = [];
+      })
+
+      // updateAddress
+      .addCase(updateAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(updateAddress.fulfilled, (state) => {
+        state.loading = false;
+        state.success = ADDRESS_UPDATE_SUCCESS;
+      })
+      .addCase(updateAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = null;
+      })
+
+      // deleteAddress
+      .addCase(deleteAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(deleteAddress.fulfilled, (state) => {
+        state.loading = false;
+        state.success = ADDRESS_DELETE_SUCCESS;
       })
       .addCase(deleteAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.success = null;
       });
   },
 });
 
+export const { clearAddressState } = addressSlice.actions;
 export default addressSlice.reducer;

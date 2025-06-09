@@ -8,10 +8,9 @@ const ToastContext = createContext();
  * Fournit un contexte global pour l'affichage des notifications toast dans l'application.
  *
  * @component
- * @param {object} props - Les propriétés du composant.
- * @param {React.ReactNode} props.children - Les éléments enfants à rendre à l'intérieur du provider.
- * @returns {JSX.Element} Le provider de contexte toast englobant les enfants et le composant Toast.
- *
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Les éléments enfants à encapsuler.
+ * @returns {JSX.Element}
  *
  * @example
  * <GlobalToastProvider>
@@ -28,6 +27,11 @@ export const GlobalToastProvider = ({ children }) => {
     </ToastContext.Provider>
   );
 };
+
+/**
+ * Hook pour accéder au contexte global de toast.
+ * @returns {{ showToast: (message: string, type?: string, duration?: number) => void }}
+ */
 export const useGlobalToast = () => useContext(ToastContext);
 
 GlobalToastProvider.propTypes = {

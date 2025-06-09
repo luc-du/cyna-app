@@ -87,9 +87,4 @@ ProductCard.propTypes = {
   linkTo: PropTypes.string,
 };
 
-ProductCard.defaultProps = {
-  disabled: false,
-  linkTo: null,
-};
-
 export default ProductCard;

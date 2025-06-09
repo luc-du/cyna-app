@@ -16,7 +16,7 @@ const PaymentMethodsSection = ({ data }) => {
         {
           /* Afficher 2 CB */
           <ul>
-            {data.cards?.length > 0
+            {data.users?.length > 0
               ? data.cards.map((card, index) => {
                   <li key={index}>{card}</li>;
                 })

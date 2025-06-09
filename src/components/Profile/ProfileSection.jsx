@@ -1,89 +1,61 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useToast } from "../../hooks/useToast";
-import {
-  fetchUserProfile,
-  updateUserProfile,
-} from "../../redux/slice/authSlice";
 import CTAButton from "../shared/buttons/CTAButton";
 import ModalOverlay from "../ui/ModalOverlay";
+import { formatPhone } from "../utils/formatPhone";
 import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
 
 /**
  * ProfileSection
- * Composant affichant et permettant la modification des informations personnelles de l'utilisateur.
- *
+ * Affiche et permet la modification des informations personnelles de l'utilisateur.
+ * Accessible : gestion ARIA et focus.
  * @component
- * @param {Object} props - Les propriétés du composant.
- * @param {Object} props.data - Données de l'utilisateur à afficher.
+ * @param {Object} props
+ * @param {Object} props.userData - Données de l'utilisateur à afficher.
+ * @param {Function} props.onUpdateProfile - Callback pour mettre à jour le profil utilisateur.
+ * @param {Function} props.showToast - Fonction pour afficher les notifications.
  * @returns {JSX.Element}
  */
-const ProfileSection = ({ data }) => {
-  // 1. États :
-  const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.auth);
+const ProfileSection = ({ userData, onUpdateProfile, showToast }) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  const { showToast, ToastComponent } = useToast();
-
-  // 2. Fonctions :
-
   /**
-   * Active le mode édition.
-   * @function
+   * Démarre le mode édition.
    */
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
+  const handleStartEdit = () => setIsEditing(true);
 
   /**
    * Annule le mode édition.
-   * @function
    */
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-  };
+  const handleCancelEdit = () => setIsEditing(false);
 
   /**
-   * Sauvegarde les modifications du profil utilisateur.
+   * Sauvegarde les modifications du profil.
    * @async
-   * @function
-   * @param {Object} formData - Données du formulaire à sauvegarder.
+   * @param {Object} formData - Données du formulaire.
    */
-  const handleSaveProfile = async (formData) => {
+  const handleSave = async (formData) => {
     try {
-      await dispatch(
-        updateUserProfile({ userId: data.id, profileData: formData })
-      ).unwrap();
-      await dispatch(fetchUserProfile());
+      await onUpdateProfile(formData);
       setIsEditing(false);
-      showToast("Informations mises à jour !");
     } catch (error) {
-      console.error("Erreur lors de la mise à jour :", error);
+      console.error("Erreur lors de la mise à jour du profil :", error);
       showToast("Erreur lors de la mise à jour du profil", "error");
     }
   };
 
   /**
    * Traduit le rôle utilisateur en français.
-   * @function
-   * @param {string} value - Rôle utilisateur.
+   * @param {string} role - Rôle brut.
    * @returns {string}
    */
-  const mapUserRole = (value) => {
-    if (value === "USER") {
-      return "Membre";
-    } else {
-      return "Administrateur";
-    }
-  };
+  const formatUserRole = (role) =>
+    role === "USER" ? "Membre" : "Administrateur";
 
-  // 3. Affichage pendant le chargement ou absence de données
-  if (!data || loading) {
+  if (!userData) {
     return (
       <div
-        id="personal-informations"
+        id="profile-personal-info"
         className="container-profile-section"
         aria-busy="true"
         aria-live="polite"
@@ -93,89 +65,86 @@ const ProfileSection = ({ data }) => {
     );
   }
 
-  // 4. Rendu principal :
   return (
-    <>
-      {/* Composant Toast pour les notifications */}
-      <ToastComponent />
-      <div
-        id="personal-informations"
-        className="container-profile-section"
-        aria-labelledby="profile-section-title"
-        tabIndex={-1}
-      >
-        <div className="container-profile-section">
-          <h2 className="text-xl mb-4" id="personal-info-title">
-            Informations personnelles
-          </h2>
+    <section
+      id="profile-personal-info"
+      className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
+      aria-labelledby="profile-section-title"
+      tabIndex={-1}
+    >
+      <h2 className="text-xl mb-4" id="profile-section-title" tabIndex={0}>
+        Informations personnelles
+      </h2>
 
-          <p>
-            <strong>Nom :</strong> <span aria-label="Nom">{data.lastname}</span>
-          </p>
-          <p>
-            <strong>Prénom :</strong>{" "}
-            <span aria-label="Prénom">{data.firstname}</span>
-          </p>
-          <p>
-            <strong>Email :</strong>{" "}
-            <span aria-label="Adresse email">{data.email}</span>
-          </p>
-          <p>
-            <strong>Téléphone :</strong>{" "}
-            <span aria-label="Numéro de téléphone">
-              {data.phone ? 0 + data.phone : "Non renseigné"}
-            </span>
-          </p>
-          <p>
-            <strong>Status :</strong>{" "}
-            <span aria-label="Statut utilisateur">
-              {mapUserRole(data.roles)}
-            </span>
-          </p>
+      <p>
+        <strong>Nom :</strong>{" "}
+        <span aria-label="Nom utilisateur">{userData.lastname}</span>
+      </p>
 
-          <div className="container-cta mt-4">
-            <CTAButton
-              label="Modifier"
-              className="cta-profile-style"
-              handleClick={handleEditClick}
-              aria-label="Modifier les informations personnelles"
-            />
-          </div>
-        </div>
+      <p>
+        <strong>Prénom :</strong>{" "}
+        <span aria-label="Prénom utilisateur">{userData.firstname}</span>
+      </p>
 
-        {/* Modal d'édition des informations personnelles */}
-        {isEditing && (
-          <ModalOverlay
-            onClose={handleCancelEdit}
-            aria-modal="true"
-            role="dialog"
-            aria-labelledby="edit-profile-title"
-            tabIndex={-1}
-          >
-            <PersonalInfoForm
-              userData={data}
-              onSave={handleSaveProfile}
-              onCancel={handleCancelEdit}
-            />
-          </ModalOverlay>
-        )}
+      <p>
+        <strong>Email :</strong>{" "}
+        <span aria-label="Adresse email">{userData.email}</span>
+      </p>
+
+      <p>
+        <strong>Téléphone :</strong>{" "}
+        <span aria-label="Numéro de téléphone">
+          {userData.phone ? formatPhone(userData.phone) : "Non renseigné"}
+        </span>
+      </p>
+
+      <p>
+        <strong>Statut :</strong>{" "}
+        <span aria-label="Statut utilisateur">
+          {formatUserRole(userData.roles)}
+        </span>
+      </p>
+
+      <div className="container-cta mt-4">
+        <CTAButton
+          label="Modifier"
+          className="underline"
+          handleClick={handleStartEdit}
+          aria-label="Modifier les informations personnelles"
+        />
       </div>
-    </>
+
+      {isEditing && (
+        <ModalOverlay
+          onClose={handleCancelEdit}
+          aria-modal="true"
+          role="dialog"
+          aria-labelledby="edit-profile-title"
+          tabIndex={-1}
+        >
+          <PersonalInfoForm
+            userData={userData}
+            onSave={handleSave}
+            onCancel={handleCancelEdit}
+            showToast={showToast}
+          />
+        </ModalOverlay>
+      )}
+    </section>
   );
 };
 
-/**
- * Définition des PropTypes pour la validation des props du composant ProfileSection.
- */
 ProfileSection.propTypes = {
-  data: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  userData: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     firstname: PropTypes.string.isRequired,
     lastname: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     phone: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     roles: PropTypes.string.isRequired,
   }).isRequired,
+  onUpdateProfile: PropTypes.func.isRequired,
+  showToast: PropTypes.func.isRequired,
 };
 
 export default ProfileSection;

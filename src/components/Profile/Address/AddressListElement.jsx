@@ -1,74 +1,81 @@
 import PropTypes from "prop-types";
 import CTAButton from "../../shared/buttons/CTAButton";
 
-const AddressListElement = ({
-  address,
-  index,
-  handleDeleteAddress,
-  setEditingAddress,
-  setShowForm,
-}) => {
-  return (
-    <>
-      <li key={address.id}>
-        <p>
-          <strong>Nom :</strong> <span>{address.name}</span>
-        </p>
-        <p>
-          <strong>Ville :</strong> <span>{address.city}</span>
-        </p>
-        <p>
-          <strong>Code postal :</strong> <span>{address.postcode}</span>
-        </p>
-        <p>
-          <strong>Pays :</strong> <span>{address.country}</span>
-        </p>
-        {address.url && (
-          <p>
-            <strong>
-              <a
-                href={address.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-violet-600"
-              >
-                Google map
-              </a>
-            </strong>
-          </p>
-        )}
-        <div className="w-full flex items-center gap-2 my-2 justify-evenly">
-          <CTAButton
-            label="Supprimer"
-            className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-red-600 hover:text-white transition"
-            handleClick={() => handleDeleteAddress(address.id)}
-          />
-          <CTAButton
-            label="Modifier"
-            className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
-            handleClick={() => {
-              setEditingAddress(address);
-              setShowForm(true);
-            }}
-          />
-        </div>
-      </li>
-    </>
-  );
-};
+/**
+ * AddressListElement
+ * Affiche les détails d'une adresse et propose actions modifier/supprimer.
+ * Accessible : boutons avec aria-labels explicites.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.address - Objet adresse.
+ * @param {Function} props.onEdit - Callback pour édition.
+ * @param {Function} props.onDelete - Callback pour suppression.
+ * @returns {JSX.Element}
+ */
+const AddressListElement = ({ address, onEdit, onDelete }) => (
+  <div
+    className="flex flex-col border border-slate-200 rounded-2xl gap-4 p-4 mt-2"
+    tabIndex={0}
+  >
+    <p>
+      <strong>Nom:</strong> {address.name}
+    </p>
+    <p>
+      <strong>Ville:</strong> {address.city}
+    </p>
+    <p>
+      <strong>Code postal:</strong> {address.postcode}
+    </p>
+    <p>
+      <strong>Pays:</strong> {address.country}
+    </p>
+    {address.url && (
+      <p>
+        <strong>Localisation:</strong>
+        <span>
+          <a
+            href={address.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-violet-600 underline"
+            aria-label="Voir sur Google Maps"
+          >
+            {""} Google Maps
+          </a>
+        </span>
+      </p>
+    )}
+    <div className="flex justify-end gap-4 mt-2">
+      <CTAButton
+        label="Modifier"
+        handleClick={onEdit}
+        className="cta-warning"
+        aria-label="Modifier cette adresse"
+      />
+      <CTAButton
+        label="Supprimer"
+        handleClick={onDelete}
+        className="cta-danger"
+        aria-label="Supprimer cette adresse"
+      />
+    </div>
+  </div>
+);
+
 AddressListElement.propTypes = {
   address: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    name: PropTypes.string,
-    city: PropTypes.string,
-    postcode: PropTypes.string,
-    country: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    postcode: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
     url: PropTypes.string,
+    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
   }).isRequired,
-  index: PropTypes.number.isRequired,
-  handleDeleteAddress: PropTypes.func.isRequired,
-  setEditingAddress: PropTypes.func.isRequired,
-  setShowForm: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default AddressListElement;
