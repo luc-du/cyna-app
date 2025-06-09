@@ -117,7 +117,7 @@ const AddressSection = () => {
       <div className="w-full flex items-center justify-end mt-2">
         <CTAButton
           label="Ajouter une adresse"
-          className="px-4 py-2 border border-primaryBackground text-primaryBackground rounded hover:bg-primaryBackground hover:text-white transition"
+          className="cta-success"
           handleClick={toggleForm}
           aria-label="Ajouter une nouvelle adresse"
         />

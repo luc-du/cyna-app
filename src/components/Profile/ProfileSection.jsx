@@ -63,9 +63,6 @@ const ProfileSection = ({ data }) => {
       ).unwrap();
       await dispatch(fetchUserProfile());
       setIsEditing(false);
-      showToast("Informations mises à jour !");
-      console.log("[DEBUG] handleSaveProfile called with:", formData);
-      console.log("Mise à jour effectuée👍");
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
       showToast("Erreur lors de la mise à jour du profil", "error");
@@ -107,15 +104,14 @@ const ProfileSection = ({ data }) => {
       <ToastComponent />
       <div
         id="personal-informations"
-        className="container-profile-section"
+        className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
         aria-labelledby="profile-section-title"
         tabIndex={-1}
       >
+        <h2 className="text-xl mb-4" id="personal-info-title">
+          Informations personnelles
+        </h2>
         <div className="container-profile-section">
-          <h2 className="text-xl mb-4" id="personal-info-title">
-            Informations personnelles
-          </h2>
-
           <p>
             <strong>Nom :</strong> <span aria-label="Nom">{data.lastname}</span>
           </p>
@@ -143,7 +139,7 @@ const ProfileSection = ({ data }) => {
           <div className="container-cta mt-4">
             <CTAButton
               label="Modifier"
-              className="cta-profile-style"
+              className="underline"
               handleClick={handleEditClick}
               aria-label="Modifier les informations personnelles"
             />

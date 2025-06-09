@@ -3,14 +3,13 @@ import CTAButton from "../../shared/buttons/CTAButton";
 
 const AddressListElement = ({
   address,
-  index,
   handleDeleteAddress,
   setEditingAddress,
   setShowForm,
 }) => {
   return (
     <>
-      <li key={address.id}>
+      <li key={address.id} className="flex flex-col gap-2">
         <p>
           <strong>Nom :</strong> <span>{address.name}</span>
         </p>
@@ -37,19 +36,21 @@ const AddressListElement = ({
             </strong>
           </p>
         )}
-        <div className="w-full flex items-center gap-2 my-2 justify-evenly">
-          <CTAButton
-            label="Supprimer"
-            className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-red-600 hover:text-white transition"
-            handleClick={() => handleDeleteAddress(address.id)}
-          />
+        <div className="w-full flex items-center gap-4 my-2 justify-end">
           <CTAButton
             label="Modifier"
-            className="mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition"
             handleClick={() => {
               setEditingAddress(address);
               setShowForm(true);
             }}
+            className="cta-warning"
+            aria-label="Modifier l'adresse"
+          />
+          <CTAButton
+            label="Supprimer"
+            handleClick={() => handleDeleteAddress(address.id)}
+            className="cta-danger"
+            aria-label="Supprimer l'adresse"
           />
         </div>
       </li>

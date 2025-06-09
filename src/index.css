@@ -42,10 +42,11 @@ h3 {
 }
 
 .container-profile-section {
-  @apply py-4 border-b-2;
+  @apply py-4;
+  /* border border-slate-200 rounded-2xl gap-4 p-4 */
 }
 .cta-profile-style {
-  @apply mt-2 px-4 py-2 border border-primaryBackground text-primaryBackground rounded-md hover:bg-primaryBackground hover:text-white transition;
+  @apply underline;
 }
 
 .cta-action {
@@ -56,6 +57,15 @@ h3 {
   @apply bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500 transition;
 }
 
-/* .cta-primary-action{
+/* New pills */
+.cta-success {
+  @apply px-4 py-2 text-sm rounded-2xl bg-green-50 text-green-600 hover:bg-green-600 hover:text-white;
+}
 
-} */
+.cta-warning {
+  @apply px-4 py-2 text-sm rounded-2xl underline;
+}
+
+.cta-danger {
+  @apply px-4 py-2 text-sm rounded-2xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white;
+}

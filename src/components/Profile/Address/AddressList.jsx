@@ -10,8 +10,11 @@ const AddressList = ({
 }) => {
   return (
     <>
-      <div id="address" className="container-profile-section">
-        <h2 className="text-xl">Adresses</h2>
+      <h2 className="text-xl">Adresses</h2>
+      <div
+        id="address"
+        className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
+      >
         <ul>
           {user && addresses.length > 0 ? (
             addresses.map((address) => (
