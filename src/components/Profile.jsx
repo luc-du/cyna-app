@@ -110,6 +110,13 @@ const Profile = () => {
             className="mt-4 py-4 text-left"
             aria-label="Détails du profil"
           >
+            <div
+              id="password-section"
+              className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
+            >
+              <h2>PASSWORD SECTION</h2>
+              <p>à développer</p>
+            </div>
             <AddressSection
               user={user}
               // onUpdateAddress={/* à implémenter */}
