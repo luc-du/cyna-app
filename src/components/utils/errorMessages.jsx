@@ -37,12 +37,16 @@ export const AUTH_FORGOT_PASSWORD_ERROR =
   "Erreur lors de la demande de réinitialisation.";
 export const AUTH_PASSWORD_RESET_ERROR =
   "Erreur lors de la réinitialisation du mot de passe.";
+
+/* EMAILS */
 export const AUTH_EMAIL_ALREADY_EXISTS_ERROR =
   "Impossible de créer le compte. Veuillez vérifier vos informations.";
 export const AUTH_ACCOUNT_NOT_VERIFIED_ERROR =
   "Connexion impossible. Vérifiez vos informations ou votre email.";
 export const AUTH_EMAIL_VERIFICATION_FAILED =
   "Échec lors de la vérification de l'email. Veuillez réessayer.";
+
+/*  */
 export const AUTH_ACCOUNT_VALIDATION_ERROR =
   "Erreur lors de la validation du compte.";
 export const AUTH_PROFILE_UPDATE_ERROR =
@@ -57,7 +61,10 @@ export const AUTH_UNAUTHORIZED_ERROR = "Accès non autorisé.";
 export const AUTH_USER_NOT_FOUND_ERROR =
   "Identifiants invalides ou utilisateur inexistant.";
 
-// --- Adresses ---
+/* USER */
+export const AVATAR_UPLOAD_ERROR = "Erreur lors de la mise à jour de l'avatar";
+
+/* ADDRESSES */
 export const ADDRESS_CREATE_ERROR =
   "Erreur lors de la création de l'adresse. Veuillez réessayer.";
 export const ADDRESSES_GET_ERROR =

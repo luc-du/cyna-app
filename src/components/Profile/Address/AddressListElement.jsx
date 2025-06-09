@@ -1,54 +1,66 @@
-// AddressListElement.jsx
 import PropTypes from "prop-types";
 import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
- * Élément représentant une adresse.
- * @param {{ address: object, onEdit: func, onDelete: func }} props
+ * AddressListElement
+ * Affiche les détails d'une adresse et propose actions modifier/supprimer.
+ * Accessible : boutons avec aria-labels explicites.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.address - Objet adresse.
+ * @param {Function} props.onEdit - Callback pour édition.
+ * @param {Function} props.onDelete - Callback pour suppression.
+ * @returns {JSX.Element}
  */
 const AddressListElement = ({ address, onEdit, onDelete }) => (
-  <li className="flex flex-col gap-2 mb-4">
+  <div
+    className="flex flex-col border border-slate-200 rounded-2xl gap-4 p-4 mt-2"
+    tabIndex={0}
+  >
     <p>
-      <strong>Nom :</strong> {address.name}
+      <strong>Nom:</strong> {address.name}
     </p>
     <p>
-      <strong>Ville :</strong> {address.city}
+      <strong>Ville:</strong> {address.city}
     </p>
     <p>
-      <strong>Code postal :</strong> {address.postcode}
+      <strong>Code postal:</strong> {address.postcode}
     </p>
     <p>
-      <strong>Pays :</strong> {address.country}
+      <strong>Pays:</strong> {address.country}
     </p>
     {address.url && (
       <p>
-        <strong>
+        <strong>Localisation:</strong>
+        <span>
           <a
             href={address.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-violet-600"
+            className="text-violet-600 underline"
+            aria-label="Voir sur Google Maps"
           >
-            Google map
+            {""} Google Maps
           </a>
-        </strong>
+        </span>
       </p>
     )}
     <div className="flex justify-end gap-4 mt-2">
       <CTAButton
         label="Modifier"
-        onClick={onEdit}
+        handleClick={onEdit}
         className="cta-warning"
-        aria-label="Modifier l'adresse"
+        aria-label="Modifier cette adresse"
       />
       <CTAButton
         label="Supprimer"
-        onClick={onDelete}
+        handleClick={onDelete}
         className="cta-danger"
-        aria-label="Supprimer l'adresse"
+        aria-label="Supprimer cette adresse"
       />
     </div>
-  </li>
+  </div>
 );
 
 AddressListElement.propTypes = {
@@ -59,6 +71,8 @@ AddressListElement.propTypes = {
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired,
     url: PropTypes.string,
+    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,

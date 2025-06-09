@@ -126,6 +126,7 @@ const ProfileSection = ({ userData, onUpdateProfile, showToast }) => {
             userData={userData}
             onSave={handleSave}
             onCancel={handleCancelEdit}
+            showToast={showToast}
           />
         </ModalOverlay>
       )}

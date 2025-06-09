@@ -11,7 +11,7 @@ import CTAButton from "../../shared/buttons/CTAButton";
  * @param {Function} props.onSave - Fonction appelée à la soumission du formulaire.
  * @param {Function} props.onCancel - Fonction appelée en cas d'annulation.
  */
-const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
+const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -65,11 +65,13 @@ const PersonalInfoForm = ({ userData, onSave, onCancel }) => {
 
     // Vérification email
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      showToast("Vérifier la saisie de l'input email", "warning");
       return;
     }
 
     // Vérification téléphone (doit commencer par 0 et être suivi de 9 chiffres)
     if (form.phone && !/^0[1-9][0-9]{8}$/.test(form.phone)) {
+      showToast("Vérifier la saisie de l'input téléphone", "warning");
       return;
     }
 
