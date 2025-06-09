@@ -42,7 +42,7 @@ export const fetchUserAddresses = async (userId) => {
 export const updateAddress = async (addressId, payload) => {
   const token = getToken();
   const response = await axios.patch(
-    API_ROUTES.ADDRESS.UPDATE(addressId),
+    API_ROUTES.ADDRESS.PATCH(addressId),
     payload,
     {
       headers: {
