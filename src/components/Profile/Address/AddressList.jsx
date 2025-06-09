@@ -3,6 +3,7 @@ import AddressListElement from "./AddressListElement";
 
 const AddressList = ({
   user,
+  addresses,
   handleDeleteAddress,
   setEditingAddress,
   setShowForm,
@@ -12,8 +13,8 @@ const AddressList = ({
       <div id="address" className="container-profile-section">
         <h2 className="text-xl">Adresses</h2>
         <ul>
-          {user?.addresses?.length > 0 ? (
-            user.addresses.map((address) => (
+          {user && addresses.length > 0 ? (
+            addresses.map((address) => (
               <AddressListElement
                 key={address.id}
                 address={{
@@ -35,19 +36,16 @@ const AddressList = ({
   );
 };
 
-AddressList.propTypes = {
-  user: PropTypes.shape({
-    addresses: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-          .isRequired,
-        name: PropTypes.string.isRequired,
-        city: PropTypes.string.isRequired,
-        postcode: PropTypes.string.isRequired,
-        country: PropTypes.string.isRequired,
-        url: PropTypes.string,
-      })
-    ),
+AddressList.prototype = {
+  user: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  addresses: PropTypes.arrayOf({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    postcode: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    user_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
   handleDeleteAddress: PropTypes.func.isRequired,
   setEditingAddress: PropTypes.func.isRequired,

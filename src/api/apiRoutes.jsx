@@ -52,6 +52,7 @@ export const API_ROUTES = {
 
   // ─── ADRESSE ───────────────────────────────────────────────────────────────
   ADDRESS: {
+    GET_BY_USER: (userId) => getApiUrl(AUTH_HOST, `/address/user/${userId}`),
     ALL: getApiUrl(AUTH_HOST, "/address"),
     CREATE: getApiUrl(AUTH_HOST, "/address"),
     BY_ID: (id) => getApiUrl(AUTH_HOST, `/address/${id}`),

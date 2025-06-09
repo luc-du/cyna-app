@@ -17,6 +17,22 @@ export const createAddress = async (payload) => {
   return response.data;
 };
 
+/*
+ * Récupérer toutes les addresses de l'utilisateur
+ *
+ *
+ */
+
+export const fetchUserAddresses = async (userId) => {
+  const token = getToken();
+  const response = await axios.get(API_ROUTES.ADDRESS.GET_BY_USER(userId), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
 /**
  * Met à jour une adresse existante.
  * @param {string|number} addressId

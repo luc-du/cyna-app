@@ -3,7 +3,12 @@ import {
   ADDRESS_CREATE_ERROR,
   ADDRESS_DELETE_ERROR,
   ADDRESS_UPDATE_ERROR,
+  ADDRESSES_GET_ERROR,
 } from "../../components/utils/errorMessages";
+import {
+  ADDRESS_DELETE_SUCCESS,
+  ADDRESS_UPDATE_SUCCESS,
+} from "../../components/utils/successMessages";
 import * as addressService from "../../services/addressService";
 
 // Créer une nouvelle adresse
@@ -13,8 +18,22 @@ export const createAddress = createAsyncThunk(
     try {
       return await addressService.createAddress(payload);
     } catch (error) {
-      console.error("Erreur création adresse :", error);
+      console.error(ADDRESS_CREATE_ERROR, error);
       return thunkAPI.rejectWithValue(ADDRESS_CREATE_ERROR);
+    }
+  }
+);
+
+// Récupérer les addresses de user
+export const getUserAddresses = createAsyncThunk(
+  "address/fetchByUser",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await addressService.fetchUserAddresses(userId);
+      return response;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(ADDRESSES_GET_ERROR);
     }
   }
 );
@@ -26,7 +45,7 @@ export const updateAddress = createAsyncThunk(
     try {
       return await addressService.updateAddress(addressId, updatedData);
     } catch (error) {
-      console.error("Erreur mise à jour adresse :", error);
+      console.error(ADDRESS_UPDATE_ERROR, error);
       return thunkAPI.rejectWithValue(ADDRESS_UPDATE_ERROR);
     }
   }
@@ -39,19 +58,19 @@ export const deleteAddress = createAsyncThunk(
     try {
       return await addressService.deleteAddress(addressId);
     } catch (error) {
-      console.error("Erreur suppression adresse :", error);
+      console.error(ADDRESS_DELETE_ERROR, error);
       return thunkAPI.rejectWithValue(ADDRESS_DELETE_ERROR);
     }
   }
 );
 
-// Slice Redux (optionnel : utile si tu veux centraliser dans `state.address`)
 const addressSlice = createSlice({
   name: "address",
   initialState: {
+    list: [],
     loading: false,
     error: null,
-    success: null, // Pour afficher un toast global si nécessaire
+    success: null,
   },
   reducers: {
     clearAddressState: (state) => {
@@ -62,9 +81,11 @@ const addressSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // createAddress
       .addCase(createAddress.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = null;
       })
       .addCase(createAddress.fulfilled, (state) => {
         state.loading = false;
@@ -73,32 +94,55 @@ const addressSlice = createSlice({
       .addCase(createAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.success = null;
       })
 
-      .addCase(updateAddress.pending, (state) => {
+      // getUserAddresses
+      .addCase(getUserAddresses.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+      .addCase(getUserAddresses.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.list = payload;
+      })
+      .addCase(getUserAddresses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.list = [];
+      })
+
+      // updateAddress
+      .addCase(updateAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
       .addCase(updateAddress.fulfilled, (state) => {
         state.loading = false;
-        state.success = "Adresse mise à jour avec succès.";
+        state.success = ADDRESS_UPDATE_SUCCESS;
       })
       .addCase(updateAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.success = null;
       })
 
+      // deleteAddress
       .addCase(deleteAddress.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = null;
       })
       .addCase(deleteAddress.fulfilled, (state) => {
         state.loading = false;
-        state.success = "Adresse supprimée avec succès.";
+        state.success = ADDRESS_DELETE_SUCCESS;
       })
       .addCase(deleteAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.success = null;
       });
   },
 });

@@ -60,6 +60,8 @@ export const AUTH_USER_NOT_FOUND_ERROR =
 // --- Adresses ---
 export const ADDRESS_CREATE_ERROR =
   "Erreur lors de la création de l'adresse. Veuillez réessayer.";
+export const ADDRESSES_GET_ERROR =
+  "Erreur lors de la création des adresses de l'utilisateur. Veuillez réessayer.";
 export const ADDRESS_UPDATE_ERROR =
   "Erreur lors de la mise à jour de l'adresse. Modifications non enregistrées.";
 export const ADDRESS_DELETE_ERROR =

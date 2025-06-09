@@ -21,8 +21,6 @@ const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const currentUserId = profile?.id;
-    console.log("🔍 currentUserId détecté :", currentUserId);
     setForm((prev) => ({
       ...prev,
       ...initialData,
@@ -36,7 +34,6 @@ const AddressForm = ({ onSubmit, initialData = {}, onSuccess, showForm }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("✅ Validation OK, données envoyées :", form);
     try {
       await onSubmit(form);
       setForm({
