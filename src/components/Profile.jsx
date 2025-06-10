@@ -88,6 +88,23 @@ const Profile = () => {
     }
   };
 
+  // Mise à jour du mot de passe -fix
+  const handleChangePassword = async (payload) => {
+    try {
+      await dispatch(changeUserPassword(payload)).unwrap();
+      showToast("Mot de passe modifié avec succès", "success");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      console.error("Erreur complète:", error);
+      showToast(
+        error.message || "Erreur lors de la mise à jour du mot de passe",
+        "error"
+      );
+    }
+  };
+
   // Création ou modification d'une adresse
   const handleSaveAddress = async (addressData) => {
     if (!user?.id) return;
@@ -121,23 +138,6 @@ const Profile = () => {
       showToast("Adresse supprimée avec succès", "success");
     } catch {
       showToast("Erreur lors de la suppression de l'adresse", "error");
-    }
-  };
-
-  // Mise à jour du mot de passe -fix
-  const handleChangePassword = async (payload) => {
-    try {
-      await dispatch(changeUserPassword(payload)).unwrap();
-      showToast("Mot de passe modifié avec succès", "success");
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    } catch (error) {
-      console.error("Erreur complète:", error);
-      showToast(
-        error.message || "Erreur lors de la mise à jour du mot de passe",
-        "error"
-      );
     }
   };
 
@@ -192,7 +192,7 @@ const Profile = () => {
               addresses={addresses}
               loading={addressesLoading}
               error={addressesError}
-              user={user}
+              userId={user?.id}
               onSaveAddress={handleSaveAddress}
               onDeleteAddress={handleDeleteAddress}
               showToast={showToast}

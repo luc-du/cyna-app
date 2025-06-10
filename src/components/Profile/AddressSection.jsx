@@ -27,7 +27,7 @@ const AddressSection = ({
   onSaveAddress,
   onDeleteAddress,
   showToast,
-  user,
+  userId, // ← Renommer user en userId
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentAddress, setCurrentAddress] = useState(null);
@@ -61,17 +61,8 @@ const AddressSection = ({
 
   // Soumet (création ou mise à jour) via le callback parent
   const handleSave = async (addressData) => {
-    try {
-      await onSaveAddress(addressData);
-      showToast(
-        addressData.id ? "Adresse modifiée" : "Adresse ajoutée",
-        "success"
-      );
-      setIsOpen(false);
-    } catch (err) {
-      console.error(err);
-      showToast("Erreur lors de l'enregistrement de l'adresse", "error");
-    }
+    await onSaveAddress(addressData);
+    setIsOpen(false);
   };
 
   return (
@@ -112,7 +103,7 @@ const AddressSection = ({
         <ModalOverlay onClose={closeModal}>
           <AddressForm
             addressData={currentAddress}
-            userId={user}
+            userId={userId}
             onSaveAddress={handleSave}
             onCancel={closeModal}
           />
@@ -131,8 +122,10 @@ AddressSection.propTypes = {
       city: PropTypes.string.isRequired,
       country: PropTypes.string.isRequired,
       url: PropTypes.string,
-      userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-        .isRequired,
+      user: PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+          .isRequired,
+      }).isRequired,
     })
   ).isRequired,
   loading: PropTypes.bool.isRequired,
