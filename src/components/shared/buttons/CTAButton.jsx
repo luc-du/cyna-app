@@ -1,7 +1,13 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-const CTAButton = ({ className, link, label, handleClick }) => {
+const CTAButton = ({
+  type = "button",
+  className,
+  link,
+  label,
+  handleClick,
+}) => {
   // 1.States
   // 2.Functions
   // 3.Others
@@ -12,6 +18,7 @@ const CTAButton = ({ className, link, label, handleClick }) => {
 
   return (
     <button
+      type={type}
       className="flex items-center justify-center"
       onClick={handleClick ? handleClick : null}
     >
@@ -23,6 +30,7 @@ const CTAButton = ({ className, link, label, handleClick }) => {
 };
 
 CTAButton.propTypes = {
+  type: PropTypes.string.isRequired,
   className: PropTypes.string,
   handleClick: PropTypes.func,
   link: PropTypes.string,

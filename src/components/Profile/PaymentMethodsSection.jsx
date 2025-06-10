@@ -11,12 +11,15 @@ const PaymentMethodsSection = ({ data }) => {
   return (
     <>
       {/* Méthode de paiement*/}
-      <div id="payment_methods" className="container-profile-section">
+      <div
+        id="payment_methods"
+        className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
+      >
         <h2 className="text-xl">Méthodes de paiement</h2>
         {
           /* Afficher 2 CB */
           <ul>
-            {data.cards?.length > 0
+            {data.users?.length > 0
               ? data.cards.map((card, index) => {
                   <li key={index}>{card}</li>;
                 })

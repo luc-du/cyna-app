@@ -18,6 +18,7 @@ import {
   setToken,
 } from "../../components/utils/authStorage";
 import { AuthService } from "../../services/authServices";
+
 /**
  * Thunks asynchrones utilisant le service d'authentification centralisé
  */
@@ -128,6 +129,24 @@ export const updateUserProfile = createAsyncThunk(
   }
 );
 
+export const changeUserPassword = createAsyncThunk(
+  "auth/changePassword",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await AuthService.changePassword(payload);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        return rejectWithValue("Le serveur n'a pas répondu");
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
 /**
  * État initial du slice d'authentification
  * @typedef {Object} AuthState
@@ -143,6 +162,8 @@ const initialState = {
   isAuthenticated: !!getToken(),
   loading: false,
   error: null,
+  passwordChangeLoading: false,
+  passwordChangeError: null,
 };
 
 /**
@@ -237,6 +258,23 @@ const authSlice = createSlice({
       // Récupération du profil échouée
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.error = action.payload;
+      })
+
+      //changement de mot de passe depuis profile
+      .addCase(changeUserPassword.pending, (state) => {
+        state.passwordChangeLoading = true;
+        state.passwordChangeError = null;
+      })
+      .addCase(changeUserPassword.fulfilled, (state) => {
+        state.passwordChangeLoading = false;
+        // déconnecter user pour forcer le login après changement ?
+        // dispatchEvent(logout)
+        clearToken();
+        state.isAuthenticated = false;
+      })
+      .addCase(changeUserPassword.rejected, (state, action) => {
+        state.passwordChangeLoading = false;
+        state.passwordChangeError = action.payload;
       });
   },
 });

@@ -6,6 +6,10 @@ const PRODUCTS_HOST = import.meta.env.VITE_API_HOST_PRODUCTS;
 const CATEGORIES_HOST = import.meta.env.VITE_API_HOST_CATEGORIES;
 const CAROUSEL_HOST = import.meta.env.VITE_API_HOST_CAROUSEL;
 
+/* */
+console.log("🔍 Debug API Routes:");
+console.log("AUTH_HOST:", AUTH_HOST);
+
 export const API_ROUTES = {
   // ─── AUTHENTIFICATION ─────────────────────────────────────────────────────
   AUTH: {
@@ -17,11 +21,13 @@ export const API_ROUTES = {
         AUTH_HOST,
         `/auth/verify-email?email=${encodeURIComponent(email)}`
       ),
+    //optionnel dans mon frontend
     VALIDATE_EMAIL: (email) =>
       getApiUrl(
         AUTH_HOST,
         `/auth/validate-email?email=${encodeURIComponent(email)}`
       ),
+    //optionnel dans mon frontend
     VALIDATE_ACCOUNT: (email) =>
       getApiUrl(
         AUTH_HOST,
@@ -29,11 +35,12 @@ export const API_ROUTES = {
       ),
     PASSWORD_FORGOT_BY_ID: (userId) =>
       getApiUrl(AUTH_HOST, `/auth/password-forgot/${userId}`),
-    PASSWORD_FORGOT_BY_EMAIL: (email) =>
+    PASSWORD_FORGOT: (email) =>
       getApiUrl(
         AUTH_HOST,
         `/auth/password-forgot?email=${encodeURIComponent(email)}`
       ),
+    CHANGE_PASSWORD: () => getApiUrl(AUTH_HOST, "/auth/change-password"),
   },
 
   // ─── UTILISATEUR ───────────────────────────────────────────────────────────
@@ -50,6 +57,7 @@ export const API_ROUTES = {
 
   // ─── ADRESSE ───────────────────────────────────────────────────────────────
   ADDRESS: {
+    GET_BY_USER: (userId) => getApiUrl(AUTH_HOST, `/address/user/${userId}`),
     ALL: getApiUrl(AUTH_HOST, "/address"),
     CREATE: getApiUrl(AUTH_HOST, "/address"),
     BY_ID: (id) => getApiUrl(AUTH_HOST, `/address/${id}`),

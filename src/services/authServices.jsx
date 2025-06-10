@@ -1,8 +1,6 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
 import { getToken } from "../components/utils/authStorage";
-import apiClient from "./axiosConfig";
 
 export const AuthService = {
   /**
@@ -35,59 +33,33 @@ export const AuthService = {
   },
 
   /**
-   * Récupération des infos du profil utilisateur
-   * @returns {Promise<object>}
+   * Change the user password, en exigeant l'ancien mot de passe.
+   * @param {{
+   * userId: number|string,
+   * oldPassword: string,
+   * newPassword: string }} payload
+   * @returns {Promise<void>}
    */
-  fetchProfile: async () => {
+
+  changePassword: async (payload) => {
     const token = getToken();
-    const decoded = jwtDecode(token);
-    const userId = decoded.jti;
+    const url = API_ROUTES.AUTH.CHANGE_PASSWORD();
+    // Validation supplémentaire
+    if (!payload.userId || !payload.oldPassword || !payload.newPassword) {
+      throw new Error("Tous les champs sont obligatoires");
+    }
 
-    return axios.get(API_ROUTES.USER.BY_ID(userId), {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-  },
-
-  /**
-   * Mise à jour du profil utilisateur
-   * @param {string} userId
-   * @param {object} data
-   * @returns {Promise<object>}
-   */
-  updateProfile: async (userId, data) => {
-    const token = getToken();
-    return axios.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-  },
-
-  /**
-   * Upload d’un avatar utilisateur
-   * @param {string} userId
-   * @param {File} file
-   */
-  // uploadAvatar: async (userId, file) => {
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-
-  //   return apiClient.patch(API_ROUTES.USER.PATCH(userId), formData, {
-  //     // headers: {
-  //     //   "Content-Type": "multipart/form-data",
-  //     // },
-  //   });
-  // },
-
-  uploadAvatar: async (userId, file) => {
-    const formData = new FormData();
-    formData.append("profile", file); // nom du champ conforme au DTO Java
-
-    return apiClient.post(API_ROUTES.USER.UPLOAD_PROFILE(userId), formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    try {
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+      throw error.response?.data || error;
+    }
   },
 };

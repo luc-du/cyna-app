@@ -9,7 +9,7 @@ const AddressFieldGroup = ({ form, handleChange }) => (
       value={form.name}
       onChange={handleChange}
       required
-      className="input-style"
+      className="input"
     />
     <input
       type="text"
@@ -18,7 +18,7 @@ const AddressFieldGroup = ({ form, handleChange }) => (
       value={form.postcode}
       onChange={handleChange}
       required
-      className="input-style"
+      className="input"
     />
     <input
       type="text"
@@ -27,7 +27,7 @@ const AddressFieldGroup = ({ form, handleChange }) => (
       value={form.city}
       onChange={handleChange}
       required
-      className="input-style"
+      className="input"
     />
     <input
       type="text"
@@ -36,7 +36,7 @@ const AddressFieldGroup = ({ form, handleChange }) => (
       value={form.country}
       onChange={handleChange}
       required
-      className="input-style"
+      className="input"
     />
     <input
       type="url"
@@ -44,7 +44,7 @@ const AddressFieldGroup = ({ form, handleChange }) => (
       placeholder="Lien Google Maps (optionnel)"
       value={form.url}
       onChange={handleChange}
-      className="input-style"
+      className="input"
     />
   </>
 );
