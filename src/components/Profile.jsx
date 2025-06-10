@@ -124,7 +124,7 @@ const Profile = () => {
     }
   };
 
-  // Mise à jour du mot de passe
+  // Mise à jour du mot de passe -fix
   const handleChangePassword = async (payload) => {
     try {
       await dispatch(changeUserPassword(payload)).unwrap();
@@ -201,8 +201,7 @@ const Profile = () => {
             {/** Voir CDC */}
             <PaymentMethodsSection data={user} />
 
-            {/* <LogoutButton handleClick={"/logout"} style={"cta-danger"} /> */}
-            <LogoutButton style={"cta-danger"} />
+            <LogoutButton style={"cta-danger"} handleClick={handleLogout} />
           </div>
         </section>
       )}

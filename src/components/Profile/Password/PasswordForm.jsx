@@ -19,7 +19,7 @@ import {
  * @param {Function} props.onChangePassword
  * @param {Function} props.showToast
  */
-const PasswordForm = ({ userId, onChangePassword, showToast }) => {
+const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
   const [form, setForm] = useState({
     oldPassword: "",
     newPassword: "",
@@ -131,10 +131,17 @@ const PasswordForm = ({ userId, onChangePassword, showToast }) => {
 
       {/* Bouton de soumission */}
       <div className="flex items-center justify-end gap-4">
-        <CTAButton type="submit" label="Enregistrer" className="cta-success" />
+        <button
+          type="submit"
+          label="Enregistrer"
+          className="cta-success"
+          aria-label="Sauvegarder nouveau mot de passe"
+        >
+          Sauvegarder
+        </button>
         <CTAButton
           label="Annuler"
-          handleClick={onclose}
+          handleClick={onCancel}
           type="button"
           className="cta-cancel"
           aria-label="Annuler la modification"
