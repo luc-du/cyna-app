@@ -100,7 +100,7 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         value={form.firstname}
         onChange={handleChange}
         required
-        className="input-style"
+        className="input"
       />
 
       {/* Nom */}
@@ -115,7 +115,7 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         value={form.lastname}
         onChange={handleChange}
         required
-        className="input-style"
+        className="input"
       />
 
       {/* Email */}
@@ -130,7 +130,7 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         value={form.email}
         onChange={handleChange}
         required
-        className="input-style"
+        className="input"
       />
 
       {/* Téléphone */}
@@ -147,7 +147,7 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         onBlur={handlePhoneBlur}
         pattern="^0[1-9][0-9]{8}$"
         inputMode="numeric"
-        className="input-style"
+        className="input"
         aria-describedby="phoneFormat"
       />
       <span id="phoneFormat" className="sr-only">
@@ -159,7 +159,7 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         <div className="flex gap-4">
           <button
             type="submit"
-            className="cta-action"
+            className="cta-success"
             aria-label="Sauvegarder les informations personnelles"
           >
             Sauvegarder
@@ -169,7 +169,7 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
             label="Annuler"
             handleClick={onCancel}
             type="button"
-            className="cta-secondary"
+            className="cta-cancel"
             aria-label="Annuler la modification"
           />
         </div>

@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
+import ModalOverlay from "../ui/ModalOverlay"; // Keep this import
 import AddressForm from "./Address/AddressForm";
 import AddressList from "./Address/AddressList";
 
@@ -28,19 +29,24 @@ const AddressSection = ({
   showToast,
   user,
 }) => {
-  const [isFormVisible, setFormVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [currentAddress, setCurrentAddress] = useState(null);
+
+  // The `openModal` and `closeModal` functions are already correctly defined
+  // and handle the `isOpen` state for the ModalOverlay.
+  // const openModal = () => setIsOpen(true); // Redundant, handleAddClick and handleEdit already do this
+  const closeModal = () => setIsOpen(false);
 
   // Ouvre le formulaire en mode création
   const handleAddClick = () => {
     setCurrentAddress(null);
-    setFormVisible(true);
+    setIsOpen(true);
   };
 
   // Ouvre le formulaire en mode édition
   const handleEdit = (address) => {
     setCurrentAddress(address);
-    setFormVisible(true);
+    setIsOpen(true);
   };
 
   // Supprime une adresse via le callback parent
@@ -64,7 +70,7 @@ const AddressSection = ({
         addressData.id ? "Adresse modifiée" : "Adresse ajoutée",
         "success"
       );
-      setFormVisible(false);
+      setIsOpen(false); // Close modal on successful save
     } catch (err) {
       console.error(err);
       showToast("Erreur lors de l'enregistrement de l'adresse", "error");
@@ -77,11 +83,7 @@ const AddressSection = ({
       className="container-profile-section border border-slate-200 rounded-2xl gap-4 p-4"
       tabIndex={-1}
     >
-      <h2
-        id="address-section-title"
-        className="text-xl font-semibold mb-2"
-        tabIndex={0}
-      >
+      <h2 id="address-section-title" tabIndex={0}>
         Adresses
       </h2>
       <DataStatus
@@ -108,13 +110,22 @@ const AddressSection = ({
           aria-label="Ajouter une nouvelle adresse"
         />
       </div>
-      {isFormVisible && (
-        <AddressForm
-          addressData={currentAddress}
-          userId={user}
-          onSaveAddress={handleSave}
-          onCancel={() => setFormVisible(false)}
-        />
+
+      {isOpen && (
+        <ModalOverlay
+          onClose={closeModal} // ModalOverlay's onClose will now trigger `closeModal`
+          // Any ARIA attributes on ModalOverlay itself are sufficient.
+          // No need to pass className="max-w-md" here, as that applies to the inner content div.
+          // The ModalOverlay handles its own fixed, full-screen sizing.
+        >
+          {/* AddressForm is now the child of ModalOverlay */}
+          <AddressForm
+            addressData={currentAddress}
+            userId={user}
+            onSaveAddress={handleSave}
+            onCancel={closeModal} // Use closeModal to consistently close the modal
+          />
+        </ModalOverlay>
       )}
     </section>
   );
@@ -138,6 +149,7 @@ AddressSection.propTypes = {
   onSaveAddress: PropTypes.func.isRequired,
   onDeleteAddress: PropTypes.func.isRequired,
   showToast: PropTypes.func.isRequired,
+  user: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default AddressSection;

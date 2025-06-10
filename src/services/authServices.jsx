@@ -31,4 +31,35 @@ export const AuthService = {
     const token = getToken();
     return axios.post(API_ROUTES.AUTH.VALIDATE, { token });
   },
+
+  /**
+   * Change the user password, en exigeant l'ancien mot de passe.
+   * @param {{
+   * userId: number|string,
+   * oldPassword: string,
+   * newPassword: string }} payload
+   * @returns {Promise<void>}
+   */
+
+  changePassword: async (payload) => {
+    const token = getToken();
+    const url = API_ROUTES.AUTH.CHANGE_PASSWORD();
+    // Validation supplémentaire
+    if (!payload.userId || !payload.oldPassword || !payload.newPassword) {
+      throw new Error("Tous les champs sont obligatoires");
+    }
+
+    try {
+      const response = await axios.post(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+      throw error.response?.data || error;
+    }
+  },
 };

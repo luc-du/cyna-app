@@ -38,6 +38,9 @@ export const AUTH_FORGOT_PASSWORD_ERROR =
 export const AUTH_PASSWORD_RESET_ERROR =
   "Erreur lors de la réinitialisation du mot de passe.";
 
+// ---REGISTER
+export const REGISTER_ERROR = "Erreur d'inscription :";
+
 /* EMAILS */
 export const AUTH_EMAIL_ALREADY_EXISTS_ERROR =
   "Impossible de créer le compte. Veuillez vérifier vos informations.";
@@ -73,3 +76,7 @@ export const ADDRESS_UPDATE_ERROR =
   "Erreur lors de la mise à jour de l'adresse. Modifications non enregistrées.";
 export const ADDRESS_DELETE_ERROR =
   "Erreur lors de la suppression de l'adresse. Veuillez réessayer plus tard.";
+
+/* PASSWORD */
+export const PASSWORD_INPUTTED_ERROR =
+  "Le mot de passe doit contenir au moins 6 caractères, une majuscule, un chiffre et un caractère spécial";

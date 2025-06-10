@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import CTAButton from "../shared/buttons/CTAButton";
 
-const LogoutButton = ({ handleClick }) => {
+const LogoutButton = ({ handleClick, style }) => {
   // 1.States
   // 2.Functions
   // 3.Others
@@ -9,14 +9,12 @@ const LogoutButton = ({ handleClick }) => {
   // 4.Render
 
   return (
-    <div>
+    <div className="gap-4 p-4">
       {/* LogoutButton */}
       <div className="w-full flex items-center justify-center">
         <CTAButton
           label="Se déconnecter"
-          className={
-            "btn mt-6 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-700"
-          }
+          className={style}
           handleClick={handleClick}
         />
       </div>

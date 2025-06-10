@@ -76,29 +76,29 @@ const ProfileSection = ({ userData, onUpdateProfile, showToast }) => {
         Informations personnelles
       </h2>
 
-      <p>
+      <p className="mt-4">
         <strong>Nom :</strong>{" "}
         <span aria-label="Nom utilisateur">{userData.lastname}</span>
       </p>
 
-      <p>
+      <p className="mt-4">
         <strong>Prénom :</strong>{" "}
         <span aria-label="Prénom utilisateur">{userData.firstname}</span>
       </p>
 
-      <p>
+      <p className="mt-4">
         <strong>Email :</strong>{" "}
         <span aria-label="Adresse email">{userData.email}</span>
       </p>
 
-      <p>
+      <p className="mt-4">
         <strong>Téléphone :</strong>{" "}
         <span aria-label="Numéro de téléphone">
           {userData.phone ? formatPhone(userData.phone) : "Non renseigné"}
         </span>
       </p>
 
-      <p>
+      <p className="mt-4">
         <strong>Statut :</strong>{" "}
         <span aria-label="Statut utilisateur">
           {formatUserRole(userData.roles)}

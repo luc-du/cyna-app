@@ -6,6 +6,10 @@ const PRODUCTS_HOST = import.meta.env.VITE_API_HOST_PRODUCTS;
 const CATEGORIES_HOST = import.meta.env.VITE_API_HOST_CATEGORIES;
 const CAROUSEL_HOST = import.meta.env.VITE_API_HOST_CAROUSEL;
 
+/* */
+console.log("🔍 Debug API Routes:");
+console.log("AUTH_HOST:", AUTH_HOST);
+
 export const API_ROUTES = {
   // ─── AUTHENTIFICATION ─────────────────────────────────────────────────────
   AUTH: {
@@ -36,6 +40,7 @@ export const API_ROUTES = {
         AUTH_HOST,
         `/auth/password-forgot?email=${encodeURIComponent(email)}`
       ),
+    CHANGE_PASSWORD: () => getApiUrl(AUTH_HOST, "/auth/change-password"),
   },
 
   // ─── UTILISATEUR ───────────────────────────────────────────────────────────

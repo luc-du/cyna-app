@@ -13,10 +13,13 @@ import {
   getUserAddresses,
   updateAddress,
 } from "../redux/slice/addressSlice";
-import { logout } from "../redux/slice/authSlice";
+import { changeUserPassword, logout } from "../redux/slice/authSlice";
 import { fetchUserProfile, updateUserProfile } from "../redux/slice/userSlice";
 import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
+import LogoutButton from "./Profile/LogoutButton";
+import PasswordSection from "./Profile/Password/PasswordSection";
+import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
 import { AUTH_PROFILE_UPDATE_ERROR } from "./utils/errorMessages";
 import { PROFILE_UPDATE_SUCCESS } from "./utils/successMessages";
 
@@ -121,9 +124,26 @@ const Profile = () => {
     }
   };
 
+  // Mise à jour du mot de passe
+  const handleChangePassword = async (payload) => {
+    try {
+      await dispatch(changeUserPassword(payload)).unwrap();
+      showToast("Mot de passe modifié avec succès", "success");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      console.error("Erreur complète:", error);
+      showToast(
+        error.message || "Erreur lors de la mise à jour du mot de passe",
+        "error"
+      );
+    }
+  };
+
   return (
     <main
-      className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6"
+      className="w-full flex flex-col items-center justify-center min-h-screen  bg-gray-100 p-6"
       aria-label="Page de profil utilisateur"
       tabIndex={-1}
     >
@@ -148,22 +168,26 @@ const Profile = () => {
             Profil utilisateur
           </h1>
 
-          <ProfileHeader user={user} onAvatarUpload={handleAvatarUpload} />
-
-          <ProfileSection
-            userData={user}
-            onUpdateProfile={handleUpdateProfile}
-            showToast={showToast}
-          />
-
-          {/* Section mot de passe à implémenter */}
-          <div role="region" aria-label="Mot de passe"></div>
-
           <div
             id="container-details-section"
             className="mt-4 py-4 text-left"
             aria-label="Détails du profil"
           >
+            <ProfileHeader user={user} onAvatarUpload={handleAvatarUpload} />
+
+            <ProfileSection
+              userData={user}
+              onUpdateProfile={handleUpdateProfile}
+              showToast={showToast}
+            />
+
+            {/* Section mot de passe à implémenter */}
+            <PasswordSection
+              userId={user.id}
+              onChangePassword={handleChangePassword}
+              showToast={showToast}
+            />
+
             <AddressSection
               addresses={addresses}
               loading={addressesLoading}
@@ -174,7 +198,11 @@ const Profile = () => {
               showToast={showToast}
             />
 
-            {/* <PaymentMethodsSection user={user} onLogout={handleLogout} /> */}
+            {/** Voir CDC */}
+            <PaymentMethodsSection data={user} />
+
+            {/* <LogoutButton handleClick={"/logout"} style={"cta-danger"} /> */}
+            <LogoutButton style={"cta-danger"} />
           </div>
         </section>
       )}
