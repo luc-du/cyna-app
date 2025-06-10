@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import cynaLogo from "../assets/logo.png";
 import { fetchUserProfile, registerUser } from "../redux/slice/authSlice";
 import { useGlobalToast } from "./GlobalToastProvider";
+import { PASSWORD_INPUTTED_ERROR, REGISTER_ERROR } from "./utils/errorMessages";
+import { checkPasswordStrength, getColorStrength } from "./utils/passwordUtils";
+import { REGISTER_SUCCESS } from "./utils/successMessages";
 
 /**
  * Le composant Register permet à un nouvel utilisateur de créer un compte.
@@ -35,7 +38,7 @@ const Register = () => {
   /**
    * Gère les changements dans les champs du formulaire.
    * Met à jour l'état local et vérifie la force du mot de passe si nécessaire.
-   * @param {Object} e - Événement de changement d'entrée
+   * @param {Object} e
    */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -43,23 +46,6 @@ const Register = () => {
     if (e.target.name === "password") {
       setPasswordStrength(checkPasswordStrength(e.target.value));
     }
-  };
-
-  /**
-   * Vérifie la force du mot de passe selon des critères définis.
-   * @param {string} password - Mot de passe à vérifier
-   * @returns {string} - Niveau de force ("Faible", "Moyen", "Fort")
-   */
-  const checkPasswordStrength = (password) => {
-    if (password.length < 6) return "Faible";
-    if (
-      password.length >= 6 &&
-      /[A-Z]/.test(password) &&
-      /\d/.test(password) &&
-      /[^a-zA-Z0-9]/.test(password)
-    )
-      return "Fort";
-    return "Moyen";
   };
 
   /**
@@ -71,7 +57,16 @@ const Register = () => {
     e.preventDefault();
 
     if (form.password !== form.confirmPassword) {
-      setPasswordError("Les mots de passe saisis ne correspondent pas");
+      setPasswordError("Les mots de passe saisis ne correspondent pas."); // Changed for clearer message
+      return;
+    }
+
+    // Add validation for password strength (should not be "Faible")
+    if (passwordStrength === "Faible") {
+      showToast(
+        "Le mot de passe est trop faible. Il doit contenir au moins 6 caractères, 1 majuscule, 1 chiffre et 1 caractère spécial.",
+        "error"
+      );
       return;
     }
 
@@ -92,14 +87,14 @@ const Register = () => {
       // 2. Récupération du profil utilisateur après inscription
       await dispatch(fetchUserProfile()).unwrap();
 
-      showToast("Inscription réussie", "success");
+      showToast(REGISTER_SUCCESS, "success");
       navigate("/profile");
     } catch (err) {
-      console.error("Erreur d'inscription :", err);
+      console.error(REGISTER_ERROR, err);
       const errorMessage =
         typeof err === "string"
           ? err
-          : err?.message || "Échec de l'inscription";
+          : err?.message || "Échec de l'inscription."; // Added period for consistency
       showToast(errorMessage, "error");
     }
   };
@@ -132,7 +127,7 @@ const Register = () => {
           id="firstname"
           name="firstname"
           placeholder="Prénom"
-          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="input"
           onChange={handleChange}
           required
           autoComplete="given-name"
@@ -146,7 +141,7 @@ const Register = () => {
           id="lastname"
           name="lastname"
           placeholder="Nom"
-          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="input"
           onChange={handleChange}
           required
           autoComplete="family-name"
@@ -160,71 +155,77 @@ const Register = () => {
           id="email"
           name="email"
           placeholder="Adresse e-mail"
-          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="input"
           onChange={handleChange}
           required
           autoComplete="email"
         />
         {/* Champ mot de passe */}
-        <label htmlFor="password" className="sr-only">
-          Mot de passe
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Mot de passe"
-          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          onChange={handleChange}
-          required
-          aria-describedby="passwordHelp passwordStrength"
-          autoComplete="new-password"
-        />
-        {/* Exigences du mot de passe */}
-        <p id="passwordHelp" className="text-sm text-gray-500">
-          Le mot de passe doit contenir au moins 6 caractères, une majuscule, un
-          chiffre et un caractère spécial.
-        </p>
-        {/* Indicateur de force du mot de passe */}
-        <p
-          id="passwordStrength"
-          className={`text-sm ${
-            passwordStrength === "Fort"
-              ? "text-green-600"
-              : passwordStrength === "Moyen"
-              ? "text-yellow-600"
-              : "text-red-600"
-          }`}
-          aria-live="polite"
-        >
-          Force du mot de passe : {passwordStrength}
-        </p>
+        <div>
+          {" "}
+          {/* Added a div to group label, help text, input, and strength */}
+          <label htmlFor="password" className="block font-medium text-gray-700">
+            {" "}
+            {/* Changed to block and removed sr-only */}
+            Mot de passe
+          </label>
+          {/* Exigences du mot de passe - Proactive guidance */}
+          <p id="passwordHelp" className="text-sm text-gray-500 mt-1 mb-2">
+            {PASSWORD_INPUTTED_ERROR}
+          </p>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Mot de passe"
+            onChange={handleChange}
+            className="input"
+            required
+            aria-describedby="passwordHelp passwordStrength"
+            autoComplete="new-password"
+          />
+          {/* Indicateur de force du mot de passe - Reactive feedback */}
+          <p
+            id="passwordStrength"
+            className={`text-sm ${getColorStrength(passwordStrength)} mt-2`}
+            aria-live="polite"
+          >
+            Force du mot de passe : {passwordStrength}
+          </p>
+        </div>
+
         {/* Champ confirmation du mot de passe */}
-        <label htmlFor="confirmPassword" className="sr-only">
-          Confirmez le mot de passe
-        </label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          placeholder="Confirmez le mot de passe"
-          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          onChange={handleChange}
-          required
-          autoComplete="new-password"
-        />
+        <div>
+          {" "}
+          {/* Added a div to group label and input */}
+          <label
+            htmlFor="confirmPassword"
+            className="block font-medium text-gray-700"
+          >
+            {" "}
+            {/* Changed to block and removed sr-only */}
+            Confirmez le mot de passe
+          </label>
+          <input
+            className="input"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirmez le mot de passe"
+            onChange={handleChange}
+            required
+            autoComplete="new-password"
+          />
+        </div>
+
         {/* Affichage de l'erreur de mot de passe */}
         {passwordError && (
-          <p className="text-red-500 text-sm" role="alert">
+          <p className="text-red-500 text-sm -mt-4" role="alert">
+            {" "}
+            {/* Adjusted negative margin for better spacing */}
             {passwordError}
           </p>
         )}
-        {/* Affichage de l'erreur globale
-        {error && (
-          <p className="text-red-500 text-sm" role="alert">
-            {typeof error === "string" ? error : JSON.stringify(error)}
-          </p>
-        )} */}
         {/* Bouton de soumission */}
         <button
           type="submit"

@@ -10,10 +10,10 @@ import AddressFieldGroup from "./AddressFieldGroup";
  *
  * @component
  * @param {Object} props
- * @param {Object|null} props.addressData - Données de l'adresse à éditer (null pour création).
- * @param {string|number} props.userId - ID de l'utilisateur.
- * @param {Function} props.onSaveAddress - Callback déclenché à la soumission du formulaire.
- * @param {Function} props.onCancel - Callback déclenché en cas d'annulation.
+ * @param {Object|null} props.addressData
+ * @param {string|number} props.userId
+ * @param {Function} props.onSaveAddress
+ * @param {Function} props.onCancel
  * @returns {JSX.Element}
  */
 const AddressForm = ({ addressData, userId, onSaveAddress, onCancel }) => {
@@ -63,46 +63,39 @@ const AddressForm = ({ addressData, userId, onSaveAddress, onCancel }) => {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-      role="dialog"
-      aria-modal="true"
+    <form
+      onSubmit={handleSubmit}
+      className="form"
       aria-labelledby="address-form-title"
-      tabIndex={-1}
     >
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 flex flex-col gap-4"
+      <h2
+        id="address-form-title"
+        className="text-xl font-semibold text-center"
+        tabIndex={0}
       >
-        <h2
-          id="address-form-title"
-          className="text-xl font-semibold text-center"
-          tabIndex={0}
+        {form.id ? "Modifier l'adresse" : "Ajouter une adresse"}
+      </h2>
+
+      {/** Groupe de champs pour l'adresse */}
+      <AddressFieldGroup form={form} handleChange={handleChange} />
+
+      <div className="flex justify-end gap-4 mt-4">
+        <button
+          type="submit"
+          className="cta-success"
+          aria-label={form.id ? "Modifier l'adresse" : "Ajouter l'adresse"}
         >
-          {form.id ? "Modifier l'adresse" : "Ajouter une adresse"}
-        </h2>
-
-        {/** Groupe de champs pour l'adresse */}
-        <AddressFieldGroup form={form} handleChange={handleChange} />
-
-        <div className="flex justify-end gap-4 mt-4">
-          <button
-            type="submit"
-            className="cta-action"
-            aria-label={form.id ? "Modifier l'adresse" : "Ajouter l'adresse"}
-          >
-            {form.id ? "Modifier" : "Ajouter"}
-          </button>
-          <CTAButton
-            type="button"
-            label="Annuler"
-            handleClick={onCancel}
-            className="cta-secondary"
-            aria-label="Annuler"
-          />
-        </div>
-      </form>
-    </div>
+          {form.id ? "Modifier" : "Ajouter"}
+        </button>
+        <CTAButton
+          type="button"
+          label="Annuler"
+          handleClick={onCancel}
+          className="cta-cancel"
+          aria-label="Annuler"
+        />
+      </div>
+    </form>
   );
 };
 

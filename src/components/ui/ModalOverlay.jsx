@@ -14,6 +14,7 @@ import PropTypes from "prop-types";
  * - Ferme la modale avec la touche Échap.
  */
 import { useEffect, useRef } from "react";
+import { IoClose } from "react-icons/io5";
 
 const ModalOverlay = ({ children, onClose }) => {
   const modalRef = useRef(null);
@@ -47,10 +48,24 @@ const ModalOverlay = ({ children, onClose }) => {
     >
       <div
         className="bg-white rounded-xl shadow-lg p-6 w-full max-w-lg"
-        onClick={(e) => e.stopPropagation()} // Empêche la fermeture lors d'un clic à l'intérieur de la modale
+        onClick={(e) => e.stopPropagation()}
         ref={modalRef}
         tabIndex={0}
       >
+        <div className="flex items-center justify-end">
+          <button
+            onClick={onClose}
+            className="flex items-center justify-center
+            bg-red-50 hover:bg-red-100
+            text-red-500 hover:text-red-600
+            p-1.5 w-8 h-8 rounded-full
+            transition-colors duration-200
+            focus:outline-none focus:ring-2 focus:ring-red-200"
+            aria-label="Fermer la modale"
+          >
+            <IoClose className="w-5 h-5" />
+          </button>
+        </div>
         {children}
       </div>
     </div>
