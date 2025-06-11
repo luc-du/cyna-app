@@ -21,9 +21,13 @@ const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
         Méthodes de paiement
       </h2>
 
-      <CTAButton onClick={() => setModalOpen(true)}>
-        Ajouter une carte
-      </CTAButton>
+      <div className="flex items-center justify-end">
+        <CTAButton
+          handleClick={() => setModalOpen(true)}
+          className={"cta-success"}
+          label={"Ajouter une carte"}
+        />
+      </div>
 
       <PaymentMethodList
         methods={methods}

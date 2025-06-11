@@ -23,20 +23,21 @@ const PaymentMethodListItem = ({ method, onDelete, onSetDefault }) => {
           </span>
         )}
       </div>
-      <div className="flex space-x-2">
-        {!isDefault && (
-          <CTAButton
-            onClick={onSetDefault}
-            aria-label={`Définir la carte ${last4} par défaut`}
-            label={"Défaut"}
-          />
-        )}
+      <div className="flex items-center justify-end space-x-2 gap-4">
         <CTAButton
           onClick={onDelete}
           aria-label={`Supprimer la carte ${last4}`}
           className={"cta-danger"}
           label={"Supprimer"}
         />
+        {!isDefault && (
+          <CTAButton
+            handleClick={onSetDefault}
+            aria-label={`Définir la carte ${last4} par défaut`}
+            label={"Défaut"}
+            className={"cta-success"}
+          />
+        )}
       </div>
     </li>
   );
