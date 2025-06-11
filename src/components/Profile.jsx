@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PaymentMethodsSection from "../components/Profile/PaymentMethods/PaymentMethodsSection";
 import ProfileHeader from "../components/Profile/ProfileHeader";
 import ProfileSection from "../components/Profile/ProfileSection";
 import DataStatus from "../components/shared/DataStatus";
@@ -19,7 +20,6 @@ import { useGlobalToast } from "./GlobalToastProvider";
 import AddressSection from "./Profile/Address/AddressSection";
 import LogoutButton from "./Profile/LogoutButton";
 import PasswordSection from "./Profile/Password/PasswordSection";
-import PaymentMethodsSection from "./Profile/PaymentMethods/PaymentMethodsSection";
 import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
@@ -185,8 +185,13 @@ const Profile = () => {
             showToast={showToast}
           />
         );
+
       case "payment":
-        return <PaymentMethodsSection data={user} />;
+        return (
+          <>
+            <PaymentMethodsSection />
+          </>
+        );
       case "settings":
         return (
           <div className="space-y-4">

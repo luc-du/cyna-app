@@ -379,23 +379,29 @@ export const MOCKSLIDES = [
  * Utilisé en dev pour afficher et tester la section Paiement.
  */
 
+/**
+ * MOCK_PAYMENT_METHODS
+ * Données simulées des méthodes de paiement pour l'utilisateur
+ * Shape : { id, label, last4, expiryMonth, expiryYear, isDefault }
+ */
+// mock/paymentMethods.js
 export const MOCK_PAYMENT_METHODS = [
   {
-    id: "pm_1AbCdEfGhIjKlMn",
-    brand: "visa",
-    last4: "4242",
-    expMonth: 12,
-    expYear: 2025,
+    id: "pm_1",
     cardholderName: "Jean Dupont",
+    last4: "4242",
+    expiryMonth: 12,
+    expiryYear: 2026,
+    type: "Visa",
     isDefault: true,
   },
   {
-    id: "pm_2XyZaBcDeFgHiJ",
-    brand: "mastercard",
-    last4: "4444",
-    expMonth: 6,
-    expYear: 2024,
-    cardholderName: "Jean Dupont",
+    id: "pm_2",
+    cardholderName: "Marie Martin",
+    last4: "1881",
+    expiryMonth: 5,
+    expiryYear: 2024,
+    type: "Mastercard",
     isDefault: false,
   },
 ];

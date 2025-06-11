@@ -9,6 +9,7 @@ const CAROUSEL_HOST = import.meta.env.VITE_API_HOST_CAROUSEL;
 /* */
 console.log("🔍 Debug API Routes:");
 console.log("AUTH_HOST:", AUTH_HOST);
+console.log("AUTH_SUBSCRIPTION:", AUTH_HOST.VITE_API_HOST_SUBSCRIPTION);
 
 export const API_ROUTES = {
   // ─── AUTHENTIFICATION ─────────────────────────────────────────────────────
@@ -109,12 +110,11 @@ export const API_ROUTES = {
   // --- PAYMENT METHODS
   PAYMENT_METHODS: {
     // Paiement : méthodes de paiement
-    GET: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/payment-methods"),
-    POST: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/payment-methods"),
-    DELETE: (id) =>
-      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods/${id}`),
-    PATCH: (id) =>
-      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods/${id}`),
+    GET_ALL: (customerId) =>
+      `/subscriptions/payment-methods?customerId=${customerId}`,
+    CREATE: `/subscriptions/payment-methods`,
+    DELETE: (id) => `/subscriptions/payment-methods/${id}`,
+    SET_DEFAULT: (id) => `/subscriptions/payment-methods/${id}/default`,
   },
   // ─── CATEGORIES ─────────────────────────────────────────────────────────────
   CATEGORIES: {

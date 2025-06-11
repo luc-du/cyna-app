@@ -1,56 +1,23 @@
 import PropTypes from "prop-types";
-import DataStatus from "../../shared/DataStatus";
+import { MOCK_PAYMENT_METHODS } from "../../../mock/MOCKS_DATA";
 import PaymentMethodListItem from "./PaymentMethodListItem";
 
 /**
- * PaymentMethodList
- *
- * Affiche une liste de méthodes de paiement.
- *
- * Props :
- * - methods : tableau d'objets paymentMethod
- * - onDelete : fonction appelée avec l'id pour suppression
- * - onSetDefault : fonction appelée avec l'id pour définir par défaut
- * - loading : état de chargement (optionnel)
- * - error : erreur éventuelle (optionnel)
+ * Liste les cartes.
  */
-const PaymentMethodList = ({
-  methods = [],
-  onDelete,
-  onSetDefault,
-  loading = false,
-  error = null,
-}) => {
-  const statusComponent = (
-    <DataStatus
-      loading={loading}
-      loadingMessage="Chargement des méthodes de paiement..."
-      error={error}
-      dataLength={methods}
-      emptyMessage="Aucune méthode de paiement enregistrée."
-    />
-  );
-
-  // Si on a un état à afficher (loading, error, ou empty), on l'affiche
-  if (statusComponent) return statusComponent;
-
-  // Sinon on affiche la liste normale
+const PaymentMethodList = ({ methods, onDelete, onSetDefault }) => {
+  if (!Array.isArray(methods) || methods.length === 0) {
+    methods = MOCK_PAYMENT_METHODS;
+  }
   return (
-    <ul role="list" className="space-y-3">
-      {methods.map((method) => (
-        <li key={method.id}>
-          <PaymentMethodListItem
-            id={method.id}
-            brand={method.brand}
-            last4={method.last4}
-            expMonth={method.expMonth}
-            expYear={method.expYear}
-            cardholderName={method.cardholderName}
-            isDefault={method.isDefault}
-            onDelete={() => onDelete(method.id)}
-            onSetDefault={() => onSetDefault(method.id)}
-          />
-        </li>
+    <ul role="list" className="space-y-4 mt-6">
+      {methods.map((pm) => (
+        <PaymentMethodListItem
+          key={pm.id}
+          method={pm}
+          onDelete={() => onDelete(pm.id)}
+          onSetDefault={() => onSetDefault(pm.id)}
+        />
       ))}
     </ul>
   );
@@ -60,18 +27,16 @@ PaymentMethodList.propTypes = {
   methods: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      brand: PropTypes.string.isRequired,
-      last4: PropTypes.string.isRequired,
-      expMonth: PropTypes.number.isRequired,
-      expYear: PropTypes.number.isRequired,
       cardholderName: PropTypes.string,
+      last4: PropTypes.string.isRequired,
+      expiryMonth: PropTypes.number.isRequired,
+      expiryYear: PropTypes.number.isRequired,
+      type: PropTypes.string,
       isDefault: PropTypes.bool,
     })
-  ),
+  ).isRequired,
   onDelete: PropTypes.func.isRequired,
   onSetDefault: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Error)]),
 };
 
 export default PaymentMethodList;

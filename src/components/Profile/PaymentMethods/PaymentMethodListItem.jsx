@@ -1,74 +1,57 @@
-import classNames from "classnames";
 import PropTypes from "prop-types";
 import CTAButton from "../../shared/buttons/CTAButton";
-
 /**
- * PaymentMethodListItem
- *
- * Affiche une carte bancaire avec actions.
- *
- * Props :
- * - id, brand, last4, expMonth, expYear, cardholderName, isDefault
- * - onDelete : fn(id)
- * - onSetDefault : fn(id)
+ * Un item de carte avec actions.
  */
-const PaymentMethodListItem = ({
-  id,
-  brand,
-  last4,
-  expMonth,
-  expYear,
-  cardholderName,
-  isDefault,
-  onDelete,
-  onSetDefault,
-}) => {
-  const label = `${brand.toUpperCase()} •••• ${last4}`;
-  const expiration = `Exp: ${expMonth.toString().padStart(2, "0")}/${expYear}`;
+const PaymentMethodListItem = ({ method, onDelete, onSetDefault }) => {
+  const { cardholderName, last4, expiryMonth, expiryYear, type, isDefault } =
+    method;
 
   return (
-    <div
-      className={classNames(
-        "flex items-center justify-between p-4 bg-white rounded-lg shadow",
-        { "border-2 border-blue-500": isDefault }
-      )}
-      aria-label={`${label}, ${expiration}${
-        isDefault ? ", carte par défaut" : ""
-      }`}
-    >
-      <div className="flex flex-col">
-        <span className="font-medium">{label}</span>
-        <span className="text-sm text-gray-500">{expiration}</span>
-        <span className="text-sm text-gray-500">{cardholderName}</span>
+    <li className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+      <div>
+        <p className="font-medium">
+          {type} •••• {last4}
+        </p>
+        <p className="text-sm text-gray-600">
+          Exp: {expiryMonth}/{expiryYear}{" "}
+          {cardholderName && `— ${cardholderName}`}
+        </p>
+        {isDefault && (
+          <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded">
+            Par défaut
+          </span>
+        )}
       </div>
-
       <div className="flex space-x-2">
         {!isDefault && (
           <CTAButton
             onClick={onSetDefault}
-            label="Définir par défaut"
-            aria-label={`Définir ${label} comme carte par défaut`}
+            aria-label={`Définir la carte ${last4} par défaut`}
+            label={"Défaut"}
           />
         )}
         <CTAButton
           onClick={onDelete}
-          label="Supprimer"
-          variant="danger"
-          aria-label={`Supprimer ${label}`}
+          aria-label={`Supprimer la carte ${last4}`}
+          className={"cta-danger"}
+          label={"Supprimer"}
         />
       </div>
-    </div>
+    </li>
   );
 };
 
 PaymentMethodListItem.propTypes = {
-  id: PropTypes.string.isRequired,
-  brand: PropTypes.string.isRequired,
-  last4: PropTypes.string.isRequired,
-  expMonth: PropTypes.number.isRequired,
-  expYear: PropTypes.number.isRequired,
-  cardholderName: PropTypes.string,
-  isDefault: PropTypes.bool,
+  method: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    cardholderName: PropTypes.string,
+    last4: PropTypes.string.isRequired,
+    expiryMonth: PropTypes.number.isRequired,
+    expiryYear: PropTypes.number.isRequired,
+    type: PropTypes.string,
+    isDefault: PropTypes.bool,
+  }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onSetDefault: PropTypes.func.isRequired,
 };
