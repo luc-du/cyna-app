@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import AddressSection from "../components/Profile/AddressSection";
 import ProfileHeader from "../components/Profile/ProfileHeader";
 import ProfileSection from "../components/Profile/ProfileSection";
 import DataStatus from "../components/shared/DataStatus";
@@ -17,12 +16,19 @@ import { changeUserPassword, logout } from "../redux/slice/authSlice";
 import { fetchUserProfile, updateUserProfile } from "../redux/slice/userSlice";
 import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
+import AddressSection from "./Profile/Address/AddressSection";
 import LogoutButton from "./Profile/LogoutButton";
 import PasswordSection from "./Profile/Password/PasswordSection";
-import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
-import { profileTabs } from "./Profile/ProfileTabs";
-import { AUTH_PROFILE_UPDATE_ERROR } from "./utils/errorMessages";
-import { PROFILE_UPDATE_SUCCESS } from "./utils/successMessages";
+import PaymentMethodsSection from "./Profile/PaymentMethods/PaymentMethodsSection";
+import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
+import {
+  AUTH_PROFILE_UPDATE_ERROR,
+  AVATAR_UPLOAD_ERROR,
+} from "./utils/errorMessages";
+import {
+  AVATAR_UPLOAD_SUCCESS,
+  PROFILE_UPDATE_SUCCESS,
+} from "./utils/successMessages";
 
 /**
  * Page de profil utilisateur avec système de tabs
@@ -74,9 +80,9 @@ const Profile = () => {
     try {
       await uploadProfileImage(user.id, file);
       dispatch(fetchUserProfile());
-      showToast("Avatar mis à jour avec succès !", "success");
+      showToast(AVATAR_UPLOAD_SUCCESS, "success");
     } catch {
-      showToast("Erreur lors de la mise à jour de l'avatar", "error");
+      showToast(AVATAR_UPLOAD_ERROR, "error");
     }
   };
 
@@ -234,7 +240,6 @@ const Profile = () => {
               aria-label="Navigation du profil"
             >
               {/* Mobile: tabs horizontales avec scroll */}
-              {/* <div className="flex overflow-x-auto lg:hidden space-x-2 pb-2"> */}
               <div className="flex flex-col items-center justify-evenly gap-2 lg:hidden space-x-2 pb-2">
                 {tabs.map((tab) => (
                   <button

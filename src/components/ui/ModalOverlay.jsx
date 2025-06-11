@@ -24,6 +24,7 @@ const ModalOverlay = ({ children, onClose }) => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         onClose();
+        alert("close me");
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -73,9 +74,7 @@ const ModalOverlay = ({ children, onClose }) => {
 };
 
 ModalOverlay.propTypes = {
-  /** Contenu à afficher dans la modale */
   children: PropTypes.node.isRequired,
-  /** Fonction appelée lors de la fermeture de la modale */
   onClose: PropTypes.func.isRequired,
 };
 

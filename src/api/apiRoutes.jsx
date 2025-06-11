@@ -106,6 +106,16 @@ export const API_ROUTES = {
     CONFIG: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/config"),
   },
 
+  // --- PAYMENT METHODS
+  PAYMENT_METHODS: {
+    // Paiement : méthodes de paiement
+    GET: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/payment-methods"),
+    POST: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/payment-methods"),
+    DELETE: (id) =>
+      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods/${id}`),
+    PATCH: (id) =>
+      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods/${id}`),
+  },
   // ─── CATEGORIES ─────────────────────────────────────────────────────────────
   CATEGORIES: {
     ALL: getApiUrl(CATEGORIES_HOST, "/categories"),

@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import CTAButton from "../shared/buttons/CTAButton";
-import DataStatus from "../shared/DataStatus";
-import ModalOverlay from "../ui/ModalOverlay"; // Keep this import
-import AddressForm from "./Address/AddressForm";
-import AddressList from "./Address/AddressList";
+import CTAButton from "../../shared/buttons/CTAButton";
+import DataStatus from "../../shared/DataStatus";
+import ModalOverlay from "../../ui/ModalOverlay"; // Keep this import
+import AddressForm from "../Address/AddressForm";
+import AddressList from "../Address/AddressList";
 
 /**
  * AddressSection
