@@ -1,7 +1,12 @@
 import PropTypes from "prop-types";
 import CTAButton from "../../shared/buttons/CTAButton";
+
 /**
- * Un item de carte avec actions.
+ * Affiche une carte avec actions.
+ *
+ * @param {Object} method
+ * @param {Function} onDelete
+ * @param {Function} onSetDefault
  */
 const PaymentMethodListItem = ({ method, onDelete, onSetDefault }) => {
   const { cardholderName, last4, expiryMonth, expiryYear, type, isDefault } =
@@ -9,7 +14,7 @@ const PaymentMethodListItem = ({ method, onDelete, onSetDefault }) => {
 
   return (
     <li className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-      <div>
+      <div className="">
         <p className="font-medium">
           {type} •••• {last4}
         </p>
@@ -23,19 +28,19 @@ const PaymentMethodListItem = ({ method, onDelete, onSetDefault }) => {
           </span>
         )}
       </div>
-      <div className="flex items-center justify-end space-x-2 gap-4">
+      <div className="flex space-x-4">
         <CTAButton
-          onClick={onDelete}
+          handleClick={onDelete}
           aria-label={`Supprimer la carte ${last4}`}
-          className={"cta-danger"}
-          label={"Supprimer"}
+          className="cta-danger"
+          label="Supprimer"
         />
         {!isDefault && (
           <CTAButton
             handleClick={onSetDefault}
             aria-label={`Définir la carte ${last4} par défaut`}
-            label={"Défaut"}
-            className={"cta-success"}
+            className="cta-success"
+            label="Défaut"
           />
         )}
       </div>

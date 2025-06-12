@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import CTAButton from "../../shared/buttons/CTAButton";
+
 /**
- * Formulaire d’ajout de carte.
+ * Formulaire d’ajout d’une carte.
+ *
  * @param {Function} onSubmit – reçoit { customerId, type, number, month, year, cvc }.
  * @param {Function} onCancel
  */
@@ -12,6 +14,7 @@ const PaymentMethodForm = ({ onSubmit, onCancel }) => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [cvc, setCvc] = useState("");
+  const [type, setType] = useState("");
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -21,6 +24,7 @@ const PaymentMethodForm = ({ onSubmit, onCancel }) => {
     if (!/^(0[1-9]|1[0-2])$/.test(month)) errs.month = "MM";
     if (!/^\d{4}$/.test(year)) errs.year = "YYYY";
     if (!/^\d{3,4}$/.test(cvc)) errs.cvc = "3 ou 4 chiffres";
+    if (!type) errs.type = "Requis";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -28,7 +32,7 @@ const PaymentMethodForm = ({ onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    onSubmit({ cardholderName, number, month, year, cvc });
+    onSubmit({ cardholderName, type, number, month, year, cvc });
   };
 
   return (
@@ -36,6 +40,7 @@ const PaymentMethodForm = ({ onSubmit, onCancel }) => {
       <p id="pm-form-instructions" className="text-sm text-gray-600 mb-4">
         Saisissez les détails de votre carte. Tous les champs sont requis.
       </p>
+
       <label className="block mb-2">
         Titulaire
         <input
@@ -52,23 +57,108 @@ const PaymentMethodForm = ({ onSubmit, onCancel }) => {
           </span>
         )}
       </label>
-      {/* Champs numéro, expiry, cvc similaires… */}
-      <div className="mt-6 flex justify-end space-x-2">
+
+      <label className="block mb-2">
+        Type de carte
+        <input
+          type="text"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="input"
+          aria-invalid={!!errors.type}
+          aria-describedby={errors.type ? "err-type" : undefined}
+        />
+        {errors.type && (
+          <span id="err-type" className="text-red-600 text-sm">
+            {errors.type}
+          </span>
+        )}
+      </label>
+
+      <label className="block mb-2">
+        Numéro de carte
+        <input
+          type="text"
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+          className="input"
+          maxLength={16}
+          aria-invalid={!!errors.number}
+          aria-describedby={errors.number ? "err-number" : undefined}
+        />
+        {errors.number && (
+          <span id="err-number" className="text-red-600 text-sm">
+            {errors.number}
+          </span>
+        )}
+      </label>
+
+      <div className="flex space-x-4 mb-2">
+        <label className="flex-1">
+          Mois (MM)
+          <input
+            type="text"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="input"
+            maxLength={2}
+            aria-invalid={!!errors.month}
+            aria-describedby={errors.month ? "err-month" : undefined}
+          />
+          {errors.month && (
+            <span id="err-month" className="text-red-600 text-sm">
+              {errors.month}
+            </span>
+          )}
+        </label>
+
+        <label className="flex-1">
+          Année (YYYY)
+          <input
+            type="text"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="input"
+            maxLength={4}
+            aria-invalid={!!errors.year}
+            aria-describedby={errors.year ? "err-year" : undefined}
+          />
+          {errors.year && (
+            <span id="err-year" className="text-red-600 text-sm">
+              {errors.year}
+            </span>
+          )}
+        </label>
+      </div>
+
+      <label className="block mb-4">
+        CVV
+        <input
+          type="text"
+          value={cvc}
+          onChange={(e) => setCvc(e.target.value)}
+          className="input"
+          maxLength={4}
+          aria-invalid={!!errors.cvc}
+          aria-describedby={errors.cvc ? "err-cvc" : undefined}
+        />
+        {errors.cvc && (
+          <span id="err-cvc" className="text-red-600 text-sm">
+            {errors.cvc}
+          </span>
+        )}
+      </label>
+
+      <div className="mt-6 flex justify-end space-x-4">
         <CTAButton
           type="button"
           handleClick={onCancel}
           label="Annuler"
           variant="secondary"
-          className={"underline"}
+          className="underline"
         />
-
-        <CTAButton
-          type="submit"
-          label="Valider"
-          aria-label="valider"
-          className={"cta-success"}
-        />
-      </div>{" "}
+        <CTAButton type="submit" label="Valider" className="cta-success" />
+      </div>
     </form>
   );
 };
@@ -79,208 +169,3 @@ PaymentMethodForm.propTypes = {
 };
 
 export default PaymentMethodForm;
-
-// /**
-//  * PaymentMethodForm
-//  *
-//  * Formulaire pour ajouter une méthode de paiement.
-//  * Champs : cardholderName, number, expMonth, expYear, cvc
-//  * Validation client et accessibilité.
-//  *
-//  * Props :
-//  * - onSubmit(newMethod) : callback quand le formulaire est validé
-//  * - onCancel() : annule et ferme le formulaire
-//  */
-// const PaymentMethodForm = ({ onSubmit, onCancel }) => {
-//   const [values, setValues] = useState({
-//     cardholderName: "",
-//     number: "",
-//     expMonth: "",
-//     expYear: "",
-//     cvc: "",
-//   });
-//   const [errors, setErrors] = useState({});
-
-//   const validate = () => {
-//     const errs = {};
-//     if (!values.cardholderName.trim())
-//       errs.cardholderName = "Le nom est requis.";
-//     if (!/^\d{16}$/.test(values.number))
-//       errs.number = "Le numéro doit comporter 16 chiffres.";
-//     if (!/^(0[1-9]|1[0-2])$/.test(values.expMonth))
-//       errs.expMonth = "Mois invalide (MM).";
-//     if (!/^\d{4}$/.test(values.expYear))
-//       errs.expYear = "Année invalide (YYYY).";
-//     if (!/^\d{3,4}$/.test(values.cvc))
-//       errs.cvc = "CVC invalide (3 ou 4 chiffres).";
-//     setErrors(errs);
-//     return Object.keys(errs).length === 0;
-//   };
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setValues((prev) => ({ ...prev, [name]: value }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (!validate()) return;
-//     // Créer l'objet à passer à onSubmit
-//     const newMethod = {
-//       id: `pm_${Date.now()}`,
-//       brand: "unknown",
-//       last4: values.number.slice(-4),
-//       expMonth: parseInt(values.expMonth, 10),
-//       expYear: parseInt(values.expYear, 10),
-//       cardholderName: values.cardholderName,
-//       isDefault: false,
-//     };
-//     onSubmit(newMethod);
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit} aria-labelledby="payment-form-title">
-//       <h3 id="payment-form-title" className="text-lg font-medium mb-4">
-//         Ajouter une carte
-//       </h3>
-//       <div className="space-y-4">
-//         <div>
-//           <label htmlFor="cardholderName" className="block text-sm font-medium">
-//             Titulaire de la carte
-//           </label>
-//           <input
-//             id="cardholderName"
-//             name="cardholderName"
-//             type="text"
-//             value={values.cardholderName}
-//             onChange={handleChange}
-//             required
-//             aria-describedby={
-//               errors.cardholderName ? "error-cardholderName" : undefined
-//             }
-//             className="input"
-//           />
-//           {errors.cardholderName && (
-//             <p id="error-cardholderName" className="text-sm text-red-600">
-//               {errors.cardholderName}
-//             </p>
-//           )}
-//         </div>
-//         <div>
-//           <label htmlFor="number" className="block text-sm font-medium">
-//             Numéro de carte
-//           </label>
-//           <input
-//             id="number"
-//             name="number"
-//             type="text"
-//             inputMode="numeric"
-//             pattern="\d{16}"
-//             value={values.number}
-//             onChange={handleChange}
-//             required
-//             aria-describedby={errors.number ? "error-number" : undefined}
-//             className="input"
-//           />
-//           {errors.number && (
-//             <p id="error-number" className="text-sm text-red-600">
-//               {errors.number}
-//             </p>
-//           )}
-//         </div>
-//         <div className="grid grid-cols-2 gap-4">
-//           <div>
-//             <label htmlFor="expMonth" className="block text-sm font-medium">
-//               Mois (MM)
-//             </label>
-//             <input
-//               id="expMonth"
-//               name="expMonth"
-//               type="text"
-//               inputMode="numeric"
-//               pattern="^(0[1-9]|1[0-2])$"
-//               value={values.expMonth}
-//               onChange={handleChange}
-//               required
-//               aria-describedby={errors.expMonth ? "error-expMonth" : undefined}
-//               className="input"
-//             />
-//             {errors.expMonth && (
-//               <p id="error-expMonth" className="text-sm text-red-600">
-//                 {errors.expMonth}
-//               </p>
-//             )}
-//           </div>
-//           <div>
-//             <label htmlFor="expYear" className="block text-sm font-medium">
-//               Année (YYYY)
-//             </label>
-//             <input
-//               id="expYear"
-//               name="expYear"
-//               type="text"
-//               inputMode="numeric"
-//               pattern="\d{4}"
-//               value={values.expYear}
-//               onChange={handleChange}
-//               required
-//               aria-describedby={errors.expYear ? "error-expYear" : undefined}
-//               className="input"
-//             />
-//             {errors.expYear && (
-//               <p id="error-expYear" className="text-sm text-red-600">
-//                 {errors.expYear}
-//               </p>
-//             )}
-//           </div>
-//         </div>
-//         <div>
-//           <label htmlFor="cvc" className="block text-sm font-medium">
-//             CVC
-//           </label>
-//           <input
-//             id="cvc"
-//             name="cvc"
-//             type="text"
-//             inputMode="numeric"
-//             pattern="\d{3,4}"
-//             value={values.cvc}
-//             onChange={handleChange}
-//             required
-//             aria-describedby={errors.cvc ? "error-cvc" : undefined}
-//             className="input"
-//           />
-//           {errors.cvc && (
-//             <p id="error-cvc" className="text-sm text-red-600">
-//               {errors.cvc}
-//             </p>
-//           )}
-//         </div>
-//       </div>
-
-//       <div className="mt-6 flex justify-end space-x-2">
-//         <CTAButton
-//           type="button"
-//           handleClick={onCancel}
-//           label="Annuler"
-//           variant="secondary"
-//           className={"underline"}
-//         />
-
-//         <CTAButton
-//           type="submit"
-//           label="Valider"
-//           aria-label="valider"
-//           className={"cta-success"}
-//         />
-//       </div>
-//     </form>
-//   );
-// };
-
-// PaymentMethodForm.propTypes = {
-//   onSubmit: PropTypes.func.isRequired,
-//   onCancel: PropTypes.func.isRequired,
-// };
-
-// export default PaymentMethodForm;

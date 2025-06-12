@@ -6,14 +6,15 @@ import PaymentMethodForm from "./PaymentMethodForm";
 import PaymentMethodList from "./PaymentMethodList";
 
 /**
- * Affiche la section Paiement dans le profil.
- * @param {Array} methods – tableau des méthodes de paiement.
- * @param {Function} onAdd – callback ajouté.
- * @param {Function} onDelete
- * @param {Function} onSetDefault
+ * Section « Méthodes de paiement » du profil utilisateur.
+ *
+ * @param {Object[]} methods – tableau des méthodes de paiement.
+ * @param {Function} onAdd – callback appelé avec les données de la nouvelle carte.
+ * @param {Function} onDelete – callback appelé avec l’ID de la carte à supprimer.
+ * @param {Function} onSetDefault – callback appelé avec l’ID de la carte à définir par défaut.
  */
 const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <section aria-labelledby="payment-heading">
@@ -21,11 +22,11 @@ const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
         Méthodes de paiement
       </h2>
 
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end mb-4">
         <CTAButton
-          handleClick={() => setModalOpen(true)}
-          className={"cta-success"}
-          label={"Ajouter une carte"}
+          handleClick={() => setIsModalOpen(true)}
+          className="cta-success"
+          label="Ajouter une carte"
         />
       </div>
 
@@ -36,13 +37,13 @@ const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
       />
 
       {isModalOpen && (
-        <ModalOverlay onClose={() => setModalOpen(false)}>
+        <ModalOverlay onClose={() => setIsModalOpen(false)}>
           <PaymentMethodForm
             onSubmit={(data) => {
               onAdd(data);
-              setModalOpen(false);
+              setIsModalOpen(false);
             }}
-            onCancel={() => setModalOpen(false)}
+            onCancel={() => setIsModalOpen(false)}
           />
         </ModalOverlay>
       )}

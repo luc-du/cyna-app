@@ -1,17 +1,20 @@
 import PropTypes from "prop-types";
 import { MOCK_PAYMENT_METHODS } from "../../../mock/MOCKS_DATA";
 import PaymentMethodListItem from "./PaymentMethodListItem";
-
 /**
- * Liste les cartes.
+ * Liste les méthodes de paiement.
+ *
+ * Si `methods` est vide, affiche les mocks.
  */
 const PaymentMethodList = ({ methods, onDelete, onSetDefault }) => {
-  if (!Array.isArray(methods) || methods.length === 0) {
-    methods = MOCK_PAYMENT_METHODS;
-  }
+  const list =
+    Array.isArray(methods) && methods.length > 0
+      ? methods
+      : MOCK_PAYMENT_METHODS;
+
   return (
-    <ul role="list" className="space-y-4 mt-6">
-      {methods.map((pm) => (
+    <ul role="list" className="space-y-4">
+      {list.map((pm) => (
         <PaymentMethodListItem
           key={pm.id}
           method={pm}
