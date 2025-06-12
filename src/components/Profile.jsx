@@ -231,7 +231,10 @@ const Profile = () => {
             className="text-3xl font-bold text-gray-800"
             tabIndex={0}
           >
-            Profil utilisateur
+            {/* {Profil utilisateur} */}
+            {user
+              ? `Bienvenue ${user.lastname} ${user.firstname}`
+              : "Profil utilisateur"}
           </h1>
         </div>
 

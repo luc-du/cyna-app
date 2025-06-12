@@ -1,54 +1,140 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { PAYMENT_ADDED_ERROR } from "../../components/utils/errorMessages";
-import { PAYMENT_ADDED_SUCCESS } from "../../components/utils/successMessages";
+import paymentService from "../../services/paymentService";
 
-// Thunk pour POST /payment-methods
-export const addPaymentMethod = createAsyncThunk(
-  "payment/add",
-  async (payload, thunkAPI) => {
+/**
+ * Thunks asynchrones
+ */
+
+// 1. Récupérer toutes les méthodes de paiement
+export const fetchPaymentMethods = createAsyncThunk(
+  "payment/fetchAll",
+  async (customerId, { rejectWithValue }) => {
     try {
-      return await subscriptionService.addPaymentMethod(payload);
-    } catch (error) {
-      console.error(PAYMENT_ADDED_ERROR, error);
-      return thunkAPI.rejectWithValue(PAYMENT_ADDED_ERROR);
+      const data = await paymentService.fetchPaymentMethods(customerId);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
     }
   }
 );
 
+// 2. Ajouter une méthode de paiement
+export const addPaymentMethod = createAsyncThunk(
+  "payment/add",
+  async (paymentData, { rejectWithValue }) => {
+    try {
+      const data = await paymentService.addPaymentMethod(paymentData);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+// 3. Supprimer une méthode
+export const deletePaymentMethod = createAsyncThunk(
+  "payment/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      await paymentService.deletePaymentMethod(id);
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+// 4. Définir une méthode par défaut
+export const setDefaultPaymentMethod = createAsyncThunk(
+  "payment/setDefault",
+  async (id, { rejectWithValue }) => {
+    try {
+      await paymentService.setDefaultPaymentMethod(id);
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+/**
+ * Slice
+ */
+const initialState = {
+  list: [],
+  loading: false,
+  error: null,
+};
+
 const paymentSlice = createSlice({
   name: "payment",
-  initialState: {
-    list: [], // on y ajoutera fetchPaymentMethods plus tard
-    loading: false,
-    error: null,
-    success: null,
-  },
-  reducers: {
-    clearPaymentState: (state) => {
-      state.loading = false;
-      state.error = null;
-      state.success = null;
-    },
-  },
+  initialState,
+  reducers: {},
   extraReducers: (builder) => {
+    // fetchPaymentMethods
     builder
-      // addPaymentMethod
+      .addCase(fetchPaymentMethods.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPaymentMethods.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = action.payload;
+      })
+      .addCase(fetchPaymentMethods.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // addPaymentMethod
+    builder
       .addCase(addPaymentMethod.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.success = null;
       })
-      .addCase(addPaymentMethod.fulfilled, (state, { payload }) => {
+      .addCase(addPaymentMethod.fulfilled, (state, action) => {
         state.loading = false;
-        state.success = PAYMENT_ADDED_SUCCESS;
-        // on pourra pusher payload dans state.list si on veut update UI instantanément
+        // MEttre un auto*refetch? via fetchPaymentMethods ?
+        state.list.push(action.payload);
       })
-      .addCase(addPaymentMethod.rejected, (state, { payload }) => {
+      .addCase(addPaymentMethod.rejected, (state, action) => {
         state.loading = false;
-        state.error = payload;
+        state.error = action.payload;
+      });
+
+    // deletePaymentMethod
+    builder
+      .addCase(deletePaymentMethod.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePaymentMethod.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = state.list.filter((m) => m.id !== action.payload);
+      })
+      .addCase(deletePaymentMethod.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // setDefaultPaymentMethod
+    builder
+      .addCase(setDefaultPaymentMethod.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(setDefaultPaymentMethod.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = state.list.map((m) => ({
+          ...m,
+          isDefault: m.id === action.payload, //check un seul élément par défaut et uncheck les autres
+        }));
+      })
+      .addCase(setDefaultPaymentMethod.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { clearPaymentState } = paymentSlice.actions;
 export default paymentSlice.reducer;
