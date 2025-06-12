@@ -55,7 +55,7 @@ const PasswordSection = ({ userId, onChangePassword, showToast }) => {
 
       <div className="flex items-center justify-end mt-4">
         <CTAButton
-          label="Modifier le mot de passe"
+          label="Modifier"
           className={"underline"}
           handleClick={openModal}
           aria-haspopup="dialog"

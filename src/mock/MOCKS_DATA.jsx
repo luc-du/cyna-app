@@ -373,3 +373,35 @@ export const MOCKSLIDES = [
     ctaLink: "/about",
   },
 ];
+
+/**
+ * Tableau simulant les méthodes de paiement de l'utilisateur.
+ * Utilisé en dev pour afficher et tester la section Paiement.
+ */
+
+/**
+ * MOCK_PAYMENT_METHODS
+ * Données simulées des méthodes de paiement pour l'utilisateur
+ * Shape : { id, label, last4, expiryMonth, expiryYear, isDefault }
+ */
+// mock/paymentMethods.js
+export const MOCK_PAYMENT_METHODS = [
+  {
+    id: "pm_1",
+    cardholderName: "Jean Dupont",
+    last4: "4242",
+    expiryMonth: 12,
+    expiryYear: 2026,
+    type: "Visa",
+    isDefault: true,
+  },
+  {
+    id: "pm_2",
+    cardholderName: "Marie Martin",
+    last4: "1881",
+    expiryMonth: 5,
+    expiryYear: 2024,
+    type: "Mastercard",
+    isDefault: false,
+  },
+];

@@ -94,7 +94,7 @@ const Register = () => {
       const errorMessage =
         typeof err === "string"
           ? err
-          : err?.message || "Échec de l'inscription."; // Added period for consistency
+          : err?.message || "Échec de l'inscription.";
       showToast(errorMessage, "error");
     }
   };
@@ -163,10 +163,8 @@ const Register = () => {
         {/* Champ mot de passe */}
         <div>
           {" "}
-          {/* Added a div to group label, help text, input, and strength */}
           <label htmlFor="password" className="block font-medium text-gray-700">
             {" "}
-            {/* Changed to block and removed sr-only */}
             Mot de passe
           </label>
           {/* Exigences du mot de passe - Proactive guidance */}
@@ -222,7 +220,6 @@ const Register = () => {
         {passwordError && (
           <p className="text-red-500 text-sm -mt-4" role="alert">
             {" "}
-            {/* Adjusted negative margin for better spacing */}
             {passwordError}
           </p>
         )}

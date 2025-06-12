@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import AddressSection from "../components/Profile/AddressSection";
+import PaymentMethodsSection from "../components/Profile/PaymentMethods/PaymentMethodsSection";
 import ProfileHeader from "../components/Profile/ProfileHeader";
 import ProfileSection from "../components/Profile/ProfileSection";
 import DataStatus from "../components/shared/DataStatus";
@@ -14,37 +14,63 @@ import {
   updateAddress,
 } from "../redux/slice/addressSlice";
 import { changeUserPassword, logout } from "../redux/slice/authSlice";
+import {
+  addPaymentMethod,
+  deletePaymentMethod,
+  fetchPaymentMethods,
+  setDefaultPaymentMethod,
+} from "../redux/slice/paymentSlice";
 import { fetchUserProfile, updateUserProfile } from "../redux/slice/userSlice";
 import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
+import AddressSection from "./Profile/Address/AddressSection";
 import LogoutButton from "./Profile/LogoutButton";
 import PasswordSection from "./Profile/Password/PasswordSection";
-import PaymentMethodsSection from "./Profile/PaymentMethodsSection";
-import { AUTH_PROFILE_UPDATE_ERROR } from "./utils/errorMessages";
-import { PROFILE_UPDATE_SUCCESS } from "./utils/successMessages";
+import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
+import {
+  AUTH_PROFILE_UPDATE_ERROR,
+  AVATAR_UPLOAD_ERROR,
+} from "./utils/errorMessages";
+import {
+  AVATAR_UPLOAD_SUCCESS,
+  PROFILE_UPDATE_SUCCESS,
+} from "./utils/successMessages";
 
 /**
- * Page de profil utilisateur
+ * Page de profil utilisateur avec système de tabs
  * @component
  */
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showToast } = useGlobalToast();
+  const [activeTab, setActiveTab] = useState("profile");
 
   useAuthEffect();
   useAutoLogout();
 
+  const tabs = profileTabs;
+
+  // Profil utilisateur
   const {
     user,
     loading: userLoading,
     error: userError,
   } = useSelector((state) => state.user);
+
+  // Adresses
   const {
     list: addresses,
     loading: addressesLoading,
     error: addressesError,
   } = useSelector((state) => state.address);
+
+  // Moyens de paiement
+  const {
+    list: paymentMethods,
+    loading: paymentLoading,
+    error: paymentError,
+  } = useSelector((state) => state.payment);
 
   const loading = userLoading || (!user && !userError);
 
@@ -58,25 +84,30 @@ const Profile = () => {
     }
   }, [dispatch, user]);
 
-  // Déconnexion
+  // Chargement des moyens de paiement à l'entrée de l'onglet
+  useEffect(() => {
+    if (activeTab === "payment" && user?.customerId) {
+      dispatch(fetchPaymentMethods(user.customerId));
+    }
+  }, [dispatch, activeTab, user?.customerId]);
+
+  // Handlers
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
-  // Mise à jour de l'avatar
   const handleAvatarUpload = async (file) => {
     if (!user?.id) return;
     try {
       await uploadProfileImage(user.id, file);
       dispatch(fetchUserProfile());
-      showToast("Avatar mis à jour avec succès !", "success");
+      showToast(AVATAR_UPLOAD_SUCCESS, "success");
     } catch {
-      showToast("Erreur lors de la mise à jour de l'avatar", "error");
+      showToast(AVATAR_UPLOAD_ERROR, "error");
     }
   };
 
-  // Mise à jour des informations personnelles
   const handleUpdateProfile = async (updates) => {
     if (!user?.id) return;
     try {
@@ -88,7 +119,22 @@ const Profile = () => {
     }
   };
 
-  // Création ou modification d'une adresse
+  const handleChangePassword = async (payload) => {
+    try {
+      await dispatch(changeUserPassword(payload)).unwrap();
+      showToast("Mot de passe modifié avec succès", "success");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (error) {
+      console.error("Erreur complète:", error);
+      showToast(
+        error.message || "Erreur lors de la mise à jour du mot de passe",
+        "error"
+      );
+    }
+  };
+
   const handleSaveAddress = async (addressData) => {
     if (!user?.id) return;
     try {
@@ -113,7 +159,6 @@ const Profile = () => {
     }
   };
 
-  // Suppression d'une adresse
   const handleDeleteAddress = async (addressId) => {
     try {
       await dispatch(deleteAddress(addressId)).unwrap();
@@ -124,88 +169,204 @@ const Profile = () => {
     }
   };
 
-  // Mise à jour du mot de passe
-  const handleChangePassword = async (payload) => {
+  const handleAddPaymentMethod = async (data) => {
     try {
-      await dispatch(changeUserPassword(payload)).unwrap();
-      showToast("Mot de passe modifié avec succès", "success");
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    } catch (error) {
-      console.error("Erreur complète:", error);
-      showToast(
-        error.message || "Erreur lors de la mise à jour du mot de passe",
-        "error"
-      );
+      await dispatch(
+        addPaymentMethod({ ...data, customerId: user.customerId })
+      ).unwrap();
+      dispatch(fetchPaymentMethods(user.customerId));
+      showToast("Carte ajoutée avec succès", "success");
+    } catch {
+      showToast("Erreur lors de l'ajout de la carte", "error");
     }
   };
 
-  return (
-    <main
-      className="w-full flex flex-col items-center justify-center min-h-screen  bg-gray-100 p-6"
-      aria-label="Page de profil utilisateur"
-      tabIndex={-1}
-    >
-      <DataStatus
-        dataLength={user}
-        loading={loading}
-        loadingMessage="Chargement des données utilisateur en cours..."
-        error={userError}
-        emptyMessage="Aucune information pour cet utilisateur."
-      />
+  const handleDeletePaymentMethod = async (id) => {
+    try {
+      await dispatch(deletePaymentMethod(id)).unwrap();
+      dispatch(fetchPaymentMethods(user.customerId));
+      showToast("Carte supprimée avec succès", "success");
+    } catch {
+      showToast("Erreur lors de la suppression de la carte", "error");
+    }
+  };
 
-      {!loading && !userError && user && (
-        <section
-          className="bg-white p-6 shadow-lg rounded-lg w-full max-w-md"
-          aria-labelledby="profile-title"
-        >
-          <h1
-            id="profile-title"
-            className="text-3xl font-bold text-center mb-4"
-            tabIndex={0}
-          >
-            Profil utilisateur
-          </h1>
+  const handleSetDefaultPaymentMethod = async (id) => {
+    try {
+      await dispatch(setDefaultPaymentMethod(id)).unwrap();
+      dispatch(fetchPaymentMethods(user.customerId));
+      showToast("Carte par défaut définie", "success");
+    } catch {
+      showToast("Erreur lors de la définition de la carte par défaut", "error");
+    }
+  };
 
-          <div
-            id="container-details-section"
-            className="mt-4 py-4 text-left"
-            aria-label="Détails du profil"
-          >
+  // Rendu du contenu selon l'onglet actif
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "profile":
+        return (
+          <div className="space-y-6">
             <ProfileHeader user={user} onAvatarUpload={handleAvatarUpload} />
-
             <ProfileSection
               userData={user}
               onUpdateProfile={handleUpdateProfile}
               showToast={showToast}
             />
-
-            {/* Section mot de passe à implémenter */}
-            <PasswordSection
-              userId={user.id}
-              onChangePassword={handleChangePassword}
-              showToast={showToast}
-            />
-
-            <AddressSection
-              addresses={addresses}
-              loading={addressesLoading}
-              error={addressesError}
-              user={user}
-              onSaveAddress={handleSaveAddress}
-              onDeleteAddress={handleDeleteAddress}
-              showToast={showToast}
-            />
-
-            {/** Voir CDC */}
-            <PaymentMethodsSection data={user} />
-
-            {/* <LogoutButton handleClick={"/logout"} style={"cta-danger"} /> */}
-            <LogoutButton style={"cta-danger"} />
           </div>
-        </section>
-      )}
+        );
+      case "password":
+        return (
+          <PasswordSection
+            userId={user.id}
+            onChangePassword={handleChangePassword}
+            showToast={showToast}
+          />
+        );
+      case "addresses":
+        return (
+          <AddressSection
+            addresses={addresses}
+            loading={addressesLoading}
+            error={addressesError}
+            userId={user?.id}
+            onSaveAddress={handleSaveAddress}
+            onDeleteAddress={handleDeleteAddress}
+            showToast={showToast}
+          />
+        );
+
+      case "payment":
+        return (
+          <PaymentMethodsSection
+            methods={paymentMethods}
+            onAdd={handleAddPaymentMethod}
+            onDelete={handleDeletePaymentMethod}
+            onSetDefault={handleSetDefaultPaymentMethod}
+          />
+        );
+      case "settings":
+        return (
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Paramètres du compte</h3>
+            <LogoutButton style={"cta-danger"} handleClick={handleLogout} />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  if (loading || userError || !user) {
+    return (
+      <main className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+        <DataStatus
+          dataLength={user}
+          loading={loading}
+          loadingMessage="Chargement des données utilisateur en cours..."
+          error={userError}
+          emptyMessage="Aucune information pour cet utilisateur."
+        />
+      </main>
+    );
+  }
+
+  return (
+    <main
+      className="w-full min-h-screen bg-gray-100"
+      aria-label="Page de profil utilisateur"
+    >
+      <div className="container mx-auto px-4 py-6">
+        {/* Header avec titre */}
+        <div className="text-center mb-8">
+          <h1
+            id="profile-title"
+            className="text-3xl font-bold text-gray-800"
+            tabIndex={0}
+          >
+            {user
+              ? `Bienvenue ${user.lastname} ${user.firstname}`
+              : "Profil utilisateur"}
+          </h1>
+        </div>
+
+        {/* Layout responsive avec tabs */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {/* Navigation tabs - Mobile: horizontal, Desktop: vertical */}
+          <div className="lg:col-span-1">
+            <nav
+              className="bg-white rounded-lg shadow-md p-4"
+              role="tablist"
+              aria-label="Navigation du profil"
+            >
+              {/* Mobile: tabs horizontales avec scroll */}
+              <div className="flex flex-col items-center justify-evenly gap-2 lg:hidden space-x-2 pb-2">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    aria-controls={`panel-${tab.id}`}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+                      w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg whitespace-nowrap
+                      transition-colors duration-200 font-medium text-sm
+                      ${
+                        activeTab === tab.id
+                          ? "bg-blue-500 text-white shadow-md"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }
+                    `}
+                  >
+                    <p>
+                      <span className="text-lg">{tab.icon}</span>
+                      {""}
+                      <span>{tab.label}</span>
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+              {/* Desktop: tabs verticales */}
+              <div className="hidden lg:flex flex-col space-y-2">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    aria-controls={`panel-${tab.id}`}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+                      flex items-center space-x-3 px-4 py-3 rounded-lg text-left
+                      transition-colors duration-200 font-medium
+                      ${
+                        activeTab === tab.id
+                          ? "bg-blue-500 text-white shadow-md"
+                          : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                      }
+                    `}
+                  >
+                    <span className="text-xl">{tab.icon}</span>
+                    <span>{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+            </nav>
+          </div>
+
+          {/* Contenu principal */}
+          <div className="lg:col-span-3">
+            <div
+              id={`panel-${activeTab}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${activeTab}`}
+              className="bg-white rounded-lg shadow-md p-6"
+            >
+              {renderTabContent()}
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 };

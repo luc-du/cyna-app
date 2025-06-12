@@ -102,7 +102,6 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         required
         className="input"
       />
-
       {/* Nom */}
       <label htmlFor="lastname" className="sr-only">
         Nom
@@ -117,7 +116,6 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         required
         className="input"
       />
-
       {/* Email */}
       <label htmlFor="email" className="sr-only">
         Email
@@ -132,7 +130,6 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
         required
         className="input"
       />
-
       {/* Téléphone */}
       <label htmlFor="phone" className="sr-only">
         Téléphone
@@ -153,8 +150,6 @@ const PersonalInfoForm = ({ userData, onSave, onCancel, showToast }) => {
       <span id="phoneFormat" className="sr-only">
         Format attendu : 0X XX XX XX XX
       </span>
-
-      {/* Boutons */}
       <div className="w-full flex items-center justify-end">
         <div className="flex gap-4">
           <button

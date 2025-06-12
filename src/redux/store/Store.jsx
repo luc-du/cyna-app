@@ -4,6 +4,7 @@ import authReducer from "../slice/authSlice";
 import carouselReducer from "../slice/carouselSlice";
 import cartReducer from "../slice/cartSlice";
 import categoryReducer from "../slice/categorySlice";
+import paymentReducer from "../slice/paymentSlice";
 import productReducer from "../slice/productSlice";
 import searchReducer from "../slice/searchSlice";
 import { topProductsReducer } from "../slice/topProductsSlice";
@@ -20,9 +21,8 @@ const store = configureStore({
     topProducts: topProductsReducer,
     search: searchReducer,
     user: userReducer,
+    payment: paymentReducer,
   },
 });
 
 export default store;
-
-/* checked */
