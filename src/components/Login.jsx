@@ -69,7 +69,7 @@ const Login = () => {
           type="email"
           name="email"
           placeholder="Adresse e-mail"
-          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="input"
           onChange={handleChange}
           required
         />
@@ -79,7 +79,7 @@ const Login = () => {
           type="password"
           name="password"
           placeholder="Mot de passe"
-          className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="input"
           onChange={handleChange}
           required
         />

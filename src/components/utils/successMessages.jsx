@@ -15,6 +15,9 @@ export const ADDRESS_DELETE_SUCCESS = "Adresse supprimée avec succès.";
 export const ITEM_ADDED_TO_CART = "Produit ajouté au panier.";
 export const ITEM_REMOVED_FROM_CART = "Produit retiré du panier.";
 
-// --- Commandes (si prévu) ---
+// --- Commandes---
 export const ORDER_SUCCESS = "Commande validée avec succès.";
 export const PAYMENT_SUCCESS = "Paiement effectué avec succès.";
+
+// --- Moyens de paiement
+export const PAYMENT_ADDED_SUCCESS = "Moyen de paiement ajouté avec succès";
