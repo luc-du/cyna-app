@@ -14,6 +14,12 @@ import {
   updateAddress,
 } from "../redux/slice/addressSlice";
 import { changeUserPassword, logout } from "../redux/slice/authSlice";
+import {
+  addPaymentMethod,
+  deletePaymentMethod,
+  fetchPaymentMethods,
+  setDefaultPaymentMethod,
+} from "../redux/slice/paymentSlice";
 import { fetchUserProfile, updateUserProfile } from "../redux/slice/userSlice";
 import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
@@ -45,16 +51,26 @@ const Profile = () => {
 
   const tabs = profileTabs;
 
+  // Profil utilisateur
   const {
     user,
     loading: userLoading,
     error: userError,
   } = useSelector((state) => state.user);
+
+  // Adresses
   const {
     list: addresses,
     loading: addressesLoading,
     error: addressesError,
   } = useSelector((state) => state.address);
+
+  // Moyens de paiement
+  const {
+    list: paymentMethods,
+    loading: paymentLoading,
+    error: paymentError,
+  } = useSelector((state) => state.payment);
 
   const loading = userLoading || (!user && !userError);
 
@@ -68,13 +84,19 @@ const Profile = () => {
     }
   }, [dispatch, user]);
 
-  // Déconnexion
+  // Chargement des moyens de paiement à l'entrée de l'onglet
+  useEffect(() => {
+    if (activeTab === "payment" && user?.customerId) {
+      dispatch(fetchPaymentMethods(user.customerId));
+    }
+  }, [dispatch, activeTab, user?.customerId]);
+
+  // Handlers
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
-  // Mise à jour de l'avatar
   const handleAvatarUpload = async (file) => {
     if (!user?.id) return;
     try {
@@ -86,7 +108,6 @@ const Profile = () => {
     }
   };
 
-  // Mise à jour des informations personnelles
   const handleUpdateProfile = async (updates) => {
     if (!user?.id) return;
     try {
@@ -98,7 +119,6 @@ const Profile = () => {
     }
   };
 
-  // Mise à jour du mot de passe
   const handleChangePassword = async (payload) => {
     try {
       await dispatch(changeUserPassword(payload)).unwrap();
@@ -115,7 +135,6 @@ const Profile = () => {
     }
   };
 
-  // Création ou modification d'une adresse
   const handleSaveAddress = async (addressData) => {
     if (!user?.id) return;
     try {
@@ -140,7 +159,6 @@ const Profile = () => {
     }
   };
 
-  // Suppression d'une adresse
   const handleDeleteAddress = async (addressId) => {
     try {
       await dispatch(deleteAddress(addressId)).unwrap();
@@ -148,6 +166,38 @@ const Profile = () => {
       showToast("Adresse supprimée avec succès", "success");
     } catch {
       showToast("Erreur lors de la suppression de l'adresse", "error");
+    }
+  };
+
+  const handleAddPaymentMethod = async (data) => {
+    try {
+      await dispatch(
+        addPaymentMethod({ ...data, customerId: user.customerId })
+      ).unwrap();
+      dispatch(fetchPaymentMethods(user.customerId));
+      showToast("Carte ajoutée avec succès", "success");
+    } catch {
+      showToast("Erreur lors de l'ajout de la carte", "error");
+    }
+  };
+
+  const handleDeletePaymentMethod = async (id) => {
+    try {
+      await dispatch(deletePaymentMethod(id)).unwrap();
+      dispatch(fetchPaymentMethods(user.customerId));
+      showToast("Carte supprimée avec succès", "success");
+    } catch {
+      showToast("Erreur lors de la suppression de la carte", "error");
+    }
+  };
+
+  const handleSetDefaultPaymentMethod = async (id) => {
+    try {
+      await dispatch(setDefaultPaymentMethod(id)).unwrap();
+      dispatch(fetchPaymentMethods(user.customerId));
+      showToast("Carte par défaut définie", "success");
+    } catch {
+      showToast("Erreur lors de la définition de la carte par défaut", "error");
     }
   };
 
@@ -188,9 +238,12 @@ const Profile = () => {
 
       case "payment":
         return (
-          <>
-            <PaymentMethodsSection />
-          </>
+          <PaymentMethodsSection
+            methods={paymentMethods}
+            onAdd={handleAddPaymentMethod}
+            onDelete={handleDeletePaymentMethod}
+            onSetDefault={handleSetDefaultPaymentMethod}
+          />
         );
       case "settings":
         return (
@@ -231,7 +284,6 @@ const Profile = () => {
             className="text-3xl font-bold text-gray-800"
             tabIndex={0}
           >
-            {/* {Profil utilisateur} */}
             {user
               ? `Bienvenue ${user.lastname} ${user.firstname}`
               : "Profil utilisateur"}
