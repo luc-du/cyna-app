@@ -109,12 +109,21 @@ export const API_ROUTES = {
 
   // --- PAYMENT METHODS
   PAYMENT_METHODS: {
-    // Paiement : méthodes de paiement
     GET_ALL: (customerId) =>
-      `/subscriptions/payment-methods?customerId=${customerId}`,
-    CREATE: `/subscriptions/payment-methods`,
-    DELETE: (id) => `/subscriptions/payment-methods/${id}`,
-    SET_DEFAULT: (id) => `/subscriptions/payment-methods/${id}/default`,
+      getApiUrl(
+        SUBSCRIPTION_HOST,
+        `/subscriptions/payment-methods?customerId=${encodeURIComponent(
+          customerId
+        )}`
+      ),
+    CREATE: getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods`),
+    DELETE: (id) =>
+      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods/${id}`),
+    SET_DEFAULT: (id) =>
+      getApiUrl(
+        SUBSCRIPTION_HOST,
+        `/subscriptions/payment-methods/${id}/default`
+      ),
   },
   // ─── CATEGORIES ─────────────────────────────────────────────────────────────
   CATEGORIES: {

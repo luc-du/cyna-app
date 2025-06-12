@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PAYMENT_ADDED_ERROR } from "../../components/utils/errorMessages";
 import { PAYMENT_ADDED_SUCCESS } from "../../components/utils/successMessages";
-import * as subscriptionService from "../services/subscriptionService";
 
 // Thunk pour POST /payment-methods
 export const addPaymentMethod = createAsyncThunk(
