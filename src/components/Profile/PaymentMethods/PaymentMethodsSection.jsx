@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import CTAButton from "../../shared/buttons/CTAButton";
 import ModalOverlay from "../../ui/ModalOverlay";
-import PaymentMethodForm from "./PaymentMethodForm";
 import PaymentMethodList from "./PaymentMethodList";
+import StripeCheckoutForm from "./StripeCheckoutForm";
 
 /**
  * Section « Méthodes de paiement » du profil utilisateur.
@@ -38,12 +38,18 @@ const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
 
       {isModalOpen && (
         <ModalOverlay onClose={() => setIsModalOpen(false)}>
-          <PaymentMethodForm
+          {/* <PaymentMethodForm
             onSubmit={(data) => {
               onAdd(data);
               setIsModalOpen(false);
             }}
             onCancel={() => setIsModalOpen(false)}
+          /> */}
+          <StripeCheckoutForm
+            onToken={(pmId) => {
+              onAdd(pmId);
+              setIsModalOpen(false);
+            }}
           />
         </ModalOverlay>
       )}

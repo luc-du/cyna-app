@@ -4,7 +4,7 @@ import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
  * Formulaire d’ajout d’une carte.
- *
+ * MOCKED OFFLINE
  * @param {Function} onSubmit – reçoit { customerId, type, number, month, year, cvc }.
  * @param {Function} onCancel
  */
@@ -32,7 +32,7 @@ const PaymentMethodForm = ({ onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    onSubmit({ cardholderName, type, number, month, year, cvc });
+    onSubmit({ cardholderName, type: "CARD", number, month, year, cvc });
   };
 
   return (

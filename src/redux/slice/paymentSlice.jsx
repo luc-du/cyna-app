@@ -8,7 +8,7 @@ import paymentService from "../../services/paymentService";
 // 1. Récupérer toutes les méthodes de paiement
 export const fetchPaymentMethods = createAsyncThunk(
   "payment/fetchAll",
-  async (customerId, { rejectWithValue }) => {
+  async (customerId = 45, { rejectWithValue }) => {
     try {
       const data = await paymentService.fetchPaymentMethods(customerId);
       return data;
