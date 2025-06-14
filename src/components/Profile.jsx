@@ -20,7 +20,11 @@ import {
   fetchPaymentMethods,
   setDefaultPaymentMethod,
 } from "../redux/slice/paymentSlice";
-import { fetchUserProfile, updateUserProfile } from "../redux/slice/userSlice";
+import {
+  createStripeCustomer,
+  fetchUserProfile,
+  updateUserProfile,
+} from "../redux/slice/userSlice";
 import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
 import AddressSection from "./Profile/Address/AddressSection";
@@ -81,15 +85,27 @@ const Profile = () => {
     }
     if (user?.id) {
       dispatch(getUserAddresses(user.id));
+      console.log("Redux user state:", user);
     }
   }, [dispatch, user]);
 
-  // Chargement des moyens de paiement à l'entrée de l'onglet
   useEffect(() => {
-    if (activeTab === "payment" && user?.customerId) {
-      dispatch(fetchPaymentMethods(user.customerId));
+    if (activeTab !== "payment" || !user) return;
+
+    // 1) Si pas encore de customerId, on le crée
+    if (!user.customerId) {
+      console.log("Création Stripe Customer…");
+      dispatch(createStripeCustomer())
+        .unwrap()
+        .then(() => console.log("Customer créé, reload profil"))
+        .catch((e) => console.error("Erreur createStripeCustomer:", e));
+      return; // on sort, on attend la mise à jour de user.customerId
     }
-  }, [dispatch, activeTab, user?.customerId]);
+
+    // 2) Dès qu’on a le customerId, on fetch les méthodes
+    console.log("FetchPaymentMethods pour", user.customerId);
+    dispatch(fetchPaymentMethods(user.customerId));
+  }, [activeTab, user, dispatch]);
 
   // Handlers
   const handleLogout = () => {

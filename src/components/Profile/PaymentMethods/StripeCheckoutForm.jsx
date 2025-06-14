@@ -36,9 +36,14 @@ const StripeCheckoutForm = ({ onToken }) => {
 
     const card = elements.getElement(CardElement);
 
+    // const { error, paymentMethod } = await stripe.createPaymentMethod({
+    //   type: "card",
+    //   card,
+    // });
+
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
-      card,
+      card: elements.getElement(CardElement),
     });
 
     if (error) {
