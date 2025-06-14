@@ -1,49 +1,65 @@
+// src/components/Profile/Payment/PaymentMethodListItem.jsx
 import PropTypes from "prop-types";
+import {
+  FaCcMastercard as MastercardIcon,
+  FaCcVisa as VisaIcon,
+} from "react-icons/fa";
 import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
- * Affiche une carte avec actions.
- *
- * @param {Object} method
- * @param {Function} onDelete
- * @param {Function} onSetDefault
+ * Affiche une carte de paiement avec ses actions.
  */
 const PaymentMethodListItem = ({ method, onDelete, onSetDefault }) => {
   const { cardholderName, last4, expiryMonth, expiryYear, type, isDefault } =
     method;
-  console.log(method);
+
+  // Choix de l'icône selon le type
+  const BrandIcon = type?.toLowerCase().includes("visa")
+    ? VisaIcon
+    : type?.toLowerCase().includes("master")
+    ? MastercardIcon
+    : null;
 
   return (
-    <li className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-      <div className="">
-        <p className="font-medium">
-          {type} •••• {last4}
-        </p>
-        <p className="text-sm text-gray-600">
-          Exp: {expiryMonth}/{expiryYear}{" "}
-          {cardholderName && `— ${cardholderName}`}
-        </p>
+    <li className="flex items-center justify-between bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex items-center space-x-4">
+        {BrandIcon && <BrandIcon className="w-8 h-8" />}
+        <div>
+          <p className="font-medium text-gray-800">
+            •••• <span className="font-mono">{last4}</span>
+          </p>
+          <p className="text-sm text-gray-500">
+            Expiration{" "}
+            <span className="font-mono">{`${expiryMonth
+              ?.toString()
+              .padStart(2, "0")}/${expiryYear?.toString().slice(-2)}`}</span>
+          </p>
+          {cardholderName && (
+            <p className="text-sm text-gray-600 italic">{cardholderName}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-2">
         {isDefault && (
-          <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded">
+          <span className="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full mr-2">
             Par défaut
           </span>
         )}
-      </div>
-      <div className="flex space-x-4">
-        <CTAButton
-          handleClick={onDelete}
-          aria-label={`Supprimer la carte ${last4}`}
-          className="cta-danger"
-          label="Supprimer"
-        />
         {!isDefault && (
           <CTAButton
             handleClick={onSetDefault}
-            aria-label={`Définir la carte ${last4} par défaut`}
-            className="cta-success"
+            aria-label={`Définir la carte •••• ${last4} par défaut`}
+            className="cta-success text-sm px-3 py-1"
             label="Défaut"
           />
         )}
+        <CTAButton
+          handleClick={onDelete}
+          aria-label={`Supprimer la carte •••• ${last4}`}
+          className="cta-danger text-sm px-3 py-1"
+          label="Supprimer"
+        />
       </div>
     </li>
   );
