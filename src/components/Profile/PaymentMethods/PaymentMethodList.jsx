@@ -2,19 +2,19 @@ import PropTypes from "prop-types";
 import PaymentMethodListItem from "./PaymentMethodListItem";
 /**
  * Liste les méthodes de paiement.
- *
- * Si `methods` est vide, affiche les mocks.
  */
 const PaymentMethodList = ({ methods, onDelete, onSetDefault }) => {
-  const list =
-    // Array.isArray(methods) && methods.length > 0
-    //   ? methods
-    //   : MOCK_PAYMENT_METHODS;
-    Array.isArray(methods) && methods.length > 0 ? methods : [];
+  if (!Array.isArray(methods) || methods.length === 0) {
+    return (
+      <p className="text-gray-500 italic">
+        Aucune carte de paiement enregistrée pour le moment.
+      </p>
+    );
+  }
 
   return (
     <ul role="list" className="space-y-4">
-      {list.map((pm) => (
+      {methods.map((pm) => (
         <PaymentMethodListItem
           key={pm.id}
           method={pm}
@@ -25,7 +25,6 @@ const PaymentMethodList = ({ methods, onDelete, onSetDefault }) => {
     </ul>
   );
 };
-
 PaymentMethodList.propTypes = {
   methods: PropTypes.arrayOf(
     PropTypes.shape({

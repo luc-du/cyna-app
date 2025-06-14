@@ -91,7 +91,6 @@ const Profile = () => {
     }
     if (user?.id) {
       dispatch(getUserAddresses(user.id));
-      console.log("Redux user state:", user);
     }
   }, [dispatch, user]);
 
@@ -194,7 +193,6 @@ const Profile = () => {
   const handleAddPaymentMethod = async (paymentMethodId) => {
     try {
       await dispatch(
-        // addPaymentMethod({ ...paymentMethodId, customerId: user.customerIdn })
         addPaymentMethod({ customerId: user.customerId, paymentMethodId })
       ).unwrap();
       dispatch(fetchPaymentMethods(user.customerId));
@@ -216,11 +214,15 @@ const Profile = () => {
 
   const handleSetDefaultPaymentMethod = async (id) => {
     try {
-      await dispatch(setDefaultPaymentMethod(id)).unwrap();
-      dispatch(fetchPaymentMethods(user.customerId));
+      await dispatch(
+        setDefaultPaymentMethod({ id, customerId: user.customerId })
+      ).unwrap();
+      // dispatch(fetchPaymentMethods(user.customerId));//mise à jour géré par l'extraReducer
       showToast(PAYMENT_SET_DEFAULT_SUCCESS, "success");
+      console.log("Set default");
     } catch {
       showToast(PAYMENT_SET_DEFAULT_ERROR, "error");
+      console.log("Set default");
     }
   };
 

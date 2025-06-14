@@ -30,7 +30,7 @@ const PaymentMethodListItem = ({
 
   return (
     <>
-      <li className="flex items-center justify-between bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+      <li className="flex flex-wrap items-center justify-between bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
         <div className="flex items-center space-x-4">
           {BrandIcon && <BrandIcon className="w-8 h-8" />}
           <div>
@@ -50,14 +50,9 @@ const PaymentMethodListItem = ({
         </div>
 
         <div className="flex items-center space-x-2">
-          {isDefault && (
-            <span className="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full mr-2">
-              Par défaut
-            </span>
-          )}
           {!isDefault && (
             <CTAButton
-              handleClick={onSetDefault}
+              handleClick={() => onSetDefault(method.id)}
               aria-label={`Définir la carte •••• ${last4} par défaut`}
               className="cta-success text-sm px-3 py-1"
               label="Défaut"
@@ -70,6 +65,9 @@ const PaymentMethodListItem = ({
             label={deleting === method.id ? "Suppression…" : "Supprimer"}
             disabled={deleting === method.id}
           />
+        </div>
+        <div className="w-full my-2">
+          {isDefault && <p className="text-green-500 ">Carte par défaut</p>}
         </div>
       </li>
       {showConfirm && (

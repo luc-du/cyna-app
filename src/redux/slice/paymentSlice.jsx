@@ -47,9 +47,11 @@ export const deletePaymentMethod = createAsyncThunk(
 // 4. Définir une méthode par défaut
 export const setDefaultPaymentMethod = createAsyncThunk(
   "payment/setDefault",
-  async (id, { rejectWithValue }) => {
+  async ({ id, customerId }, { rejectWithValue }) => {
     try {
-      await paymentService.setDefaultPaymentMethod(id);
+      await paymentService.setDefaultPaymentMethod(id, customerId);
+      console.log("SetDefault card");
+
       return id;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);

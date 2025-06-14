@@ -119,10 +119,12 @@ export const API_ROUTES = {
     CREATE: getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-method`),
     DELETE: (id) =>
       getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods/${id}`),
-    SET_DEFAULT: (id) =>
+    SET_DEFAULT: ({ id, customerId }) =>
       getApiUrl(
         SUBSCRIPTION_HOST,
-        `/subscriptions/payment-methods/${id}/default`
+        `/subscriptions/payment-methods/${encodeURIComponent(
+          id
+        )}/default?customerId=${encodeURIComponent(customerId)}`
       ),
   },
   // ─── CATEGORIES ─────────────────────────────────────────────────────────────
