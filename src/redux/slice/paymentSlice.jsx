@@ -64,6 +64,7 @@ const initialState = {
   list: [],
   loading: false,
   error: null,
+  deleting: null,
 };
 
 const paymentSlice = createSlice({
@@ -104,9 +105,10 @@ const paymentSlice = createSlice({
 
     // deletePaymentMethod
     builder
-      .addCase(deletePaymentMethod.pending, (state) => {
+      .addCase(deletePaymentMethod.pending, (state, { meta }) => {
         state.loading = true;
         state.error = null;
+        state.deleting = meta.arg;
       })
       .addCase(deletePaymentMethod.fulfilled, (state, action) => {
         state.loading = false;

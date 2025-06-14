@@ -21,3 +21,7 @@ export const PAYMENT_SUCCESS = "Paiement effectué avec succès.";
 
 // --- Moyens de paiement
 export const PAYMENT_ADDED_SUCCESS = "Moyen de paiement ajouté avec succès";
+export const PAYMENT_DELETION_SUCCESS =
+  "Carte de paiement supprimée avec succès";
+export const PAYMENT_SET_DEFAULT_SUCCESS =
+  "Carte par défaut définie avec succès";

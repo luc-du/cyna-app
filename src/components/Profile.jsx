@@ -34,9 +34,15 @@ import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
   AVATAR_UPLOAD_ERROR,
+  PAYMENT_ADDED_ERROR,
+  PAYMENT_DELETION_ERROR,
+  PAYMENT_SET_DEFAULT_ERROR,
 } from "./utils/errorMessages";
 import {
   AVATAR_UPLOAD_SUCCESS,
+  PAYMENT_ADDED_SUCCESS,
+  PAYMENT_DELETION_SUCCESS,
+  PAYMENT_SET_DEFAULT_SUCCESS,
   PROFILE_UPDATE_SUCCESS,
 } from "./utils/successMessages";
 
@@ -192,9 +198,9 @@ const Profile = () => {
         addPaymentMethod({ customerId: user.customerId, paymentMethodId })
       ).unwrap();
       dispatch(fetchPaymentMethods(user.customerId));
-      showToast("Carte ajoutée avec succès", "success");
+      showToast(PAYMENT_ADDED_SUCCESS, "success");
     } catch {
-      showToast("Erreur lors de l'ajout de la carte", "error");
+      showToast(PAYMENT_ADDED_ERROR, "error");
     }
   };
 
@@ -202,9 +208,9 @@ const Profile = () => {
     try {
       await dispatch(deletePaymentMethod(id)).unwrap();
       dispatch(fetchPaymentMethods(user.customerId));
-      showToast("Carte supprimée avec succès", "success");
+      showToast(PAYMENT_DELETION_SUCCESS, "success");
     } catch {
-      showToast("Erreur lors de la suppression de la carte", "error");
+      showToast(PAYMENT_DELETION_ERROR, "error");
     }
   };
 
@@ -212,9 +218,9 @@ const Profile = () => {
     try {
       await dispatch(setDefaultPaymentMethod(id)).unwrap();
       dispatch(fetchPaymentMethods(user.customerId));
-      showToast("Carte par défaut définie", "success");
+      showToast(PAYMENT_SET_DEFAULT_SUCCESS, "success");
     } catch {
-      showToast("Erreur lors de la définition de la carte par défaut", "error");
+      showToast(PAYMENT_SET_DEFAULT_ERROR, "error");
     }
   };
 
