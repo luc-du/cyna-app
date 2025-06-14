@@ -185,10 +185,11 @@ const Profile = () => {
     }
   };
 
-  const handleAddPaymentMethod = async (data) => {
+  const handleAddPaymentMethod = async (paymentMethodId) => {
     try {
       await dispatch(
-        addPaymentMethod({ ...data, customerId: user.customerId })
+        // addPaymentMethod({ ...paymentMethodId, customerId: user.customerIdn })
+        addPaymentMethod({ customerId: user.customerId, paymentMethodId })
       ).unwrap();
       dispatch(fetchPaymentMethods(user.customerId));
       showToast("Carte ajoutée avec succès", "success");

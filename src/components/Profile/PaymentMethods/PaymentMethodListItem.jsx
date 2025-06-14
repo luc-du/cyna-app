@@ -11,6 +11,7 @@ import CTAButton from "../../shared/buttons/CTAButton";
 const PaymentMethodListItem = ({ method, onDelete, onSetDefault }) => {
   const { cardholderName, last4, expiryMonth, expiryYear, type, isDefault } =
     method;
+  console.log(method);
 
   return (
     <li className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">

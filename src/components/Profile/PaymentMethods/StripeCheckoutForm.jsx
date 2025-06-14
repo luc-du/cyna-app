@@ -29,37 +29,74 @@ const StripeCheckoutForm = ({ onToken }) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
+      setError("Stripe n'est pas encore prêt. Veuillez patienter.");
       return;
     }
 
     setLoading(true);
+    setError(null); //reset des autres erreurs
 
-    const card = elements.getElement(CardElement);
+    // Récupérer l'élément CardElement de stripe
+    const cardElement = elements.getElement(CardElement);
 
-    // const { error, paymentMethod } = await stripe.createPaymentMethod({
-    //   type: "card",
-    //   card,
-    // });
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: elements.getElement(CardElement),
-    });
-
-    if (error) {
-      setError(error.message);
-    } else {
-      // Si la création de la méthode de paiement est réussie, appelle la fonction onToken avec l'ID de la méthode de paiement
-      onToken(paymentMethod.id);
+    if (!cardElement) {
+      // Si CardElement n'est pas trouvé, cela signifie un problème avec le rendu de Stripe Elements.
+      setError(
+        "Impossible de récupérer le champ de carte. Veuillez réessayer."
+      );
+      setLoading(false); // S'assurer de désactiver le chargement
+      return;
     }
-    setLoading(false);
+
+    try {
+      // Créer une méthode de paiement via Stripe
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+      });
+
+      // débogage
+      console.log("Payment Method created by Stripe:", paymentMethod);
+
+      if (error) {
+        // Gérer les erreurs renvoyées par Stripe (ex: carte invalide)
+        setError(error.message);
+      } else {
+        onToken(paymentMethod.id);
+        cardElement.clear(); //Effacer les champs de la carte après succès
+      }
+    } catch (err) {
+      // Gérer les erreurs inattendues (réseau)
+      console.error(
+        "Erreur inattendue lors de la création de la méthode de paiement:",
+        err
+      );
+      setError(err.message || "Une erreur inattendue est survenue.");
+    } finally {
+      setLoading(false); // Désactiver l'état de chargement, success ou error
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="form">
       {/* Composant CardElement de Stripe pour la saisie sécurisée des informations de carte */}
-      <CardElement options={{ hidePostalCode: true }} />
-      {error && <p className="text-red-600">{error}</p>}
+      <div className="mb-4">
+        {" "}
+        {/* Ajout d'une div pour le style de CardElement */}
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: "16px",
+                color: "#333",
+                "::placeholder": { color: "#888" },
+              },
+            },
+            hidePostalCode: true,
+          }}
+        />
+      </div>
+      {error && <p className="text-red-600 text-sm mb-2">{error}</p>}{" "}
       <div className="flex items-center justify-end mt-6">
         <CTAButton
           type="submit"

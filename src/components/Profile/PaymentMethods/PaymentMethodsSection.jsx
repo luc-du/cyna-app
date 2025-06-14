@@ -16,6 +16,15 @@ import StripeCheckoutForm from "./StripeCheckoutForm";
 const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleStripeTokenGenerated = async (pmId) => {
+    try {
+      await onAdd(pmId);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la carte via Stripe:", error);
+    }
+  };
+
   return (
     <section aria-labelledby="payment-heading">
       <h2 id="payment-heading" className="text-xl font-semibold mb-4">
@@ -45,12 +54,7 @@ const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
             }}
             onCancel={() => setIsModalOpen(false)}
           /> */}
-          <StripeCheckoutForm
-            onToken={(pmId) => {
-              onAdd(pmId);
-              setIsModalOpen(false);
-            }}
-          />
+          <StripeCheckoutForm onToken={handleStripeTokenGenerated} />
         </ModalOverlay>
       )}
     </section>
