@@ -14,7 +14,7 @@ const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
   const isActive = Boolean(product.active) && !disabled;
 
   const containerClass = [
-    "bg-white dark:bg-gray-700 dark:border dark:border-gray-600",
+    "h-full bg-white dark:bg-gray-700 dark:border dark:border-gray-600",
     "shadow-md rounded-lg overflow-hidden flex flex-col transition-colors duration-300",
     isActive ? "hover:shadow-xl" : "opacity-50 cursor-not-allowed",
   ].join(" ");
