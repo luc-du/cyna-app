@@ -36,7 +36,10 @@ const PaymentMethodForm = ({ onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} aria-describedby="pm-form-instructions">
+    <form
+      onSubmit={handleSubmit}
+      aria-describedby="pm-form-instructions dark:bg-white"
+    >
       <p id="pm-form-instructions" className="text-sm text-gray-600 mb-4">
         Saisissez les détails de votre carte. Tous les champs sont requis.
       </p>

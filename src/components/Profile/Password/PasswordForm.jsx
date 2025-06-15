@@ -40,13 +40,11 @@ const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 1) Confirmation
     if (form.newPassword !== form.confirm) {
       showToast("Les mots de passe ne correspondent pas.", "error");
       return;
     }
 
-    // 2) Force minimale
     if (strength === "Faible") {
       showToast(
         "Le nouveau mot de passe est trop faible (6 + majuscule, chiffre, spécial).",
@@ -70,7 +68,10 @@ const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
     >
       {/* Ancien mot de passe */}
       <div>
-        <label htmlFor="oldPassword" className="block font-medium">
+        <label
+          htmlFor="oldPassword"
+          className="block font-medium text-gray-700 dark:text-gray-300"
+        >
           Ancien mot de passe
         </label>
         <input
@@ -80,13 +81,16 @@ const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
           value={form.oldPassword}
           onChange={handleChange}
           required
-          className="input"
+          className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
         />
       </div>
 
       {/* Nouveau mot de passe */}
       <div>
-        <label htmlFor="newPassword" className="block font-medium">
+        <label
+          htmlFor="newPassword"
+          className="block font-medium text-gray-700 dark:text-gray-300"
+        >
           Nouveau mot de passe
         </label>
         <input
@@ -97,9 +101,12 @@ const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
           onChange={handleChange}
           required
           aria-describedby="passwordHelp passwordStrength"
-          className="input"
+          className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
         />
-        <p id="passwordHelp" className="text-sm text-gray-500">
+        <p
+          id="passwordHelp"
+          className="text-sm text-gray-500 dark:text-gray-400"
+        >
           Doit contenir au moins 6 car., 1 majuscule, 1 chiffre, 1 car. spécial.
         </p>
       </div>
@@ -115,7 +122,10 @@ const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
 
       {/* Confirmation */}
       <div>
-        <label htmlFor="confirm" className="block font-medium">
+        <label
+          htmlFor="confirm"
+          className="block font-medium text-gray-700 dark:text-gray-300"
+        >
           Confirmer le nouveau mot de passe
         </label>
         <input
@@ -125,7 +135,7 @@ const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
           value={form.confirm}
           onChange={handleChange}
           required
-          className="input"
+          className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
         />
       </div>
 
@@ -133,7 +143,6 @@ const PasswordForm = ({ userId, onChangePassword, showToast, onCancel }) => {
       <div className="flex items-center justify-end gap-4">
         <button
           type="submit"
-          label="Enregistrer"
           className="cta-success"
           aria-label="Sauvegarder nouveau mot de passe"
         >
@@ -155,6 +164,7 @@ PasswordForm.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   onChangePassword: PropTypes.func.isRequired,
   showToast: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
 };
 
 export default PasswordForm;
