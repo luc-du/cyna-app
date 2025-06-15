@@ -6,11 +6,6 @@ const PRODUCTS_HOST = import.meta.env.VITE_API_HOST_PRODUCTS;
 const CATEGORIES_HOST = import.meta.env.VITE_API_HOST_CATEGORIES;
 const CAROUSEL_HOST = import.meta.env.VITE_API_HOST_CAROUSEL;
 
-/* */
-console.log("🔍 Debug API Routes:");
-console.log("AUTH_HOST:", AUTH_HOST);
-console.log("SUBSCRIPTION_HOST:", SUBSCRIPTION_HOST);
-
 export const API_ROUTES = {
   // ─── AUTHENTIFICATION ─────────────────────────────────────────────────────
   AUTH: {

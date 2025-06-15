@@ -47,13 +47,6 @@ const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
 
       {isModalOpen && (
         <ModalOverlay onClose={() => setIsModalOpen(false)}>
-          {/* <PaymentMethodForm
-            onSubmit={(data) => {
-              onAdd(data);
-              setIsModalOpen(false);
-            }}
-            onCancel={() => setIsModalOpen(false)}
-          /> */}
           <StripeCheckoutForm onToken={handleStripeTokenGenerated} />
         </ModalOverlay>
       )}

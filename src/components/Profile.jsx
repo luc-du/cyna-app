@@ -217,7 +217,11 @@ const Profile = () => {
       await dispatch(
         setDefaultPaymentMethod({ id, customerId: user.customerId })
       ).unwrap();
-      // dispatch(fetchPaymentMethods(user.customerId));//mise à jour géré par l'extraReducer
+
+      /* DEBUG  */
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      dispatch(fetchPaymentMethods(user.customerId)); //mise à jour géré par l'extraReducer
+      console.log("Set default success, refetching list methods");
       showToast(PAYMENT_SET_DEFAULT_SUCCESS, "success");
       console.log("Set default");
     } catch {

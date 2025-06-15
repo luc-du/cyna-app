@@ -1,30 +1,54 @@
 import PropTypes from "prop-types";
+import DataStatus from "../../shared/DataStatus";
 import PaymentMethodListItem from "./PaymentMethodListItem";
-/**
- * Liste les méthodes de paiement.
- */
-const PaymentMethodList = ({ methods, onDelete, onSetDefault }) => {
-  if (!Array.isArray(methods) || methods.length === 0) {
-    return (
-      <p className="text-gray-500 italic">
-        Aucune carte de paiement enregistrée pour le moment.
-      </p>
-    );
-  }
 
+/**
+ * Liste les méthodes de paiement utilisateur.
+ *
+ * Affiche un loader, un message d'erreur ou un message "vide" selon le statut,
+ * puis la liste des cartes.
+ *
+ * @param {Object[]} methods – Méthodes de paiement (tableau).
+ * @param {boolean} loading – Indique si les données sont en cours de chargement.
+ * @param {string|object|null} error – Message d'erreur ou objet Error.
+ * @param {Function} onDelete – Supprime une carte par son ID.
+ * @param {Function} onSetDefault – Définit la carte par défaut par son ID.
+ */
+const PaymentMethodList = ({
+  methods,
+  loading,
+  error,
+  onDelete,
+  onSetDefault,
+}) => {
   return (
-    <ul role="list" className="space-y-4">
-      {methods.map((pm) => (
-        <PaymentMethodListItem
-          key={pm.id}
-          method={pm}
-          onDelete={() => onDelete(pm.id)}
-          onSetDefault={() => onSetDefault(pm.id)}
-        />
-      ))}
-    </ul>
+    <div aria-live="polite" aria-busy={loading}>
+      {/* Loader / Erreur / Vide */}
+      <DataStatus
+        loading={loading}
+        error={error}
+        dataLength={methods}
+        loadingMessage="Chargement des moyens de paiement…"
+        emptyMessage="Aucune carte enregistrée."
+      />
+
+      {/* Liste des cartes, n'afficher que si on a des méthodes */}
+      {!loading && !error && Array.isArray(methods) && methods.length > 0 && (
+        <ul role="list" className="space-y-4" aria-label="Liste des cartes">
+          {methods.map((pm) => (
+            <PaymentMethodListItem
+              key={pm.id}
+              method={pm}
+              onDelete={() => onDelete(pm.id)}
+              onSetDefault={() => onSetDefault(pm.id)}
+            />
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
+
 PaymentMethodList.propTypes = {
   methods: PropTypes.arrayOf(
     PropTypes.shape({
@@ -36,9 +60,20 @@ PaymentMethodList.propTypes = {
       type: PropTypes.string,
       isDefault: PropTypes.bool,
     })
-  ).isRequired,
+  ),
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Error),
+    PropTypes.object,
+  ]),
   onDelete: PropTypes.func.isRequired,
   onSetDefault: PropTypes.func.isRequired,
+};
+
+PaymentMethodList.defaultProps = {
+  methods: [],
+  error: null,
 };
 
 export default PaymentMethodList;
