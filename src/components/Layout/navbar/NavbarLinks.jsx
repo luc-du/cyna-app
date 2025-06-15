@@ -1,6 +1,5 @@
 import {
   FaHome,
-  FaShoppingCart,
   FaSignInAlt,
   FaSignOutAlt,
   FaThList,
@@ -11,46 +10,42 @@ import { Link } from "react-router-dom";
 import { logout } from "../../../redux/slice/authSlice";
 
 export default function NavbarLinks() {
-  // 1.State
   const dispatch = useDispatch();
   const isLogged = useSelector((state) => state.auth.isAuthenticated);
 
-  // 2.Functions
-  // 3.Others
-
-  // 4.Render
   return (
-    <>
+    <div className="flex items-center justify-around flex-wrap gap-2 lg:gap-4">
       <Link to="/" className="navBarLink">
         <FaHome className="navBarLinkIcon" />
-        <span>Accueil</span>
+        <span className="hidden lg:inline">Accueil</span>
       </Link>
-      <Link to="/cart" className="navBarLink">
-        <FaShoppingCart className="navBarLinkIcon" />
-        <span>Mon panier</span>
-      </Link>
+
       <Link to="/categories" className="navBarLink">
         <FaThList className="navBarLinkIcon" />
-        <span>Catégories</span>
+        <span className="hidden lg:inline">Catégories</span>
       </Link>
+
       {isLogged ? (
-        <Link onClick={() => dispatch(logout())} className="navBarLink">
-          <FaSignOutAlt className="navBarLinkIcon" />
-          <span>Se déconnecter</span>
-        </Link>
+        <>
+          <Link
+            onClick={() => dispatch(logout())}
+            className="navBarLink"
+            to="#"
+          >
+            <FaSignOutAlt className="navBarLinkIcon" />
+            <span className="hidden lg:inline">Se déconnecter</span>
+          </Link>
+          <Link to="/profile" className="navBarLink">
+            <FaUser className="navBarLinkIcon" />
+            <span className="hidden lg:inline">Mon compte</span>
+          </Link>
+        </>
       ) : (
         <Link to="/login" className="navBarLink">
           <FaSignInAlt className="navBarLinkIcon" />
-          <span>Me connecter</span>
+          <span className="hidden lg:inline">Me connecter</span>
         </Link>
       )}
-
-      {isLogged && (
-        <Link to="/profile" className="navBarLink">
-          <FaUser className="navBarLinkIcon" />
-          <span>Mon compte</span>
-        </Link>
-      )}
-    </>
+    </div>
   );
 }

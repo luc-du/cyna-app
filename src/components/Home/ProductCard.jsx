@@ -1,29 +1,20 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { placeHolder } from "../../assets/indexImages";
+import { getImageSrc } from "../utils/getImageSrc";
 import { getPromo } from "../utils/getMockData";
 
-/**
- * ProductCard
- * - Si product.active === false, on désactive le clic et on applique l’opacité réduite.
- * - Si disabled === true, on n’affiche pas le lien.
- * - Affiche l’indicateur promo si promo === true.
- */
 const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
   if (!product || !product.id || !product.name) {
     console.warn("ProductCard – product mal formé :", product);
     return null;
   }
 
-  const imageSrc =
-    (Array.isArray(product.images) && product.images[0]?.url) || placeHolder;
-
+  const imageSrc = getImageSrc(product);
   const promotion = product.promo ? getPromo(product.id) : null;
   const isActive = Boolean(product.active) && !disabled;
 
-  // Classe pour désactiver le clic et atténuer l’opacité si inactif
   const containerClass = [
-    "shadow-md rounded-lg overflow-hidden h-full flex flex-col transition",
+    "shadow-md rounded-lg overflow-hidden h-full flex flex-col transition bg-white dark:bg-gray-800",
     isActive ? "hover:shadow-xl" : "opacity-50 cursor-not-allowed",
   ].join(" ");
 
@@ -38,26 +29,29 @@ const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
       </div>
       <div className="flex flex-col flex-1 justify-between gap-2 p-4">
         <div>
-          <h3 className="text-lg font-semibold">{product.name}</h3>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+            {product.name}
+          </h3>
           {promotion && (
             <h4 className="mb-4 text-center text-green-500 font-medium">
               {promotion}
             </h4>
           )}
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             {typeof product.amount === "number" && product.amount > 0
               ? `${product.amount.toFixed(2)} €`
               : "Prix sur demande"}
           </p>
         </div>
         {product.brand && (
-          <p className="text-sm text-gray-500 mt-1">Marque : {product.brand}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Marque : {product.brand}
+          </p>
         )}
       </div>
     </>
   );
 
-  // Si disabled ou product.active === false, on n’enroule pas dans <Link>
   if (!isActive || !linkTo) {
     return <div className={containerClass}>{content}</div>;
   }

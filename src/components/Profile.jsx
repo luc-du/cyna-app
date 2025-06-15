@@ -33,6 +33,7 @@ import DeleteAccountButton from "./Profile/DeletAccountButton";
 import LogoutButton from "./Profile/LogoutButton";
 import PasswordSection from "./Profile/Password/PasswordSection";
 import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
+import DarkModeToggle from "./ui/buttons/DarkModeToggle";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
   AVATAR_UPLOAD_ERROR,
@@ -300,7 +301,7 @@ const Profile = () => {
             </AccountSettingsSection>
 
             <AccountSettingsSection title="Mode sombre">
-              <p className="text-gray-500">@ venir</p>
+              <DarkModeToggle variant={"switch"} />
             </AccountSettingsSection>
 
             <AccountSettingsSection title="Changer de langue">
