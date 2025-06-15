@@ -68,7 +68,7 @@ const CartSummary = ({ total, cartLength }) => {
         <CTAButton
           label="Passer à la caisse"
           link="/checkout"
-          style="w-full mt-6"
+          className={"cta-success"}
         />
       </div>
     </div>

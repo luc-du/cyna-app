@@ -22,18 +22,6 @@ h3 {
   @apply text-primary text-xl font-semibold mb-4 dark:text-white;
 }
 
-/* p {
-  @apply text-primary dark:text-white;
-} */
-
-/* p {
-  @apply text-gray-700 dark:text-gray-300;
-} */
-
-/* p {
-  @apply text-primary dark:text-white;
-} */
-
 .btn {
   @apply flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition bg-primary hover:bg-CTAHover;
 }

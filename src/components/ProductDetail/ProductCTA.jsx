@@ -49,11 +49,12 @@ const ProductCTA = ({ product }) => {
             ? `Ajouter au panier : ${product.name}`
             : `Produit indisponible : ${product.name}`
         }
-        className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition ${
-          isAvailable
-            ? "bg-primary hover:bg-CTAHover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            : "bg-gray-400 cursor-not-allowed"
-        }`}
+        className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition 
+  ${
+    isAvailable
+      ? "bg-primary hover:bg-CTAHover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-primary dark:hover:bg-indigo-600 dark:focus:ring-white dark:focus:ring-offset-gray-900 shadow-md hover:shadow-lg"
+      : "bg-gray-400 cursor-not-allowed"
+  }`}
         onClick={handleAddToCart}
       >
         <FaCartPlus aria-hidden="true" />{" "}

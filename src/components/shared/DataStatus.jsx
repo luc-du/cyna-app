@@ -70,11 +70,4 @@ DataStatus.propTypes = {
   emptyMessage: PropTypes.string,
 };
 
-DataStatus.defaultProps = {
-  loadingMessage: "Chargement…",
-  error: null,
-  dataLength: null,
-  emptyMessage: "Aucune donnée disponible pour le moment.",
-};
-
 export default DataStatus;
