@@ -27,6 +27,7 @@ import {
 } from "../redux/slice/userSlice";
 import { deleteUserProfile, uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
+import AccountSettingsSection from "./Profile/AccountSettings/AccountSettingsSection";
 import AddressSection from "./Profile/Address/AddressSection";
 import DeleteAccountButton from "./Profile/DeletAccountButton";
 import LogoutButton from "./Profile/LogoutButton";
@@ -293,8 +294,28 @@ const Profile = () => {
         return (
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Paramètres du compte</h3>
-            <LogoutButton style={"cta-danger"} handleClick={handleLogout} />
-            <DeleteAccountButton onConfirm={handleDeleteAccount} />
+
+            <AccountSettingsSection title="Newsletter">
+              <p className="text-gray-500">@ venir</p>
+            </AccountSettingsSection>
+
+            <AccountSettingsSection title="Mode sombre">
+              <p className="text-gray-500">@ venir</p>
+            </AccountSettingsSection>
+
+            <AccountSettingsSection title="Changer de langue">
+              <p className="text-gray-500">@ venir</p>
+            </AccountSettingsSection>
+
+            <AccountSettingsSection title="Suppression du compte">
+              <DeleteAccountButton onConfirm={handleDeleteAccount} />
+            </AccountSettingsSection>
+
+            <AccountSettingsSection title="Déconnexion">
+              <div className="flex justify-center">
+                <LogoutButton style={"cta-danger"} handleClick={handleLogout} />
+              </div>
+            </AccountSettingsSection>
           </div>
         );
 
