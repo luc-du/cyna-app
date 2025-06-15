@@ -1,5 +1,6 @@
 import cynaItLogo from "./cyna_it_logo.jpeg";
 import emptyCartIcon from "./icons/emptyCart.svg";
+import IconCrossCircle from "./icons/IconCrossCircle";
 import cert from "./images/cert.jpg";
 import cloud from "./images/cloud.jpg";
 import edr from "./images/edr.jpg";
@@ -40,6 +41,7 @@ export const indexImages = [
   logoCynaWhite,
   logoPng,
   placeHolder,
+  IconCrossCircle,
 ];
 
 // Icônes spécifiques

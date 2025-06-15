@@ -20,7 +20,11 @@ import {
   fetchPaymentMethods,
   setDefaultPaymentMethod,
 } from "../redux/slice/paymentSlice";
-import { fetchUserProfile, updateUserProfile } from "../redux/slice/userSlice";
+import {
+  createStripeCustomer,
+  fetchUserProfile,
+  updateUserProfile,
+} from "../redux/slice/userSlice";
 import { uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
 import AddressSection from "./Profile/Address/AddressSection";
@@ -30,9 +34,15 @@ import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
   AVATAR_UPLOAD_ERROR,
+  PAYMENT_ADDED_ERROR,
+  PAYMENT_DELETION_ERROR,
+  PAYMENT_SET_DEFAULT_ERROR,
 } from "./utils/errorMessages";
 import {
   AVATAR_UPLOAD_SUCCESS,
+  PAYMENT_ADDED_SUCCESS,
+  PAYMENT_DELETION_SUCCESS,
+  PAYMENT_SET_DEFAULT_SUCCESS,
   PROFILE_UPDATE_SUCCESS,
 } from "./utils/successMessages";
 
@@ -84,12 +94,23 @@ const Profile = () => {
     }
   }, [dispatch, user]);
 
-  // Chargement des moyens de paiement à l'entrée de l'onglet
   useEffect(() => {
-    if (activeTab === "payment" && user?.customerId) {
-      dispatch(fetchPaymentMethods(user.customerId));
+    if (activeTab !== "payment" || !user) return;
+
+    // 1) Si pas encore de customerId, on le crée
+    if (!user.customerId) {
+      console.log("Création Stripe Customer…");
+      dispatch(createStripeCustomer())
+        .unwrap()
+        .then(() => console.log("Customer créé, reload profil"))
+        .catch((e) => console.error("Erreur createStripeCustomer:", e));
+      return; // on sort, on attend la mise à jour de user.customerId
     }
-  }, [dispatch, activeTab, user?.customerId]);
+
+    // 2) Dès qu’on a le customerId, on fetch les méthodes
+    console.log("FetchPaymentMethods pour", user.customerId);
+    dispatch(fetchPaymentMethods(user.customerId));
+  }, [activeTab, user, dispatch]);
 
   // Handlers
   const handleLogout = () => {
@@ -169,15 +190,15 @@ const Profile = () => {
     }
   };
 
-  const handleAddPaymentMethod = async (data) => {
+  const handleAddPaymentMethod = async (paymentMethodId) => {
     try {
       await dispatch(
-        addPaymentMethod({ ...data, customerId: user.customerId })
+        addPaymentMethod({ customerId: user.customerId, paymentMethodId })
       ).unwrap();
       dispatch(fetchPaymentMethods(user.customerId));
-      showToast("Carte ajoutée avec succès", "success");
+      showToast(PAYMENT_ADDED_SUCCESS, "success");
     } catch {
-      showToast("Erreur lors de l'ajout de la carte", "error");
+      showToast(PAYMENT_ADDED_ERROR, "error");
     }
   };
 
@@ -185,19 +206,27 @@ const Profile = () => {
     try {
       await dispatch(deletePaymentMethod(id)).unwrap();
       dispatch(fetchPaymentMethods(user.customerId));
-      showToast("Carte supprimée avec succès", "success");
+      showToast(PAYMENT_DELETION_SUCCESS, "success");
     } catch {
-      showToast("Erreur lors de la suppression de la carte", "error");
+      showToast(PAYMENT_DELETION_ERROR, "error");
     }
   };
 
   const handleSetDefaultPaymentMethod = async (id) => {
     try {
-      await dispatch(setDefaultPaymentMethod(id)).unwrap();
-      dispatch(fetchPaymentMethods(user.customerId));
-      showToast("Carte par défaut définie", "success");
+      await dispatch(
+        setDefaultPaymentMethod({ id, customerId: user.customerId })
+      ).unwrap();
+
+      /* DEBUG  */
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      dispatch(fetchPaymentMethods(user.customerId)); //mise à jour géré par l'extraReducer
+      console.log("Set default success, refetching list methods");
+      showToast(PAYMENT_SET_DEFAULT_SUCCESS, "success");
+      console.log("Set default");
     } catch {
-      showToast("Erreur lors de la définition de la carte par défaut", "error");
+      showToast(PAYMENT_SET_DEFAULT_ERROR, "error");
+      console.log("Set default");
     }
   };
 
