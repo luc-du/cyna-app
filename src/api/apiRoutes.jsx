@@ -6,11 +6,6 @@ const PRODUCTS_HOST = import.meta.env.VITE_API_HOST_PRODUCTS;
 const CATEGORIES_HOST = import.meta.env.VITE_API_HOST_CATEGORIES;
 const CAROUSEL_HOST = import.meta.env.VITE_API_HOST_CAROUSEL;
 
-/* */
-console.log("🔍 Debug API Routes:");
-console.log("AUTH_HOST:", AUTH_HOST);
-console.log("AUTH_SUBSCRIPTION:", AUTH_HOST.VITE_API_HOST_SUBSCRIPTION);
-
 export const API_ROUTES = {
   // ─── AUTHENTIFICATION ─────────────────────────────────────────────────────
   AUTH: {
@@ -82,7 +77,7 @@ export const API_ROUTES = {
       "/subscriptions/subscription/cancel"
     ),
     UPDATE_SUBSCRIPTION: (subscriptionId) =>
-      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/subscriptionId`),
+      getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/${subscriptionId}`),
     GET_BY_CUSTOMER: (customerId) =>
       getApiUrl(
         SUBSCRIPTION_HOST,
@@ -116,13 +111,15 @@ export const API_ROUTES = {
           customerId
         )}`
       ),
-    CREATE: getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods`),
+    CREATE: getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-method`),
     DELETE: (id) =>
       getApiUrl(SUBSCRIPTION_HOST, `/subscriptions/payment-methods/${id}`),
-    SET_DEFAULT: (id) =>
+    SET_DEFAULT: ({ id, customerId }) =>
       getApiUrl(
         SUBSCRIPTION_HOST,
-        `/subscriptions/payment-methods/${id}/default`
+        `/subscriptions/payment-methods/${encodeURIComponent(
+          id
+        )}/default?customerId=${encodeURIComponent(customerId)}`
       ),
   },
   // ─── CATEGORIES ─────────────────────────────────────────────────────────────

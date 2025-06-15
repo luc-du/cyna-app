@@ -56,9 +56,25 @@ const DataStatus = ({
 DataStatus.propTypes = {
   loading: PropTypes.bool.isRequired,
   loadingMessage: PropTypes.string,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Error)]),
-  dataLength: PropTypes.any,
+  error: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Error),
+    PropTypes.object,
+  ]),
+  dataLength: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+    PropTypes.number,
+    PropTypes.string,
+  ]),
   emptyMessage: PropTypes.string,
+};
+
+DataStatus.defaultProps = {
+  loadingMessage: "Chargement…",
+  error: null,
+  dataLength: null,
+  emptyMessage: "Aucune donnée disponible pour le moment.",
 };
 
 export default DataStatus;

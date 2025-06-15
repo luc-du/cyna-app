@@ -4,6 +4,7 @@ import {
   AUTH_PROFILE_UPDATE_ERROR,
   AUTH_PROFILE_UPLOAD_ERROR,
 } from "../../components/utils/errorMessages";
+import { createCustomer as apiCreateCustomer } from "../../services/subscriptionService";
 import * as userService from "../../services/userService";
 
 /* Thunks */
@@ -51,11 +52,37 @@ export const uploadProfileImage = createAsyncThunk(
   }
 );
 
+/**
+ * Créer un Customer Stripe pour l’utilisateur courant.
+ */
+export const createStripeCustomer = createAsyncThunk(
+  "user/createStripeCustomer",
+  async (_, { getState, dispatch, rejectWithValue }) => {
+    const { user } = getState().user;
+    if (!user) {
+      return rejectWithValue("Utilisateur non connecté");
+    }
+    try {
+      await apiCreateCustomer({
+        userId: user.id,
+        name: `${user.firstname} ${user.lastname}`,
+        email: user.email,
+      });
+      // re-récupère le profil mis à jour
+      await dispatch(fetchUserProfile(user.id)).unwrap();
+      return true;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
 /* Slice */
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    profile: null,
+    // profile: null,
+    user: null,
     loading: false,
     error: null,
   },
@@ -69,18 +96,17 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Récupération du profil réussie
-      .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.error = null;
-      })
-      // Récupération du profil échouée
-      .addCase(fetchUserProfile.rejected, (state, action) => {
-        state.error = action.payload;
-      })
-      .addCase(updateUserProfile.pending, (state, action) => {
+      .addCase(fetchUserProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.profile = action.payload;
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.user = payload;
+      })
+      .addCase(fetchUserProfile.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
       })
 
       .addCase(updateUserProfile.fulfilled, (state, action) => {
@@ -102,9 +128,20 @@ const userSlice = createSlice({
           state.loading = false;
           state.error = action.payload;
         }
-      );
+      )
+      // createStripeCustomer
+      .addCase(createStripeCustomer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createStripeCustomer.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(createStripeCustomer.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+      });
   },
 });
-
 export const { clearUserState } = userSlice.actions;
 export default userSlice.reducer;

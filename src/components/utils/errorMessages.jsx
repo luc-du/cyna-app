@@ -83,4 +83,8 @@ export const PASSWORD_INPUTTED_ERROR =
 
 // ---Moyens de paiement
 export const PAYMENT_ADDED_ERROR =
-  "Erreur lors de l'ajout du moyen de paiement";
+  "Erreur lors de l'ajout de la carte de paiement";
+export const PAYMENT_DELETION_ERROR =
+  "Erreur lors de la suppression de la carte de paiement";
+export const PAYMENT_SET_DEFAULT_ERROR =
+  "Erreur lors de la définition de la carte de paiement par défaut";

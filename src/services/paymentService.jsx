@@ -47,10 +47,11 @@ const paymentService = {
    * Définit une carte comme défaut.
    * @param {string} id
    */
-  setDefaultPaymentMethod: async (id) => {
+  // paymentService.js (correction)
+  setDefaultPaymentMethod: async (id, customerId) => {
     const token = getToken();
     const response = await axios.patch(
-      API_ROUTES.PAYMENT_METHODS.SET_DEFAULT(id),
+      API_ROUTES.PAYMENT_METHODS.SET_DEFAULT({ id, customerId }),
       null,
       { headers: { Authorization: `Bearer ${token}` } }
     );

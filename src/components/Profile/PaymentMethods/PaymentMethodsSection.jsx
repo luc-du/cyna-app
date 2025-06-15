@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import CTAButton from "../../shared/buttons/CTAButton";
 import ModalOverlay from "../../ui/ModalOverlay";
-import PaymentMethodForm from "./PaymentMethodForm";
 import PaymentMethodList from "./PaymentMethodList";
+import StripeCheckoutForm from "./StripeCheckoutForm";
 
 /**
  * Section « Méthodes de paiement » du profil utilisateur.
@@ -15,6 +15,15 @@ import PaymentMethodList from "./PaymentMethodList";
  */
 const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleStripeTokenGenerated = async (pmId) => {
+    try {
+      await onAdd(pmId);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la carte via Stripe:", error);
+    }
+  };
 
   return (
     <section aria-labelledby="payment-heading">
@@ -38,13 +47,7 @@ const PaymentMethodsSection = ({ methods, onAdd, onDelete, onSetDefault }) => {
 
       {isModalOpen && (
         <ModalOverlay onClose={() => setIsModalOpen(false)}>
-          <PaymentMethodForm
-            onSubmit={(data) => {
-              onAdd(data);
-              setIsModalOpen(false);
-            }}
-            onCancel={() => setIsModalOpen(false)}
-          />
+          <StripeCheckoutForm onToken={handleStripeTokenGenerated} />
         </ModalOverlay>
       )}
     </section>
