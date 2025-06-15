@@ -20,7 +20,7 @@ const TopProductsGrid = () => {
 
   return (
     <section
-      className="w-full py-10 px-6 md:px-20 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300"
+      className="w-full py-10 px-6 md:px-20 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 rounded-2xl dark:border-gray-700 transition-colors duration-300"
       aria-labelledby="top-products-heading"
       aria-describedby="top-products-desc"
       role="region"
@@ -46,7 +46,7 @@ const TopProductsGrid = () => {
         dataLength={safeTopProducts.length}
       />
       <div
-        className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6 transition-colors duration-300"
+        className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start transition-colors duration-300"
         role="list"
         aria-label="Liste des top produits"
         tabIndex={0}

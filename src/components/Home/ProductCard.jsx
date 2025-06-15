@@ -14,10 +14,9 @@ const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
   const isActive = Boolean(product.active) && !disabled;
 
   const containerClass = [
-    "shadow-md rounded-lg overflow-hidden h-full flex flex-col transition bg-white dark:bg-gray-800",
+    "shadow-md rounded-lg overflow-hidden h-full flex flex-col transition",
     isActive ? "hover:shadow-xl" : "opacity-50 cursor-not-allowed",
   ].join(" ");
-
   const content = (
     <>
       <div className="w-full">
