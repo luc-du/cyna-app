@@ -11,16 +11,28 @@
 }
 
 h1 {
-  @apply text-primary text-2xl font-bold mb-4;
+  @apply text-primary text-2xl font-bold mb-4 dark:text-white;
 }
 
 h2 {
-  @apply text-primary text-2xl font-bold mb-4;
+  @apply text-primary text-2xl font-bold mb-4 dark:text-white;
 }
 
 h3 {
-  @apply text-primary text-xl font-semibold mb-4;
+  @apply text-primary text-xl font-semibold mb-4 dark:text-white;
 }
+
+/* p {
+  @apply text-primary dark:text-white;
+} */
+
+/* p {
+  @apply text-gray-700 dark:text-gray-300;
+} */
+
+/* p {
+  @apply text-primary dark:text-white;
+} */
 
 .btn {
   @apply flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition bg-primary hover:bg-CTAHover;
@@ -28,13 +40,12 @@ h3 {
 
 /* FeedBack */
 .error-feedback {
-  @apply text-red-500;
+  @apply text-red-500 dark:text-red-400;
 }
 
 .loading-feedback {
-  @apply text-green-500;
+  @apply text-green-500 dark:text-green-400;
 }
-
 /* Profile */
 
 .container-cta {
@@ -42,9 +53,9 @@ h3 {
 }
 
 .container-profile-section {
-  @apply py-4;
-  /* border border-slate-200 rounded-2xl gap-4 p-4 */
+  @apply py-4 dark:bg-gray-900 dark:text-white;
 }
+
 .cta-profile-style {
   @apply underline;
 }
@@ -78,9 +89,9 @@ h3 {
 
 @layer components {
   .form {
-    @apply bg-white p-6 flex flex-col gap-4 w-full max-w-md;
+    @apply bg-white p-6 flex flex-col gap-4 w-full max-w-md dark:bg-gray-800;
   }
   .input {
-    @apply mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-300;
+    @apply mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-300 dark:bg-gray-900 dark:border-gray-600 dark:text-white;
   }
 }

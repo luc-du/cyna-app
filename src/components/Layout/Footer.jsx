@@ -1,11 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
+import { FaFacebook, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="hidden sm:flex flex-col items-center p-4 bg-primaryBackground text-white w-full bottom-0 shadow-md">
+    <footer className="hidden sm:flex flex-col items-center p-4 bg-primaryBackground text-white w-full bottom-0 shadow-md dark:bg-gray-900 dark:text-white transition-colors duration-300">
       <div className="flex flex-row space-x-4 mb-4">
         <Link to="/terms" className="hover:text-gray-400 text-white">
           CGU
