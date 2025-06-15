@@ -25,9 +25,10 @@ import {
   fetchUserProfile,
   updateUserProfile,
 } from "../redux/slice/userSlice";
-import { uploadProfileImage } from "../services/userService";
+import { deleteUserProfile, uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
 import AddressSection from "./Profile/Address/AddressSection";
+import DeleteAccountButton from "./Profile/DeletAccountButton";
 import LogoutButton from "./Profile/LogoutButton";
 import PasswordSection from "./Profile/Password/PasswordSection";
 import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
@@ -37,6 +38,7 @@ import {
   PAYMENT_ADDED_ERROR,
   PAYMENT_DELETION_ERROR,
   PAYMENT_SET_DEFAULT_ERROR,
+  USER_DELETE_ERROR,
 } from "./utils/errorMessages";
 import {
   AVATAR_UPLOAD_SUCCESS,
@@ -44,6 +46,7 @@ import {
   PAYMENT_DELETION_SUCCESS,
   PAYMENT_SET_DEFAULT_SUCCESS,
   PROFILE_UPDATE_SUCCESS,
+  USER_DELETE_SUCCESS,
 } from "./utils/successMessages";
 
 /**
@@ -78,8 +81,8 @@ const Profile = () => {
   // Moyens de paiement
   const {
     list: paymentMethods,
-    loading: paymentLoading,
-    error: paymentError,
+    // loading: paymentLoading,
+    // error: paymentError,
   } = useSelector((state) => state.payment);
 
   const loading = userLoading || (!user && !userError);
@@ -219,14 +222,26 @@ const Profile = () => {
       ).unwrap();
 
       /* DEBUG  */
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // await new Promise((resolve) => setTimeout(resolve, 500));
       dispatch(fetchPaymentMethods(user.customerId)); //mise à jour géré par l'extraReducer
       console.log("Set default success, refetching list methods");
       showToast(PAYMENT_SET_DEFAULT_SUCCESS, "success");
-      console.log("Set default");
     } catch {
       showToast(PAYMENT_SET_DEFAULT_ERROR, "error");
-      console.log("Set default");
+    }
+  };
+
+  /* Settings */
+  const handleDeleteAccount = async () => {
+    if (!user?.id) return;
+    try {
+      await deleteUserProfile(user.id);
+      showToast(USER_DELETE_SUCCESS, "success");
+      await fetchUserProfile();
+      navigate("/");
+    } catch (error) {
+      showToast(USER_DELETE_ERROR, "error");
+      console.error(error);
     }
   };
 
@@ -279,8 +294,10 @@ const Profile = () => {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Paramètres du compte</h3>
             <LogoutButton style={"cta-danger"} handleClick={handleLogout} />
+            <DeleteAccountButton onConfirm={handleDeleteAccount} />
           </div>
         );
+
       default:
         return null;
     }
