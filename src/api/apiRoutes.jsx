@@ -37,6 +37,8 @@ export const API_ROUTES = {
         `/auth/password-forgot?email=${encodeURIComponent(email)}`
       ),
     CHANGE_PASSWORD: () => getApiUrl(AUTH_HOST, "/auth/change-password"),
+    RESET_PASSWORD: (email) =>
+      `/auth/password-forgot?email=${encodeURIComponent(email)}`,
   },
 
   // ─── UTILISATEUR ───────────────────────────────────────────────────────────
