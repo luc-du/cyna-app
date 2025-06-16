@@ -1,3 +1,9 @@
+import {
+  FaCcAmex as AmericanExpressIcon,
+  FaCcJcb,
+  FaCcMastercard as MastercardIcon,
+  FaCcVisa as VisaIcon,
+} from "react-icons/fa";
 import cynaItLogo from "./cyna_it_logo.jpeg";
 import emptyCartIcon from "./icons/emptyCart.svg";
 import IconCrossCircle from "./icons/IconCrossCircle";
@@ -20,7 +26,7 @@ import logoPng from "./logo.png";
 import placeHolder from "./placeholder.svg";
 
 /**
- * Tableau indexé de toutes les images pour import global
+ * Tableau indexé de toutes les images et icônes pour import global
  */
 export const indexImages = [
   cert,
@@ -41,16 +47,19 @@ export const indexImages = [
   logoCynaWhite,
   logoPng,
   placeHolder,
+  emptyCartIcon,
   IconCrossCircle,
 ];
 
-// Icônes spécifiques
-export const icons = [emptyCartIcon];
+// Les icônes spécifiques peuvent toujours être exportées individuellement si nécessaire,
+// mais ne sont plus nécessaires dans un tableau séparé si elles sont dans indexImages.
+export const icons = []; // Ce tableau peut être vidé ou supprimé si toutes les icônes sont dans indexImages
 
 /**
  * Exports nommés pour chaque asset, si vous voulez y accéder individuellement
  */
 export {
+  AmericanExpressIcon,
   cert,
   cloud,
   cynaItLogo,
@@ -58,16 +67,20 @@ export {
   edrPremium,
   emptyBox,
   emptyCartIcon,
+  FaCcJcb,
+  IconCrossCircle,
   identity,
   idImg,
   logoCynaWhite,
   logoPng,
+  MastercardIcon,
   placeHolder,
   security,
   siem,
   soc,
   socPremium,
   technology,
+  VisaIcon,
   xdr,
   xdrPremium,
 };

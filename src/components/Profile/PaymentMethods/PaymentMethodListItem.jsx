@@ -1,11 +1,8 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import {
-  FaCcMastercard as MastercardIcon,
-  FaCcVisa as VisaIcon,
-} from "react-icons/fa";
 import CTAButton from "../../shared/buttons/CTAButton";
 import ConfirmModal from "../../ui/ConfirmModal";
+import setCardIcon from "../../utils/setCardIcon";
 
 /**
  * Affiche une carte de paiement avec ses actions.
@@ -21,18 +18,14 @@ const PaymentMethodListItem = ({
 
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // Choix de l'icône selon le type
-  const BrandIcon = type?.toLowerCase().includes("visa")
-    ? VisaIcon
-    : type?.toLowerCase().includes("master")
-    ? MastercardIcon
-    : null;
-
+  const CardIcon = setCardIcon(type);
+  console.log("Type passed to setCardIcon:", type);
+  console.log("Result of setCardIcon (CardIcon):", CardIcon);
   return (
     <>
       <li className="flex flex-wrap items-center justify-between bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
-        <div className="flex items-center space-x-4">
-          {BrandIcon && <BrandIcon className="w-8 h-8" />}
+        <div className="flex items-center space-x-4 ml-4">
+          <CardIcon className="w-10 h-10 object-contain text-black" />
           <div>
             <p className="font-medium text-gray-800">
               •••• <span className="font-mono">{last4}</span>

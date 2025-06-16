@@ -70,11 +70,7 @@ const CartSummary = ({ total, cartLength }) => {
       </div>
 
       <div id="cart-actions" className="mt-6 flex justify-end">
-        <CTAButton
-          label="Procéder au paiement"
-          link="/checkout"
-          // className="cta-success"
-        />
+        <CTAButton label="Procéder au paiement" link="/checkout" />
       </div>
     </section>
   );

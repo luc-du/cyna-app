@@ -1,6 +1,13 @@
 import PropTypes from "prop-types";
 import DataStatus from "../shared/DataStatus";
+import setCardIcon from "../utils/setCardIcon";
 
+/**
+ * Sélecteur de moyen de paiement pour l’abonnement.
+ * @param {object[]} methodsPaymentList – Liste des cartes disponibles
+ * @param {string|number|null} selectedId – ID sélectionné
+ * @param {function} onSelect – Callback pour mettre à jour la sélection
+ */
 const PaymentSelector = ({
   methodsPaymentList,
   selectedId,
@@ -20,10 +27,14 @@ const PaymentSelector = ({
         emptyMessage="Aucun moyen de paiement enregistré pour le moment"
         loadingMessage="Chargement de la liste des moyens de paiement"
       />
-      <h3>Moyens de paiement</h3>
-      <p className="text-gray-400 dark:text-white my-2">
+
+      <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+        Moyens de paiement
+      </h3>
+      <p className="text-gray-500 dark:text-gray-300 mb-4 text-sm">
         Sélectionner une carte pour procéder au paiement
       </p>
+
       {Array.isArray(methodsPaymentList) && methodsPaymentList.length > 0 && (
         <ul role="list" className="space-y-4" aria-label="Liste des cartes">
           {methodsPaymentList.map((pm) => {
@@ -34,50 +45,56 @@ const PaymentSelector = ({
               expiryYear,
               isDefault,
               last4,
+              type,
             } = pm;
+
+            // Composant d'icône
+            const CardIcon = setCardIcon(type);
+            console.log("🪪type card", type);
+
             return (
-              <>
-                <li
-                  id={id}
-                  className="flex flex-wrap items-center justify-between bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition"
-                >
-                  <input
-                    type="radio"
-                    id={`address-${id}`}
-                    name="address"
-                    checked={selectedId === id}
-                    onChange={() => onSelect(id)}
-                    className="mt-1 accent-blue-600"
-                  />
-                  <div className="flex items-center space-x-4">
-                    {/* {BrandIcon && <BrandIcon className="w-8 h-8" />} */}
-                    <div>
-                      <p className="font-medium text-gray-800">
-                        •••• <span className="font-mono">{last4}</span>
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Expiration{" "}
-                        <span className="font-mono">{`${expiryMonth
+              <li
+                key={id}
+                className="flex flex-wrap items-center justify-between bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg p-4 shadow-sm hover:shadow-md transition"
+              >
+                <input
+                  type="radio"
+                  id={`payment-${id}`}
+                  name="payment"
+                  checked={selectedId === id}
+                  onChange={() => onSelect(id)}
+                  className="mt-1 accent-blue-600"
+                />
+                <div className="flex items-center space-x-4 ml-4">
+                  <CardIcon className="w-10 h-10 object-contain" />
+                  <div>
+                    <p className="font-medium text-gray-800 dark:text-white">
+                      •••• <span className="font-mono">{last4}</span>
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Expiration{" "}
+                      <span className="font-mono">
+                        {`${expiryMonth
                           ?.toString()
                           .padStart(2, "0")}/${expiryYear
                           ?.toString()
-                          .slice(-2)}`}</span>
+                          .slice(-2)}`}
+                      </span>
+                    </p>
+                    {cardholderName && (
+                      <p className="text-sm italic text-gray-500 dark:text-gray-400">
+                        {cardholderName}
                       </p>
-                      {cardholderName && (
-                        <p className="text-sm text-gray-600 italic">
-                          {cardholderName}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="w-full my-2">
-                    {isDefault && (
-                      <p className="text-green-500 ">Carte par défaut</p>
                     )}
                   </div>
-                </li>
-              </>
+                </div>
+
+                {isDefault && (
+                  <p className="w-full mt-2 text-sm text-green-500">
+                    Carte par défaut
+                  </p>
+                )}
+              </li>
             );
           })}
         </ul>
@@ -86,9 +103,7 @@ const PaymentSelector = ({
   );
 };
 
-export default PaymentSelector;
-
-PaymentSelector.prototype = {
+PaymentSelector.propTypes = {
   methodsPaymentList: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -105,3 +120,5 @@ PaymentSelector.prototype = {
   loading: PropTypes.bool,
   error: PropTypes.string,
 };
+
+export default PaymentSelector;

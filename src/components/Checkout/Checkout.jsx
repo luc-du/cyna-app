@@ -32,7 +32,7 @@ export default function Checkout() {
   const methodPaymentError = useSelector((state) => state.payment.error);
   const methodPaymentLoading = useSelector((state) => state.payment.loading);
 
-  /* Debug corriger le naming de user et auth sur fetchUserProfile - doublon de 💩 */
+  /* 📌Debug corriger le naming de user et auth sur fetchUserProfile - doublon de 💩 */
   const userId = user?.id;
   const customerId = user?.customerId;
 
@@ -57,7 +57,7 @@ export default function Checkout() {
       dispatch(fetchPaymentMethods(customerId));
       console.log(fetchPaymentMethods(customerId));
     }
-  }, [dispatch, user, userId]);
+  }, [dispatch, user, userId, customerId]);
 
   const handleSelectAddress = (id) => {
     setSelectedAddressId(id);
