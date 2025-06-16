@@ -222,6 +222,7 @@ const Profile = () => {
       navigate("/");
     } catch (error) {
       showToast(USER_DELETE_ERROR, "error");
+      console.log(error);
     }
   };
 
@@ -273,17 +274,17 @@ const Profile = () => {
             <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
               Paramètres du compte
             </h3>
-            <AccountSettingsSection title="Newsletter">
-              <p className="text-gray-500 dark:text-gray-400">@ venir</p>
-            </AccountSettingsSection>
             <AccountSettingsSection title="Mode sombre">
               <DarkModeToggle variant={"switch"} />
+            </AccountSettingsSection>
+            <AccountSettingsSection title="Suppression du compte">
+              <DeleteAccountButton onConfirm={handleDeleteAccount} />
             </AccountSettingsSection>
             <AccountSettingsSection title="Changer de langue">
               <p className="text-gray-500 dark:text-gray-400">@ venir</p>
             </AccountSettingsSection>
-            <AccountSettingsSection title="Suppression du compte">
-              <DeleteAccountButton onConfirm={handleDeleteAccount} />
+            <AccountSettingsSection title="Newsletter">
+              <p className="text-gray-500 dark:text-gray-400">@ venir</p>
             </AccountSettingsSection>
             <AccountSettingsSection title="Déconnexion">
               <div className="flex justify-center">

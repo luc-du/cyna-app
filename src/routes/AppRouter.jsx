@@ -7,7 +7,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import CartPage from "../pages/CartPage";
 import CategoriesPage from "../pages/CategoriesPage";
 import CategoryPage from "../pages/CategoryPage";
-import Checkout from "../pages/Checkout";
+import CheckoutPage from "../pages/CheckoutPage";
 import ContactPage from "../pages/ContactPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import Homepage from "../pages/Homepage";
@@ -36,7 +36,7 @@ const AppRouter = () => {
         {/* Flow cart > checkout */}
         <Route path="/cart" element={<CartPage />} />
         <Route path="/order" element={<OrderPage />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
 
         {/* Auth */}
         <Route path="/register" element={<RegisterPage />} />

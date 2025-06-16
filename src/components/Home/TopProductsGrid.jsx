@@ -46,7 +46,7 @@ const TopProductsGrid = () => {
         dataLength={safeTopProducts.length}
       />
       <div
-        className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start transition-colors duration-300"
+        className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch transition-colors duration-300"
         role="list"
         aria-label="Liste des top produits"
         tabIndex={0}
