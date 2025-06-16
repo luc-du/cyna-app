@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { clearCart } from "../../redux/slice/cartSlice";
+import CTAButton from "../shared/buttons/CTAButton";
 
 /**
  * Bouton d'action pour vider le panier.
@@ -12,14 +13,13 @@ const CartActions = () => {
 
   return (
     <div className="mt-6 flex">
-      <button
+      <CTAButton
         type="button"
-        onClick={() => dispatch(clearCart())}
+        handleClick={() => dispatch(clearCart())}
         className="text-red-500 dark:text-red-400 underline px-6 py-3 rounded-md font-semibold hover:text-red-600 dark:hover:text-red-300 transition-colors duration-200"
         aria-label="Vider tous les articles du panier"
-      >
-        Vider le panier
-      </button>
+        label={"Vider le panier"}
+      />
     </div>
   );
 };

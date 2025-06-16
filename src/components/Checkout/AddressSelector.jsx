@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import DataStatus from "../shared/DataStatus";
 
 /**
  * Permet à l'utilisateur de choisir une adresse pour l'abonnement.
@@ -6,15 +7,20 @@ import PropTypes from "prop-types";
  * @param {string|number|null} selectedId – Adresse sélectionnée.
  * @param {function} onSelect – Callback (id) quand l'utilisateur change de choix.
  */
-export default function AddressSelector({ addresses, selectedId, onSelect }) {
-  if (!addresses?.length) {
-    return (
-      <p className="text-sm text-red-600 dark:text-red-400">
-        Aucune adresse disponible. Veuillez en ajouter une dans votre profil.
-      </p>
-    );
-  }
-
+export default function AddressSelector({
+  addresses,
+  selectedId,
+  onSelect,
+  loading,
+  error,
+}) {
+  <DataStatus
+    loading={loading}
+    error={error}
+    dataLength={addresses}
+    loadingMessage="Chargement des adresses..."
+    emptyMessage="Aucune adresse enregistrée"
+  />;
   return (
     <section
       className="bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-6"
@@ -59,11 +65,13 @@ AddressSelector.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
-      postcode: PropTypes.string,
+      postcode: PropTypes.number,
       city: PropTypes.string,
       country: PropTypes.string,
     })
   ).isRequired,
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onSelect: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
 };
