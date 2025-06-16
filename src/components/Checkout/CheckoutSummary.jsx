@@ -1,4 +1,6 @@
 import PropTypes from "prop-types";
+import EmptyState from "../ui/EmptyState";
+import { getImageSrc } from "../utils/getImageSrc";
 
 /**
  * Résumé du produit sélectionné dans le panier
@@ -8,14 +10,11 @@ import PropTypes from "prop-types";
  */
 export default function CheckoutSummary({ product, quantity }) {
   if (!product) {
-    return (
-      <div className="text-red-600 dark:text-red-400">
-        Aucun produit sélectionné.
-      </div>
-    );
+    return <EmptyState message="Aucun produit sélectionné." />;
   }
 
   const total = product.price * quantity;
+  const imageUrl = getImageSrc(product);
 
   return (
     <section
@@ -31,7 +30,7 @@ export default function CheckoutSummary({ product, quantity }) {
 
       <div className="flex items-center gap-4">
         <img
-          src={product.image || "/placeholder.png"}
+          src={imageUrl}
           alt={product.name}
           className="w-24 h-24 object-cover rounded-md border"
         />

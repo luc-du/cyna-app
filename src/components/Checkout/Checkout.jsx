@@ -14,7 +14,11 @@ export default function Checkout() {
   const { showToast } = useGlobalToast();
 
   const cart = useSelector((state) => state.cart);
-  const item = cart.items?.[0];
+  console.log("🧪 Cart state:", cart);
+  // const item = cart.items?.[0];
+  const item = cart?.items?.length > 0 ? cart?.items[0] : null;
+  // const item = cart?.items?.length > 0 ? cart?.items[0] : MOCK_ITEM;
+  console.log("🧪 Produit dans le panier :", item);
 
   const addresses = useSelector((state) => state.address.list);
   const user = useSelector((state) => state.user.user);
@@ -66,7 +70,7 @@ export default function Checkout() {
   return (
     <main className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Valider mon abonnement</h1>
-      <CheckoutSummary product={item.product} quantity={item.quantity} />
+      <CheckoutSummary product={item} quantity={item.quantity} />
       <AddressSelector
         addresses={addresses}
         selectedId={selectedAddressId}
