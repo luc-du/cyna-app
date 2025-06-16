@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { getUserAddresses } from "../../redux/slice/addressSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
+import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
 import AddressSelector from "./AddressSelector";
 import CheckoutSummary from "./CheckoutSummary";
 
 export default function Checkout() {
   const dispatch = useDispatch();
-  const showToast = useGlobalToast();
+  const navigate = useNavigate();
+  const { showToast } = useGlobalToast();
+
   const cart = useSelector((state) => state.cart);
   const item = cart.items?.[0];
 
@@ -16,6 +20,7 @@ export default function Checkout() {
   const user = useSelector((state) => state.user.user);
 
   const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (user?.id) dispatch(getUserAddresses(user.id));
@@ -24,6 +29,25 @@ export default function Checkout() {
   const handleSelectedAddresses = (id) => {
     setSelectedAddressId(id);
     showToast("Adresse sélectionnée", "warning");
+  };
+
+  const handleConfirm = () => {
+    if (!selectedAddressId) {
+      showToast("Veuillez sélectionner une adresse avant de valider", "error");
+      return;
+    }
+
+    // Simulation de paiement
+    setIsProcessing(true);
+    showToast("Paiement en cours...", "info");
+
+    setTimeout(() => {
+      setIsProcessing(false);
+      showToast("Paiement validé avec succès", "success");
+
+      // Redirection
+      navigate("/order", { state: { orderConfirmed: true } });
+    }, 2000);
   };
 
   if (!item) {
@@ -48,6 +72,17 @@ export default function Checkout() {
         selectedId={selectedAddressId}
         onSelect={handleSelectedAddresses}
       />
+      <div className="flex justify-end mt-6">
+        <CTAButton
+          label={
+            isProcessing ? "Traitement en cours..." : "Confirmer mon abonnement"
+          }
+          // className={"cta-primary"}
+          handleClick={handleConfirm}
+          disabled={isProcessing}
+          aria-label="Valider l'abonnement et simuler le paiement"
+        />
+      </div>
     </main>
   );
 }
