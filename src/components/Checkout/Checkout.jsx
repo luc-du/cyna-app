@@ -43,7 +43,8 @@ export default function Checkout() {
 
   const [isProcessing, setIsProcessing] = useState(false);
   // useAuthEffect();
-  console.log("📌user from authSlice", user);
+
+  // 📌 géré l'état non auth et logout
 
   // CGV:
   const [agreedToCGV, setAgreedToCGV] = useState(false);
