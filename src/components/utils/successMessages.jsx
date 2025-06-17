@@ -2,9 +2,10 @@
 export const LOGIN_SUCCESS = "Connexion réussie.";
 export const REGISTER_SUCCESS = "Inscription effectuée avec succès.";
 
-// --- Profil utilisateur ---
+// --- USER ---
 export const PROFILE_UPDATE_SUCCESS = "Profil mis à jour avec succès.";
 export const AVATAR_UPLOAD_SUCCESS = "Avatar mis à jour avec succès.";
+export const USER_DELETE_SUCCESS = "Compte utilisateur supprimé avec succès";
 
 // --- Adresses ---
 export const ADDRESS_CREATE_SUCCESS = "Adresse ajoutée avec succès.";

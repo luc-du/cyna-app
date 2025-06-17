@@ -1,5 +1,10 @@
+const {
+  darkMode,
+} = require("@tailwindcss/postcss7-compat/stubs/defaultConfig.stub");
+
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {

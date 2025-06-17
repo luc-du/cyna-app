@@ -8,6 +8,7 @@ import paymentReducer from "../slice/paymentSlice";
 import productReducer from "../slice/productSlice";
 import searchReducer from "../slice/searchSlice";
 import { topProductsReducer } from "../slice/topProductsSlice";
+import uiReducer from "../slice/uiSlice";
 import userReducer from "../slice/userSlice";
 
 const store = configureStore({
@@ -22,6 +23,7 @@ const store = configureStore({
     search: searchReducer,
     user: userReducer,
     payment: paymentReducer,
+    ui: uiReducer,
   },
 });
 

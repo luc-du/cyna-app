@@ -1,24 +1,27 @@
+import Dashboard from "@/components/Dashboard";
+import PrivateRoute from "@/components/guards/PrivateRoute";
+import ProductList from "@/components/Products/ProductList";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import CartPage from "@/pages/CartPage";
+import CategoriesPage from "@/pages/CategoriesPage";
+import CategoryPage from "@/pages/CategoryPage";
+import CgvPage from "@/pages/CgvPage";
+import CheckoutPage from "@/pages/CheckoutPage";
+import ContactPage from "@/pages/ContactPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
+import Homepage from "@/pages/Homepage";
+import LoginPage from "@/pages/LoginPage";
+import OrderPage from "@/pages/OrderPage";
+import PageNotFound from "@/pages/PageNotFound";
+import ProductPage from "@/pages/ProductPage";
+import ProfilePage from "@/pages/ProfilePage";
+import RegisterPage from "@/pages/RegisterPage";
+import SearchPage from "@/pages/SearchPage";
+import store from "@/redux/store/Store";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "../components/Dashboard";
-import PrivateRoute from "../components/guards/PrivateRoute";
-import ProductList from "../components/Products/ProductList";
-import ProtectedRoute from "../components/ProtectedRoute";
-import CartPage from "../pages/CartPage";
-import CategoriesPage from "../pages/CategoriesPage";
-import CategoryPage from "../pages/CategoryPage";
-import Checkout from "../pages/Checkout";
-import ContactPage from "../pages/ContactPage";
-import ForgotPasswordPage from "../pages/ForgotPasswordPage";
-import Homepage from "../pages/Homepage";
-import LoginPage from "../pages/LoginPage";
-import OrderPage from "../pages/OrderPage";
-import PageNotFound from "../pages/PageNotFound";
-import ProductPage from "../pages/ProductPage";
-import ProfilePage from "../pages/ProfilePage";
-import RegisterPage from "../pages/RegisterPage";
-import SearchPage from "../pages/SearchPage";
-import store from "../redux/store/Store";
+import FAQPage from "../pages/FAQPage";
+import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 
 const AppRouter = () => {
   return (
@@ -36,7 +39,7 @@ const AppRouter = () => {
         {/* Flow cart > checkout */}
         <Route path="/cart" element={<CartPage />} />
         <Route path="/order" element={<OrderPage />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
 
         {/* Auth */}
         <Route path="/register" element={<RegisterPage />} />
@@ -57,6 +60,12 @@ const AppRouter = () => {
 
         <Route path="/contact" element={<ContactPage />} />
 
+        {/* Legal */}
+        <Route path="/cgv" element={<CgvPage />} />
+        <Route path="/legal" element={<PrivacyPolicyPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+
+        {/* Error */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Provider>

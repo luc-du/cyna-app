@@ -10,11 +10,8 @@ import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 
 /**
- * Composant affichant la page panier.
- * Synchronise le panier local avec le back-end si possible.
- * Affiche les items ou le message « panier vide ».
- *
- * @returns {JSX.Element}
+ * Composant principal pour la page Panier.
+ * Gère l’affichage dynamique, la synchro avec le backend, le fallback offline, et les messages d’état.
  */
 const Cart = () => {
   const dispatch = useDispatch();
@@ -22,25 +19,20 @@ const Cart = () => {
   const total = useSelector((state) => state.cart.total);
   const { showToast, ToastComponent } = useToast();
 
-  // Local state pour indiquer qu'on synchronise
   const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
-    // À chaque monté du composant ou quand cart change, tenter de sync en ligne
     const fetchAndSync = async () => {
       if (cart.length === 0) return;
       setIsSyncing(true);
       try {
         const updatedItems = await syncCartWithServer(cart);
-        // Pour chaque item mis à jour, on met à jour le state Redux si nécessaire
         updatedItems.forEach((newItem) => {
-          // Si le prix a changé, on met à jour la quantité pour recalculer total
           const original = cart.find(
             (i) =>
               i.id === newItem.id && i.pricingModel === newItem.pricingModel
           );
           if (original) {
-            // Si prix différent → dispatch updateQuantity avec même quantité pour forcer recalcul
             if (newItem.price !== original.price) {
               dispatch(
                 updateQuantity({
@@ -50,7 +42,6 @@ const Cart = () => {
                 })
               );
             }
-            // Si statut active=false → on peut montrer toast produit indisponible
             if (newItem.active === false && original.price !== newItem.price) {
               showToast(
                 `⚠️ Le prix de ${newItem.name} a été mis à jour`,
@@ -60,52 +51,59 @@ const Cart = () => {
           }
         });
       } catch (err) {
-        // En offline, on ne fait rien, on reste sur le fallback mocks/local
-        console.warn("Pas de connexion, mode offline panier", err);
+        console.warn("🛑 Mode offline actif pour le panier", err);
       } finally {
         setIsSyncing(false);
       }
     };
 
     fetchAndSync();
-    // on ne veut exécuter qu’à la première montée ou quand length change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart.length]);
 
   return (
-    <div className="container mx-auto px-4 py-8 relative">
+    <main
+      role="main"
+      aria-labelledby="cart-title"
+      className="container mx-auto px-4 py-8 relative"
+    >
       <ToastComponent />
-      <h2 className="text-3xl text-center font-bold mb-6">Mon Panier</h2>
+      <h2
+        id="cart-title"
+        className="text-3xl text-center font-bold mb-6 text-gray-900 dark:text-white"
+      >
+        Mon Panier
+      </h2>
 
       {isSyncing && (
         <p
           role="status"
           aria-live="polite"
-          className="text-center text-gray-600 mb-4"
+          className="text-center text-gray-600 dark:text-gray-400 mb-4"
         >
           Synchronisation du panier…
         </p>
       )}
 
       {cart.length === 0 && !isSyncing ? (
-        <div className="flex flex-col mt-6 gap-6 justify-center items-center h-64">
+        <section className="flex flex-col mt-6 gap-6 justify-center items-center h-64 text-gray-700 dark:text-gray-200">
           <img
             src={emptyCartIcon}
             alt="Panier vide"
-            className="inline-block w-32 h-32 mr-2"
+            className="inline-block w-32 h-32"
           />
-          <h3>Votre panier est vide.</h3>
-          <p className="text-lg text-center text-gray-500">
+          <h3 className="text-xl font-semibold">Votre panier est vide.</h3>
+          <p className="text-lg text-center text-gray-500 dark:text-gray-400">
             Ajoutez des articles pour commencer vos achats.
           </p>
           <div className="mt-2">
-            <CTAButton label="Commencer vos achats" link={"/products"} />
+            <CTAButton label="Commencer vos achats" link="/products" />
           </div>
-        </div>
+        </section>
       ) : (
         <>
-          {/* En-tête (Desktop) */}
-          <div className="hidden md:grid grid-cols-6 gap-4 font-semibold border-b pb-2 mb-4 text-gray-700">
+          {/* En-tête (Desktop uniquement) */}
+          <div className="hidden md:grid grid-cols-6 gap-4 font-semibold border-b pb-2 mb-4 text-gray-700 dark:text-gray-300">
             <span>Service</span>
             <span>Durée</span>
             <span>Quantité</span>
@@ -115,7 +113,7 @@ const Cart = () => {
             <span></span>
           </div>
 
-          {/* Items */}
+          {/* Liste des articles */}
           <div className="flex flex-col gap-4">
             {cart.map((item) => (
               <CartItem
@@ -126,14 +124,14 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* Résumé & CTA */}
+          {/* Résumé commande + CTA */}
           <CartSummary total={total} cartLength={cart.length} />
-          <div className="sticky bottom-0 bg-white border-t mt-6 pt-4 pb-6 px-4 z-10 flex justify-end">
+          <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t dark:border-gray-700 mt-6 pt-4 pb-6 px-4 z-10 flex justify-end">
             <CartActions />
           </div>
         </>
       )}
-    </div>
+    </main>
   );
 };
 

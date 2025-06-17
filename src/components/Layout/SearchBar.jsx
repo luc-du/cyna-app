@@ -1,4 +1,3 @@
-// src/components/SearchBar.jsx
 import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -51,13 +50,14 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="relative hidden lg:block">
+    <div className="relative w-full max-w-xs min-w-0 lg:flex-shrink-0">
       <input
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Rechercher un produit ou service..."
-        className="w-64 px-3 py-1 border rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full px-3 py-1 border rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
+        // className="input"
         aria-label="Champ de recherche de produit"
       />
       {inputValue && (
@@ -72,3 +72,5 @@ export default function SearchBar() {
     </div>
   );
 }
+
+//📌en darkmode soucis de visibilité du texte dans input

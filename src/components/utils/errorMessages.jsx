@@ -66,6 +66,8 @@ export const AUTH_USER_NOT_FOUND_ERROR =
 
 /* USER */
 export const AVATAR_UPLOAD_ERROR = "Erreur lors de la mise à jour de l'avatar";
+export const USER_DELETE_ERROR =
+  "Erreur lors de la suppression du compte. Veuillez réessayer plus tard.";
 
 /* ADDRESSES */
 export const ADDRESS_CREATE_ERROR =
@@ -88,3 +90,5 @@ export const PAYMENT_DELETION_ERROR =
   "Erreur lors de la suppression de la carte de paiement";
 export const PAYMENT_SET_DEFAULT_ERROR =
   "Erreur lors de la définition de la carte de paiement par défaut";
+
+/*  */

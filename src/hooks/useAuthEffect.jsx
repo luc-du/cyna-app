@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { validateToken, logout } from "../redux/slice/authSlice";
+import { logout, validateToken } from "../redux/slice/authSlice";
 
 /**
  * Hook personnalisé pour valider le token d'authentification lors du chargement d'une page protégée.

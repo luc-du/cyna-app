@@ -4,17 +4,18 @@ import { useNavigate } from "react-router-dom";
 import cynaLogo from "../assets/logo.png";
 import { fetchUserProfile, registerUser } from "../redux/slice/authSlice";
 import { useGlobalToast } from "./GlobalToastProvider";
+import CTAButton from "./shared/buttons/CTAButton";
 import { PASSWORD_INPUTTED_ERROR, REGISTER_ERROR } from "./utils/errorMessages";
 import { checkPasswordStrength, getColorStrength } from "./utils/passwordUtils";
 import { REGISTER_SUCCESS } from "./utils/successMessages";
 
 /**
- * Le composant Register permet à un nouvel utilisateur de créer un compte.
- * Il fournit un formulaire d'inscription, un indicateur de force du mot de passe et une gestion des erreurs.
+ * Formulaire d'inscription d'un nouvel utilisateur.
+ * Gère la saisie des champs, la validation, la force du mot de passe et les notifications.
  * @component
+ * @returns {JSX.Element}
  */
 const Register = () => {
-  // État local pour les champs du formulaire
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -24,21 +25,17 @@ const Register = () => {
     role: "USER",
   });
 
-  // État pour l'erreur de mot de passe et la force du mot de passe
   const [passwordError, setPasswordError] = useState(null);
   const [passwordStrength, setPasswordStrength] = useState("Faible");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // État Redux pour l'authentification
   const { error, loading } = useSelector((state) => state.auth);
-  // Hook personnalisé pour les notifications globales
   const { showToast } = useGlobalToast();
 
   /**
-   * Gère les changements dans les champs du formulaire.
-   * Met à jour l'état local et vérifie la force du mot de passe si nécessaire.
-   * @param {Object} e
+   * Gère la mise à jour des champs du formulaire.
+   * @param {React.ChangeEvent<HTMLInputElement>} e
    */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -49,19 +46,18 @@ const Register = () => {
   };
 
   /**
-   * Gère la soumission du formulaire d'inscription.
-   * Valide la correspondance des mots de passe, déclenche l'inscription et la récupération du profil, et affiche les notifications.
-   * @param {Object} e - Événement de soumission du formulaire
+   * Gère la soumission du formulaire.
+   * Vérifie la validité des mots de passe, tente l'inscription et affiche un retour utilisateur.
+   * @param {React.FormEvent<HTMLFormElement>} e
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (form.password !== form.confirmPassword) {
-      setPasswordError("Les mots de passe saisis ne correspondent pas."); // Changed for clearer message
+      setPasswordError("Les mots de passe saisis ne correspondent pas.");
       return;
     }
 
-    // Add validation for password strength (should not be "Faible")
     if (passwordStrength === "Faible") {
       showToast(
         "Le mot de passe est trop faible. Il doit contenir au moins 6 caractères, 1 majuscule, 1 chiffre et 1 caractère spécial.",
@@ -73,20 +69,8 @@ const Register = () => {
     setPasswordError(null);
 
     try {
-      // 1. Inscription de l'utilisateur
-      await dispatch(
-        registerUser({
-          firstname: form.firstname,
-          lastname: form.lastname,
-          email: form.email,
-          password: form.password,
-          role: form.role,
-        })
-      ).unwrap();
-
-      // 2. Récupération du profil utilisateur après inscription
+      await dispatch(registerUser(form)).unwrap();
       await dispatch(fetchUserProfile()).unwrap();
-
       showToast(REGISTER_SUCCESS, "success");
       navigate("/profile");
     } catch (err) {
@@ -100,25 +84,25 @@ const Register = () => {
   };
 
   return (
-    <div className="w-full flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="w-full flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white rounded-xl shadow-md px-10 py-8 flex flex-col gap-6"
+        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md px-10 py-8 flex flex-col gap-6"
         aria-label="Formulaire d'inscription"
       >
-        {/* Logo de l'application */}
-        <div className="flex justify-center">
-          <img
-            src={cynaLogo}
-            alt="Logo de Cyna"
-            className="h-14"
-            aria-hidden="true"
-          />
+        {/* Logo */}
+        <div className="flex justify-center" aria-hidden="true">
+          <img src={cynaLogo} alt="Logo de Cyna" className="h-14" />
         </div>
-        <h1 className="text-center text-2xl font-bold text-gray-900">
+
+        <h1
+          className="text-center text-2xl font-bold text-gray-900 dark:text-white"
+          tabIndex={0}
+        >
           Créez votre compte
         </h1>
-        {/* Champ prénom */}
+
+        {/* Prénom */}
         <label htmlFor="firstname" className="sr-only">
           Prénom
         </label>
@@ -127,12 +111,13 @@ const Register = () => {
           id="firstname"
           name="firstname"
           placeholder="Prénom"
-          className="input"
+          className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
           onChange={handleChange}
           required
           autoComplete="given-name"
         />
-        {/* Champ nom */}
+
+        {/* Nom */}
         <label htmlFor="lastname" className="sr-only">
           Nom
         </label>
@@ -141,12 +126,13 @@ const Register = () => {
           id="lastname"
           name="lastname"
           placeholder="Nom"
-          className="input"
+          className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
           onChange={handleChange}
           required
           autoComplete="family-name"
         />
-        {/* Champ email */}
+
+        {/* Email */}
         <label htmlFor="email" className="sr-only">
           Adresse e-mail
         </label>
@@ -155,20 +141,24 @@ const Register = () => {
           id="email"
           name="email"
           placeholder="Adresse e-mail"
-          className="input"
+          className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
           onChange={handleChange}
           required
           autoComplete="email"
         />
-        {/* Champ mot de passe */}
+
+        {/* Mot de passe */}
         <div>
-          {" "}
-          <label htmlFor="password" className="block font-medium text-gray-700">
-            {" "}
+          <label
+            htmlFor="password"
+            className="block font-medium text-gray-700 dark:text-gray-300"
+          >
             Mot de passe
           </label>
-          {/* Exigences du mot de passe - Proactive guidance */}
-          <p id="passwordHelp" className="text-sm text-gray-500 mt-1 mb-2">
+          <p
+            id="passwordHelp"
+            className="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-2"
+          >
             {PASSWORD_INPUTTED_ERROR}
           </p>
           <input
@@ -177,12 +167,11 @@ const Register = () => {
             name="password"
             placeholder="Mot de passe"
             onChange={handleChange}
-            className="input"
+            className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             required
             aria-describedby="passwordHelp passwordStrength"
             autoComplete="new-password"
           />
-          {/* Indicateur de force du mot de passe - Reactive feedback */}
           <p
             id="passwordStrength"
             className={`text-sm ${getColorStrength(passwordStrength)} mt-2`}
@@ -192,20 +181,16 @@ const Register = () => {
           </p>
         </div>
 
-        {/* Champ confirmation du mot de passe */}
+        {/* Confirmation du mot de passe */}
         <div>
-          {" "}
-          {/* Added a div to group label and input */}
           <label
             htmlFor="confirmPassword"
-            className="block font-medium text-gray-700"
+            className="block font-medium text-gray-700 dark:text-gray-300"
           >
-            {" "}
-            {/* Changed to block and removed sr-only */}
             Confirmez le mot de passe
           </label>
           <input
-            className="input"
+            className="input dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             type="password"
             id="confirmPassword"
             name="confirmPassword"
@@ -216,22 +201,21 @@ const Register = () => {
           />
         </div>
 
-        {/* Affichage de l'erreur de mot de passe */}
+        {/* Erreur de confirmation */}
         {passwordError && (
-          <p className="text-red-500 text-sm -mt-4" role="alert">
-            {" "}
+          <p className="text-red-500 text-sm -mt-2" role="alert">
             {passwordError}
           </p>
         )}
-        {/* Bouton de soumission */}
-        <button
+
+        {/* Soumission */}
+        <CTAButton
           type="submit"
-          className="bg-purple-600 text-white py-3 rounded-md font-semibold hover:bg-purple-700 transition"
+          className="bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-md font-semibold transition"
           disabled={loading}
           aria-busy={loading}
-        >
-          {loading ? "Inscription..." : "S'inscrire"}
-        </button>
+          label={loading ? "Inscription..." : "S'inscrire"}
+        />
       </form>
     </div>
   );

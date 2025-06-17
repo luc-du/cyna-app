@@ -1,34 +1,43 @@
 import PropTypes from "prop-types";
-import { getPromo } from "../utils/getMockData.jsx";
+import { getPromo } from "../utils/getMockData";
 
+/**
+ * Affiche les informations principales d’un produit.
+ * Titre, description, promotion, prix, disponibilité.
+ */
 const ProductInfo = ({ product }) => {
-  const isAvailable = product.active;
+  const isAvailable = Boolean(product.active);
   const promotion = product.promo || getPromo(product.id);
 
   return (
-    <div className="mt-6 text-center">
-      <h1 className="text-3xl font-bold text-primary">
+    <div className="w-full mt-6 mx-auto  p-4 rounded-md bg-gray-100 dark:bg-gray-800 shadow-sm text-center space-y-4">
+      <h1 className="text-3xl font-bold text-primary dark:text-white">
         {product?.name || "Produit sans nom"}
       </h1>
-      <p className="mt-4 text-gray-600">
+
+      <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
         {product?.description || "Aucune description disponible"}
       </p>
-      <p className="mt-4 text-gray-600">{promotion}</p>
-      <span className="block mt-4 text-2xl font-semibold text-green-600">
-        {product.amount + "€"}{" "}
-        {/*classic price
-        {/* {product.amount
-          ? `${formatStripePrice(product.amount)}`
-          : `${getMockPricing(product.defaultPricing)}`} */}{" "}
-        {/* formatted price */}
-      </span>
-      <span
-        className={`block mt-2 text-sm font-semibold ${
-          product.active ? "text-green-500" : "text-red-500"
+
+      {promotion && (
+        <p className="text-sm font-medium text-green-500">🎉 {promotion}</p>
+      )}
+
+      <p className="text-2xl font-semibold text-green-600 dark:text-green-400">
+        {typeof product.amount === "number"
+          ? `${product.amount.toFixed(2)} €`
+          : "Prix sur demande"}
+      </p>
+
+      <p
+        className={`text-sm font-semibold ${
+          isAvailable
+            ? "text-green-500 dark:text-green-400"
+            : "text-red-500 dark:text-red-400"
         }`}
       >
         {isAvailable ? "Disponible immédiatement" : "Indisponible"}
-      </span>
+      </p>
     </div>
   );
 };
@@ -39,9 +48,9 @@ ProductInfo.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     amount: PropTypes.number,
-    promo: PropTypes.bool.isRequired,
+    promo: PropTypes.bool,
     defaultPricing: PropTypes.number,
-    pricingModel: PropTypes.string.isRequired,
+    pricingModel: PropTypes.string,
     active: PropTypes.bool.isRequired,
     images: PropTypes.arrayOf(
       PropTypes.shape({
