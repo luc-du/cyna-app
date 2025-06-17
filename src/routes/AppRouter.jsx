@@ -20,6 +20,7 @@ import SearchPage from "@/pages/SearchPage";
 import store from "@/redux/store/Store";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
+import FAQPage from "../pages/FAQPage";
 import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 
 const AppRouter = () => {
@@ -62,6 +63,9 @@ const AppRouter = () => {
         {/* Legal */}
         <Route path="/cgv" element={<CgvPage />} />
         <Route path="/legal" element={<PrivacyPolicyPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+
+        {/* Error */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Provider>

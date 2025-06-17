@@ -19,6 +19,12 @@ export default function Footer() {
           Mentions légales
         </Link>
         <Link
+          to="/faq"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-white"
+        >
+          FÀQ
+        </Link>
+        <Link
           to="/contact"
           className="hover:underline focus:outline-none focus:ring-2 focus:ring-white"
         >

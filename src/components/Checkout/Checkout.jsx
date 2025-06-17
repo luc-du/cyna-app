@@ -169,7 +169,7 @@ export default function Checkout() {
       >
         <h2>Conditions Générales de Ventes</h2>
         <div className="flex items-center space-x-4">
-          <label htmlFor="cgv">Accepter la C.G.V</label>
+          <label htmlFor="cgv">Accepter les C.G.V</label>
           <input
             type="checkbox"
             name="cgv"
@@ -182,7 +182,7 @@ export default function Checkout() {
           <CTAButton
             handleClick={() => setIsModalOpen(true)}
             className="underline"
-            label="Voir la C.G.V"
+            label="Voir les C.G.V"
           />
         </div>
         {isModalOpen && (
