@@ -6,8 +6,10 @@ import { getUserAddresses } from "../../redux/slice/addressSlice";
 import { fetchPaymentMethods } from "../../redux/slice/paymentSlice";
 import { fetchUserProfile } from "../../redux/slice/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
+import CGV from "../Legal/CGV";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
+import ModalOverlay from "../ui/ModalOverlay";
 import { getToken } from "../utils/authStorage";
 import AddressSelector from "./AddressSelector";
 import CheckoutSummary from "./CheckoutSummary";
@@ -44,6 +46,12 @@ export default function Checkout() {
   // useAuthEffect();
   console.log("📌user from authSlice", user);
 
+  // CGV:
+  const [agreedToCGV, setAgreedToCGV] = useState(false);
+
+  //Modal CGV
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     if (!user && getToken()) {
       dispatch(fetchUserProfile());
@@ -53,7 +61,7 @@ export default function Checkout() {
       dispatch(getUserAddresses(user));
       // 2.adresse de user
       dispatch(getUserAddresses(userId));
-      // 3.payment
+      // 3.paiement
       dispatch(fetchPaymentMethods(customerId));
       console.log(fetchPaymentMethods(customerId));
     }
@@ -69,6 +77,11 @@ export default function Checkout() {
     showToast("Moyen de paiement sélectionné", "info");
   };
 
+  const handleCGVChange = (event) => {
+    setAgreedToCGV(event.target.checked);
+    showToast("Conditions Générales de ventes acceptées", "info");
+  };
+
   const handleConfirm = () => {
     if (!selectedAddressId) {
       showToast("Veuillez sélectionner une adresse avant de valider.", "error");
@@ -82,6 +95,14 @@ export default function Checkout() {
       );
       return;
     }
+
+    if (!agreedToCGV) {
+      showToast("Veuillez accepter les conditions générales de vente", "error");
+      return;
+    }
+
+    /* Modal */
+
     setIsProcessing(true);
     showToast("Paiement en cours...", "info");
 
@@ -141,6 +162,35 @@ export default function Checkout() {
         loading={methodPaymentLoading}
         error={methodPaymentError}
       />
+
+      <section
+        className="bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-6"
+        aria-labelledby="card-selector-title"
+      >
+        <h2>Conditions Générales de Ventes</h2>
+        <div className="flex items-center space-x-4">
+          <label htmlFor="cgv">Accepter la C.G.V</label>
+          <input
+            type="checkbox"
+            name="cgv"
+            id="cgv"
+            checked={agreedToCGV}
+            onChange={handleCGVChange}
+          />
+        </div>
+        <div className="flex items-center justify-end">
+          <CTAButton
+            handleClick={() => setIsModalOpen(true)}
+            className="underline"
+            label="Voir la C.G.V"
+          />
+        </div>
+        {isModalOpen && (
+          <ModalOverlay onClose={() => setIsModalOpen(false)}>
+            <CGV isInModal={true} />
+          </ModalOverlay>
+        )}
+      </section>
 
       <div className="flex justify-end mt-6">
         <CTAButton

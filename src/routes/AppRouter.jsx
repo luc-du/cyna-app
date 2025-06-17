@@ -1,24 +1,26 @@
+import Dashboard from "@/components/Dashboard";
+import PrivateRoute from "@/components/guards/PrivateRoute";
+import ProductList from "@/components/Products/ProductList";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import CartPage from "@/pages/CartPage";
+import CategoriesPage from "@/pages/CategoriesPage";
+import CategoryPage from "@/pages/CategoryPage";
+import CgvPage from "@/pages/CgvPage";
+import CheckoutPage from "@/pages/CheckoutPage";
+import ContactPage from "@/pages/ContactPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
+import Homepage from "@/pages/Homepage";
+import LoginPage from "@/pages/LoginPage";
+import OrderPage from "@/pages/OrderPage";
+import PageNotFound from "@/pages/PageNotFound";
+import ProductPage from "@/pages/ProductPage";
+import ProfilePage from "@/pages/ProfilePage";
+import RegisterPage from "@/pages/RegisterPage";
+import SearchPage from "@/pages/SearchPage";
+import store from "@/redux/store/Store";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "../components/Dashboard";
-import PrivateRoute from "../components/guards/PrivateRoute";
-import ProductList from "../components/Products/ProductList";
-import ProtectedRoute from "../components/ProtectedRoute";
-import CartPage from "../pages/CartPage";
-import CategoriesPage from "../pages/CategoriesPage";
-import CategoryPage from "../pages/CategoryPage";
-import CheckoutPage from "../pages/CheckoutPage";
-import ContactPage from "../pages/ContactPage";
-import ForgotPasswordPage from "../pages/ForgotPasswordPage";
-import Homepage from "../pages/Homepage";
-import LoginPage from "../pages/LoginPage";
-import OrderPage from "../pages/OrderPage";
-import PageNotFound from "../pages/PageNotFound";
-import ProductPage from "../pages/ProductPage";
-import ProfilePage from "../pages/ProfilePage";
-import RegisterPage from "../pages/RegisterPage";
-import SearchPage from "../pages/SearchPage";
-import store from "../redux/store/Store";
+import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
 
 const AppRouter = () => {
   return (
@@ -57,6 +59,9 @@ const AppRouter = () => {
 
         <Route path="/contact" element={<ContactPage />} />
 
+        {/* Legal */}
+        <Route path="/cgv" element={<CgvPage />} />
+        <Route path="/legal" element={<PrivacyPolicyPage />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Provider>

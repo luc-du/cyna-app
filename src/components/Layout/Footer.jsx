@@ -7,10 +7,10 @@ export default function Footer() {
     <footer className="hidden sm:flex flex-col items-center p-6 w-full bg-primary text-white dark:bg-gray-900 dark:text-white shadow-inner border-t border-gray-300 dark:border-gray-700 transition-colors duration-300">
       <nav className="flex flex-row gap-6 mb-4 text-sm">
         <Link
-          to="/terms"
+          to="/cgv"
           className="hover:underline focus:outline-none focus:ring-2 focus:ring-white"
         >
-          CGU
+          CGV
         </Link>
         <Link
           to="/legal"
