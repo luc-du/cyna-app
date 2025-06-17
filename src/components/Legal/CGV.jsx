@@ -3,7 +3,11 @@ import CTAButton from "../shared/buttons/CTAButton";
 
 const CGV = ({ isInModal = false }) => {
   return (
-    <article className="container-text" aria-labelledby="cgv-title">
+    /* 📌🔩fix scroll max-h-screen overflow-auto */
+    <article
+      className="container-text max-h-screen overflow-auto"
+      aria-labelledby="cgv-title"
+    >
       <header>
         <h1
           id="cgv-title"

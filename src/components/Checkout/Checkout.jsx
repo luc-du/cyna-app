@@ -6,14 +6,13 @@ import { getUserAddresses } from "../../redux/slice/addressSlice";
 import { fetchPaymentMethods } from "../../redux/slice/paymentSlice";
 import { fetchUserProfile } from "../../redux/slice/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
-import CGV from "../Legal/CGV";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
-import ModalOverlay from "../ui/ModalOverlay";
 import { getToken } from "../utils/authStorage";
 import AddressSelector from "./AddressSelector";
 import CheckoutSummary from "./CheckoutSummary";
 import PaymentSelector from "./PaymentSelector";
+import TermsAgreement from "./TermsAgreement";
 
 export default function Checkout() {
   const dispatch = useDispatch();
@@ -48,9 +47,6 @@ export default function Checkout() {
 
   // CGV:
   const [agreedToCGV, setAgreedToCGV] = useState(false);
-
-  //Modal CGV
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!user && getToken()) {
@@ -163,34 +159,12 @@ export default function Checkout() {
         error={methodPaymentError}
       />
 
-      <section
-        className="bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-6"
-        aria-labelledby="card-selector-title"
-      >
-        <h2>Conditions Générales de Ventes</h2>
-        <div className="flex items-center space-x-4">
-          <label htmlFor="cgv">Accepter les C.G.V</label>
-          <input
-            type="checkbox"
-            name="cgv"
-            id="cgv"
-            checked={agreedToCGV}
-            onChange={handleCGVChange}
-          />
-        </div>
-        <div className="flex items-center justify-end">
-          <CTAButton
-            handleClick={() => setIsModalOpen(true)}
-            className="underline"
-            label="Voir les C.G.V"
-          />
-        </div>
-        {isModalOpen && (
-          <ModalOverlay onClose={() => setIsModalOpen(false)}>
-            <CGV isInModal={true} />
-          </ModalOverlay>
-        )}
-      </section>
+      <TermsAgreement
+        hasAgreedToTerms={agreedToCGV}
+        onTermsChange={handleCGVChange}
+        isInModalOpen={true}
+        setIsModalOpen={"setIsModalOpen"}
+      />
 
       <div className="flex justify-end mt-6">
         <CTAButton
