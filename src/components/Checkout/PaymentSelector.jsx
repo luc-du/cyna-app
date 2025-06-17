@@ -50,7 +50,6 @@ const PaymentSelector = ({
 
             // Composant d'icône
             const CardIcon = setCardIcon(type);
-            console.log("🪪type card", type);
 
             return (
               <li

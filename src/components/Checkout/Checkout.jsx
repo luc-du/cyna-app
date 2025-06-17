@@ -60,7 +60,6 @@ export default function Checkout() {
       dispatch(getUserAddresses(userId));
       // 3.paiement
       dispatch(fetchPaymentMethods(customerId));
-      console.log(fetchPaymentMethods(customerId));
     }
   }, [dispatch, user, userId, customerId]);
 
