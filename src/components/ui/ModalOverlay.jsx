@@ -33,7 +33,7 @@ const ModalOverlay = ({ children, onClose }) => {
       aria-label="Fenêtre modale"
     >
       <div
-        className="bg-white dark:bg-gray-800 dark:text-white rounded-xl shadow-lg p-6 w-full max-w-[calc(100vw-4rem)] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[95vh] flex flex-col"
+        className="bg-white dark:bg-gray-800 dark:text-white rounded-xl shadow-lg p-6 w-full max-w-[calc(100vw-4rem)] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[95vh] flex flex-col sm:max-h-[80vh] sm:my-6 my-4"
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
         tabIndex={0}
@@ -51,7 +51,7 @@ const ModalOverlay = ({ children, onClose }) => {
             label={<IoClose className="w-5 h-5" />}
           />
         </div>
-        <div className="sm: max-h-50 flex-grow overflow-y-auto mt-4 pr-2 pb-4">
+        <div className="sm:max-h-[60vh] overflow-y-auto flex-grow mt-4 pr-2 pb-4">
           {children}
         </div>
       </div>

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import { getUserAddresses } from "../../redux/slice/addressSlice";
 import { fetchPaymentMethods } from "../../redux/slice/paymentSlice";
+import { createPriceThunk } from "../../redux/slice/priceSlice";
+import { createCustomerSubscription } from "../../redux/slice/subscriptionSlice";
 import { fetchUserProfile } from "../../redux/slice/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
 import CTAButton from "../shared/buttons/CTAButton";
@@ -28,12 +30,12 @@ export default function Checkout() {
   const addressesError = useSelector((state) => state.address.error);
   /* User */
   const user = useSelector((state) => state.user.user);
+
   /* Paiement */
   const { list: methodsPaymentList } = useSelector((state) => state.payment);
   const methodPaymentError = useSelector((state) => state.payment.error);
   const methodPaymentLoading = useSelector((state) => state.payment.loading);
 
-  /* 📌Debug corriger le naming de user et auth sur fetchUserProfile - doublon de 💩 */
   const userId = user?.id;
   const customerId = user?.customerId;
 
@@ -42,8 +44,6 @@ export default function Checkout() {
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
-  // useAuthEffect();
-  console.log("📌user from authSlice", user);
 
   // CGV:
   const [agreedToCGV, setAgreedToCGV] = useState(false);
@@ -59,7 +59,6 @@ export default function Checkout() {
       dispatch(getUserAddresses(userId));
       // 3.paiement
       dispatch(fetchPaymentMethods(customerId));
-      console.log(fetchPaymentMethods(customerId));
     }
   }, [dispatch, user, userId, customerId]);
 
@@ -78,7 +77,7 @@ export default function Checkout() {
     showToast("Conditions Générales de ventes acceptées", "info");
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selectedAddressId) {
       showToast("Veuillez sélectionner une adresse avant de valider.", "error");
       return;
@@ -102,11 +101,50 @@ export default function Checkout() {
     setIsProcessing(true);
     showToast("Paiement en cours...", "info");
 
-    setTimeout(() => {
-      setIsProcessing(false);
-      showToast("Paiement validé avec succès", "success");
+    try {
+      console.log("🛒 from checkout - item:", item);
+
+      // 1.Créer l’objet Price dans Stripe
+      const priceDto = {
+        currency: "eur",
+        amount: 200,
+        productId: item.id,
+        productName: item.name,
+        description: item.description,
+        pricingModel: item.pricingModel,
+      };
+
+      const createdPrice = await dispatch(createPriceThunk(priceDto)).unwrap();
+      const stripePriceId = createdPrice.priceId;
+
+      let payload;
+
+      if (item.pricingModel !== "PAY_AS_YOU_GO") {
+        payload = {
+          customerId: user.customerId,
+          priceId: stripePriceId,
+          quantity: item.quantity,
+        };
+      } else {
+        payload = {
+          customerId: user.customerId,
+          priceId: stripePriceId,
+          quantity: item.quantity,
+        };
+      }
+
+      console.log("📌Payload from Checkout");
+
+      await dispatch(createCustomerSubscription(payload)).unwrap();
+
+      showToast("Abonnement créé !", "success");
       navigate("/order", { state: { orderConfirmed: true } });
-    }, 2000);
+    } catch (error) {
+      showToast("Erreur lors de la souscription");
+      console.error("🔩Error subscription - checkout", error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // Cas panier vide

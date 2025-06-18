@@ -36,11 +36,6 @@ const AppRouter = () => {
         <Route path="/products/:productId" element={<ProductPage />} />
         <Route path="/product:id" element={<ProductPage />} />
 
-        {/* Flow cart > checkout */}
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/order" element={<OrderPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-
         {/* Auth */}
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -50,6 +45,11 @@ const AppRouter = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/edit-profile" element={<LoginPage />} />
+
+          {/* Flow cart > checkout */}
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/order" element={<OrderPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
         </Route>
 
         <Route element={<ProtectedRoute roles={["ADMIN", "USER"]} />}>

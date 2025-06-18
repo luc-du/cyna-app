@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import EmptyState from "../ui/EmptyState";
 import { getImageSrc } from "../utils/getImageSrc";
+import { getPricingLabel } from "../utils/getPricingLabel";
 
 /**
  * Résumé du produit sélectionné dans le panier
@@ -16,6 +17,8 @@ export default function CheckoutSummary({ product, quantity }) {
   const total = product.price * quantity;
   const imageUrl = getImageSrc(product);
 
+  const { name, pricingModel, description, price } = product;
+  const normalizedPricingModel = getPricingLabel(pricingModel);
   return (
     <section
       className="bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-6"
@@ -31,19 +34,20 @@ export default function CheckoutSummary({ product, quantity }) {
       <div className="flex items-center gap-4">
         <img
           src={imageUrl}
-          alt={product.name}
+          alt={name}
           className="w-24 h-24 object-cover rounded-md border"
         />
 
         <div className="flex flex-col justify-between">
+          <p className="font-medium text-gray-900 dark:text-white">{name}</p>
           <p className="font-medium text-gray-900 dark:text-white">
-            {product.name}
+            {normalizedPricingModel}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            {product.description || "Abonnement sélectionné"}
+            {description && description}
           </p>
           <p className="text-gray-800 dark:text-gray-100 mt-2">
-            Prix unitaire : <strong>{product.price.toFixed(2)} €</strong>
+            Prix unitaire : <strong>{price.toFixed(2)} €</strong>
           </p>
           <p className="text-gray-800 dark:text-gray-100">
             Quantité : <strong>{quantity}</strong>
@@ -60,6 +64,7 @@ export default function CheckoutSummary({ product, quantity }) {
 CheckoutSummary.propTypes = {
   product: PropTypes.shape({
     name: PropTypes.string.isRequired,
+    pricingModel: PropTypes.number.isRequired,
     description: PropTypes.string,
     price: PropTypes.number.isRequired,
     image: PropTypes.string,

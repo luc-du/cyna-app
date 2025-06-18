@@ -7,12 +7,15 @@ import {
   setQuery,
 } from "../../redux/slice/searchSlice";
 import ProductCard from "../Home/ProductCard";
+import CTAButton from "../shared/buttons/CTAButton";
 import EmptyState from "../ui/EmptyState";
 import Loader from "../ui/Loader";
 import AvailabilityToggle from "./AvailabilityToggle";
 import FilterCheckboxes from "./FilterCheckboxes";
 import PriceSlider from "./PriceSlider";
 import SortSelect from "./SortSelect";
+
+/* 📌🔩 À fixer suite maj repo les filtres avancés ne fonctionnent plus */
 
 /**
  * Composant SearchPage
@@ -103,8 +106,9 @@ export default function SearchPage() {
   };
 
   return (
-    <main
+    <div
       className="container mx-auto px-4 lg:px-6 py-8 flex flex-col lg:flex-row"
+      role="region"
       aria-labelledby="search-results-heading"
     >
       {/* Filtres latéraux */}
@@ -144,12 +148,12 @@ export default function SearchPage() {
           checked={availableOnly}
           onChange={setAvailableOnly}
         />
-        <button
-          onClick={handleResetAll}
+        <CTAButton
+          type="button"
+          handleClick={handleResetAll}
           className="mt-6 text-sm text-primary hover:underline focus:outline-none dark:text-white"
-        >
-          Réinitialiser tous les filtres
-        </button>
+          label={"Réinitialiser tous les filtres"}
+        />
       </aside>
 
       {/* Résultats de recherche */}
@@ -176,12 +180,12 @@ export default function SearchPage() {
               : `Résultats pour : « ${query} »`}
           </h2>
           {query.trim() !== "" && (
-            <button
-              onClick={handleResetAll}
-              className="text-sm text-primary hover:underline focus:outline-none ml-0 sm:ml-4"
-            >
-              Réinitialiser la recherche
-            </button>
+            <CTAButton
+              type="button"
+              handleClick={handleResetAll}
+              className="text-sm text-primary hover:underline focus:outline-none ml-0 sm:ml-4  dark:text-white"
+              label={"Réinitialiser la recherche"}
+            />
           )}
         </div>
         {query.trim() === "" ? (
@@ -224,6 +228,6 @@ export default function SearchPage() {
           </>
         )}
       </section>
-    </main>
+    </div>
   );
 }

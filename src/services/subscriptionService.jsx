@@ -17,3 +17,40 @@ export const createCustomer = async ({ userId, name, email }) => {
 
   return response.data;
 };
+
+/**
+ * customerId    – ID Stripe du client
+ * priceId       – ID du plan Stripe (vérifier en amont)
+ * quantity      – quantité (1 par défaut)
+ * paymentMethodId – ID du PM sélectionné
+ */
+export const createSubscription = async (data) => {
+  const token = getToken();
+  const response = await axios.post(
+    API_ROUTES.SUBSCRIPTION.CREATE_SUBSCRIPTION,
+    // { customerId, priceId, quantity, paymentMethodId },
+    data,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+/**
+ * Crée un objet Price dans Stripe
+ * @param {{ priceId: string, currency: string, amount: number, productId: string, productName: string, description: string, pricingModel: string }} priceDto
+ * @returns {Promise<PriceDto>}
+ */
+export const createPrice = async (priceDto) => {
+  const token = getToken();
+  const response = await axios.post(
+    API_ROUTES.SUBSCRIPTION.CREATE_PRICE,
+    priceDto,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+export default {
+  createSubscription,
+  createPrice,
+};

@@ -47,7 +47,7 @@ const DataStatus = ({
   if (!loading && !error && dataLength !== null && isEmpty(dataLength)) {
     return (
       <div className="text-center mt-4" role="status" aria-live="polite">
-        <p className="text-gray-600 mb-4">{emptyMessage}</p>
+        <p className="text-gray-600 mb-4 dark:text-white">{emptyMessage}</p>
         {/* Si un CTAButton est fourni, on l'affiche sous le message vide */}
         {ctaButton && <div>{ctaButton}</div>}
       </div>

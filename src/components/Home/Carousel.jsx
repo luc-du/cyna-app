@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { MOCKSLIDES } from "../../mock/MOCKS_DATA";
-
 // En attendant - backend => Simulation des données du back-office (remplacé par un fetch API)
 const mockSlides = MOCKSLIDES;
 
