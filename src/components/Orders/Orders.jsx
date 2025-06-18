@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchCustomerSubscription } from "../../redux/slice/subscriptionSlice";
 import CTAButton from "../shared/buttons/CTAButton";
-import DataStatus from "../shared/DataStatus"; // Assure-toi que DataStatus est bien importé
+import DataStatus from "../shared/DataStatus";
 
 /**
  * Page de confirmation de commande
@@ -22,13 +22,13 @@ const Orders = () => {
   console.log("From orders - user:", user);
 
   const {
-    current: subscriptions, // Renommé en 'subscriptions' pour indiquer que c'est un tableau
+    current: subscriptions,
     loading,
     error,
   } = useSelector((state) => state.subscription);
 
   const customerId = user?.customerId;
-  const firstSubscription = subscriptions?.[0]; // Accède au premier élément du tableau
+  const firstSubscription = subscriptions?.[0];
   console.log("From orders - firstSubscription:", firstSubscription);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Orders = () => {
     // Sécurité : redirection si pas d’état de validation
     if (!location.state?.orderConfirmed) {
       navigate("/", { replace: true });
-      return; // Ajout d'un return pour arrêter l'exécution si pas de confirmation
+      return;
     }
 
     if (customerId) {
@@ -68,13 +68,12 @@ const Orders = () => {
           dataLength={0}
           loading={false}
           error={error}
-          errorMessage={error} // Affiche le message d'erreur
+          errorMessage={error}
         />
       </main>
     );
   }
 
-  // Si aucun abonnement n'est trouvé après chargement
   if (!firstSubscription) {
     return (
       <main className="p-6">
@@ -105,6 +104,7 @@ const Orders = () => {
 
       {/* Résumé dynamique de commande */}
       <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6">
+        <p className="font-semibold">Date</p>
         <p className="font-semibold">
           Abonnement :{" "}
           <span className="font-normal">{firstSubscription.productName}</span>
@@ -114,7 +114,6 @@ const Orders = () => {
           <span className="font-normal">
             {(firstSubscription.amount / 100).toFixed(2)} €
           </span>{" "}
-          {/* Supposons que 'amount' est en cents */}
         </p>
         <p className="font-semibold">
           Statut :{" "}
@@ -126,7 +125,6 @@ const Orders = () => {
             {user?.firstname} {user?.lastname}
           </span>
         </p>
-        {/* Ajoute d'autres détails de l'abonnement si disponibles */}
       </div>
 
       <div className="flex justify-center gap-4">
