@@ -44,7 +44,7 @@ AddressList.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
-      postcode: PropTypes.string.isRequired,
+      postcode: PropTypes.number.isRequired,
       city: PropTypes.string.isRequired,
       country: PropTypes.string.isRequired,
       url: PropTypes.string,

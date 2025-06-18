@@ -55,9 +55,8 @@ export default function SearchBar() {
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Rechercher un produit ou service..."
+        placeholder="Rechercher..."
         className="w-full px-3 py-1 border rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
-        // className="input"
         aria-label="Champ de recherche de produit"
       />
       {inputValue && (

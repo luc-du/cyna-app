@@ -1,14 +1,13 @@
 import PropTypes from "prop-types";
-import { getPricingModel } from "../utils/getMockData";
-import { getPricingLabel } from "../utils/pricingLabel";
+import { getPricingLabel } from "../utils/getPricingLabel";
 
 /**
  * Affiche les spécifications techniques du produit (modèle tarifaire, marque...).
  */
 const ProductSpecs = ({ product }) => {
-  const pricingText = product.pricingModel
-    ? getPricingLabel(product.pricingModel)
-    : getPricingModel(product.defaultPricing);
+  console.log(product.pricingModel);
+
+  const pricingText = getPricingLabel(product.pricingModel);
 
   return (
     <section

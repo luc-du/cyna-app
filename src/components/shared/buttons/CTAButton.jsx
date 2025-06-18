@@ -9,7 +9,7 @@ const CTAButton = ({
   label,
   handleClick,
   disabled = false,
-  ...props // Pour capturer aria-label et autresProps HTML
+  ...props
 }) => {
   // Styles par variante
   const getVariantStyles = () => {

@@ -5,6 +5,7 @@ import carouselReducer from "../slice/carouselSlice";
 import cartReducer from "../slice/cartSlice";
 import categoryReducer from "../slice/categorySlice";
 import paymentReducer from "../slice/paymentSlice";
+import priceReducer from "../slice/priceSlice";
 import productReducer from "../slice/productSlice";
 import searchReducer from "../slice/searchSlice";
 import { topProductsReducer } from "../slice/topProductsSlice";
@@ -23,6 +24,7 @@ const store = configureStore({
     search: searchReducer,
     user: userReducer,
     payment: paymentReducer,
+    price: priceReducer,
     ui: uiReducer,
   },
 });

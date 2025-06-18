@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import DataStatus from "../shared/DataStatus";
+import CTAButton from "../shared/buttons/CTAButton";
 
 /**
  * Permet à l'utilisateur de choisir une adresse pour l'abonnement.
@@ -20,6 +21,14 @@ export default function AddressSelector({
     dataLength={addresses}
     loadingMessage="Chargement des adresses..."
     emptyMessage="Aucune adresse enregistrée"
+    ctaButton={
+      <CTAButton
+        type="button"
+        label={"Ajouter une addresses"}
+        className={"underline hover:text-gray-400"}
+        link={"/profile#address"}
+      />
+    }
   />;
   return (
     <section
