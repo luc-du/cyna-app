@@ -117,6 +117,12 @@ export default function Checkout() {
       const createdPrice = await dispatch(createPriceThunk(priceDto)).unwrap();
       const stripePriceId = createdPrice.priceId;
 
+      /* 🩹 Tentative de patch  PAY_AS_YOU_GO
+      ‼️{
+        "error": "Internal Server Error",
+        "message": "400 BAD_REQUEST \"You cannot set the quantity for metered plans.\"",
+        "status": "BAD_REQUEST"
+}
       let payload;
 
       if (item.pricingModel !== "PAY_AS_YOU_GO") {
@@ -132,15 +138,26 @@ export default function Checkout() {
           quantity: item.quantity,
         };
       }
+      */
 
+      const payload = {
+        customerId: user.customerId,
+        priceId: stripePriceId,
+        quantity: item.quantity,
+      };
       console.log("📌Payload from Checkout");
 
-      await dispatch(createCustomerSubscription(payload)).unwrap();
+      // await dispatch(createCustomerSubscription(payload)).unwrap();
+      const createdSub = await dispatch(
+        createCustomerSubscription(payload)
+      ).unwrap();
 
       showToast("Abonnement créé !", "success");
-      navigate("/order", { state: { orderConfirmed: true } });
+      navigate("/order", {
+        state: { orderConfirmed: true, subscription: [createdSub] },
+      });
     } catch (error) {
-      showToast("Erreur lors de la souscription");
+      showToast("Erreur lors de la souscription", "error");
       console.error("🔩Error subscription - checkout", error);
     } finally {
       setIsProcessing(false);

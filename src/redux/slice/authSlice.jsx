@@ -191,6 +191,9 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(logout, (state) => {
+        return initialState;
+      })
       // Inscription réussie
       .addCase(registerUser.fulfilled, (state, action) => {
         const { token } = action.payload;

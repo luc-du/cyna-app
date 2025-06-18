@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fetchCustomerSubscription } from "../../redux/slice/subscriptionSlice";
 import CTAButton from "../shared/buttons/CTAButton";
+import DataStatus from "../shared/DataStatus"; // Assure-toi que DataStatus est bien importé
 
 /**
  * Page de confirmation de commande
@@ -13,22 +15,78 @@ import CTAButton from "../shared/buttons/CTAButton";
 const Orders = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const { user } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
+  console.log("From orders - user:", user);
+
+  const {
+    current: subscriptions, // Renommé en 'subscriptions' pour indiquer que c'est un tableau
+    loading,
+    error,
+  } = useSelector((state) => state.subscription);
+
+  const customerId = user?.customerId;
+  const firstSubscription = subscriptions?.[0]; // Accède au premier élément du tableau
+  console.log("From orders - firstSubscription:", firstSubscription);
 
   useEffect(() => {
+    // Redirection si non connecté
+    if (!isAuthenticated) {
+      navigate("/login", { replace: true });
+      return; // Ajout d'un return pour arrêter l'exécution si non authentifié
+    }
     // Sécurité : redirection si pas d’état de validation
     if (!location.state?.orderConfirmed) {
       navigate("/", { replace: true });
+      return; // Ajout d'un return pour arrêter l'exécution si pas de confirmation
     }
-  }, [location, navigate]);
 
-  // Redirection si non connecté
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login", { replace: true });
+    if (customerId) {
+      dispatch(fetchCustomerSubscription(customerId));
     }
-  }, [isAuthenticated, navigate]);
+  }, [location, navigate, dispatch, customerId, isAuthenticated]);
+
+  /* DataStatus */
+  if (loading) {
+    return (
+      <main className="p-6 max-w-4xl mx-auto space-y-6">
+        <DataStatus
+          dataLength={0} // ou null si tu ne connais pas la longueur initiale
+          loading={true}
+          error={null}
+          loadingMessage="Chargement du détail de votre abonnement..."
+        />
+      </main>
+    );
+  }
+  if (error) {
+    return (
+      <main className="p-6 max-w-4xl mx-auto space-y-6">
+        <DataStatus
+          dataLength={0}
+          loading={false}
+          error={error}
+          errorMessage={error} // Affiche le message d'erreur
+        />
+      </main>
+    );
+  }
+
+  // Si aucun abonnement n'est trouvé après chargement
+  if (!firstSubscription) {
+    return (
+      <main className="p-6">
+        <DataStatus
+          dataLength={0}
+          loading={false}
+          error={null}
+          emptyMessage="Aucun abonnement trouvé pour ce client."
+        />
+      </main>
+    );
+  }
 
   return (
     <main
@@ -45,13 +103,22 @@ const Orders = () => {
         vous a été envoyé.
       </p>
 
-      {/* Optionnel : Résumé simulé de commande */}
+      {/* Résumé dynamique de commande */}
       <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6">
         <p className="font-semibold">
-          Abonnement : <span className="font-normal">Premium Mensuel</span>
+          Abonnement :{" "}
+          <span className="font-normal">{firstSubscription.productName}</span>
         </p>
         <p className="font-semibold">
-          Montant : <span className="font-normal">29,99 €</span>
+          Montant :{" "}
+          <span className="font-normal">
+            {(firstSubscription.amount / 100).toFixed(2)} €
+          </span>{" "}
+          {/* Supposons que 'amount' est en cents */}
+        </p>
+        <p className="font-semibold">
+          Statut :{" "}
+          <span className="font-normal">{firstSubscription.status}</span>
         </p>
         <p className="font-semibold">
           Client :{" "}
@@ -59,6 +126,7 @@ const Orders = () => {
             {user?.firstname} {user?.lastname}
           </span>
         </p>
+        {/* Ajoute d'autres détails de l'abonnement si disponibles */}
       </div>
 
       <div className="flex justify-center gap-4">

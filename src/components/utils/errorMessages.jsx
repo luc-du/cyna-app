@@ -83,7 +83,7 @@ export const ADDRESS_DELETE_ERROR =
 export const PASSWORD_INPUTTED_ERROR =
   "Le mot de passe doit contenir au moins 6 caractères, une majuscule, un chiffre et un caractère spécial";
 
-// ---Moyens de paiement
+/* PAYMENT */
 export const PAYMENT_ADDED_ERROR =
   "Erreur lors de l'ajout de la carte de paiement";
 export const PAYMENT_DELETION_ERROR =
@@ -91,4 +91,4 @@ export const PAYMENT_DELETION_ERROR =
 export const PAYMENT_SET_DEFAULT_ERROR =
   "Erreur lors de la définition de la carte de paiement par défaut";
 
-/*  */
+/* SUBSCRIPTION */
