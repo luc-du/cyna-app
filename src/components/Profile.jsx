@@ -33,6 +33,7 @@ import DeleteAccountButton from "./Profile/DeletAccountButton";
 import LogoutButton from "./Profile/LogoutButton";
 import PasswordSection from "./Profile/Password/PasswordSection";
 import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
+import SubscriptionsSection from "./Profile/Subscriptions/SubscriptionsSection";
 import DarkModeToggle from "./ui/buttons/DarkModeToggle";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
@@ -268,6 +269,8 @@ const Profile = () => {
             onSetDefault={handleSetDefaultPaymentMethod}
           />
         );
+      case "subscriptions":
+        return <SubscriptionsSection />;
       case "settings":
         return (
           <div className="space-y-4">

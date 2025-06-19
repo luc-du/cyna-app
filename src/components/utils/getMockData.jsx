@@ -1,5 +1,5 @@
 import { MOCK_PRICING_OPTIONS, MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
-import { formatStripePrice } from "./formatStripePrice";
+import setStripePrice from "./stripe/stripeUtils";
 
 /**
  * Renvoie une chaîne prête à l’affichage :
@@ -16,7 +16,7 @@ export const getMockPricing = (pricingId) => {
 
   // Si c’est un nombre, on formate. Sinon "Sur demande", on renvoie directement.
   if (typeof option.price === "number") {
-    return formatStripePrice(option.price);
+    return setStripePrice(option.price);
   } else {
     return option.price;
   }

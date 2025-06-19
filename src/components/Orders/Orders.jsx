@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { fetchCustomerSubscription } from "../../redux/slice/subscriptionSlice";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
+import setMappedDate from "../utils/setMappedDate";
+import setStripePrice from "../utils/stripe/stripeUtils";
 
 /**
  * Orders
@@ -88,10 +90,8 @@ const Orders = () => {
   }
 
   const { productName, amount } = subscription;
-  const formattedAmount = (amount / 100).toFixed(2);
-  const mappedDate = subscription.createdAt
-    ? new Date(subscription.createdAt).toLocaleDateString()
-    : "—";
+  const formattedAmount = setStripePrice(amount);
+  const date = setMappedDate(subscription);
 
   return (
     <div
@@ -123,7 +123,7 @@ const Orders = () => {
           <div>
             <dt className="font-semibold">Date de souscription</dt>
             <dd className="">
-              le <span>{mappedDate}</span>
+              le <span>{date}</span>
             </dd>
           </div>
           <div>

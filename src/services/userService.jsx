@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { API_ROUTES } from "../api/apiRoutes";
-import { getToken } from "../components/utils/authStorage";
+import { getToken } from "../components/utils/auth/authStorage";
 
 /**
  * Récupère les informations d’un utilisateur par son ID.
