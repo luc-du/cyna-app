@@ -2,8 +2,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomerSubscription } from "../../../redux/slice/subscriptionSlice";
 import DataStatus from "../../shared/DataStatus";
-import setMappedDate from "../../utils/setMappedDate";
-import setStripePrice from "../../utils/stripe/stripeUtils";
+import {
+  renderSubscriptionStatus,
+  setMappedDate,
+  setStripePrice,
+} from "../../utils/stripe/stripeUtils";
 
 export default function SubscriptionsSection() {
   const dispatch = useDispatch();
@@ -32,6 +35,7 @@ export default function SubscriptionsSection() {
         /* Setters - Mapped */
         const date = setMappedDate(subscription);
         const amount = setStripePrice(subscription.amount);
+        const status = renderSubscriptionStatus(subscription.status);
 
         return (
           <div
@@ -49,11 +53,11 @@ export default function SubscriptionsSection() {
               </div>
               <div>
                 <dt className="font-semibold">Montant</dt>
-                <dd>{amount} €</dd>
+                <dd>{amount}</dd>
               </div>
               <div>
                 <dt className="font-semibold">Statut</dt>
-                <dd>{subscription.status}</dd>
+                <dd>{status}</dd>
               </div>
             </dl>
           </div>

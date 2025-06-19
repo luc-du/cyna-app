@@ -4,8 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { fetchCustomerSubscription } from "../../redux/slice/subscriptionSlice";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
-import setMappedDate from "../utils/setMappedDate";
-import setStripePrice from "../utils/stripe/stripeUtils";
+import {
+  setMappedDate,
+  setStripePrice,
+  setSubscribeStatus,
+} from "../utils/stripe/stripeUtils";
 
 /**
  * Orders
@@ -92,6 +95,7 @@ const Orders = () => {
   const { productName, amount } = subscription;
   const formattedAmount = setStripePrice(amount);
   const date = setMappedDate(subscription);
+  const satus = setSubscribeStatus(subscription.status);
 
   return (
     <div
@@ -137,7 +141,7 @@ const Orders = () => {
           <div>
             <dt className="font-semibold ">Statut</dt>
             <dd className="">
-              {subscription.status == "active" ? (
+              {/* {subscription.status == "active" ? (
                 <p className="text-green-500">
                   <span>🟢</span>Actif
                 </p>
@@ -145,7 +149,8 @@ const Orders = () => {
                 <p className="text-red-500">
                   <span>🔴</span>Actif
                 </p>
-              )}
+              )} */}
+              {status}
             </dd>
           </div>
           <div>
