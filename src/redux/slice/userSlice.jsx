@@ -81,7 +81,7 @@ export const createStripeCustomer = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    // profile: null,
+    profile: null,
     user: null,
     loading: false,
     error: null,
@@ -103,6 +103,7 @@ const userSlice = createSlice({
       .addCase(fetchUserProfile.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.user = payload;
+        // state.profile = id;
       })
       .addCase(fetchUserProfile.rejected, (state, { payload }) => {
         state.loading = false;

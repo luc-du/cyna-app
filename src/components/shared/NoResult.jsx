@@ -1,17 +1,36 @@
 import PropTypes from "prop-types";
 import { emptyBox } from "../../assets/indexImages";
 
-const NoResult = ({ message = "Aucun résultat trouvé" }) => {
+/**
+ * NoResult
+ * Composant d'affichage fallback lorsqu'aucune donnée n'est disponible.
+ * Affiche un message et une illustration neutre.
+ *
+ * @param {string} message - Message à afficher sous l’illustration
+ */
+const NoResult = ({ message }) => {
   return (
-    <div className="text-center mt-10 text-gray-500">
-      <img src={emptyBox} alt={message} className="mx-auto mb-4 w-24 h-24" />
-      <p className="mt-10 text-center text-gray-500">{message}</p>
+    <div
+      className="text-center mt-10 text-gray-500 dark:text-gray-400"
+      role="status"
+      aria-live="polite"
+    >
+      <img
+        src={emptyBox}
+        alt="Aucun résultat visuel"
+        className="mx-auto mb-4 w-24 h-24 opacity-80"
+      />
+      <p className="mt-4 text-base font-medium">{message}</p>
     </div>
   );
 };
 
-export default NoResult;
-
 NoResult.propTypes = {
-  message: PropTypes.string.isRequired,
+  message: PropTypes.string,
 };
+
+NoResult.defaultProps = {
+  message: "Aucun résultat trouvé",
+};
+
+export default NoResult;

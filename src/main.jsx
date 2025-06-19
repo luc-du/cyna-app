@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App.jsx";
 import { GlobalToastProvider } from "./components/GlobalToastProvider.jsx";
+import DarkModeInitializer from "./components/ui/DarkModeInitializer.jsx";
 import "./index.css";
 import store from "./redux/store/Store";
 
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")).render(
       <Provider store={store}>
         <Router>
           <GlobalToastProvider>
+            <DarkModeInitializer />
             <App />
           </GlobalToastProvider>
         </Router>

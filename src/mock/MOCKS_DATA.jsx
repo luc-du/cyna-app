@@ -405,3 +405,15 @@ export const MOCK_PAYMENT_METHODS = [
     isDefault: false,
   },
 ];
+
+export const MOCK_PRODUCT = {
+  name: "Formule Découverte",
+  description: "1 mois d'accès à notre plateforme",
+  price: 19.99,
+  image: "/img/demo.png",
+};
+
+export const MOCK_ITEM = {
+  product: MOCK_PRODUCT,
+  quantity: 1,
+};

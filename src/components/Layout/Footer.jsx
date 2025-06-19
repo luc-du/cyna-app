@@ -1,28 +1,43 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
+import { FaFacebook, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="hidden sm:flex flex-col items-center p-4 bg-primaryBackground text-white w-full bottom-0 shadow-md">
-      <div className="flex flex-row space-x-4 mb-4">
-        <Link to="/terms" className="hover:text-gray-400 text-white">
-          CGU
+    <footer className="hidden sm:flex flex-col items-center p-6 w-full bg-primary text-white dark:bg-gray-900 dark:text-white shadow-inner border-t border-gray-300 dark:border-gray-700 transition-colors duration-300">
+      <nav className="flex flex-row gap-6 mb-4 text-sm">
+        <Link
+          to="/cgv"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-white"
+        >
+          CGV
         </Link>
-        <Link to="/legal" className="hover:text-gray-400 text-white">
+        <Link
+          to="/legal"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-white"
+        >
           Mentions légales
         </Link>
-        <Link to="/contact" className="hover:text-gray-400 text-white">
+        <Link
+          to="/faq"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-white"
+        >
+          FÀQ
+        </Link>
+        <Link
+          to="/contact"
+          className="hover:underline focus:outline-none focus:ring-2 focus:ring-white"
+        >
           Contact
         </Link>
-      </div>
-      <div className="flex flex-row space-x-4">
+      </nav>
+      <div className="flex flex-row gap-6">
         <a
           href="https://www.facebook.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-gray-400 text-white"
+          aria-label="Visiter notre page Facebook"
+          className="hover:text-gray-300 transition-colors duration-200"
         >
           <FaFacebook className="text-xl" />
         </a>
@@ -30,7 +45,8 @@ export default function Footer() {
           href="https://www.twitter.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-gray-400 text-white"
+          aria-label="Visiter notre compte Twitter"
+          className="hover:text-gray-300 transition-colors duration-200"
         >
           <BsTwitterX className="text-xl" />
         </a>
@@ -38,7 +54,8 @@ export default function Footer() {
           href="https://www.linkedin.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-gray-400 text-white"
+          aria-label="Visiter notre page LinkedIn"
+          className="hover:text-gray-300 transition-colors duration-200"
         >
           <FaLinkedin className="text-xl" />
         </a>

@@ -25,18 +25,22 @@ import {
   fetchUserProfile,
   updateUserProfile,
 } from "../redux/slice/userSlice";
-import { uploadProfileImage } from "../services/userService";
+import { deleteUserProfile, uploadProfileImage } from "../services/userService";
 import { useGlobalToast } from "./GlobalToastProvider";
+import AccountSettingsSection from "./Profile/AccountSettings/AccountSettingsSection";
 import AddressSection from "./Profile/Address/AddressSection";
+import DeleteAccountButton from "./Profile/DeletAccountButton";
 import LogoutButton from "./Profile/LogoutButton";
 import PasswordSection from "./Profile/Password/PasswordSection";
 import { profileTabs } from "./Profile/ProfileTabs/ProfileTabs";
+import DarkModeToggle from "./ui/buttons/DarkModeToggle";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
   AVATAR_UPLOAD_ERROR,
   PAYMENT_ADDED_ERROR,
   PAYMENT_DELETION_ERROR,
   PAYMENT_SET_DEFAULT_ERROR,
+  USER_DELETE_ERROR,
 } from "./utils/errorMessages";
 import {
   AVATAR_UPLOAD_SUCCESS,
@@ -44,6 +48,7 @@ import {
   PAYMENT_DELETION_SUCCESS,
   PAYMENT_SET_DEFAULT_SUCCESS,
   PROFILE_UPDATE_SUCCESS,
+  USER_DELETE_SUCCESS,
 } from "./utils/successMessages";
 
 /**
@@ -61,30 +66,22 @@ const Profile = () => {
 
   const tabs = profileTabs;
 
-  // Profil utilisateur
   const {
     user,
     loading: userLoading,
     error: userError,
   } = useSelector((state) => state.user);
 
-  // Adresses
   const {
     list: addresses,
     loading: addressesLoading,
     error: addressesError,
   } = useSelector((state) => state.address);
 
-  // Moyens de paiement
-  const {
-    list: paymentMethods,
-    loading: paymentLoading,
-    error: paymentError,
-  } = useSelector((state) => state.payment);
+  const { list: paymentMethods } = useSelector((state) => state.payment);
 
   const loading = userLoading || (!user && !userError);
 
-  // Chargement du profil et des adresses
   useEffect(() => {
     if (!user) {
       dispatch(fetchUserProfile());
@@ -96,23 +93,16 @@ const Profile = () => {
 
   useEffect(() => {
     if (activeTab !== "payment" || !user) return;
-
-    // 1) Si pas encore de customerId, on le crée
     if (!user.customerId) {
-      console.log("Création Stripe Customer…");
       dispatch(createStripeCustomer())
         .unwrap()
         .then(() => console.log("Customer créé, reload profil"))
         .catch((e) => console.error("Erreur createStripeCustomer:", e));
-      return; // on sort, on attend la mise à jour de user.customerId
+      return;
     }
-
-    // 2) Dès qu’on a le customerId, on fetch les méthodes
-    console.log("FetchPaymentMethods pour", user.customerId);
     dispatch(fetchPaymentMethods(user.customerId));
   }, [activeTab, user, dispatch]);
 
-  // Handlers
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
@@ -148,7 +138,6 @@ const Profile = () => {
         navigate("/login");
       }, 2000);
     } catch (error) {
-      console.error("Erreur complète:", error);
       showToast(
         error.message || "Erreur lors de la mise à jour du mot de passe",
         "error"
@@ -217,20 +206,26 @@ const Profile = () => {
       await dispatch(
         setDefaultPaymentMethod({ id, customerId: user.customerId })
       ).unwrap();
-
-      /* DEBUG  */
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      dispatch(fetchPaymentMethods(user.customerId)); //mise à jour géré par l'extraReducer
-      console.log("Set default success, refetching list methods");
+      dispatch(fetchPaymentMethods(user.customerId));
       showToast(PAYMENT_SET_DEFAULT_SUCCESS, "success");
-      console.log("Set default");
     } catch {
       showToast(PAYMENT_SET_DEFAULT_ERROR, "error");
-      console.log("Set default");
     }
   };
 
-  // Rendu du contenu selon l'onglet actif
+  const handleDeleteAccount = async () => {
+    if (!user?.id) return;
+    try {
+      await deleteUserProfile(user.id);
+      showToast(USER_DELETE_SUCCESS, "success");
+      await fetchUserProfile();
+      navigate("/");
+    } catch (error) {
+      showToast(USER_DELETE_ERROR, "error");
+      console.log(error);
+    }
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "profile":
@@ -264,7 +259,6 @@ const Profile = () => {
             showToast={showToast}
           />
         );
-
       case "payment":
         return (
           <PaymentMethodsSection
@@ -277,8 +271,26 @@ const Profile = () => {
       case "settings":
         return (
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Paramètres du compte</h3>
-            <LogoutButton style={"cta-danger"} handleClick={handleLogout} />
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
+              Paramètres du compte
+            </h3>
+            <AccountSettingsSection title="Mode sombre">
+              <DarkModeToggle variant={"switch"} />
+            </AccountSettingsSection>
+            <AccountSettingsSection title="Suppression du compte">
+              <DeleteAccountButton onConfirm={handleDeleteAccount} />
+            </AccountSettingsSection>
+            <AccountSettingsSection title="Changer de langue">
+              <p className="text-gray-500 dark:text-gray-400">@ venir</p>
+            </AccountSettingsSection>
+            <AccountSettingsSection title="Newsletter">
+              <p className="text-gray-500 dark:text-gray-400">@ venir</p>
+            </AccountSettingsSection>
+            <AccountSettingsSection title="Déconnexion">
+              <div className="flex justify-center">
+                <LogoutButton style={"cta-danger"} handleClick={handleLogout} />
+              </div>
+            </AccountSettingsSection>
           </div>
         );
       default:
@@ -288,7 +300,7 @@ const Profile = () => {
 
   if (loading || userError || !user) {
     return (
-      <main className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <main className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
         <DataStatus
           dataLength={user}
           loading={loading}
@@ -302,15 +314,14 @@ const Profile = () => {
 
   return (
     <main
-      className="w-full min-h-screen bg-gray-100"
+      className="w-full min-h-screen bg-gray-100 dark:bg-gray-900"
       aria-label="Page de profil utilisateur"
     >
       <div className="container mx-auto px-4 py-6">
-        {/* Header avec titre */}
         <div className="text-center mb-8">
           <h1
             id="profile-title"
-            className="text-3xl font-bold text-gray-800"
+            className="text-3xl font-bold text-gray-800 dark:text-white"
             tabIndex={0}
           >
             {user
@@ -318,17 +329,13 @@ const Profile = () => {
               : "Profil utilisateur"}
           </h1>
         </div>
-
-        {/* Layout responsive avec tabs */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {/* Navigation tabs - Mobile: horizontal, Desktop: vertical */}
           <div className="lg:col-span-1">
             <nav
-              className="bg-white rounded-lg shadow-md p-4"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
               role="tablist"
               aria-label="Navigation du profil"
             >
-              {/* Mobile: tabs horizontales avec scroll */}
               <div className="flex flex-col items-center justify-evenly gap-2 lg:hidden space-x-2 pb-2">
                 {tabs.map((tab) => (
                   <button
@@ -343,20 +350,17 @@ const Profile = () => {
                       ${
                         activeTab === tab.id
                           ? "bg-blue-500 text-white shadow-md"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
                       }
                     `}
                   >
                     <p>
-                      <span className="text-lg">{tab.icon}</span>
-                      {""}
+                      <span className="text-lg">{tab.icon}</span>{" "}
                       <span>{tab.label}</span>
                     </p>
                   </button>
                 ))}
               </div>
-
-              {/* Desktop: tabs verticales */}
               <div className="hidden lg:flex flex-col space-y-2">
                 {tabs.map((tab) => (
                   <button
@@ -371,7 +375,7 @@ const Profile = () => {
                       ${
                         activeTab === tab.id
                           ? "bg-blue-500 text-white shadow-md"
-                          : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                          : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600"
                       }
                     `}
                   >
@@ -382,14 +386,12 @@ const Profile = () => {
               </div>
             </nav>
           </div>
-
-          {/* Contenu principal */}
           <div className="lg:col-span-3">
             <div
               id={`panel-${activeTab}`}
               role="tabpanel"
               aria-labelledby={`tab-${activeTab}`}
-              className="bg-white rounded-lg shadow-md p-6"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
             >
               {renderTabContent()}
             </div>

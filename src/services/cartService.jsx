@@ -59,11 +59,9 @@ export const syncCartWithServer = async (items) => {
   const updatedItems = await Promise.all(
     items.map(async (item) => {
       try {
-        // Utilisation de API_ROUTES pour construire l’URL au lieu de process.env
         const url = API_ROUTES.PRODUCTS.BY_ID(item.id);
         const response = await axios.get(url);
         console.log("From cartService :", response.data);
-        // On attend que l’API retourne les données du produit
         const data = response.data;
 
         return {
@@ -98,8 +96,6 @@ export const syncCartWithServer = async (items) => {
  * Nécessite que l’API expose un endpoint DELETE /api/v1/cart/{userId}.
  *
  * @param {string|number} userId
- *   - Identifiant de l’utilisateur dont on veut vider le panier.
- *
  * @returns {Promise<void>}
  *   - Promesse résolue quand l’opération est terminée (succès ou échec).
  *     En cas d’erreur, on affiche un warning mais on ne rejette pas pour éviter de bloquer l’UX.
@@ -114,11 +110,6 @@ export const clearCartOnServer = async (userId) => {
   }
 
   try {
-    // Si vous avez défini un host CART dans vos variables VITE_…,
-    // vous pouvez remplacer l’URL ci-dessous par :
-    //   `${import.meta.env.VITE_API_HOST_CART}/api/v1/cart/${userId}`
-    //
-    // Mais si vous n’avez pas d’endpoint panier côté BE, il suffit de laisser cette fonction vide.
     const CART_HOST = import.meta.env.VITE_API_HOST_CART;
     if (!CART_HOST) {
       console.warn(

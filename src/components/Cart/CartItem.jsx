@@ -2,25 +2,19 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
 import { getImageSrc } from "../utils/getImageSrc";
-import { getPricingLabel } from "../utils/pricingLabel";
+import { getPricingLabel } from "../utils/getPricingLabel";
 
 /**
- * Affiche une ligne d'article dans le panier.
- *
- * @param {Object} props
- * @param {Object} props.item - Item du panier
- * @param {Function} props.showToast - Fonction pour afficher un toast
- * @returns {JSX.Element}
+ * CartItem
+ * Affiche une ligne d'article dans le panier avec contrôle de quantité et suppression.
  */
 const CartItem = ({ item, showToast }) => {
   const dispatch = useDispatch();
 
+  const imageSrc = getImageSrc(item);
+
   /**
-   * Met à jour la quantité du produit dans le panier.
-   * Plante si la quantité est inférieure à 1 (protégé par le bouton).
-   *
-   * @param {number} newQuantity - Nouvelle quantité souhaitée
-   * @returns {void}
+   * Met à jour la quantité d’un article
    */
   const handleUpdateQuantity = (newQuantity) => {
     if (newQuantity < 1) return;
@@ -37,10 +31,8 @@ const CartItem = ({ item, showToast }) => {
     );
   };
 
-  const imageSrc = getImageSrc(item);
   /**
-   * Supprime l'article du panier.
-   * @returns {void}
+   * Supprime l’article du panier
    */
   const handleRemove = () => {
     dispatch(
@@ -54,11 +46,11 @@ const CartItem = ({ item, showToast }) => {
 
   return (
     <div
-      className="relative grid grid-cols-1 sm:grid-cols-4 gap-4 items-center bg-white shadow-md p-4 rounded-lg"
+      className="relative grid grid-cols-1 sm:grid-cols-4 gap-4 items-center bg-white dark:bg-gray-800 dark:text-white shadow-md p-4 rounded-lg transition-colors duration-300"
       aria-live="polite"
       aria-atomic="true"
     >
-      {/* Image + détails */}
+      {/* Image + Info produit */}
       <div className="flex items-center space-x-4 col-span-1">
         <img
           src={imageSrc}
@@ -67,16 +59,16 @@ const CartItem = ({ item, showToast }) => {
         />
         <div className="text-left font-semibold sm:text-base text-sm">
           <h4 className="text-lg font-semibold">{item.name}</h4>
-          <p className="text-gray-500">{getPricingLabel(item.pricingModel)}</p>
-          <p className="text-gray-700">
-            {/* 📌Prix unitaire : {formatStripePrice(item.price)}  */}{" "}
-            {/*StripePrice*/}
-            Prix unitaire : {item.price + " €"}
+          <p className="text-gray-500 dark:text-gray-400">
+            {getPricingLabel(item.pricingModel)}
+          </p>
+          <p className="text-gray-700 dark:text-gray-300">
+            Prix unitaire : {item.price.toFixed(2)} €
           </p>
         </div>
       </div>
 
-      {/* Quantité */}
+      {/* Contrôle Quantité */}
       <div className="flex items-center space-x-2 col-span-1 justify-end sm:justify-center">
         <button
           type="button"
@@ -90,7 +82,7 @@ const CartItem = ({ item, showToast }) => {
           –
         </button>
         <span
-          className="px-4 py-2 border rounded-lg"
+          className="px-4 py-2 border rounded-lg dark:border-gray-600"
           aria-live="polite"
           aria-atomic="true"
         >
@@ -106,11 +98,11 @@ const CartItem = ({ item, showToast }) => {
         </button>
       </div>
 
-      {/* Supprimer */}
+      {/* Bouton Supprimer */}
       <div className="col-span-1 flex justify-center">
         <button
           type="button"
-          className="text-red-600 underline text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
+          className="text-red-600 dark:text-red-400 underline text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 dark:focus:ring-red-400"
           onClick={handleRemove}
           aria-label={`Supprimer ${item.name} du panier`}
         >
@@ -118,11 +110,10 @@ const CartItem = ({ item, showToast }) => {
         </button>
       </div>
 
-      {/* Total ligne */}
+      {/* Total de la ligne */}
       <div className="text-right font-semibold sm:text-base text-sm">
         <span aria-label={`Total pour ${item.name}`}>
-          {/* {formatStripePrice(item.price * item.quantity)} */}
-          {item.price * item.quantity + " €"}
+          {(item.price * item.quantity).toFixed(2)} €
         </span>
       </div>
     </div>

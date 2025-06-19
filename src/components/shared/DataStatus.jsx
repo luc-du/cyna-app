@@ -17,17 +17,23 @@ const DataStatus = ({
   error = null,
   dataLength,
   emptyMessage = "Aucune donnée disponible pour le moment.",
+  children = null,
+  ctaButton = null, // Nouvelle prop pour le bouton CTA
 }) => {
   if (loading) {
     return (
       <Loader
         message={
           <p
-            className="text-center text-blue-500 mt-4"
+            className="text-center text-blue-500 mt-4 dark:text-white"
             role="status"
             aria-live="polite"
           >
             {loadingMessage}
+            {/* Si c'est un children, on le met après le message de chargement */}
+            {children}
+            {/* Si un CTAButton est fourni, on l'affiche sous le message de chargement */}
+            {ctaButton && <div className="mt-4">{ctaButton}</div>}
           </p>
         }
       />
@@ -40,12 +46,23 @@ const DataStatus = ({
 
   if (!loading && !error && dataLength !== null && isEmpty(dataLength)) {
     return (
+      <div className="text-center mt-4" role="status" aria-live="polite">
+        <p className="text-gray-600 mb-4 dark:text-white">{emptyMessage}</p>
+        {/* Si un CTAButton est fourni, on l'affiche sous le message vide */}
+        {ctaButton && <div>{ctaButton}</div>}
+      </div>
+    );
+  }
+
+  // Si une erreur est présente, afficher le message d'erreur
+  if (error) {
+    return (
       <p
-        className="text-center text-gray-600 mt-4"
-        role="status"
-        aria-live="polite"
+        className="text-center text-red-500 mt-4"
+        role="alert"
+        aria-live="assertive"
       >
-        {emptyMessage}
+        Erreur : {error}
       </p>
     );
   }
@@ -68,13 +85,8 @@ DataStatus.propTypes = {
     PropTypes.string,
   ]),
   emptyMessage: PropTypes.string,
-};
-
-DataStatus.defaultProps = {
-  loadingMessage: "Chargement…",
-  error: null,
-  dataLength: null,
-  emptyMessage: "Aucune donnée disponible pour le moment.",
+  children: PropTypes.node,
+  ctaButton: PropTypes.node,
 };
 
 export default DataStatus;

@@ -78,3 +78,16 @@ export const uploadProfileImage = async (userId, file) => {
 
   return response.data;
 };
+
+/**
+ * Supprimer un utilisateur par son ID.
+ * @param {number|string} userId
+ */
+export const deleteUserProfile = async (userId) => {
+  const token = getToken();
+  await axios.delete(API_ROUTES.USER.DELETE(userId), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

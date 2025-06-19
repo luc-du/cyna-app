@@ -90,25 +90,6 @@ export const validateToken = createAsyncThunk(
   }
 );
 
-// Récupération du profil utilisateur
-export const fetchUserProfile = createAsyncThunk(
-  "auth/fetchUserProfile",
-  /**
-   * @param {void} _ - Non utilisé
-   * @param {Object} thunkAPI - Objet Redux Toolkit pour la gestion des erreurs
-   */
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await AuthService.fetchProfile();
-      return res.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Impossible de récupérer le profil utilisateur"
-      );
-    }
-  }
-);
-
 // Mise à jour du profil utilisateur
 export const updateUserProfile = createAsyncThunk(
   "auth/updateUserProfile",
@@ -210,6 +191,9 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(logout, (state) => {
+        return initialState;
+      })
       // Inscription réussie
       .addCase(registerUser.fulfilled, (state, action) => {
         const { token } = action.payload;
@@ -248,16 +232,6 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.userId = null;
-      })
-
-      // Récupération du profil réussie
-      .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.error = null;
-      })
-      // Récupération du profil échouée
-      .addCase(fetchUserProfile.rejected, (state, action) => {
-        state.error = action.payload;
       })
 
       //changement de mot de passe depuis profile

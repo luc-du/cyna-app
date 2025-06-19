@@ -63,3 +63,13 @@ export const AuthService = {
     }
   },
 };
+
+/**
+ * Envoie un lien de réinitialisation de mot de passe au backend.
+ * @param {string} email - L'adresse e-mail de l'utilisateur.
+ * @returns {Promise<void>}
+ */
+export const resetPassword = async (email) => {
+  const url = `${API_ROUTES.AUTH.RESET_PASSWORD(email)}`;
+  return await axios.post(url); // ← Aucun body, email en query string
+};

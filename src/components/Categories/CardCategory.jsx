@@ -17,7 +17,7 @@ const CardCategory = ({ category }) => {
   return (
     <Link
       to={categoryLink}
-      className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+      className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl "
       role="region"
       aria-label={`Catégorie : ${category.name}`}
       tabIndex={0}
@@ -29,7 +29,9 @@ const CardCategory = ({ category }) => {
         className="w-full h-40 object-cover"
       />
       <div className="p-4 text-center">
-        <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-dark">
+          {category.name}
+        </h3>
         {category.description && (
           <p className="text-sm text-gray-600 mt-2 line-clamp-3">
             {category.description}

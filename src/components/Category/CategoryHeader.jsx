@@ -1,25 +1,38 @@
 import PropTypes from "prop-types";
-import { placeHolder } from "../../assets/indexImages";
+import { getImageSrc } from "../utils/getImageSrc";
+
 /**
- * En-tête visuel de la page de catégorie.
+ * CategoryHeader
+ * Affiche une bannière visuelle avec le nom de la catégorie et une image associée.
+ * Utilisé comme header de la page catégorie.
+ *
+ * @param {object} element - Objet catégorie avec image, nom, description
+ * @param {ReactNode} children - Contenu additionnel (description ou composant)
  */
 const CategoryHeader = ({ element, children }) => {
+  const imageUrl = getImageSrc(element);
+
   return (
-    <div className="text-center my-6">
-      <div className="relative">
+    <section
+      className="text-center my-6"
+      role="banner"
+      aria-label={`En-tête visuel de la catégorie ${element.name}`}
+    >
+      <div className="relative rounded-lg overflow-hidden shadow-md">
         <img
-          src={element.images[0]?.url || placeHolder} // Utilise la première image ou une image par défaut
+          src={imageUrl}
           alt={`Illustration de ${element.name}`}
-          className="w-full max-h-96 object-cover rounded-lg shadow-md"
+          className="w-full max-h-96 object-cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-          <h1 className="text-3xl font-bold text-white transition transform hover:scale-105 hover:shadow-2xl">
+          <h1 className="text-3xl font-bold text-white transition-transform transform hover:scale-105 hover:shadow-2xl">
             {element.name}
           </h1>
         </div>
       </div>
+
       {children}
-    </div>
+    </section>
   );
 };
 
@@ -29,7 +42,7 @@ CategoryHeader.propTypes = {
       PropTypes.shape({ url: PropTypes.string.isRequired })
     ).isRequired,
     name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
   }).isRequired,
   children: PropTypes.node,
 };

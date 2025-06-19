@@ -1,17 +1,14 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { placeHolder } from "../../assets/indexImages";
+import { getImageSrc } from "../utils/getImageSrc";
 
 const CategoryCard = ({ category }) => {
-  // Vérifie si category.images est un tableau et contient au moins une image
-  //faire un utils de ce snippet pour l'utiliser dans d'autres composants❓
-  const imageSrc =
-    (Array.isArray(category.images) && category.images[0]?.url) || placeHolder;
+  const imageSrc = getImageSrc(category);
 
   return (
     <Link
       to={`/categories/${category.id}`}
-      className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+      className="block bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md dark:shadow-white/10 transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
     >
       <img
         src={imageSrc}
@@ -19,7 +16,9 @@ const CategoryCard = ({ category }) => {
         className="w-full h-40 object-cover"
       />
       <div className="p-4 text-center">
-        <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+          {category.name}
+        </h3>
       </div>
     </Link>
   );
