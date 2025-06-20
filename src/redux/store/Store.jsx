@@ -8,6 +8,7 @@ import paymentReducer from "../slice/paymentSlice";
 import priceReducer from "../slice/priceSlice";
 import productReducer from "../slice/productSlice";
 import searchReducer from "../slice/searchSlice";
+import subscriptionReducer from "../slice/subscriptionSlice";
 import { topProductsReducer } from "../slice/topProductsSlice";
 import uiReducer from "../slice/uiSlice";
 import userReducer from "../slice/userSlice";
@@ -26,6 +27,7 @@ const store = configureStore({
     payment: paymentReducer,
     price: priceReducer,
     ui: uiReducer,
+    subscription: subscriptionReducer,
   },
 });
 

@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createSubscription } from "../../services/subscriptionService";
+import {
+  createSubscription,
+  getSubscriptionByCustomer,
+} from "../../services/subscriptionService";
 
 export const createCustomerSubscription = createAsyncThunk(
   "subscription/create",
@@ -13,23 +16,55 @@ export const createCustomerSubscription = createAsyncThunk(
   }
 );
 
+export const fetchCustomerSubscription = createAsyncThunk(
+  "subscription/fetchByCustomer",
+  async (customerId, { rejectWithValue }) => {
+    try {
+      const response = await getSubscriptionByCustomer(customerId);
+      return Array.isArray(response) ? response : [response];
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const subscriptionSlice = createSlice({
   name: "subscription",
-  initialState: { current: null, loading: false, error: false },
+  initialState: {
+    current: [], // Initialiser comme un tableau vide pour stocker les abonnements
+    loading: false,
+    error: false,
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(createSubscription.pending, (state) => {
+      .addCase(createCustomerSubscription.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createSubscription.fulfilled, (state, { payload }) => {
+      .addCase(createCustomerSubscription.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.error = false;
-        state.current = payload;
+        // Quand une nouvelle souscription est créée, l'ajouter au tableau
+        // Ou si tu ne gères qu'un seul abonnement actif, tu peux le remplacer
+        state.current = [payload]; // Stocke le nouvel abonnement dans un tableau
       })
-      .addCase(createSubscription.rejected, (state, { payload }) => {
+      .addCase(createCustomerSubscription.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload;
+      })
+      .addCase(fetchCustomerSubscription.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCustomerSubscription.fulfilled, (state, action) => {
+        state.loading = false;
+        state.current = action.payload;
+      })
+      .addCase(fetchCustomerSubscription.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload?.message ||
+          "Erreur lors du chargement de subscription";
       });
   },
 });

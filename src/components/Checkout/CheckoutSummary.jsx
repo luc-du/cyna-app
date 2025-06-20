@@ -64,7 +64,7 @@ export default function CheckoutSummary({ product, quantity }) {
 CheckoutSummary.propTypes = {
   product: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    pricingModel: PropTypes.number.isRequired,
+    pricingModel: PropTypes.string.isRequired,
     description: PropTypes.string,
     price: PropTypes.number.isRequired,
     image: PropTypes.string,

@@ -77,10 +77,6 @@ h3 {
 .container-text {
   @apply max-w-2xl mx-auto px-4 py-10 bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-6;
 }
-
-/* 
-w-full flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-2 gap-2
-*/
 /* form */
 
 @layer components {
