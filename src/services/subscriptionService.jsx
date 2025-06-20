@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ROUTES } from "../api/apiRoutes";
-import { getToken } from "../components/utils/authStorage";
+import { getToken } from "../components/utils/auth/authStorage";
 /**
  * Crée un Customer Stripe et met à jour l’utilisateur via le micro-service Auth-users.
  * @param {{ userId: number, name: string, email: string }} payload

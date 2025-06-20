@@ -4,7 +4,7 @@ import {
   FALLBACK_STATE_DEFAULT,
   FALLBACK_STATE_PREFIX,
   SEARCH_UNKNOWN_ERROR,
-} from "../../components/utils/errorMessages";
+} from "../../lib/errorMessages";
 import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
 import categoryService from "../../services/categoryService"; // <-- on importe le service
 

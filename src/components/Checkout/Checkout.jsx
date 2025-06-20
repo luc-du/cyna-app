@@ -10,7 +10,7 @@ import { fetchUserProfile } from "../../redux/slice/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
-import { getToken } from "../utils/authStorage";
+import { getToken } from "../utils/auth/authStorage";
 import AddressSelector from "./AddressSelector";
 import CheckoutSummary from "./CheckoutSummary";
 import PaymentSelector from "./PaymentSelector";

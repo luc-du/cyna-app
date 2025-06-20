@@ -16,7 +16,7 @@ import {
   clearToken,
   getToken,
   setToken,
-} from "../../components/utils/authStorage";
+} from "../../components/utils/auth/authStorage";
 import { AuthService } from "../../services/authServices";
 
 /**

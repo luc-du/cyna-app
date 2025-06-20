@@ -3,7 +3,7 @@ import {
   AUTH_PASSWORD_UPDATE_ERROR,
   AUTH_PROFILE_UPDATE_ERROR,
   AUTH_PROFILE_UPLOAD_ERROR,
-} from "../../components/utils/errorMessages";
+} from "../../lib/errorMessages";
 import { createCustomer as apiCreateCustomer } from "../../services/subscriptionService";
 import * as userService from "../../services/userService";
 
