@@ -6,14 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
 import { addToCart } from "../../redux/slice/cartSlice";
 import ConfirmModal from "../ui/ConfirmModal";
-
-/**
- * Bouton CTA pour ajouter un produit au panier avec confirmation.
- *
- * @param {Object} props
- * @param {Object} props.product - Produit à ajouter.
- * @returns {JSX.Element|null}
- */
 const ProductCTA = ({ product }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,13 +15,7 @@ const ProductCTA = ({ product }) => {
   if (!product) return null;
   const isAvailable = product.active === true;
 
-  /** Gère le click principal sur le CTA */
-  const handleClick = () => {
-    if (isAvailable) setShowModal(true);
-  };
-
-  /** Ajoute le produit au panier (sans redirection) */
-  const handleAddToCart = () => {
+  const handleAddToCartAndAsk = () => {
     dispatch(
       addToCart({
         id: product.id,
@@ -41,12 +27,12 @@ const ProductCTA = ({ product }) => {
         price: typeof product.amount === "number" ? product.amount : 0,
       })
     );
+
     showToast(`✔️ ${product.name} ajouté au panier`, "success");
+    setShowModal(true);
   };
 
-  /** Ajoute puis redirige vers /cart */
-  const handleAddAndGoToCart = () => {
-    handleAddToCart();
+  const handleGoToCart = () => {
     setShowModal(false);
     navigate("/cart");
   };
@@ -56,7 +42,7 @@ const ProductCTA = ({ product }) => {
       <button
         type="button"
         disabled={!isAvailable}
-        onClick={handleClick}
+        onClick={handleAddToCartAndAsk}
         aria-label={
           isAvailable
             ? `Ajouter au panier : ${product.name}`
@@ -82,7 +68,7 @@ const ProductCTA = ({ product }) => {
           title="Produit ajouté au panier"
           message="Souhaitez-vous continuer vos achats ou aller au panier ?"
           onCancel={() => setShowModal(false)}
-          onConfirm={handleAddAndGoToCart}
+          onConfirm={handleGoToCart}
           confirmLabel="Aller au panier"
           cancelLabel="Continuer"
           confirmClass="bg-primary text-white px-4 py-2 rounded-md"

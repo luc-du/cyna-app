@@ -29,8 +29,9 @@ const Cart = () => {
         const updatedItems = await syncCartWithServer(cart);
         updatedItems.forEach((newItem) => {
           const original = cart.find(
-            (i) =>
-              i.id === newItem.id && i.pricingModel === newItem.pricingModel
+            (item) =>
+              item.id === newItem.id &&
+              item.pricingModel === newItem.pricingModel
           );
           if (original) {
             if (newItem.price !== original.price) {

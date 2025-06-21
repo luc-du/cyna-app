@@ -8,7 +8,7 @@ import { emptyBox } from "../../assets/indexImages";
  *
  * @param {string} message - Message à afficher sous l’illustration
  */
-const NoResult = ({ message }) => {
+const NoResult = ({ message = "Aucun résultat trouvé" }) => {
   return (
     <div
       className="text-center mt-10 text-gray-500 dark:text-gray-400"
@@ -27,10 +27,6 @@ const NoResult = ({ message }) => {
 
 NoResult.propTypes = {
   message: PropTypes.string,
-};
-
-NoResult.defaultProps = {
-  message: "Aucun résultat trouvé",
 };
 
 export default NoResult;

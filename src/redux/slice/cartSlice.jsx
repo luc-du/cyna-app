@@ -43,7 +43,7 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    // ➕ Ajouter au panier
+    // Ajouter au panier
     addToCart: (state, action) => {
       const { id, name, brand, imageUrl, pricingModel, price } = action.payload;
 
@@ -69,7 +69,7 @@ const cartSlice = createSlice({
       saveCartToLocalStorage(state.items, state.total);
     },
 
-    // 🔄 Modifier quantité
+    // Modifier quantité
     updateQuantity: (state, action) => {
       const { id, pricingModel, quantity } = action.payload;
       const item = state.items.find(
@@ -84,7 +84,7 @@ const cartSlice = createSlice({
       saveCartToLocalStorage(state.items, state.total);
     },
 
-    // ❌ Supprimer un item
+    // Supprimer un item
     removeFromCart: (state, action) => {
       const { id, pricingModel } = action.payload;
       state.items = state.items.filter(
