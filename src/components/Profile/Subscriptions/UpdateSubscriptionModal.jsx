@@ -43,15 +43,15 @@ export default function UpdateSubscriptionModal({
         </div>
         <div className="flex justify-end space-x-4">
           <CTAButton
+            type="submit"
+            label="Enregistrer"
+            className="cta-success"
+          />
+          <CTAButton
             handleClick={onCancel}
             label="Annuler"
             className="underline text-gray-700 dark:text-gray-300"
             type="button"
-          />
-          <CTAButton
-            type="submit"
-            label="Enregistrer"
-            className="cta-success"
           />
         </div>
       </form>

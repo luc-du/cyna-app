@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import CTAButton from "../../shared/buttons/CTAButton";
 import DownloadInvoiceButton from "../../shared/buttons/DownloadInvoiceButton";
 import {
   renderSubscriptionStatus,
@@ -42,7 +41,7 @@ const SubscriptionListElement = ({ sub, onModify, onCancel, loading }) => {
           user={user}
           key={sub.subscriptionId}
         />
-        <CTAButton
+        {/* <CTAButton
           handleClick={onModify}
           label="Modifier"
           className="underline"
@@ -55,7 +54,7 @@ const SubscriptionListElement = ({ sub, onModify, onCancel, loading }) => {
           className="cta-danger"
           disabled={loading}
           aria-label={`Résilier l'abonnement ${sub.productName}`}
-        />
+        /> */}
       </div>
     </li>
   );

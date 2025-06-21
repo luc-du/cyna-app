@@ -18,6 +18,7 @@ import TermsAgreement from "./TermsAgreement";
 
 /* Stripe */
 import { useStripe } from "@stripe/react-stripe-js";
+import { clearCart } from "../../redux/slice/cartSlice";
 
 /**
  * Checkout
@@ -156,7 +157,13 @@ const Checkout = () => {
 
       showToast("Abonnement créé !", "success");
 
-      // 4) Redirection vers la page de confirmation
+      // 3) Mise à jour de l'état utilisateur
+      await dispatch(fetchUserProfile()).unwrap();
+
+      //4) Nettoyage du panier
+      dispatch(clearCart());
+
+      // 5) Redirection vers la page de confirmation
       navigate("/order", {
         state: { orderConfirmed: true },
       });
