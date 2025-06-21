@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import PropTypes from "prop-types";
-import { logoPng } from "../../assets/indexImages";
-import CTAButton from "../shared/buttons/CTAButton";
+import { DownloadIcon, logoPng } from "../../../assets/indexImages";
+import CTAButton from "./CTAButton";
 
 /**
  * Composant pour télécharger une facture PDF de l’abonnement.
@@ -67,7 +67,12 @@ export default function DownloadInvoiceButton({ subscription, user, date }) {
 
   return (
     <CTAButton
-      label="Télécharger ma facture"
+      label={
+        <p>
+          <DownloadIcon className="inline-block mr-2" />{" "}
+          <span>Télécharger la facture PDF</span>
+        </p>
+      }
       handleClick={handleDownload}
       className="underline hover:text-gray-400"
       aria-label="Télécharger la facture PDF"

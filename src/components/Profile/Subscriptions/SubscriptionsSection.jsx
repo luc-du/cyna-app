@@ -5,13 +5,9 @@ import {
   modifySubscription,
   removeSubscription,
 } from "../../../redux/slice/subscriptionSlice";
-import CTAButton from "../../shared/buttons/CTAButton";
 import DataStatus from "../../shared/DataStatus";
 import ConfirmModal from "../../ui/ConfirmModal";
-import {
-  renderSubscriptionStatus,
-  setMappedDate,
-} from "../../utils/stripe/stripeUtils";
+import SubscriptionListElement from "../Address/SubscriptionListElement";
 import UpdateSubscriptionModal from "./UpdateSubscriptionModal";
 
 export default function SubscriptionsSection() {
@@ -78,55 +74,19 @@ export default function SubscriptionsSection() {
 
   return (
     <>
-      <div className="space-y-4">
+      <ul className="space-y-4">
         {subs.map((sub) => {
-          const date = setMappedDate(sub);
-          const status = renderSubscriptionStatus(sub.status);
           return (
-            <div
+            <SubscriptionListElement
               key={sub.subscriptionId}
-              className="border rounded-lg p-4 bg-white dark:bg-gray-800"
-            >
-              <dl className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                  <dt className="font-semibold">Date de souscription</dt>
-                  <dd>{date}</dd>
-                </div>
-                <div>
-                  <dt className="font-semibold">Produit</dt>
-                  <dd>{sub.productName}</dd>
-                </div>
-                <div>
-                  <dt className="font-semibold">Montant</dt>
-                  <dd>{sub.amount} €</dd>
-                </div>
-                <div>
-                  <dt className="font-semibold">Statut</dt>
-                  <dd>{status}</dd>
-                </div>
-              </dl>
-              <div className="flex items-center justify-end space-x-4">
-                <CTAButton
-                  handleClick={() => handleModify(sub)}
-                  label="Modifier"
-                  className="underline"
-                  disabled={loading}
-                  aria-label={`Modifier l'abonnement ${sub.productName}`}
-                />
-                <CTAButton
-                  handleClick={() =>
-                    handleCancel(sub.subscriptionId, sub.productName)
-                  }
-                  label="Résilier"
-                  className="cta-danger"
-                  disabled={loading}
-                  aria-label={`Résilier l'abonnement ${sub.productName}`}
-                />
-              </div>
-            </div>
+              sub={sub}
+              onModify={() => handleModify(sub)}
+              onCancel={() => handleCancel(sub.subscriptionId, sub.productName)}
+              loading={loading}
+            />
           );
         })}
-      </div>
+      </ul>
       {confirmModal}
       {updateModal}
     </>

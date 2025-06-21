@@ -23,7 +23,7 @@ const StripeCheckoutForm = ({ onToken }) => {
 
   /**
    * Gère la soumission du formulaire de paiement.
-   * @param {React.FormEvent<HTMLFormElement>} e - L'événement de soumission du formulaire.
+   * @param {React.FormEvent<HTMLFormElement>} e -
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,11 +40,10 @@ const StripeCheckoutForm = ({ onToken }) => {
     const cardElement = elements.getElement(CardElement);
 
     if (!cardElement) {
-      // Si CardElement n'est pas trouvé, cela signifie un problème avec le rendu de Stripe Elements.
       setError(
         "Impossible de récupérer le champ de carte. Veuillez réessayer."
       );
-      setLoading(false); // S'assurer de désactiver le chargement
+      setLoading(false);
       return;
     }
 
@@ -55,15 +54,11 @@ const StripeCheckoutForm = ({ onToken }) => {
         card: cardElement,
       });
 
-      // débogage
-      console.log("Payment Method created by Stripe:", paymentMethod);
-
       if (error) {
-        // Gérer les erreurs renvoyées par Stripe (ex: carte invalide)
         setError(error.message);
       } else {
         onToken(paymentMethod.id);
-        cardElement.clear(); //Effacer les champs de la carte après succès
+        cardElement.clear();
       }
     } catch (err) {
       // Gérer les erreurs inattendues (réseau)
@@ -73,23 +68,25 @@ const StripeCheckoutForm = ({ onToken }) => {
       );
       setError(err.message || "Une erreur inattendue est survenue.");
     } finally {
-      setLoading(false); // Désactiver l'état de chargement, success ou error
+      setLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="form">
-      {/* Composant CardElement de Stripe pour la saisie sécurisée des informations de carte */}
-      <div className="mb-4">
-        {" "}
-        {/* Ajout d'une div pour le style de CardElement */}
+      <div className="p-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800">
         <CardElement
           options={{
             style: {
               base: {
                 fontSize: "16px",
-                color: "#333",
-                "::placeholder": { color: "#888" },
+                color: "#000",
+                "::placeholder": {
+                  color: "#94a3b8",
+                },
+              },
+              invalid: {
+                color: "#f87171",
               },
             },
             hidePostalCode: true,
