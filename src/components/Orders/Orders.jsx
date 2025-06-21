@@ -7,8 +7,8 @@ import DataStatus from "../shared/DataStatus";
 import {
   renderSubscriptionStatus,
   setMappedDate,
-  setStripePrice,
 } from "../utils/stripe/stripeUtils";
+import DownloadInvoiceButton from "./DownloadInvoiceButton";
 
 /**
  * Orders
@@ -93,9 +93,8 @@ const Orders = () => {
   }
 
   const { productName, amount } = subscription;
-  const formattedAmount = setStripePrice(amount);
   const date = setMappedDate(subscription);
-  const satus = renderSubscriptionStatus(subscription.status);
+  const renderedStatus = renderSubscriptionStatus(subscription.status);
 
   return (
     <div
@@ -111,11 +110,12 @@ const Orders = () => {
         🎉 Merci pour votre commande !
       </h1>
 
-      <p className="mb-4 text-lg text-left">
-        Votre souscription a bien été enregistrée. Un e-mail de confirmation
-        vous a été envoyé.
+      <p className="mb-4 text-lg text-center">
+        Votre souscription a bien été enregistrée.
       </p>
-
+      <p className="mb-6 text-lg text-left">
+        Voici les détails de votre abonnement :
+      </p>
       <section
         className="bg-gray-100 dark:bg-gray-800 shadow rounded-xl p-6 mb-6"
         aria-labelledby="order-summary-title"
@@ -136,22 +136,11 @@ const Orders = () => {
           </div>
           <div>
             <dt className="font-semibold ">Montant</dt>
-            <dd className="">{formattedAmount} €</dd>
+            <dd className="">{amount} €</dd>
           </div>
           <div>
             <dt className="font-semibold ">Statut</dt>
-            <dd className="">
-              {/* {subscription.status == "active" ? (
-                <p className="text-green-500">
-                  <span>🟢</span>Actif
-                </p>
-              ) : (
-                <p className="text-red-500">
-                  <span>🔴</span>Actif
-                </p>
-              )} */}
-              {status}
-            </dd>
+            <dd className="">{renderedStatus}</dd>
           </div>
           <div>
             <dt className="font-semibold ">Client</dt>
@@ -162,7 +151,13 @@ const Orders = () => {
         </dl>
       </section>
 
-      <div className="flex justify-center gap-4">
+      <div className="flex items-center flex-col md:flex-row justify-center gap-4 mt-6">
+        <DownloadInvoiceButton
+          subscription={subscription}
+          user={user}
+          date={date}
+          className="text-blue-700 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-200 underline transition-colors duration-200"
+        />
         <CTAButton
           link="/"
           label="Retour à l’accueil"
@@ -172,7 +167,7 @@ const Orders = () => {
         <CTAButton
           link="/profile"
           label="Voir mon profil"
-          className="cta-secondary"
+          className="underline hover:text-gray-400"
           aria-label="Aller à la page de profil"
         />
       </div>

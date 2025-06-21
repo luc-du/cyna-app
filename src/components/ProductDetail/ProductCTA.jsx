@@ -71,8 +71,8 @@ const ProductCTA = ({ product }) => {
           onConfirm={handleGoToCart}
           confirmLabel="Aller au panier"
           cancelLabel="Continuer"
-          confirmClass="bg-primary text-white px-4 py-2 rounded-md"
-          cancelClass="underline text-gray-700"
+          confirmClass="bg-primary text-white px-4 py-2 rounded-md "
+          cancelClass="underline text-gray-700 dark:text-white hover:text-gray-500 dark:hover:text-gray-300"
         />
       )}
     </div>

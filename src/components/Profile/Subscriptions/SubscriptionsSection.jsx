@@ -11,7 +11,6 @@ import ConfirmModal from "../../ui/ConfirmModal";
 import {
   renderSubscriptionStatus,
   setMappedDate,
-  setStripePrice,
 } from "../../utils/stripe/stripeUtils";
 import UpdateSubscriptionModal from "./UpdateSubscriptionModal";
 
@@ -33,7 +32,9 @@ export default function SubscriptionsSection() {
     return <DataStatus loading loadingMessage="Chargement des abonnements…" />;
   if (error) return <DataStatus error={error} />;
   if (!subs.length)
-    return <DataStatus emptyMessage="Aucun abonnement trouvé." />;
+    return (
+      <DataStatus loading={loading} emptyMessage="Aucun abonnement trouvé." />
+    );
 
   const handleCancel = (subscriptionId, productName) => {
     setConfirmConfig({
@@ -80,7 +81,6 @@ export default function SubscriptionsSection() {
       <div className="space-y-4">
         {subs.map((sub) => {
           const date = setMappedDate(sub);
-          const amount = setStripePrice(sub.amount);
           const status = renderSubscriptionStatus(sub.status);
           return (
             <div
@@ -98,7 +98,7 @@ export default function SubscriptionsSection() {
                 </div>
                 <div>
                   <dt className="font-semibold">Montant</dt>
-                  <dd>{amount}</dd>
+                  <dd>{sub.amount} €</dd>
                 </div>
                 <div>
                   <dt className="font-semibold">Statut</dt>
