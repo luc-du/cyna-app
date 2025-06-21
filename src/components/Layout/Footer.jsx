@@ -2,7 +2,7 @@ import { BsTwitterX } from "react-icons/bs";
 import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export default function Footer() {
+const Footer = () => {
   return (
     <footer className="hidden sm:flex flex-col items-center p-6 w-full bg-primary text-white dark:bg-gray-900 dark:text-white shadow-inner border-t border-gray-300 dark:border-gray-700 transition-colors duration-300">
       <nav className="flex flex-row gap-6 mb-4 text-sm">
@@ -62,4 +62,6 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

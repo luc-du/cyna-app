@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { getPromo } from "../utils/getMockData";
-import setStripePrice from "../utils/stripe/stripeUtils";
+import { setStripePrice } from "../utils/stripe/stripeUtils";
 
 /**
  * Affiche les informations principales d’un produit.
@@ -50,7 +50,7 @@ ProductInfo.propTypes = {
     promo: PropTypes.bool,
     defaultPricing: PropTypes.number,
     pricingModel: PropTypes.string,
-    active: PropTypes.bool.isRequired,
+    active: PropTypes.bool,
     images: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,

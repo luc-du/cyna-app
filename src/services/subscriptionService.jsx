@@ -64,8 +64,41 @@ export const getSubscriptionByCustomer = async (customerId) => {
   return response.data;
 };
 
+/*
+ * subscriptionId – ID Stripe de l'abonnement
+ * priceId      – ID du plan Stripe (vérifier en amont)
+ * quantity     – quantité (1 par défaut)
+ */
+export const updateSubscription = async ({
+  subscriptionId,
+  priceId,
+  quantity,
+}) => {
+  const token = getToken();
+  const response = await axios.patch(
+    API_ROUTES.SUBSCRIPTION.UPDATE_SUBSCRIPTION(subscriptionId),
+    { priceId, quantity },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+/*
+ * subscriptionId – ID Stripe de l'abonnement
+ */
+export const cancelCustomerSubscription = async (subscriptionId) => {
+  const token = getToken();
+  const response = await axios.post(
+    API_ROUTES.SUBSCRIPTION.CANCEL_SUBSCRIPTION,
+    { subscriptionId },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
 export default {
   createPrice,
   createSubscription,
   getSubscriptionByCustomer,
+  updateSubscription,
+  cancelCustomerSubscription,
 };

@@ -22,9 +22,6 @@ const CategoriesGrid = () => {
     }
   }, [dispatch]);
 
-  // Détermine quelle data afficher
-  let dataToDisplay = categories || [];
-
   return (
     <section
       className="w-full py-10 px-6 md:px-20 bg-white dark:bg-gray-900 transition-colors duration-300"
@@ -34,6 +31,7 @@ const CategoriesGrid = () => {
       <h2
         id="categories-heading"
         className="text-2xl md:text-3xl font-bold text-center text-primaryBackground dark:text-white"
+        tabIndex={0}
       >
         Nos Catégories
       </h2>
@@ -45,7 +43,7 @@ const CategoriesGrid = () => {
       <DataStatus
         loading={loading}
         error={error}
-        dataLength={dataToDisplay.length}
+        dataLength={categories.length}
       />
 
       <div
@@ -53,7 +51,7 @@ const CategoriesGrid = () => {
         role="list"
         aria-label="Liste des catégories"
       >
-        {dataToDisplay.map((category) => (
+        {categories.map((category) => (
           <CategoryCard key={category.id} category={category} />
         ))}
       </div>

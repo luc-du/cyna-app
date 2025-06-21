@@ -1,29 +1,34 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
 import { addToCart } from "../../redux/slice/cartSlice";
+import ConfirmModal from "../ui/ConfirmModal";
 
 /**
- * Composant CTA pour ajouter un produit au panier.
+ * Bouton CTA pour ajouter un produit au panier avec confirmation.
  *
  * @param {Object} props
- * @param {Object} props.product - Objet produit, shape : { id, name, brand, amount, pricingModel, active, images }
+ * @param {Object} props.product - Produit à ajouter.
  * @returns {JSX.Element|null}
  */
 const ProductCTA = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { showToast, ToastComponent } = useToast();
+  const [showModal, setShowModal] = useState(false);
 
   if (!product) return null;
-
-  // Vérifier la disponibilité du produit
   const isAvailable = product.active === true;
 
-  /**
-   * Ajoute l'article au panier Redux et affiche un toast de confirmation.
-   * @returns {void}
-   */
+  /** Gère le click principal sur le CTA */
+  const handleClick = () => {
+    if (isAvailable) setShowModal(true);
+  };
+
+  /** Ajoute le produit au panier (sans redirection) */
   const handleAddToCart = () => {
     dispatch(
       addToCart({
@@ -39,31 +44,51 @@ const ProductCTA = ({ product }) => {
     showToast(`✔️ ${product.name} ajouté au panier`, "success");
   };
 
+  /** Ajoute puis redirige vers /cart */
+  const handleAddAndGoToCart = () => {
+    handleAddToCart();
+    setShowModal(false);
+    navigate("/cart");
+  };
+
   return (
     <div className="flex items-center justify-center mt-6 relative">
       <button
         type="button"
         disabled={!isAvailable}
+        onClick={handleClick}
         aria-label={
           isAvailable
             ? `Ajouter au panier : ${product.name}`
             : `Produit indisponible : ${product.name}`
         }
         className={`flex items-center justify-center max-w-xs w-full px-6 py-3 rounded-md text-white font-semibold transition 
-  ${
-    isAvailable
-      ? "bg-primary hover:bg-CTAHover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-primary dark:hover:bg-indigo-600 dark:focus:ring-white dark:focus:ring-offset-gray-900 shadow-md hover:shadow-lg"
-      : "bg-gray-400 cursor-not-allowed"
-  }`}
-        onClick={handleAddToCart}
+          ${
+            isAvailable
+              ? "bg-primary hover:bg-CTAHover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-primary dark:hover:bg-indigo-600 dark:focus:ring-white dark:focus:ring-offset-gray-900 shadow-md hover:shadow-lg"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
       >
-        <FaCartPlus aria-hidden="true" />{" "}
+        <FaCartPlus aria-hidden="true" />
         <span className="ml-2">
           {isAvailable ? "Ajouter au panier" : "Indisponible"}
         </span>
       </button>
 
       <ToastComponent />
+
+      {showModal && (
+        <ConfirmModal
+          title="Produit ajouté au panier"
+          message="Souhaitez-vous continuer vos achats ou aller au panier ?"
+          onCancel={() => setShowModal(false)}
+          onConfirm={handleAddAndGoToCart}
+          confirmLabel="Aller au panier"
+          cancelLabel="Continuer"
+          confirmClass="bg-primary text-white px-4 py-2 rounded-md"
+          cancelClass="underline text-gray-700"
+        />
+      )}
     </div>
   );
 };

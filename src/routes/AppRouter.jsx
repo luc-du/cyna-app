@@ -21,7 +21,7 @@ import store from "@/redux/store/Store";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import FAQPage from "../pages/FAQPage";
-import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
+import LegalNoticePage from "../pages/LegalNoticePage.jsx.jsx";
 
 const AppRouter = () => {
   return (
@@ -62,7 +62,7 @@ const AppRouter = () => {
 
         {/* Legal */}
         <Route path="/cgv" element={<CgvPage />} />
-        <Route path="/legal" element={<PrivacyPolicyPage />} />
+        <Route path="/legal" element={<LegalNoticePage />} />
         <Route path="/faq" element={<FAQPage />} />
 
         {/* Error */}

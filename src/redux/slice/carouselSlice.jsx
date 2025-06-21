@@ -9,7 +9,7 @@ import { MOCKSLIDES } from "../../mock/MOCKS_DATA";
 import { getCarouselSlides } from "../../services/carouselService";
 
 /**
- * Thunk asynchrone pour récupérer les slides depuis l'API.
+ * Thunk pour récupérer les slides depuis l'API.
  * En cas d’erreur ou de tableau vide, on tombe en fallback sur MOCKSLIDES.
  */
 export const fetchCarouselSlides = createAsyncThunk(
@@ -17,7 +17,6 @@ export const fetchCarouselSlides = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await getCarouselSlides();
-      // Vérifier que data est un tableau non vide
       if (!Array.isArray(data) || data.length === 0) {
         return rejectWithValue({
           isFallback: true,
@@ -27,7 +26,6 @@ export const fetchCarouselSlides = createAsyncThunk(
       }
       return data;
     } catch (err) {
-      // Récupérer un message d’erreur clair si possible
       const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
       return rejectWithValue({
         isFallback: true,
@@ -41,16 +39,14 @@ export const fetchCarouselSlides = createAsyncThunk(
 const carouselSlice = createSlice({
   name: "carousel",
   initialState: {
-    slides: [], // Liste des slides formatées
+    slides: [],
     loading: false,
     error: null,
   },
-  reducers: {
-    // (pas d’actions synchrones supplémentaires pour l’instant)
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      // ─── fetchCarouselSlides ────────────────────────────────────────────────────
+      //fetchCarouselSlides
       .addCase(fetchCarouselSlides.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -58,7 +54,6 @@ const carouselSlice = createSlice({
       })
       .addCase(fetchCarouselSlides.fulfilled, (state, action) => {
         state.loading = false;
-        // On peut formater ici les données brutes avant de stocker
         state.slides = action.payload.map((item) => ({
           id: item.id,
           imageUrl: item.imageUrl,
@@ -74,7 +69,6 @@ const carouselSlice = createSlice({
         const payload = action.payload || {};
 
         if (payload.isFallback) {
-          // MOCKSLIDES + message
           state.slides = payload.fallback.map((item) => ({
             id: item.id,
             imageUrl: item.imageUrl,

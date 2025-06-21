@@ -1,4 +1,3 @@
-// ModalOverlay.jsx
 import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";

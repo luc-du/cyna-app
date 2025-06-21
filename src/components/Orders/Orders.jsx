@@ -5,9 +5,9 @@ import { fetchCustomerSubscription } from "../../redux/slice/subscriptionSlice";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
 import {
+  renderSubscriptionStatus,
   setMappedDate,
   setStripePrice,
-  setSubscribeStatus,
 } from "../utils/stripe/stripeUtils";
 
 /**
@@ -95,7 +95,7 @@ const Orders = () => {
   const { productName, amount } = subscription;
   const formattedAmount = setStripePrice(amount);
   const date = setMappedDate(subscription);
-  const satus = setSubscribeStatus(subscription.status);
+  const satus = renderSubscriptionStatus(subscription.status);
 
   return (
     <div
