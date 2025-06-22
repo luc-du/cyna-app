@@ -37,6 +37,11 @@ const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
               </h4>
             )}
           </div>
+          <div className="w-full h-6 ">
+            <p className="text-sm text-right text-gray-500 dark:text-gray-400">
+              {!isActive && "Ce produit n'est pas disponible pour le moment."}
+            </p>
+          </div>
           <p className="text-gray-600 dark:text-gray-300">
             {setStripePrice(amount)}
           </p>

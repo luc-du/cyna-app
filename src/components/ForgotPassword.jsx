@@ -2,6 +2,7 @@ import { useState } from "react";
 import { logoPng as cynaLogo } from "../../public/indexImages";
 import { resetPassword } from "../services/authServices";
 import { useGlobalToast } from "./GlobalToastProvider";
+import CTAButton from "./shared/buttons/CTAButton";
 
 /**
  * Composant ForgotPassword
@@ -56,7 +57,7 @@ const ForgotPassword = () => {
           Réinitialisez votre mot de passe
         </h1>
 
-        <p className="text-sm text-gray-600 dark:text-gray-300 text-center">
+        <p className="text-sm text-left text-gray-600 dark:text-gray-300">
           Entrez votre adresse e-mail ci-dessous. Nous vous enverrons un lien
           sécurisé pour définir un nouveau mot de passe.
         </p>
@@ -77,16 +78,18 @@ const ForgotPassword = () => {
           aria-required="true"
         />
 
-        <button
+        <CTAButton
           type="submit"
           className="bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-md font-semibold transition"
           disabled={loading}
           aria-busy={loading}
-        >
-          {loading
-            ? "Envoi en cours..."
-            : "Envoyer le lien de réinitialisation"}
-        </button>
+          aria-label="Envoyer le lien de réinitialisation"
+          label={
+            loading
+              ? "Envoi en cours..."
+              : "Envoyer le lien de réinitialisation"
+          }
+        />
       </form>
     </div>
   );

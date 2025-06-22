@@ -30,7 +30,10 @@ const CardCategory = ({ category }) => {
         className="w-full h-40 object-cover"
       />
       <div className="p-4 text-center">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-dark">
+        <h3
+          className="text-lg font-semibold text-gray-900 dark:text-black"
+          tabIndex={0}
+        >
           {name}
         </h3>
         {description && (

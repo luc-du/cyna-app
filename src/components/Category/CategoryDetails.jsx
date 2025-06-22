@@ -61,14 +61,6 @@ const CategoryDetails = () => {
         Détails de la catégorie {selectedCategory?.name || ""}
       </h1>
 
-      <button
-        onClick={() => navigate("/categories")}
-        className="mb-4 text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Retour à la liste des catégories"
-      >
-        ← Retour à la liste des catégories
-      </button>
-
       <DataStatus
         loading={false}
         error={errorSelected}
