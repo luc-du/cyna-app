@@ -69,9 +69,4 @@ PaymentMethodList.propTypes = {
   onSetDefault: PropTypes.func.isRequired,
 };
 
-PaymentMethodList.defaultProps = {
-  methods: [],
-  error: null,
-};
-
 export default PaymentMethodList;
