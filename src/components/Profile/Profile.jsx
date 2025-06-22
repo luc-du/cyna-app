@@ -409,3 +409,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
+/* clean props */
