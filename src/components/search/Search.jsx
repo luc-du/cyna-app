@@ -99,22 +99,34 @@ export default function SearchPage() {
   };
 
   // 🔎 Filtrage local des caractéristiques techniques
-  const filteredResults = useMemo(() => {
-    if (!searchResults || selectedFeatures.length === 0) return searchResults;
+  const finalResults = useMemo(() => {
+    if (!searchResults) return [];
 
-    return searchResults.filter((product) => {
-      if (!product.caracteristics) return false;
+    let results = searchResults;
 
-      const productFeatures = product.caracteristics
-        .toLowerCase()
-        .split(",")
-        .map((f) => f.trim());
+    if (selectedFeatures.length > 0) {
+      results = results.filter((product) => {
+        if (!product.caracteristics) return false;
 
-      return selectedFeatures.some((feature) =>
-        productFeatures.includes(feature)
+        const productFeatures = product.caracteristics
+          .toLowerCase()
+          .split(",")
+          .map((f) => f.trim());
+
+        return selectedFeatures.some((feature) =>
+          productFeatures.includes(feature)
+        );
+      });
+    }
+
+    if (selectedCategoriesIds.length > 0) {
+      results = results.filter((product) =>
+        selectedCategoriesIds.includes(product.category?.id)
       );
-    });
-  }, [searchResults, selectedFeatures]);
+    }
+
+    return results;
+  }, [searchResults, selectedFeatures, selectedCategoriesIds]);
 
   return (
     <div
@@ -222,7 +234,7 @@ export default function SearchPage() {
             <div className="flex justify-end mb-4">
               <SortSelect sort={sort} onChange={setSort} />
             </div>
-            {filteredResults.length === 0 && !error ? (
+            {finalResults.length === 0 && !error ? (
               <div className="flex items-center justify-center h-40">
                 <EmptyState message="Aucun produit ne correspond à votre recherche." />
               </div>
@@ -231,7 +243,7 @@ export default function SearchPage() {
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                 aria-label="Liste des produits"
               >
-                {filteredResults.map((product) => (
+                {finalResults.map((product) => (
                   <ProductCard
                     key={product.id}
                     product={product}
