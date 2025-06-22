@@ -35,10 +35,8 @@ export default function Categories() {
   // Détermine quelle data afficher
   const dataToDisplay = isSearchMode ? searchResults : list || [];
 
-  // j' utilise DataStatus uniquement pour loading/error
-  // Le cas "vide" est géré plus bas
   return (
-    <main role="main" className="max-w-4xl mx-auto p-6">
+    <div role="region" className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold text-center mb-6">Catégories</h1>
 
       {/* Barre de recherche */}
@@ -69,7 +67,7 @@ export default function Categories() {
           - Si chargement ou erreur (avec pas de données), DataStatus a déjà affiché un Loader ou un <p> d’erreur. 
           - Sinon, j' affiche la grille, NoResult ou message vide. */}
       {!loading && !error && (
-        <>
+        <div role="region" className="w-full max-w-4xl mx-auto p-6">
           {dataToDisplay.length > 0 ? (
             <GridCategories data={dataToDisplay} />
           ) : isSearchMode ? (
@@ -82,8 +80,8 @@ export default function Categories() {
               Aucune catégorie à afficher.
             </p>
           )}
-        </>
+        </div>
       )}
-    </main>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import {
   FaCcAmex as AmericanExpressIcon,
+  FaFileDownload as DownloadIcon,
   FaCcJcb,
   FaCcMastercard as MastercardIcon,
   FaCcVisa as VisaIcon,
@@ -49,11 +50,8 @@ export const indexImages = [
   placeHolder,
   emptyCartIcon,
   IconCrossCircle,
+  DownloadIcon,
 ];
-
-// Les icônes spécifiques peuvent toujours être exportées individuellement si nécessaire,
-// mais ne sont plus nécessaires dans un tableau séparé si elles sont dans indexImages.
-export const icons = []; // Ce tableau peut être vidé ou supprimé si toutes les icônes sont dans indexImages
 
 /**
  * Exports nommés pour chaque asset, si vous voulez y accéder individuellement
@@ -63,6 +61,7 @@ export {
   cert,
   cloud,
   cynaItLogo,
+  DownloadIcon,
   edr,
   edrPremium,
   emptyBox,
@@ -84,5 +83,3 @@ export {
   xdr,
   xdrPremium,
 };
-
-/* checked 2025-06-07 */

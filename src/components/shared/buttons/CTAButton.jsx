@@ -63,7 +63,7 @@ CTAButton.propTypes = {
   className: PropTypes.string,
   handleClick: PropTypes.func,
   link: PropTypes.string,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.any.isRequired,
   disabled: PropTypes.bool,
 };
 

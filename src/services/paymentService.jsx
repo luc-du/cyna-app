@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_ROUTES } from "../api/apiRoutes";
-import { getToken } from "../components/utils/authStorage";
+import { getToken } from "../components/utils/auth/authStorage";
 
 /**
  * Service pour gérer les méthodes de paiement utilisateur.

@@ -5,7 +5,7 @@ import Loader from "../../components/ui/Loader";
 const isEmpty = (data) => {
   if (Array.isArray(data)) return data.length === 0;
   if (data && typeof data === "object") return Object.keys(data).length === 0;
-  return !data; // null, undefined, false, '', 0
+  return !data;
 };
 
 /**
@@ -18,23 +18,21 @@ const DataStatus = ({
   dataLength,
   emptyMessage = "Aucune donnée disponible pour le moment.",
   children = null,
-  ctaButton = null, // Nouvelle prop pour le bouton CTA
+  ctaButton = null,
 }) => {
   if (loading) {
     return (
       <Loader
         message={
-          <p
+          <div
             className="text-center text-blue-500 mt-4 dark:text-white"
             role="status"
             aria-live="polite"
           >
-            {loadingMessage}
-            {/* Si c'est un children, on le met après le message de chargement */}
+            <p>{loadingMessage}</p>
             {children}
-            {/* Si un CTAButton est fourni, on l'affiche sous le message de chargement */}
             {ctaButton && <div className="mt-4">{ctaButton}</div>}
-          </p>
+          </div>
         }
       />
     );

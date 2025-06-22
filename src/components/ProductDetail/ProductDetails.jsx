@@ -29,7 +29,6 @@ const ProductDetails = () => {
   const parsedId = Number(productId);
   const isValidId = !isNaN(parsedId) && parsedId > 0;
 
-  // Chargement des données si non présentes
   useEffect(() => {
     if (isValidId && (!product || String(product.id) !== productId)) {
       dispatch(fetchProductById(productId));
@@ -78,7 +77,7 @@ const ProductDetails = () => {
   return (
     <div
       role="region"
-      className="max-w-6xl mx-auto p-6 bg-white dark:bg-gray-900 dark:text-white border-gray-700 rounded-lg shadow-lg space-y-8 transition-colors duration-300"
+      className="w-full max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 dark:text-white border-gray-700 rounded-lg shadow-lg space-y-8 transition-colors duration-300"
       aria-labelledby="product-title"
     >
       <h1 id="product-title" className="sr-only">

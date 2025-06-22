@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
 import { getImageSrc } from "../utils/getImageSrc";
 import { getPricingLabel } from "../utils/getPricingLabel";
+import { setStripePrice } from "../utils/stripe/stripeUtils";
 
 /**
  * CartItem
@@ -21,7 +22,7 @@ const CartItem = ({ item, showToast }) => {
     dispatch(
       updateQuantity({
         id: item.id,
-        pricingModel: item.pricingModel || "default",
+        pricingModel: item.pricingModel,
         quantity: newQuantity,
       })
     );
@@ -63,7 +64,7 @@ const CartItem = ({ item, showToast }) => {
             {getPricingLabel(item.pricingModel)}
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            Prix unitaire : {item.price.toFixed(2)} €
+            Prix unitaire : {setStripePrice(item.price)}
           </p>
         </div>
       </div>
@@ -113,7 +114,7 @@ const CartItem = ({ item, showToast }) => {
       {/* Total de la ligne */}
       <div className="text-right font-semibold sm:text-base text-sm">
         <span aria-label={`Total pour ${item.name}`}>
-          {(item.price * item.quantity).toFixed(2)} €
+          {setStripePrice(item.price * item.quantity)}
         </span>
       </div>
     </div>

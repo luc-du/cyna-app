@@ -5,8 +5,6 @@ import { getPricingLabel } from "../utils/getPricingLabel";
  * Affiche les spécifications techniques du produit (modèle tarifaire, marque...).
  */
 const ProductSpecs = ({ product }) => {
-  console.log(product.pricingModel);
-
   const pricingText = getPricingLabel(product.pricingModel);
 
   return (

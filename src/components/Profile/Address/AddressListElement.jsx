@@ -15,7 +15,7 @@ import CTAButton from "../../shared/buttons/CTAButton";
  */
 const AddressListElement = ({ address, onEdit, onDelete }) => (
   <div
-    className="flex flex-col border border-slate-200 rounded-2xl gap-4 p-4 mt-2"
+    className="bg-white flex flex-col border border-slate-200 rounded-2xl gap-4 p-4 mt-2 dark:text-black"
     tabIndex={0}
   >
     <p>

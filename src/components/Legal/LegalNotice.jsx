@@ -1,6 +1,6 @@
 import CTAButton from "../shared/buttons/CTAButton";
 
-const PrivacyPolicy = () => {
+const LegalNotice = () => {
   return (
     <article className="container-text" aria-labelledby="privacy-title">
       <header>
@@ -60,7 +60,7 @@ const PrivacyPolicy = () => {
           </h2>
           <p>
             Vos données ne sont jamais revendues. Elles peuvent être partagées
-            uniquement avec des prestataires nécessaires à l'exécution du
+            uniquement avec des prestataires nécessaires à l&apos;exécution du
             service (ex : Stripe).
           </p>
         </section>
@@ -125,4 +125,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export default PrivacyPolicy;
+export default LegalNotice;

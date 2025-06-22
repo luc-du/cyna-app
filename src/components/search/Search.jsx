@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slice/categorySlice";
 import {
@@ -15,16 +15,12 @@ import FilterCheckboxes from "./FilterCheckboxes";
 import PriceSlider from "./PriceSlider";
 import SortSelect from "./SortSelect";
 
-/* 📌🔩 À fixer suite maj repo les filtres avancés ne fonctionnent plus */
-
 /**
- * Composant SearchPage
- * Permet à l'utilisateur de rechercher des produits/services avec filtres (facettes), tri, et pagination.
- * - Prise en charge du dark mode via les classes Tailwind conditionnelles
- * - Accessibilité ARIA et focus gérés
- * - Refonte de l’UX mobile (input focus auto, debounce, reset clair)
- * @component
+ * Attention développeur :
+ * - Le champ `amount` en BDD est en centimes → les valeurs min/max doivent être multipliées par 100.
+ * - Le champ `caracteristics` est rempli depuis peu → le filtrage des "features" est fait **en frontend**, localement.
  */
+
 export default function SearchPage() {
   const dispatch = useDispatch();
 
@@ -41,17 +37,14 @@ export default function SearchPage() {
   const [localInput, setLocalInput] = useState(query);
   const inPageInputRef = useRef(null);
 
-  // Charge les catégories au montage
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Synchronise le champ local avec Redux query
   useEffect(() => {
     setLocalInput(query);
   }, [query]);
 
-  // Debounce de l'input utilisateur
   useEffect(() => {
     const timer = setTimeout(() => {
       const trimmed = localInput.trim();
@@ -64,8 +57,8 @@ export default function SearchPage() {
             size: pageSize,
             categoriesIds: selectedCategoriesIds,
             features: selectedFeatures,
-            minPrice,
-            maxPrice,
+            minPrice: minPrice * 100, // conversion euros → centimes en BDD
+            maxPrice: maxPrice * 100,
             availableOnly,
             sort,
           })
@@ -104,6 +97,67 @@ export default function SearchPage() {
     setSort("priceAsc");
     setLocalInput("");
   };
+
+  // Filtrage local des caractéristiques techniques
+  const finalResults = useMemo(() => {
+    if (!searchResults) return [];
+
+    let results = [...searchResults];
+
+    // 1.Filtrage caractéristiques techniques
+    if (selectedFeatures.length > 0) {
+      results = results.filter((product) => {
+        if (!product.caracteristics) return false;
+        const productFeatures = product.caracteristics
+          .toLowerCase()
+          .split(",")
+          .map((f) => f.trim());
+        return selectedFeatures.some((feature) =>
+          productFeatures.includes(feature)
+        );
+      });
+    }
+
+    // 2.Filtrage catégories
+    if (selectedCategoriesIds.length > 0) {
+      results = results.filter((product) =>
+        selectedCategoriesIds.includes(product.category?.id)
+      );
+    }
+
+    // 3.Filtrage disponibilité
+    if (availableOnly) {
+      results = results.filter((product) => product.active === true);
+    }
+
+    // 4.Filtrage par prix
+    results.sort((a, b) => {
+      console.log("💰ProductAmount", a.amount, b.amount, sort);
+
+      switch (sort) {
+        case "priceAsc":
+          return a.amount - b.amount;
+        case "priceDesc":
+          return b.amount - a.amount;
+        case "newest":
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        case "oldest":
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case "availableFirst":
+          return (b.active === true) - (a.active === true); // true > false
+        default:
+          return 0;
+      }
+    });
+
+    return results;
+  }, [
+    searchResults,
+    selectedFeatures,
+    selectedCategoriesIds,
+    availableOnly,
+    sort,
+  ]);
 
   return (
     <div
@@ -211,7 +265,7 @@ export default function SearchPage() {
             <div className="flex justify-end mb-4">
               <SortSelect sort={sort} onChange={setSort} />
             </div>
-            {searchResults.length === 0 && !error ? (
+            {finalResults.length === 0 && !error ? (
               <div className="flex items-center justify-center h-40">
                 <EmptyState message="Aucun produit ne correspond à votre recherche." />
               </div>
@@ -220,8 +274,12 @@ export default function SearchPage() {
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                 aria-label="Liste des produits"
               >
-                {searchResults.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                {finalResults.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    linkTo={`/products/${product.id}`}
+                  />
                 ))}
               </div>
             )}

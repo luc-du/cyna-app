@@ -1,9 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+  cancelCustomerSubscription,
   createSubscription,
   getSubscriptionByCustomer,
+  updateSubscription,
 } from "../../services/subscriptionService";
 
+/**
+ * Crée une souscription pour un client
+ */
 export const createCustomerSubscription = createAsyncThunk(
   "subscription/create",
   async (payload, { rejectWithValue }) => {
@@ -16,6 +21,9 @@ export const createCustomerSubscription = createAsyncThunk(
   }
 );
 
+/**
+ * Récupère les souscriptions d'un client
+ */
 export const fetchCustomerSubscription = createAsyncThunk(
   "subscription/fetchByCustomer",
   async (customerId, { rejectWithValue }) => {
@@ -28,10 +36,44 @@ export const fetchCustomerSubscription = createAsyncThunk(
   }
 );
 
+/**
+ * Modifie une souscription existante
+ */
+export const modifySubscription = createAsyncThunk(
+  "subscription/modify",
+  async ({ subscriptionId, priceId, quantity }, { rejectWithValue }) => {
+    try {
+      const updated = await updateSubscription({
+        subscriptionId,
+        priceId,
+        quantity,
+      });
+      return updated;
+    } catch (e) {
+      return rejectWithValue(e.response?.data || e.message);
+    }
+  }
+);
+
+/**
+ * Supprime une souscription existante
+ */
+export const removeSubscription = createAsyncThunk(
+  "subscription/remove",
+  async (subscriptionId, { rejectWithValue }) => {
+    try {
+      await cancelCustomerSubscription(subscriptionId);
+      return subscriptionId;
+    } catch (e) {
+      return rejectWithValue(e.response?.data || e.message);
+    }
+  }
+);
+
 const subscriptionSlice = createSlice({
   name: "subscription",
   initialState: {
-    current: [], // Initialiser comme un tableau vide pour stocker les abonnements
+    current: [],
     loading: false,
     error: false,
   },
@@ -44,9 +86,7 @@ const subscriptionSlice = createSlice({
       .addCase(createCustomerSubscription.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.error = false;
-        // Quand une nouvelle souscription est créée, l'ajouter au tableau
-        // Ou si tu ne gères qu'un seul abonnement actif, tu peux le remplacer
-        state.current = [payload]; // Stocke le nouvel abonnement dans un tableau
+        state.current = [payload];
       })
       .addCase(createCustomerSubscription.rejected, (state, { payload }) => {
         state.loading = false;
@@ -65,6 +105,35 @@ const subscriptionSlice = createSlice({
         state.error =
           action.payload?.message ||
           "Erreur lors du chargement de subscription";
+      })
+      .addCase(modifySubscription.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(modifySubscription.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = false;
+        const index = state.current.findIndex((sub) => sub.id === payload.id);
+        if (index !== -1) {
+          state.current[index] = payload;
+        }
+      })
+      .addCase(modifySubscription.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+      })
+      .addCase(removeSubscription.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeSubscription.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = false;
+        state.current = state.current.filter((sub) => sub.id !== payload);
+      })
+      .addCase(removeSubscription.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
       });
   },
 });

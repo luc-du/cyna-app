@@ -10,7 +10,7 @@ import { fetchUserProfile } from "../../redux/slice/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
-import { getToken } from "../utils/authStorage";
+import { getToken } from "../utils/auth/authStorage";
 import AddressSelector from "./AddressSelector";
 import CheckoutSummary from "./CheckoutSummary";
 import PaymentSelector from "./PaymentSelector";
@@ -18,6 +18,7 @@ import TermsAgreement from "./TermsAgreement";
 
 /* Stripe */
 import { useStripe } from "@stripe/react-stripe-js";
+import { clearCart } from "../../redux/slice/cartSlice";
 
 /**
  * Checkout
@@ -61,11 +62,14 @@ const Checkout = () => {
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState(null);
   const [agreedToCGV, setAgreedToCGV] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   /**
    * Récupère adresses & moyens de paiement dès que l'utilisateur est connu
    */
   useEffect(() => {
+    if (!isAuthenticated) navigate("/login");
+
     if (!user && getToken()) {
       dispatch(fetchUserProfile());
     }
@@ -73,7 +77,7 @@ const Checkout = () => {
       dispatch(getUserAddresses(userId));
       dispatch(fetchPaymentMethods(customerId));
     }
-  }, [dispatch, user, userId, customerId]);
+  }, [dispatch, user, userId, customerId, isAuthenticated, navigate]);
 
   const handleSelectAddress = (id) => {
     setSelectedAddressId(id);
@@ -153,19 +157,25 @@ const Checkout = () => {
 
       showToast("Abonnement créé !", "success");
 
-      // 4) Redirection vers la page de confirmation
+      // 3) Mise à jour de l'état utilisateur
+      await dispatch(fetchUserProfile()).unwrap();
+
+      //4) Nettoyage du panier
+      dispatch(clearCart());
+
+      // 5) Redirection vers la page de confirmation
       navigate("/order", {
         state: { orderConfirmed: true },
       });
     } catch (err) {
-      console.error("🔩Error subscription - checkout", err);
+      console.error("Error subscription - checkout", err);
       showToast("Erreur lors de la souscription", "error");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // --- Render states ---
+  // Render states
   if (!item) {
     return (
       <main className="p-6">
@@ -218,7 +228,6 @@ const Checkout = () => {
         hasAgreedToTerms={agreedToCGV}
         onTermsChange={handleCGVChange}
         isInModalOpen={true}
-        // setIsModalOpen={() => {}}
       />
 
       <div className="flex justify-end mt-6">
@@ -229,7 +238,7 @@ const Checkout = () => {
           className="cta-success"
           handleClick={handleConfirm}
           disabled={isProcessing}
-          aria-label="Valider l’abonnement et simuler un paiement"
+          aria-label="Valider l’abonnement"
         />
       </div>
     </div>
