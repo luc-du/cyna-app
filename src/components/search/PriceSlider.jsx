@@ -14,17 +14,24 @@ export default function PriceSlider({ label, min, max, value, onChange }) {
   const [currentMin, currentMax] = value;
 
   const handleMinChange = (e) => {
-    const newMin = Number(e.target.value);
-    if (newMin >= min && newMin <= currentMax && newMin <= max) {
-      onChange({ min: newMin, max: currentMax });
-    }
+    const input = Number(e.target.value);
+
+    if (isNaN(input)) return;
+
+    onChange({
+      min: input,
+      max: currentMax,
+    });
   };
 
   const handleMaxChange = (e) => {
-    const newMax = Number(e.target.value);
-    if (newMax <= max && newMax >= currentMin && newMax >= min) {
-      onChange({ min: currentMin, max: newMax });
-    }
+    const input = Number(e.target.value);
+    if (isNaN(input)) return;
+
+    onChange({
+      min: currentMin,
+      max: input,
+    });
   };
 
   return (
