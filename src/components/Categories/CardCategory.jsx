@@ -8,7 +8,8 @@ import { getImageSrc } from "../utils/getImageSrc";
  * - Affiche la vignette d'une catégorie, avec image + titre.
  */
 const CardCategory = ({ category }) => {
-  // Détermine l'URL : ici on suppose que “element.id” suffit
+  const { name, description } = category;
+
   const categoryLink = `/categories/${category.id}`;
 
   // Récupère l'URL de l'image, ou une image par défaut si pas d'images
@@ -19,22 +20,25 @@ const CardCategory = ({ category }) => {
       to={categoryLink}
       className="block bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-2xl "
       role="region"
-      aria-label={`Catégorie : ${category.name}`}
+      aria-label={`Catégorie : ${name}`}
       tabIndex={0}
     >
       <img
         src={imageSrc}
-        alt={category.name}
+        alt={name}
         loading="lazy"
         className="w-full h-40 object-cover"
       />
       <div className="p-4 text-center">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-dark">
-          {category.name}
+        <h3
+          className="text-lg font-semibold text-gray-900 dark:text-black"
+          tabIndex={0}
+        >
+          {name}
         </h3>
-        {category.description && (
+        {description && (
           <p className="text-sm text-gray-600 mt-2 line-clamp-3">
-            {category.description}
+            {description}
           </p>
         )}
       </div>

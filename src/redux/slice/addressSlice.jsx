@@ -4,11 +4,11 @@ import {
   ADDRESS_DELETE_ERROR,
   ADDRESS_UPDATE_ERROR,
   ADDRESSES_GET_ERROR,
-} from "../../components/utils/errorMessages";
+} from "../../lib/errorMessages";
 import {
   ADDRESS_DELETE_SUCCESS,
   ADDRESS_UPDATE_SUCCESS,
-} from "../../components/utils/successMessages";
+} from "../../lib/successMessages";
 import * as addressService from "../../services/addressService";
 
 // Créer une nouvelle adresse

@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import CTAButton from "../shared/buttons/CTAButton";
+import { setStripePrice } from "../utils/stripe/stripeUtils";
 
 /**
  * Composant affichant le résumé de la commande : nombre d’articles, montant HT, TVA, TTC, et zone de code promo.
@@ -10,8 +11,9 @@ import CTAButton from "../shared/buttons/CTAButton";
  * @returns {JSX.Element}
  */
 const CartSummary = ({ total, cartLength }) => {
-  const montantHT = total / 1.196;
-  const tva = total - montantHT;
+  const totalEuros = total / 100;
+  const montantHT = totalEuros / 1.196;
+  const tva = totalEuros - montantHT;
 
   return (
     <section
@@ -31,7 +33,9 @@ const CartSummary = ({ total, cartLength }) => {
         <p className="flex justify-between">
           <span>Montant H.T :</span>
           <span
-            aria-label={`Montant hors taxe : ${montantHT.toFixed(2)} euros`}
+            aria-label={`Montant hors taxe : ${setStripePrice(
+              montantHT
+            )} euros`}
           >
             {montantHT.toFixed(2)} €
           </span>
@@ -44,8 +48,8 @@ const CartSummary = ({ total, cartLength }) => {
         </p>
         <p className="flex justify-between text-xl font-bold mt-2">
           <span>Total T.T.C :</span>
-          <span aria-label={`Total TTC : ${total.toFixed(2)} euros`}>
-            {total.toFixed(2)} €
+          <span aria-label={`Total TTC : ${setStripePrice(total)} euros`}>
+            {setStripePrice(total)}
           </span>
         </p>
       </div>

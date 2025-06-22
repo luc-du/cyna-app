@@ -2,9 +2,10 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import CTAButton from "../../shared/buttons/CTAButton";
 import DataStatus from "../../shared/DataStatus";
-import ModalOverlay from "../../ui/ModalOverlay"; // Keep this import
-import AddressForm from "../Address/AddressForm";
-import AddressList from "../Address/AddressList";
+import ConfirmModal from "../../ui/ConfirmModal";
+import ModalOverlay from "../../ui/ModalOverlay";
+import AddressForm from "./AddressForm";
+import AddressList from "./AddressList";
 
 /**
  * AddressSection
@@ -27,42 +28,56 @@ const AddressSection = ({
   onSaveAddress,
   onDeleteAddress,
   showToast,
-  userId, // ← Renommer user en userId
+  userId,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false); // Renommé pour plus de clarté
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // Nouvel état pour la modale de confirmation
+  const [addressToDeleteId, setAddressToDeleteId] = useState(null); // Pour stocker l'ID de l'adresse à supprimer
   const [currentAddress, setCurrentAddress] = useState(null);
 
-  const closeModal = () => setIsOpen(false);
+  const closeFormModal = () => setIsFormOpen(false); // Renommé pour plus de clarté
+  const closeConfirmModal = () => {
+    setIsConfirmModalOpen(false);
+    setAddressToDeleteId(null);
+  };
 
   // Ouvre le formulaire en mode création
   const handleAddClick = () => {
     setCurrentAddress(null);
-    setIsOpen(true);
+    setIsFormOpen(true);
   };
 
   // Ouvre le formulaire en mode édition
   const handleEdit = (address) => {
     setCurrentAddress(address);
-    setIsOpen(true);
+    setIsFormOpen(true);
   };
 
-  // Supprime une adresse via le callback parent
-  const handleDelete = async (addressId) => {
-    if (!window.confirm("Voulez-vous vraiment supprimer cette adresse ?"))
-      return;
+  // Prépare la suppression d'une adresse en ouvrant la modale de confirmation
+  const handleDeleteClick = (addressId) => {
+    setAddressToDeleteId(addressId);
+    setIsConfirmModalOpen(true);
+  };
+
+  // Exécute la suppression après confirmation
+  const handleDeleteConfirm = async () => {
+    if (!addressToDeleteId) return;
+
     try {
-      await onDeleteAddress(addressId);
+      await onDeleteAddress(addressToDeleteId);
       showToast("Adresse supprimée avec succès", "success");
     } catch (err) {
       console.error(err);
       showToast("Erreur lors de la suppression de l'adresse", "error");
+    } finally {
+      closeConfirmModal(); // Ferme la modale de confirmation
     }
   };
 
-  // Soumet (création ou mise à jour) via le callback parent
+  // Soumettre (création ou mise à jour)
   const handleSave = async (addressData) => {
     await onSaveAddress(addressData);
-    setIsOpen(false);
+    setIsFormOpen(false);
   };
 
   return (
@@ -86,7 +101,7 @@ const AddressSection = ({
           <AddressList
             addresses={addresses}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            onDelete={handleDeleteClick}
           />
         )}
       </div>
@@ -99,15 +114,24 @@ const AddressSection = ({
         />
       </div>
 
-      {isOpen && (
-        <ModalOverlay onClose={closeModal}>
+      {isFormOpen && (
+        <ModalOverlay onClose={closeFormModal}>
           <AddressForm
             addressData={currentAddress}
             userId={userId}
             onSaveAddress={handleSave}
-            onCancel={closeModal}
+            onCancel={closeFormModal}
           />
         </ModalOverlay>
+      )}
+
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          title="Confirmer la suppression"
+          message="Voulez-vous vraiment supprimer cette adresse ? Cette action est irréversible."
+          onConfirm={handleDeleteConfirm}
+          onCancel={closeConfirmModal}
+        />
       )}
     </section>
   );
@@ -118,7 +142,7 @@ AddressSection.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
-      postcode: PropTypes.number,
+      postcode: PropTypes.string.isRequired,
       city: PropTypes.string.isRequired,
       country: PropTypes.string.isRequired,
       url: PropTypes.string,
@@ -134,6 +158,7 @@ AddressSection.propTypes = {
   onDeleteAddress: PropTypes.func.isRequired,
   showToast: PropTypes.func.isRequired,
   user: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default AddressSection;

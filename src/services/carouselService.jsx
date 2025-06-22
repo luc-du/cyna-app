@@ -6,6 +6,5 @@ import { API_ROUTES } from "../api/apiRoutes";
  * @returns {Promise<Array>} Tableau de slides bruts (avant formatage)
  */
 export const getCarouselSlides = (limits = 10) => {
-  // API_ROUTES.CAROUSEL.ALL est une fonction : ALL(limits) → "/carousel?limits=…"
   return axios.get(API_ROUTES.CAROUSEL.ALL(limits)).then((res) => res.data);
 };

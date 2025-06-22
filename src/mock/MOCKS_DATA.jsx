@@ -1,4 +1,4 @@
-import { indexImages } from "../assets/indexImages";
+import { indexImages } from "../../public/indexImages";
 
 const [
   cert, // indexImages[0]
@@ -29,15 +29,15 @@ const [
      → on veut maintenant que `edrProtection` pointe sur la même URL qu’`edr`
 */
 const edrProtection = edr;
-const placeholder3 = identity; // anciennement importé depuis identity.jpg
-const threatIntelligence = identity; // idem
-const placeholder = siem; // anciennement importé depuis siem.jpg
-const cynaSocEntreprise = soc; // on décide que cynaSocEntreprise = soc.jpg
-const cynaSocStandard = soc; // idem
-const socStandard = soc; // idem
-const placeholder2 = technology; // anciennement importé depuis technology.jpg
-const siemAnalytics = technology; // idem
-const xdrAdvanced = xdr; // idem
+const placeholder3 = identity;
+const threatIntelligence = identity;
+const placeholder = siem;
+const cynaSocEntreprise = soc;
+const cynaSocStandard = soc;
+const socStandard = soc;
+const placeholder2 = technology;
+const siemAnalytics = technology;
+const xdrAdvanced = xdr;
 
 /**
  * MOCK_CATEGORIES
@@ -53,22 +53,16 @@ export const MOCK_CATEGORIES = [
     id: 1,
     name: "SOC & SIEM",
     url: "1",
-    images: [
-      { url: placeholder }, // siem.jpg
-      { url: placeholder3 }, // identity.jpg
-    ],
+    images: [{ url: placeholder }, { url: placeholder3 }],
     description:
       "Le SOC (Security Operations Center) fonctionne en synergie avec le SIEM (Security Information and Event Management) pour surveiller, détecter et répondre aux incidents de sécurité.",
-    services: [1, 2], // Référence vers les services
+    services: [1, 2],
   },
   {
     id: 2,
     name: "EDR & XDR",
     url: "2",
-    images: [
-      { url: placeholder2 }, // technology.jpg
-      { url: placeholder }, // siem.jpg
-    ],
+    images: [{ url: placeholder2 }, { url: placeholder }],
     description:
       "Les solutions EDR (Endpoint Detection and Response) et XDR (Extended Detection and Response) offrent une protection proactive contre les menaces avancées.",
     services: [3, 4],
@@ -77,9 +71,7 @@ export const MOCK_CATEGORIES = [
     id: 3,
     name: "CYNA SOC",
     url: "3",
-    images: [
-      { url: placeholder3 }, // identity.jpg
-    ],
+    images: [{ url: placeholder3 }],
     description:
       "Le CYNA SOC est une solution de sécurité de nouvelle génération basée sur une architecture cloud-native.",
     services: [5, 6],
@@ -94,88 +86,86 @@ export const MOCK_CATEGORIES = [
  *  - images: [ { url: string } ] ou imageUrl: string
  *  - link: string (facultatif)
  *
- * Ici, on récupère les mêmes objets que MOCK_SERVICES, on choisit certains
- * services comme “top produits”.
- */
+ *  */
 export const MOCK_TOP_PRODUCTS = [
   {
     id: 1,
     name: "SOC Standard",
     brand: "CYNA",
-    amount: 199.99,
-    active: true, // Indique que le produit est actif
+    amount: 19999.99,
+    active: true,
     promo: true,
-    imageUrl: socStandard, // soc.jpg
+    images: [{ url: socStandard }],
     link: "/products/1",
   },
   {
     id: 2,
     name: "SOC Premium",
     brand: "CYNA",
-    amount: 299.99,
-    active: true, // Indique que le produit est actif
+    amount: 29999.99,
+    active: true,
     promo: false,
-    imageUrl: socPremium, // socPremium.jpg
+    images: [{ url: socPremium }],
     link: "/products/2",
   },
   {
     id: 3,
     name: "EDR Protection",
     brand: "CYNA",
-    amount: 149.99,
-    active: true, // Indique que le produit est actif
+    amount: 14999.99,
+    active: true,
     promo: false,
-    imageUrl: edrProtection, // edr.jpg
+    images: [{ url: edrProtection }],
     link: "/products/3",
   },
   {
     id: 4,
     name: "XDR Advanced",
     brand: "CYNA",
-    amount: 249.99,
-    active: true, // Indique que le produit est actif
+    amount: 24999.99,
+    active: true,
     promo: true,
-    imageUrl: xdrAdvanced, // xdr.jpg
+    images: [{ url: xdrAdvanced }],
     link: "/products/4",
   },
   {
     id: 5,
     name: "CYNA SOC Std",
     brand: "CYNA",
-    amount: 219.99,
-    active: true, // Indique que le produit est actif
+    amount: 21999.99,
+    active: true,
     promo: true,
-    imageUrl: cynaSocStandard, // soc.jpg
+    images: [{ url: cynaSocStandard }],
     link: "/products/5",
   },
   {
     id: 6,
     name: "CYNA SOC Entreprise",
     brand: "CYNA",
-    amount: 499.99,
-    active: true, // Indique que le produit est actif
+    amount: 49999.99,
+    active: true,
     promo: false,
-    imageUrl: cynaSocEntreprise, // soc.jpg
+    images: [{ url: cynaSocEntreprise }],
     link: "/products/6",
   },
   {
     id: 7,
     name: "SIEM Analytics",
     brand: "CYNA",
-    amount: 179.99,
-    active: true, // Indique que le produit est actif
+    amount: 17999.99,
+    active: true,
     promo: true,
-    imageUrl: siemAnalytics, // technology.jpg
+    images: [{ url: siemAnalytics }],
     link: "/products/7",
   },
   {
     id: 8,
     name: "Threat Intelligence",
     brand: "CYNA",
-    amount: 209.99,
-    active: true, // Indique que le produit est actif
+    amount: 20999.99,
+    active: true,
     promo: false,
-    imageUrl: threatIntelligence, // identity.jpg
+    images: [{ url: threatIntelligence }],
     link: "/products/8",
   },
 ];
@@ -190,10 +180,7 @@ export const MOCK_SERVICES = [
     id: 1,
     name: "SOC Standard",
     categoryId: 1,
-    images: [
-      { url: soc }, // soc.jpg
-      { url: socPremium }, // socPremium.jpg
-    ],
+    images: [{ url: soc }, { url: socPremium }],
     description:
       "Service de surveillance continue et de réponse aux incidents en temps réel.",
     active: true,
@@ -211,9 +198,7 @@ export const MOCK_SERVICES = [
     id: 2,
     name: "SOC Premium",
     categoryId: 1,
-    images: [
-      { url: socPremium }, // socPremium.jpg
-    ],
+    images: [{ url: socPremium }],
     description:
       "Version avancée du SOC avec des analyses approfondies et réponse automatisée.",
     available: false,
@@ -230,9 +215,7 @@ export const MOCK_SERVICES = [
     id: 3,
     name: "EDR Protection",
     categoryId: 2,
-    images: [
-      { url: edr }, // edr.jpg
-    ],
+    images: [{ url: edr }],
     description: "Détection et réponse aux menaces ciblant les terminaux.",
     available: false,
     defaultPricing: 1,
@@ -248,9 +231,7 @@ export const MOCK_SERVICES = [
     id: 4,
     name: "XDR Advanced",
     categoryId: 2,
-    images: [
-      { url: xdr }, // xdr.jpg
-    ],
+    images: [{ url: xdr }],
     description:
       "Gestion centralisée des menaces sur l’ensemble des environnements.",
     available: true,
@@ -267,9 +248,7 @@ export const MOCK_SERVICES = [
     id: 5,
     name: "CYNA SOC Standard",
     categoryId: 3,
-    images: [
-      { url: placeholder2 }, // technology.jpg
-    ],
+    images: [{ url: placeholder2 }],
     description: "Surveillance de sécurité cloud-native avec support 24/7.",
     available: true,
     defaultPricing: 1,
@@ -285,9 +264,7 @@ export const MOCK_SERVICES = [
     id: 6,
     name: "CYNA SOC Entreprise",
     categoryId: 3,
-    images: [
-      { url: placeholder3 }, // identity.jpg
-    ],
+    images: [{ url: placeholder3 }],
     description:
       "Solution SOC dédiée aux grandes entreprises, avec personnalisation avancée.",
     available: true,
@@ -311,7 +288,7 @@ export const MOCK_PRICING_OPTIONS = [
   {
     id: 1,
     name: "Mensuel",
-    price: 30000, //stripe prix en cts
+    price: 30000,
     available: true,
     description: "Paiement mensuel pour une flexibilité maximale.",
   },
@@ -379,12 +356,6 @@ export const MOCKSLIDES = [
  * Utilisé en dev pour afficher et tester la section Paiement.
  */
 
-/**
- * MOCK_PAYMENT_METHODS
- * Données simulées des méthodes de paiement pour l'utilisateur
- * Shape : { id, label, last4, expiryMonth, expiryYear, isDefault }
- */
-// mock/paymentMethods.js
 export const MOCK_PAYMENT_METHODS = [
   {
     id: "pm_1",

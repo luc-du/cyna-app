@@ -10,13 +10,25 @@ import { fetchUserProfile } from "../../redux/slice/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
-import { getToken } from "../utils/authStorage";
+import { getToken } from "../utils/auth/authStorage";
 import AddressSelector from "./AddressSelector";
 import CheckoutSummary from "./CheckoutSummary";
 import PaymentSelector from "./PaymentSelector";
 import TermsAgreement from "./TermsAgreement";
 
-export default function Checkout() {
+/* Stripe */
+import { useStripe } from "@stripe/react-stripe-js";
+import { clearCart } from "../../redux/slice/cartSlice";
+
+/**
+ * Checkout
+ * Gère le flow de souscription :
+ *  1. Création du Price Stripe
+ *  2. Création de la Subscription (DEFAULT_INCOMPLETE)
+ *  3. Confirmation du paiement via Stripe.js
+ *  4. Redirection vers /order
+ */
+const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { showToast } = useGlobalToast();
@@ -24,65 +36,76 @@ export default function Checkout() {
   /* Cart */
   const cart = useSelector((state) => state.cart);
   const item = cart?.items?.[0];
+
   /* Adresse */
   const addresses = useSelector((state) => state.address.list);
   const addressesLoading = useSelector((state) => state.address.loading);
   const addressesError = useSelector((state) => state.address.error);
+
   /* User */
   const user = useSelector((state) => state.user.user);
-
-  /* Paiement */
-  const { list: methodsPaymentList } = useSelector((state) => state.payment);
-  const methodPaymentError = useSelector((state) => state.payment.error);
-  const methodPaymentLoading = useSelector((state) => state.payment.loading);
-
   const userId = user?.id;
   const customerId = user?.customerId;
 
+  /* Paiement */
+  const {
+    list: methodsPaymentList,
+    loading: methodPaymentLoading,
+    error: methodPaymentError,
+  } = useSelector((state) => state.payment);
+
+  /* Stripe */
+  const stripe = useStripe();
+
+  /* Local state */
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState(null);
-
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  // CGV:
   const [agreedToCGV, setAgreedToCGV] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
+  /**
+   * Récupère adresses & moyens de paiement dès que l'utilisateur est connu
+   */
   useEffect(() => {
+    if (!isAuthenticated) navigate("/login");
+
     if (!user && getToken()) {
       dispatch(fetchUserProfile());
     }
-    if (user?.id) {
-      // 1.mon user
-      dispatch(getUserAddresses(user));
-      // 2.adresse de user
+    if (userId) {
       dispatch(getUserAddresses(userId));
-      // 3.paiement
       dispatch(fetchPaymentMethods(customerId));
     }
-  }, [dispatch, user, userId, customerId]);
+  }, [dispatch, user, userId, customerId, isAuthenticated, navigate]);
 
   const handleSelectAddress = (id) => {
     setSelectedAddressId(id);
     showToast("Adresse sélectionnée", "info");
   };
 
-  const handleSelectedPaymentMethod = async (id) => {
+  const handleSelectedPaymentMethod = (id) => {
     setSelectedPaymentMethodId(id);
     showToast("Moyen de paiement sélectionné", "info");
   };
 
-  const handleCGVChange = (event) => {
-    setAgreedToCGV(event.target.checked);
-    showToast("Conditions Générales de ventes acceptées", "info");
+  const handleCGVChange = (e) => {
+    setAgreedToCGV(e.target.checked);
+    showToast("Conditions Générales de vente acceptées", "info");
   };
 
+  /**
+   * Étapes au clic sur “Confirmer” :
+   * - Validation des sélections
+   * - Appels API Redux Thunk
+   * - Confirmation Stripe
+   * - Redirection
+   */
   const handleConfirm = async () => {
     if (!selectedAddressId) {
       showToast("Veuillez sélectionner une adresse avant de valider.", "error");
       return;
     }
-
     if (!selectedPaymentMethodId) {
       showToast(
         "Veuillez sélectionner un moyen de paiement avant de valider.",
@@ -90,21 +113,16 @@ export default function Checkout() {
       );
       return;
     }
-
     if (!agreedToCGV) {
       showToast("Veuillez accepter les conditions générales de vente", "error");
       return;
     }
 
-    /* Modal */
-
     setIsProcessing(true);
     showToast("Paiement en cours...", "info");
 
     try {
-      console.log("🛒 from checkout - item:", item);
-
-      // 1.Créer l’objet Price dans Stripe
+      // 1) Création du Price
       const priceDto = {
         currency: "eur",
         amount: 200,
@@ -113,41 +131,51 @@ export default function Checkout() {
         description: item.description,
         pricingModel: item.pricingModel,
       };
-
       const createdPrice = await dispatch(createPriceThunk(priceDto)).unwrap();
       const stripePriceId = createdPrice.priceId;
 
-      let payload;
+      // 2) Création de la subscription côté API → obtention du clientSecret
+      const { clientSecret } = await dispatch(
+        createCustomerSubscription({
+          customerId: user.customerId,
+          priceId: stripePriceId,
+          quantity: item.quantity,
+        })
+      ).unwrap();
 
-      if (item.pricingModel !== "PAY_AS_YOU_GO") {
-        payload = {
-          customerId: user.customerId,
-          priceId: stripePriceId,
-          quantity: item.quantity,
-        };
-      } else {
-        payload = {
-          customerId: user.customerId,
-          priceId: stripePriceId,
-          quantity: item.quantity,
-        };
+      // 3) Confirmation du PaymentIntent avec Stripe.js
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: selectedPaymentMethodId,
+        });
+
+      if (stripeError || paymentIntent.status !== "succeeded") {
+        throw new Error(
+          stripeError?.message || "Erreur lors du paiement Stripe"
+        );
       }
 
-      console.log("📌Payload from Checkout");
-
-      await dispatch(createCustomerSubscription(payload)).unwrap();
-
       showToast("Abonnement créé !", "success");
-      navigate("/order", { state: { orderConfirmed: true } });
-    } catch (error) {
-      showToast("Erreur lors de la souscription");
-      console.error("🔩Error subscription - checkout", error);
+
+      // 3) Mise à jour de l'état utilisateur
+      await dispatch(fetchUserProfile()).unwrap();
+
+      //4) Nettoyage du panier
+      dispatch(clearCart());
+
+      // 5) Redirection vers la page de confirmation
+      navigate("/order", {
+        state: { orderConfirmed: true },
+      });
+    } catch (err) {
+      console.error("Error subscription - checkout", err);
+      showToast("Erreur lors de la souscription", "error");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // Cas panier vide
+  // Render states
   if (!item) {
     return (
       <main className="p-6">
@@ -161,7 +189,6 @@ export default function Checkout() {
     );
   }
 
-  // Cas user non encore chargé
   if (!user) {
     return (
       <main className="p-6 max-w-4xl mx-auto space-y-6">
@@ -201,7 +228,6 @@ export default function Checkout() {
         hasAgreedToTerms={agreedToCGV}
         onTermsChange={handleCGVChange}
         isInModalOpen={true}
-        setIsModalOpen={"setIsModalOpen"}
       />
 
       <div className="flex justify-end mt-6">
@@ -212,9 +238,10 @@ export default function Checkout() {
           className="cta-success"
           handleClick={handleConfirm}
           disabled={isProcessing}
-          aria-label="Valider l’abonnement et simuler un paiement"
+          aria-label="Valider l’abonnement"
         />
       </div>
     </div>
   );
-}
+};
+export default Checkout;

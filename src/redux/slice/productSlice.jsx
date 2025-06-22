@@ -1,16 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { processProductData } from "../../components/utils/productUtils";
+import sortProductsByPriority from "../../components/utils/sortProductByPriority";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
   FALLBACK_STATE_PREFIX,
   SEARCH_UNKNOWN_ERROR,
-} from "../../components/utils/errorMessages";
-import { processProductData } from "../../components/utils/productUtils";
-import sortProductsByPriority from "../../components/utils/sortProductByPriority";
+} from "../../lib/errorMessages";
 import { MOCK_SERVICES, MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 import productService from "../../services/productService";
-
-// ─── Async Thunks ─────────────────────────────────────────────
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchAll",
@@ -185,7 +183,7 @@ const productSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ─── fetchProducts (liste de produits) ───────────────────────────────
+    // fetchProducts (liste de produits)
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.loadingList = true;
@@ -214,7 +212,7 @@ const productSlice = createSlice({
         }
       });
 
-    // ─── fetchProductById ─────────────────────────────────────────────────
+    // fetchProductById
     builder
       .addCase(fetchProductById.pending, (state) => {
         state.loading = true;
@@ -239,7 +237,7 @@ const productSlice = createSlice({
         state.item = null;
       });
 
-    // ─── searchProducts (recherche de produits) ───────────────────────────
+    // searchProducts (recherche de produits)
     builder
       .addCase(searchProducts.pending, (state) => {
         state.loadingSearch = true;

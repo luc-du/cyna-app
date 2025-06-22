@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import EmptyState from "../ui/EmptyState";
 import { getImageSrc } from "../utils/getImageSrc";
 import { getPricingLabel } from "../utils/getPricingLabel";
+import { setStripePrice } from "../utils/stripe/stripeUtils";
 
 /**
  * Résumé du produit sélectionné dans le panier
@@ -47,13 +48,13 @@ export default function CheckoutSummary({ product, quantity }) {
             {description && description}
           </p>
           <p className="text-gray-800 dark:text-gray-100 mt-2">
-            Prix unitaire : <strong>{price.toFixed(2)} €</strong>
+            Prix unitaire : <strong>{setStripePrice(price)}</strong>
           </p>
           <p className="text-gray-800 dark:text-gray-100">
             Quantité : <strong>{quantity}</strong>
           </p>
           <p className="mt-2 text-lg font-bold text-blue-600 dark:text-blue-400">
-            Total : {total.toFixed(2)} €
+            Total : {setStripePrice(total)}
           </p>
         </div>
       </div>
@@ -64,7 +65,7 @@ export default function CheckoutSummary({ product, quantity }) {
 CheckoutSummary.propTypes = {
   product: PropTypes.shape({
     name: PropTypes.string.isRequired,
-    pricingModel: PropTypes.number.isRequired,
+    pricingModel: PropTypes.string.isRequired,
     description: PropTypes.string,
     price: PropTypes.number.isRequired,
     image: PropTypes.string,

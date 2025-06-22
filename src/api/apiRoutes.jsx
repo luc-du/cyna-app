@@ -7,7 +7,7 @@ const CATEGORIES_HOST = import.meta.env.VITE_API_HOST_CATEGORIES;
 const CAROUSEL_HOST = import.meta.env.VITE_API_HOST_CAROUSEL;
 
 export const API_ROUTES = {
-  // ─── AUTHENTIFICATION ─────────────────────────────────────────────────────
+  // AUTHENTIFICATION
   AUTH: {
     SIGNIN: getApiUrl(AUTH_HOST, "/auth/signin"),
     SIGNUP: getApiUrl(AUTH_HOST, "/auth/signup"),
@@ -31,6 +31,7 @@ export const API_ROUTES = {
       ),
     PASSWORD_FORGOT_BY_ID: (userId) =>
       getApiUrl(AUTH_HOST, `/auth/password-forgot/${userId}`),
+
     PASSWORD_FORGOT: (email) =>
       getApiUrl(
         AUTH_HOST,
@@ -38,7 +39,10 @@ export const API_ROUTES = {
       ),
     CHANGE_PASSWORD: () => getApiUrl(AUTH_HOST, "/auth/change-password"),
     RESET_PASSWORD: (email) =>
-      `/auth/password-forgot?email=${encodeURIComponent(email)}`,
+      getApiUrl(
+        AUTH_HOST,
+        `/auth/password-forgot?email=${encodeURIComponent(email)}`
+      ),
   },
 
   // ─── UTILISATEUR ───────────────────────────────────────────────────────────

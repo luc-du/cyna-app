@@ -21,6 +21,11 @@ export const profileTabs = [
     icon: "💳",
   },
   {
+    id: "subscriptions",
+    label: "Abonnements",
+    icon: "📰",
+  },
+  {
     id: "settings",
     label: "Paramètres",
     icon: "⚙️",

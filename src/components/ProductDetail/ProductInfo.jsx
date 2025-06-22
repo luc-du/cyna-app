@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { getPromo } from "../utils/getMockData";
+import { setStripePrice } from "../utils/stripe/stripeUtils";
 
 /**
  * Affiche les informations principales d’un produit.
@@ -20,13 +21,13 @@ const ProductInfo = ({ product }) => {
       </p>
 
       {promotion && (
-        <p className="text-sm font-medium text-green-500">🎉 {promotion}</p>
+        <p className="w-full items-center justify-center text-sm font-medium text-green-500">
+          🎉 Promotion{promotion}
+        </p>
       )}
 
       <p className="text-2xl font-semibold text-green-600 dark:text-green-400">
-        {typeof product.amount === "number"
-          ? `${product.amount.toFixed(2)} €`
-          : "Prix sur demande"}
+        {setStripePrice(product.amount)}
       </p>
 
       <p
@@ -51,7 +52,7 @@ ProductInfo.propTypes = {
     promo: PropTypes.bool,
     defaultPricing: PropTypes.number,
     pricingModel: PropTypes.string,
-    active: PropTypes.bool.isRequired,
+    active: PropTypes.bool,
     images: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,

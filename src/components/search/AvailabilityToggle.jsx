@@ -1,5 +1,3 @@
-// src/components/Search/AvailabilityToggle.jsx
-
 import PropTypes from "prop-types";
 
 /**

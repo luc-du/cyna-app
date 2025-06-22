@@ -16,7 +16,7 @@ import {
   clearToken,
   getToken,
   setToken,
-} from "../../components/utils/authStorage";
+} from "../../components/utils/auth/authStorage";
 import { AuthService } from "../../services/authServices";
 
 /**
@@ -191,6 +191,9 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(logout, (state) => {
+        return initialState;
+      })
       // Inscription réussie
       .addCase(registerUser.fulfilled, (state, action) => {
         const { token } = action.payload;

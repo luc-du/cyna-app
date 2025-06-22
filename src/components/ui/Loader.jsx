@@ -12,7 +12,6 @@ import PropTypes from "prop-types";
 export default function Loader({ message = "Chargement en cours..." }) {
   return (
     <div className="w-full flex flex-col items-center justify-center py-12 text-gray-500">
-      {/* Icône de chargement animée */}
       <svg
         className="animate-spin h-10 w-10 text-primary mb-4"
         xmlns="http://www.w3.org/2000/svg"
@@ -36,17 +35,17 @@ export default function Loader({ message = "Chargement en cours..." }) {
         />
       </svg>
 
-      {/* Si message est une string, on l'affiche dans un <p>; sinon on rend directement le nœud JSX */}
       {typeof message === "string" ? (
-        <p className="text-lg">{message}</p>
+        <p className="text-lg" role="status">
+          {message}
+        </p>
       ) : (
-        message
+        <div role="status">{message}</div>
       )}
     </div>
   );
 }
 
 Loader.propTypes = {
-  /** Message (string) ou élément JSX à afficher sous l'icône de chargement */
   message: PropTypes.node,
 };

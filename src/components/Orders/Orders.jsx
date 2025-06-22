@@ -1,81 +1,177 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fetchCustomerSubscription } from "../../redux/slice/subscriptionSlice";
 import CTAButton from "../shared/buttons/CTAButton";
+import DownloadInvoiceButton from "../shared/buttons/DownloadInvoiceButton";
+import DataStatus from "../shared/DataStatus";
+import {
+  renderSubscriptionStatus,
+  setMappedDate,
+} from "../utils/stripe/stripeUtils";
 
 /**
- * Page de confirmation de commande
- * Affiche un message de succès après le checkout.
- * Accessible uniquement via location.state.orderConfirmed === true
+ * Orders
+ * Page de confirmation d'abonnement dynamique.
+ * Affiche un résumé du premier abonnement du client après checkout.
+ * Accessible uniquement si l'utilisateur est authentifié et que location.state.orderConfirmed === true.
  *
+ * @component
  * @returns {JSX.Element}
  */
 const Orders = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const { user } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
 
-  useEffect(() => {
-    // Sécurité : redirection si pas d’état de validation
-    if (!location.state?.orderConfirmed) {
-      navigate("/", { replace: true });
-    }
-  }, [location, navigate]);
+  const {
+    current: subscriptions,
+    loading,
+    error,
+  } = useSelector((state) => state.subscription);
 
-  // Redirection si non connecté
+  const customerId = user?.customerId;
+  const subscription = subscriptions?.[0];
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login", { replace: true });
+      return;
     }
-  }, [isAuthenticated, navigate]);
+    if (!location.state?.orderConfirmed) {
+      navigate("/", { replace: true });
+      return;
+    }
+    if (customerId) {
+      dispatch(fetchCustomerSubscription(customerId));
+    }
+  }, [isAuthenticated, location.state, customerId, dispatch, navigate]);
+
+  // États de chargement et erreurs
+  if (loading) {
+    return (
+      <div className="p-6 max-w-4xl mx-auto" role="region" aria-busy="true">
+        <DataStatus
+          dataLength={0}
+          loading
+          error={null}
+          loadingMessage="Chargement de votre abonnement..."
+        />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div
+        className="p-6 max-w-4xl mx-auto"
+        role="region"
+        aria-live="assertive"
+      >
+        <DataStatus
+          dataLength={0}
+          loading={false}
+          error={error}
+          errorMessage={error}
+        />
+      </div>
+    );
+  }
+  if (!subscription) {
+    return (
+      <div className="p-6 max-w-4xl mx-auto" role="region" aria-live="polite">
+        <DataStatus
+          dataLength={0}
+          loading={false}
+          error={null}
+          emptyMessage="Aucun abonnement trouvé."
+        />
+      </div>
+    );
+  }
+
+  const { productName, amount } = subscription;
+  const date = setMappedDate(subscription);
+  const renderedStatus = renderSubscriptionStatus(subscription.status);
 
   return (
-    <main
-      role="main"
+    <div
+      role="region"
       aria-labelledby="order-confirmation-title"
-      className="max-w-2xl mx-auto py-16 px-4 text-center text-gray-800 dark:text-gray-100"
+      className="max-w-2xl mx-auto py-16 px-4 text-center"
     >
-      <h1 id="order-confirmation-title" className="text-3xl font-bold mb-6">
+      <h1
+        id="order-confirmation-title"
+        className="text-3xl font-bold mb-6"
+        tabIndex={0}
+      >
         🎉 Merci pour votre commande !
       </h1>
 
-      <p className="mb-4 text-lg">
-        Votre souscription a bien été enregistrée. Un e-mail de confirmation
-        vous a été envoyé.
+      <p className="mb-4 text-lg text-center">
+        Votre souscription a bien été enregistrée.
       </p>
+      <p className="mb-6 text-lg text-left">
+        Voici les détails de votre abonnement :
+      </p>
+      <section
+        className="bg-gray-100 dark:bg-gray-800 shadow rounded-xl p-6 mb-6"
+        aria-labelledby="order-summary-title"
+      >
+        <h2 id="order-summary-title" className="sr-only">
+          Détails de votre abonnement
+        </h2>
+        <dl className="grid grid-cols-1 gap-4">
+          <div>
+            <dt className="font-semibold">Date de souscription</dt>
+            <dd className="">
+              le <span>{date}</span>
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold ">Abonnement</dt>
+            <dd className="">{productName}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold ">Montant</dt>
+            <dd className="">{amount} €</dd>
+          </div>
+          <div>
+            <dt className="font-semibold ">Statut</dt>
+            <dd className="">{renderedStatus}</dd>
+          </div>
+          <div>
+            <dt className="font-semibold ">Client</dt>
+            <dd className="">
+              {user?.firstname} {user?.lastname}
+            </dd>
+          </div>
+        </dl>
+      </section>
 
-      {/* Optionnel : Résumé simulé de commande */}
-      <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6">
-        <p className="font-semibold">
-          Abonnement : <span className="font-normal">Premium Mensuel</span>
-        </p>
-        <p className="font-semibold">
-          Montant : <span className="font-normal">29,99 €</span>
-        </p>
-        <p className="font-semibold">
-          Client :{" "}
-          <span className="font-normal">
-            {user?.firstname} {user?.lastname}
-          </span>
-        </p>
-      </div>
-
-      <div className="flex justify-center gap-4">
+      <div className="flex items-center flex-col md:flex-row justify-center gap-4 mt-6">
+        <DownloadInvoiceButton
+          subscription={subscription}
+          user={user}
+          date={date}
+          className="text-blue-700 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-200 underline transition-colors duration-200"
+        />
         <CTAButton
+          link="/"
           label="Retour à l’accueil"
-          handleClick={() => navigate("/")}
-          className="cta-primary"
-          aria-label="Retour à la page d'accueil"
+          className="underline hover:text-gray-400"
+          aria-label="Retourner à la page d'accueil"
         />
         <CTAButton
+          link="/profile"
           label="Voir mon profil"
-          handleClick={() => navigate("/profile")}
-          className="cta-secondary"
-          aria-label="Accéder à mon profil"
+          className="underline hover:text-gray-400"
+          aria-label="Aller à la page de profil"
         />
       </div>
-    </main>
+    </div>
   );
 };
 

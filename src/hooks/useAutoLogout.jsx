@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useGlobalToast } from "../components/GlobalToastProvider";
-import { clearToken, getToken } from "../components/utils/authStorage";
+import { clearToken, getToken } from "../components/utils/auth/authStorage";
 import { logout } from "../redux/slice/authSlice";
 
 /**

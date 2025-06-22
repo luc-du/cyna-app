@@ -17,10 +17,7 @@ const PaymentMethodListItem = ({
     method;
 
   const [showConfirm, setShowConfirm] = useState(false);
-
   const CardIcon = setCardIcon(type);
-  console.log("Type passed to setCardIcon:", type);
-  console.log("Result of setCardIcon (CardIcon):", CardIcon);
   return (
     <>
       <li className="flex flex-wrap items-center justify-between bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">

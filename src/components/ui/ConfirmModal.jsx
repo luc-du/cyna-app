@@ -2,7 +2,31 @@ import PropTypes from "prop-types";
 import CTAButton from "../shared/buttons/CTAButton";
 import ModalOverlay from "./ModalOverlay";
 
-export default function ConfirmModal({ title, message, onConfirm, onCancel }) {
+/**
+ * Composant modale de confirmation.
+ * Par défaut : Annuler / Confirmer (ex: suppression).
+ * Personnalisable pour d'autres contextes.
+ *
+ * @param {string} title - Titre de la modale
+ * @param {string} message - Message de confirmation
+ * @param {Function} onConfirm - Callback en cas de validation
+ * @param {Function} onCancel - Callback en cas d’annulation
+ * @param {string} [confirmLabel="Confirmer"] - Libellé bouton valider
+ * @param {string} [cancelLabel="Annuler"] - Libellé bouton annuler
+ * @param {string} [confirmClass="cta-danger"] - Classe CSS bouton confirmer
+ * @param {string} [cancelClass="underline text-gray-700"] - Classe CSS bouton annuler
+ * @returns {JSX.Element}
+ */
+export default function ConfirmModal({
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  confirmLabel = "Confirmer",
+  cancelLabel = "Annuler",
+  confirmClass = "cta-danger",
+  cancelClass = "underline text-gray-700",
+}) {
   return (
     <ModalOverlay onClose={onCancel}>
       <div
@@ -18,13 +42,16 @@ export default function ConfirmModal({ title, message, onConfirm, onCancel }) {
         <div className="flex justify-end space-x-4">
           <CTAButton
             handleClick={onCancel}
-            label="Annuler"
-            className="underline text-gray-700"
+            label={cancelLabel}
+            className={
+              cancelClass +
+              "dark:text-white hover:text-gray-900 dark:hover:text-gray-300"
+            }
           />
           <CTAButton
             handleClick={onConfirm}
-            label="Supprimer"
-            className="cta-danger"
+            label={confirmLabel}
+            className={confirmClass}
           />
         </div>
       </div>
@@ -37,4 +64,8 @@ ConfirmModal.propTypes = {
   message: PropTypes.string.isRequired,
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  confirmLabel: PropTypes.string,
+  cancelLabel: PropTypes.string,
+  confirmClass: PropTypes.string,
+  cancelClass: PropTypes.string,
 };

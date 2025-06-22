@@ -37,7 +37,7 @@ const SearchBar = ({
     <form
       role="search"
       onSubmit={handleSubmit}
-      className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-3"
+      className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-3 "
       aria-label="Formulaire de recherche"
     >
       <label htmlFor="search-input" className="sr-only">
@@ -50,7 +50,7 @@ const SearchBar = ({
         value={term}
         onChange={(e) => setTerm(e.target.value)}
         placeholder={placeholder}
-        className="w-full max-w-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full max-w-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
         aria-required="true"
         aria-label={placeholder}
       />
@@ -71,16 +71,11 @@ const SearchBar = ({
   );
 };
 
+export default SearchBar;
 SearchBar.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
   label: PropTypes.string,
   placeholder: PropTypes.string,
   minLength: PropTypes.number,
-};
-
-export default SearchBar;
-SearchBar.defaultProps = {
-  placeholder: "Rechercher …",
-  minLength: 3,
 };

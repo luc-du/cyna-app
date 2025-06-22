@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { emptyBox } from "../../assets/indexImages";
+import { emptyBox } from "../../../public/indexImages";
 import { fetchCategoryById } from "../../redux/slice/categorySlice";
 import DataStatus from "../shared/DataStatus";
 import NoResult from "../shared/NoResult";
@@ -11,9 +11,11 @@ import CategoryHeader from "./CategoryHeader";
 import CategoryProductList from "./CategoryProductList";
 
 /**
- * Page de détails d'une catégorie.
- * Récupère dynamiquement les données via l'ID depuis l'URL.
- * Gère les erreurs, l'état de chargement, et l'affichage fallback.
+ * CategoryDetails
+ * Affiche les détails d’une catégorie à partir de l’ID en URL.
+ * Gère chargement, erreurs et affichage conditionnel de produits.
+ *
+ * @returns {JSX.Element}
  */
 const CategoryDetails = () => {
   const { categoryId } = useParams();
@@ -29,14 +31,14 @@ const CategoryDetails = () => {
     dispatch(fetchCategoryById(categoryId));
   }, [dispatch, categoryId]);
 
-  // Si l’API renvoie une erreur persistante sans catégorie : redirection vers 404
+  // Redirige vers /404 si erreur persistante et aucune catégorie trouvée
   useEffect(() => {
     if (!loadingSelected && errorSelected && !selectedCategory) {
       navigate("/404");
     }
   }, [loadingSelected, errorSelected, selectedCategory, navigate]);
 
-  // Pendant le chargement : affichage centré du loader
+  // Affichage en cours de chargement
   if (loadingSelected) {
     return (
       <div
@@ -53,16 +55,12 @@ const CategoryDetails = () => {
     <main
       className="max-w-7xl w-full my-6 mx-auto p-4 bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300"
       role="region"
-      aria-label={`Détails de la catégorie ${selectedCategory?.name || ""}`}
+      aria-labelledby="category-detail-title"
     >
-      <button
-        onClick={() => navigate("/categories")}
-        className="mb-4 text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        ⬅ Retour à la liste des catégories
-      </button>
+      <h1 id="category-detail-title" className="sr-only">
+        Détails de la catégorie {selectedCategory?.name || ""}
+      </h1>
 
-      {/* Affichage d'une erreur générique si besoin */}
       <DataStatus
         loading={false}
         error={errorSelected}
@@ -70,14 +68,12 @@ const CategoryDetails = () => {
         aria-label="Statut de la catégorie"
       />
 
-      {/* Si la catégorie est chargée avec succès */}
       {selectedCategory && (
         <>
           <CategoryHeader element={selectedCategory}>
             <CategoryDescription element={selectedCategory} />
           </CategoryHeader>
 
-          {/* Affichage conditionnel des produits */}
           {Array.isArray(selectedCategory.products) &&
           selectedCategory.products.length > 0 ? (
             <CategoryProductList element={selectedCategory} />
