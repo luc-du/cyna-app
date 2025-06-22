@@ -142,14 +142,13 @@ AddressSection.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
-      postcode: PropTypes.string.isRequired,
+      postcode: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       city: PropTypes.string.isRequired,
       country: PropTypes.string.isRequired,
       url: PropTypes.string,
       user: PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-          .isRequired,
-      }).isRequired,
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      }),
     })
   ).isRequired,
   loading: PropTypes.bool.isRequired,
