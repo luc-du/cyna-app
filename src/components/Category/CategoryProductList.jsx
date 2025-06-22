@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { placeHolder } from "../../assets/indexImages";
+import { placeHolder } from "../../../public/indexImages";
 import { MOCK_SERVICES } from "../../mock/MOCKS_DATA";
 import ProductCard from "../Home/ProductCard";
 import DataStatus from "../shared/DataStatus";

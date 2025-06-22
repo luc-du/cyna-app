@@ -1,5 +1,5 @@
 import { useState } from "react";
-import cynaLogo from "../assets/logo.png";
+import { logoPng as cynaLogo } from "../../public/indexImages";
 import { resetPassword } from "../services/authServices";
 import { useGlobalToast } from "./GlobalToastProvider";
 

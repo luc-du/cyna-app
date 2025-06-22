@@ -1,4 +1,4 @@
-import { placeHolder } from "../../assets/indexImages";
+import { placeHolder } from "../../../public/indexImages";
 
 /**
  * Récupère l'URL de la première image d'un élément.
@@ -9,9 +9,15 @@ import { placeHolder } from "../../assets/indexImages";
  */
 
 export const getImageSrc = (element) => {
-  // Vérifie si element est un objet et a une propriété images
   if (element && typeof element === "object" && Array.isArray(element.images)) {
-    return element.images[0]?.url || placeHolder;
+    const imageUrl = element.images[0]?.url;
+    if (imageUrl && typeof imageUrl === "string") {
+      if (imageUrl.startsWith("http") || imageUrl.startsWith("/")) {
+        return imageUrl;
+      }
+      // Sinon on suppose un import statique (obj Vite/Webpack)
+      return typeof imageUrl === "string" ? imageUrl : placeHolder;
+    }
   }
   return placeHolder;
 };

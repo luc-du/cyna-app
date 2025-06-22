@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { emptyBox } from "../../assets/indexImages";
+import { emptyBox } from "../../../public/indexImages";
 import { fetchCategoryById } from "../../redux/slice/categorySlice";
 import DataStatus from "../shared/DataStatus";
 import NoResult from "../shared/NoResult";

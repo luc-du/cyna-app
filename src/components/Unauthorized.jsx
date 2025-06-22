@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { IconCrossCircle } from "../assets/indexImages";
+import { IconCrossCircle } from "../../public/indexImages";
 /**
  * Composant React pour afficher une page d'accès refusé.
  *
@@ -32,7 +32,7 @@ export default function Unauthorized() {
           Vous n&apos;avez pas les droits pour accéder à cette page.
         </p>
         <div className="flex mt-6 justify-center mb-4" aria-hidden="true">
-          <IconCrossCircle />
+          <IconCrossCircle className="w-12 h-12 text-red-600" />
         </div>
         <div className="text-center">
           <Link

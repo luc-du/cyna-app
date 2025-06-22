@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf";
 import PropTypes from "prop-types";
-import { DownloadIcon, logoPng } from "../../../assets/indexImages";
+import { DownloadIcon, logoPng } from "../../../../public/indexImages";
 import CTAButton from "./CTAButton";
 
 /**

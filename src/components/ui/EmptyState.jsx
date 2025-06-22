@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import EmptyBox from "../../assets/images/empty-box.jpg";
+import { emptyBox } from "../../../public/indexImages";
 
 /**
  * Composant d'état vide (EmptyState)
@@ -17,7 +17,7 @@ export default function EmptyState({ message = "Aucun résultat trouvé." }) {
       role="status"
     >
       <img
-        src={EmptyBox}
+        src={emptyBox}
         alt=""
         role="presentation"
         aria-hidden="true"

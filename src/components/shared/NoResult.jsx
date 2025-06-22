@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { emptyBox } from "../../assets/indexImages";
+import { emptyBox } from "../../../public/indexImages";
 
 /**
  * NoResult

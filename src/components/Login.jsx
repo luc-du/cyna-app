@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import cynaLogo from "../assets/logo.png";
+import { logoPng as cynaLogo } from "../../public/indexImages";
 import { loginUser } from "../redux/slice/authSlice";
 import { fetchUserProfile } from "../redux/slice/userSlice";
 import { useGlobalToast } from "./GlobalToastProvider";
