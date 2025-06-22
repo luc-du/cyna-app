@@ -23,7 +23,6 @@ const PaymentMethodList = ({
 }) => {
   return (
     <div aria-live="polite" aria-busy={loading}>
-      {/* Loader / Erreur / Vide */}
       <DataStatus
         loading={loading}
         error={error}
@@ -32,7 +31,6 @@ const PaymentMethodList = ({
         emptyMessage="Aucune carte enregistrée."
       />
 
-      {/* Liste des cartes, n'afficher que si on a des méthodes */}
       {!loading && !error && Array.isArray(methods) && methods.length > 0 && (
         <ul role="list" className="space-y-4" aria-label="Liste des cartes">
           {methods.map((pm) => (
@@ -61,7 +59,7 @@ PaymentMethodList.propTypes = {
       isDefault: PropTypes.bool,
     })
   ),
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
   error: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(Error),

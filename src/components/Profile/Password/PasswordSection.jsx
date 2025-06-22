@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CTAButton from "../../shared/buttons/CTAButton";
 import ModalOverlay from "../../ui/ModalOverlay";
 import PasswordForm from "./PasswordForm";
@@ -15,22 +15,10 @@ import PasswordForm from "./PasswordForm";
  */
 const PasswordSection = ({ userId, onChangePassword, showToast }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef(null);
   const dialogRef = useRef(null);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-
-  // Gestion du focus :
-  // - focus dans le modal à l'ouverture,
-  // - retour sur le bouton à la fermeture.
-  useEffect(() => {
-    if (isOpen) {
-      dialogRef.current?.focus();
-    } else {
-      triggerRef.current?.focus();
-    }
-  }, [isOpen]);
 
   // Wrap du submit pour fermer le modal sur succès
   const handleSubmit = async (payload) => {
@@ -60,7 +48,6 @@ const PasswordSection = ({ userId, onChangePassword, showToast }) => {
           handleClick={openModal}
           aria-haspopup="dialog"
           aria-expanded={isOpen}
-          ref={triggerRef}
         />
       </div>
 
