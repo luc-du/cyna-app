@@ -130,8 +130,34 @@ export default function SearchPage() {
       results = results.filter((product) => product.active === true);
     }
 
+    // 4.Filtrage par prix
+    results.sort((a, b) => {
+      console.log("💰ProductAmount", a.amount, b.amount, sort);
+
+      switch (sort) {
+        case "priceAsc":
+          return a.amount - b.amount;
+        case "priceDesc":
+          return b.amount - a.amount;
+        case "newest":
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        case "oldest":
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case "availableFirst":
+          return (b.active === true) - (a.active === true); // true > false
+        default:
+          return 0;
+      }
+    });
+
     return results;
-  }, [searchResults, selectedFeatures, selectedCategoriesIds, availableOnly]);
+  }, [
+    searchResults,
+    selectedFeatures,
+    selectedCategoriesIds,
+    availableOnly,
+    sort,
+  ]);
 
   return (
     <div

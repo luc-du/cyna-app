@@ -20,23 +20,12 @@ export default function SortSelect({ sort, onChange }) {
       >
         <option value="priceAsc">Prix : du moins cher au plus cher</option>
         <option value="priceDesc">Prix : du plus cher au moins cher</option>
-        <option value="newest">Nouveauté : plus récents d’abord</option>
-        <option value="oldest">Nouveauté : plus anciens d’abord</option>
-        <option value="availableFirst">
-          Disponibilité : disponibles d’abord
-        </option>
       </select>
     </div>
   );
 }
 
 SortSelect.propTypes = {
-  sort: PropTypes.oneOf([
-    "priceAsc",
-    "priceDesc",
-    "newest",
-    "oldest",
-    "availableFirst",
-  ]).isRequired,
+  sort: PropTypes.oneOf(["priceAsc", "priceDesc", "availableFirst"]).isRequired,
   onChange: PropTypes.func.isRequired,
 };

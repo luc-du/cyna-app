@@ -31,11 +31,13 @@ const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
             {name}
           </h3>
-          {promotion && (
-            <h4 className="mb-4 text-center text-green-500 font-medium">
-              {promotion}
-            </h4>
-          )}
+          <div className="w-full h-6 flex justify-center items-center">
+            {promotion && (
+              <h4 className="mb-4 text-center text-green-500 font-medium">
+                {promotion}
+              </h4>
+            )}
+          </div>
           <p className="text-gray-600 dark:text-gray-300">
             {setStripePrice(amount)}
           </p>
