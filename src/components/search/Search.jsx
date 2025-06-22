@@ -57,7 +57,7 @@ export default function SearchPage() {
             size: pageSize,
             categoriesIds: selectedCategoriesIds,
             features: selectedFeatures,
-            minPrice: minPrice * 100, // conversion euros → centimes
+            minPrice: minPrice * 100, // conversion euros → centimes en BDD
             maxPrice: maxPrice * 100,
             availableOnly,
             sort,
@@ -98,35 +98,40 @@ export default function SearchPage() {
     setLocalInput("");
   };
 
-  // 🔎 Filtrage local des caractéristiques techniques
+  // Filtrage local des caractéristiques techniques
   const finalResults = useMemo(() => {
     if (!searchResults) return [];
 
-    let results = searchResults;
+    let results = [...searchResults];
 
+    // 1.Filtrage caractéristiques techniques
     if (selectedFeatures.length > 0) {
       results = results.filter((product) => {
         if (!product.caracteristics) return false;
-
         const productFeatures = product.caracteristics
           .toLowerCase()
           .split(",")
           .map((f) => f.trim());
-
         return selectedFeatures.some((feature) =>
           productFeatures.includes(feature)
         );
       });
     }
 
+    // 2.Filtrage catégories
     if (selectedCategoriesIds.length > 0) {
       results = results.filter((product) =>
         selectedCategoriesIds.includes(product.category?.id)
       );
     }
 
+    // 3.Filtrage disponibilité
+    if (availableOnly) {
+      results = results.filter((product) => product.active === true);
+    }
+
     return results;
-  }, [searchResults, selectedFeatures, selectedCategoriesIds]);
+  }, [searchResults, selectedFeatures, selectedCategoriesIds, availableOnly]);
 
   return (
     <div
