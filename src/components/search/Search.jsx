@@ -8,6 +8,7 @@ import {
 } from "../../redux/slice/searchSlice";
 import ProductCard from "../Home/ProductCard";
 import CTAButton from "../shared/buttons/CTAButton";
+import PaginationControls from "../shared/PaginationControls";
 import EmptyState from "../ui/EmptyState";
 import Loader from "../ui/Loader";
 import AvailabilityToggle from "./AvailabilityToggle";
@@ -16,11 +17,10 @@ import PriceSlider from "./PriceSlider";
 import SortSelect from "./SortSelect";
 
 /**
- * Attention développeur :
- * - Le champ `amount` en BDD est en centimes → les valeurs min/max doivent être multipliées par 100.
- * - Le champ `caracteristics` est rempli depuis peu → le filtrage des "features" est fait **en frontend**, localement.
+ * Page de recherche avec filtres dynamiques et tri local.
+ * - Applique une pagination frontend
+ * - Contourne l'absence de filtres côté backend (catégories, features, disponibilité)
  */
-
 export default function SearchPage() {
   const dispatch = useDispatch();
 
@@ -37,14 +37,17 @@ export default function SearchPage() {
   const [localInput, setLocalInput] = useState(query);
   const inPageInputRef = useRef(null);
 
+  // Récupère les catégories au premier render
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  // Synchronise l'input local avec la query Redux
   useEffect(() => {
     setLocalInput(query);
   }, [query]);
 
+  // Recherche avec debounce 300ms
   useEffect(() => {
     const timer = setTimeout(() => {
       const trimmed = localInput.trim();
@@ -57,8 +60,8 @@ export default function SearchPage() {
             size: pageSize,
             categoriesIds: selectedCategoriesIds,
             features: selectedFeatures,
-            minPrice: minPrice * 100, // conversion euros → centimes en BDD
-            maxPrice: maxPrice * 100,
+            minPrice,
+            maxPrice,
             availableOnly,
             sort,
           })
@@ -87,24 +90,14 @@ export default function SearchPage() {
     }
   }, []);
 
-  const handleResetAll = () => {
-    dispatch(clearSearch());
-    setSelectedCategoriesIds([]);
-    setSelectedFeatures([]);
-    setMinPrice(0);
-    setMaxPrice(1000);
-    setAvailableOnly(false);
-    setSort("priceAsc");
-    setLocalInput("");
-  };
-
-  // Filtrage local des caractéristiques techniques
+  /**
+   * Applique les filtres, le tri et la pagination en local.
+   */
   const finalResults = useMemo(() => {
     if (!searchResults) return [];
 
     let results = [...searchResults];
 
-    // 1.Filtrage caractéristiques techniques
     if (selectedFeatures.length > 0) {
       results = results.filter((product) => {
         if (!product.caracteristics) return false;
@@ -118,46 +111,50 @@ export default function SearchPage() {
       });
     }
 
-    // 2.Filtrage catégories
     if (selectedCategoriesIds.length > 0) {
       results = results.filter((product) =>
         selectedCategoriesIds.includes(product.category?.id)
       );
     }
 
-    // 3.Filtrage disponibilité
     if (availableOnly) {
       results = results.filter((product) => product.active === true);
     }
 
-    // 4.Filtrage par prix
     results.sort((a, b) => {
-      console.log("💰ProductAmount", a.amount, b.amount, sort);
-
       switch (sort) {
         case "priceAsc":
           return a.amount - b.amount;
         case "priceDesc":
           return b.amount - a.amount;
-        case "newest":
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        case "oldest":
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        case "availableFirst":
-          return (b.active === true) - (a.active === true); // true > false
         default:
           return 0;
       }
     });
 
-    return results;
+    const offset = Math.max(0, (currentPage - 1) * pageSize);
+
+    return results.slice(offset, offset + pageSize);
   }, [
     searchResults,
     selectedFeatures,
     selectedCategoriesIds,
     availableOnly,
     sort,
+    currentPage,
+    pageSize,
   ]);
+
+  const handleResetAll = () => {
+    dispatch(clearSearch());
+    setSelectedCategoriesIds([]);
+    setSelectedFeatures([]);
+    setMinPrice(0);
+    setMaxPrice(1000);
+    setAvailableOnly(false);
+    setSort("priceAsc");
+    setLocalInput("");
+  };
 
   return (
     <div
@@ -165,7 +162,7 @@ export default function SearchPage() {
       role="region"
       aria-labelledby="search-results-heading"
     >
-      {/* Filtres latéraux */}
+      {/* Filtres */}
       <aside className="w-full lg:w-1/4 mb-8 lg:mb-0 lg:pr-6">
         <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
           Filtres
@@ -205,12 +202,12 @@ export default function SearchPage() {
         <CTAButton
           type="button"
           handleClick={handleResetAll}
-          className="mt-6 text-sm text-primary hover:underline focus:outline-none dark:text-white"
-          label={"Réinitialiser tous les filtres"}
+          className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-white focus:outline-none"
+          label="Réinitialiser tous les filtres"
         />
       </aside>
 
-      {/* Résultats de recherche */}
+      {/* Résultats */}
       <section className="w-full lg:w-3/4">
         <div className="mb-6">
           <input
@@ -237,8 +234,8 @@ export default function SearchPage() {
             <CTAButton
               type="button"
               handleClick={handleResetAll}
-              className="text-sm text-primary hover:underline focus:outline-none ml-0 sm:ml-4  dark:text-white"
-              label={"Réinitialiser la recherche"}
+              className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-white focus:outline-none"
+              label="Réinitialiser la recherche"
             />
           )}
         </div>
@@ -270,18 +267,21 @@ export default function SearchPage() {
                 <EmptyState message="Aucun produit ne correspond à votre recherche." />
               </div>
             ) : (
-              <div
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                aria-label="Liste des produits"
-              >
-                {finalResults.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    linkTo={`/products/${product.id}`}
-                  />
-                ))}
-              </div>
+              <section className="mb-6 w-full">
+                <div
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                  aria-label="Liste des produits"
+                >
+                  {finalResults.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+
+                <PaginationControls
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(searchResults.length / pageSize)}
+                />
+              </section>
             )}
           </>
         )}

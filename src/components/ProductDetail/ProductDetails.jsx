@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
-import { placeHolder } from "../../assets/indexImages";
+import { placeHolder } from "../../../public/indexImages";
 import { MOCK_SERVICES } from "../../mock/MOCKS_DATA";
 import { fetchProductById } from "../../redux/slice/productSlice";
 import DataStatus from "../shared/DataStatus";

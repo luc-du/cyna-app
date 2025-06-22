@@ -119,6 +119,7 @@ const LegalNotice = () => {
           link="/"
           label="Retour à l'accueil"
           aria-label="Retour à l’accueil de la plateforme"
+          className={"cta-secondary"}
         />
       </footer>
     </article>

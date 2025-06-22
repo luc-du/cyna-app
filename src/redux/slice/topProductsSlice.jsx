@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { placeHolder } from "../../../public/indexImages";
 import { API_ROUTES } from "../../api/apiRoutes";
-import { placeHolder } from "../../assets/indexImages";
 import sortProductsByPriority from "../../components/utils/sortProductByPriority";
 import {
   FALLBACK_API_MESSAGE,

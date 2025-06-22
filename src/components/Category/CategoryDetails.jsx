@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { emptyBox } from "../../assets/indexImages";
+import { emptyBox } from "../../../public/indexImages";
 import { fetchCategoryById } from "../../redux/slice/categorySlice";
 import DataStatus from "../shared/DataStatus";
 import NoResult from "../shared/NoResult";
@@ -60,14 +60,6 @@ const CategoryDetails = () => {
       <h1 id="category-detail-title" className="sr-only">
         Détails de la catégorie {selectedCategory?.name || ""}
       </h1>
-
-      <button
-        onClick={() => navigate("/categories")}
-        className="mb-4 text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Retour à la liste des catégories"
-      >
-        ← Retour à la liste des catégories
-      </button>
 
       <DataStatus
         loading={false}

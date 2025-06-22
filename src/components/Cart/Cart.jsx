@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { emptyCartIcon } from "../../assets/indexImages";
+import { emptyCartIcon } from "../../../public/indexImages";
 import { useToast } from "../../hooks/useToast";
 import { updateQuantity } from "../../redux/slice/cartSlice";
 import { syncCartWithServer } from "../../services/cartService";

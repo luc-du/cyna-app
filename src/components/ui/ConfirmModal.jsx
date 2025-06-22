@@ -43,7 +43,10 @@ export default function ConfirmModal({
           <CTAButton
             handleClick={onCancel}
             label={cancelLabel}
-            className={cancelClass}
+            className={
+              cancelClass +
+              "dark:text-white hover:text-gray-900 dark:hover:text-gray-300"
+            }
           />
           <CTAButton
             handleClick={onConfirm}

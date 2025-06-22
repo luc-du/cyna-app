@@ -7,7 +7,6 @@ import {
   FALLBACK_STATE_PREFIX,
   SEARCH_UNKNOWN_ERROR,
 } from "../../lib/errorMessages";
-import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 
 // ─── Async Thunk ──────────────────────────────────────────────────
 /**
@@ -44,7 +43,6 @@ export const searchProducts = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      // Construction des query params dynamiques
       const queryParams = new URLSearchParams();
       if (keyword) queryParams.set("keyword", keyword);
       queryParams.set("page", page);
@@ -60,82 +58,22 @@ export const searchProducts = createAsyncThunk(
       if (availableOnly) queryParams.set("availableOnly", true);
       if (sort) queryParams.set("sort", sort);
 
-      // Appel à l’API
       const response = await axios.get(
         API_ROUTES.PRODUCTS.SEARCH({ keyword, page, size }) +
           `&${queryParams.toString()}`
       );
       const data = response.data;
 
-      // Si pas de résultat côté backend
-      if (
-        !data ||
-        !Array.isArray(data.products) ||
-        data.products.length === 0
-      ) {
+      if (!data || !Array.isArray(data.products)) {
         return [];
       }
 
       return data.products;
     } catch (err) {
-      // En cas d'erreur réseau / serveur → fallback local (mock) filtré
       const msg = err.response?.data?.message || FALLBACK_API_MESSAGE;
-      console.warn(
-        "Recherche de produits échouée, utilisation du fallback :",
-        msg
-      );
+      console.warn("Échec de recherche produits :", msg);
 
-      // Filtrer MOCK_TOP_PRODUCTS localement selon les mêmes critères
-      const filteredMock = MOCK_TOP_PRODUCTS.filter((product) => {
-        // Reconstitution d’une « haystack » qui contiendra nom, description, caractéristiques
-        const haystack = `${product.name} ${product.description || ""} ${
-          product.caracteristics || ""
-        }`.toLowerCase();
-
-        // 1) correspondance mot-clé
-        if (keyword && !haystack.includes(keyword.toLowerCase())) {
-          return false;
-        }
-
-        // 2) correspondance catégorie (si renseignée)
-        if (
-          categoriesIds.length &&
-          !product.categoriesIds?.some((id) => categoriesIds.includes(id))
-        ) {
-          return false;
-        }
-
-        // 3) correspondance features (si renseignées)
-        if (
-          features.length &&
-          !features.every((f) =>
-            (product.caracteristics || "")
-              .toLowerCase()
-              .includes(f.toLowerCase())
-          )
-        ) {
-          return false;
-        }
-
-        // 4) intervalle de prix
-        if (product.amount < minPrice || product.amount > maxPrice) {
-          return false;
-        }
-
-        // 5) disponibilité
-        if (availableOnly && !product.available) {
-          return false;
-        }
-
-        // Si on arrive ici, on conserve le produit
-        return true;
-      });
-
-      return rejectWithValue({
-        isFallback: true,
-        fallback: filteredMock,
-        message: msg,
-      });
+      return rejectWithValue({ message: msg });
     }
   }
 );
@@ -146,7 +84,7 @@ const initialState = {
   loading: false,
   error: null,
   isSearchMode: false,
-  currentPage: 0,
+  currentPage: 1,
   pageSize: 6,
 };
 
@@ -155,11 +93,14 @@ const searchSlice = createSlice({
   initialState,
   reducers: {
     /**
-     * Met à jour la requête (keyword) et déclenche le mode recherche
+     * Met à jour la requête et déclenche le mode recherche
      */
     setQuery: (state, action) => {
       state.query = action.payload;
       state.isSearchMode = true;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
     },
     /**
      * Réinitialise intégralement la recherche (query, résultats, filtres)
@@ -169,7 +110,7 @@ const searchSlice = createSlice({
       state.searchResults = [];
       state.error = null;
       state.isSearchMode = false;
-      state.currentPage = 0;
+      state.currentPage = 1;
     },
   },
   extraReducers: (builder) => {
@@ -200,5 +141,5 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setQuery, clearSearch } = searchSlice.actions;
+export const { setQuery, clearSearch, setCurrentPage } = searchSlice.actions;
 export default searchSlice.reducer;

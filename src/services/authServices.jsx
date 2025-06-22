@@ -70,6 +70,6 @@ export const AuthService = {
  * @returns {Promise<void>}
  */
 export const resetPassword = async (email) => {
-  const url = `${API_ROUTES.AUTH.RESET_PASSWORD(email)}`;
-  return await axios.post(url); // ← Aucun body, email en query string
+  const url = `${API_ROUTES.AUTH.PASSWORD_FORGOT(email)}`;
+  return await axios.get(url);
 };

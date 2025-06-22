@@ -21,7 +21,9 @@ const ProductInfo = ({ product }) => {
       </p>
 
       {promotion && (
-        <p className="text-sm font-medium text-green-500">🎉 {promotion}</p>
+        <p className="w-full items-center justify-center text-sm font-medium text-green-500">
+          🎉 Promotion{promotion}
+        </p>
       )}
 
       <p className="text-2xl font-semibold text-green-600 dark:text-green-400">
