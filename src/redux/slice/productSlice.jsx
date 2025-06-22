@@ -10,8 +10,6 @@ import {
 import { MOCK_SERVICES, MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 import productService from "../../services/productService";
 
-// ─── Async Thunks ─────────────────────────────────────────────
-
 export const fetchProducts = createAsyncThunk(
   "products/fetchAll",
   async (_, { rejectWithValue }) => {
@@ -185,7 +183,7 @@ const productSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // ─── fetchProducts (liste de produits) ───────────────────────────────
+    // fetchProducts (liste de produits)
     builder
       .addCase(fetchProducts.pending, (state) => {
         state.loadingList = true;
@@ -214,7 +212,7 @@ const productSlice = createSlice({
         }
       });
 
-    // ─── fetchProductById ─────────────────────────────────────────────────
+    // fetchProductById
     builder
       .addCase(fetchProductById.pending, (state) => {
         state.loading = true;
@@ -239,7 +237,7 @@ const productSlice = createSlice({
         state.item = null;
       });
 
-    // ─── searchProducts (recherche de produits) ───────────────────────────
+    // searchProducts (recherche de produits)
     builder
       .addCase(searchProducts.pending, (state) => {
         state.loadingSearch = true;

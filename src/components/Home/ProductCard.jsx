@@ -1,14 +1,13 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { getImageSrc } from "../utils/getImageSrc";
-import { getPromo } from "../utils/getMockData";
 import { setStripePrice } from "../utils/stripe/stripeUtils";
 
 const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
   const { name, amount, brand } = product;
 
   const imageSrc = getImageSrc(product);
-  const promotion = product.promo ? getPromo(product.id) : null;
+  const promotion = product.promo ? "🎉Promotion en cours" : null;
   const isActive = Boolean(product.active) && !disabled;
 
   const containerClass = [
