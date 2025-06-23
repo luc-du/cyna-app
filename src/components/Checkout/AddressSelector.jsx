@@ -15,21 +15,6 @@ export default function AddressSelector({
   loading,
   error,
 }) {
-  <DataStatus
-    loading={loading}
-    error={error}
-    dataLength={addresses}
-    loadingMessage="Chargement des adresses..."
-    emptyMessage="Aucune adresse enregistrée"
-    ctaButton={
-      <CTAButton
-        type="button"
-        label={"Ajouter une addresses"}
-        className={"underline hover:text-gray-400"}
-        link={"/profile#address"}
-      />
-    }
-  />;
   return (
     <section
       className="bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-6"
@@ -43,27 +28,45 @@ export default function AddressSelector({
       </h2>
 
       <ul className="space-y-4">
-        {addresses.map((address) => (
-          <li key={address.id} className="flex items-start">
-            <input
-              type="radio"
-              id={`address-${address.id}`}
-              name="address"
-              checked={selectedId === address.id}
-              onChange={() => onSelect(address.id)}
-              className="mt-1 accent-blue-600"
-            />
-            <label
-              htmlFor={`address-${address.id}`}
-              className="ml-3 text-gray-700 dark:text-gray-200"
-            >
-              <p className="font-medium">{address.name}</p>
-              <p className="text-sm">
-                {address.postcode}, {address.city}, {address.country}
-              </p>
-            </label>
-          </li>
-        ))}
+        {loading || error || addresses.length === 0 ? (
+          <DataStatus
+            loading={loading}
+            error={error}
+            dataLength={addresses.length}
+            loadingMessage="Chargement des adresses..."
+            emptyMessage="Aucune adresse enregistrée"
+            ctaButton={
+              <CTAButton
+                type="button"
+                label={"Ajouter une adresse"}
+                className={"underline hover:text-gray-400"}
+                link={"/profile#address"}
+              />
+            }
+          />
+        ) : (
+          addresses.map((address) => (
+            <li key={address.id} className="flex items-start">
+              <input
+                type="radio"
+                id={`address-${address.id}`}
+                name="address"
+                checked={selectedId === address.id}
+                onChange={() => onSelect(address.id)}
+                className="mt-1 accent-blue-600"
+              />
+              <label
+                htmlFor={`address-${address.id}`}
+                className="ml-3 text-gray-700 dark:text-gray-200"
+              >
+                <p className="font-medium">{address.name}</p>
+                <p className="text-sm">
+                  {address.postcode}, {address.city}, {address.country}
+                </p>
+              </label>
+            </li>
+          ))
+        )}
       </ul>
     </section>
   );
