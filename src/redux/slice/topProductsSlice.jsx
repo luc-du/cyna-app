@@ -1,14 +1,14 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { placeHolder } from "@utils/indexImages";
-import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
-import sortProductsByPriority from "../../components/utils/sortProductByPriority";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
   FALLBACK_STATE_PREFIX,
   SEARCH_UNKNOWN_ERROR,
-} from "../../lib/errorMessages";
+} from "@lib/errorMessages";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { placeHolder } from "@utils/indexImages";
+import axios from "axios";
+import { API_ROUTES } from "../../api/apiRoutes";
+import sortProductsByPriority from "../../components/utils/sortProductByPriority";
 import { MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
 
 /**

@@ -1,6 +1,23 @@
 import { useAuthEffect } from "@hooks/useAuthEffect";
 import { useAutoLogout } from "@hooks/useAutoLogout";
 import {
+  AUTH_PROFILE_UPDATE_ERROR,
+  AVATAR_UPLOAD_ERROR,
+  PAYMENT_ADDED_ERROR,
+  PAYMENT_DELETION_ERROR,
+  PAYMENT_SET_DEFAULT_ERROR,
+  USER_DELETE_ERROR,
+} from "@lib/errorMessages";
+import {
+  AVATAR_UPLOAD_SUCCESS,
+  PAYMENT_ADDED_SUCCESS,
+  PAYMENT_DELETION_SUCCESS,
+  PAYMENT_SET_DEFAULT_SUCCESS,
+  PROFILE_UPDATE_SUCCESS,
+  USER_DELETE_SUCCESS,
+} from "@lib/successMessages";
+import { deleteUserProfile, uploadProfileImage } from "@services/userService";
+import {
   createAddress,
   deleteAddress,
   getUserAddresses,
@@ -21,26 +38,6 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  AUTH_PROFILE_UPDATE_ERROR,
-  AVATAR_UPLOAD_ERROR,
-  PAYMENT_ADDED_ERROR,
-  PAYMENT_DELETION_ERROR,
-  PAYMENT_SET_DEFAULT_ERROR,
-  USER_DELETE_ERROR,
-} from "../../lib/errorMessages";
-import {
-  AVATAR_UPLOAD_SUCCESS,
-  PAYMENT_ADDED_SUCCESS,
-  PAYMENT_DELETION_SUCCESS,
-  PAYMENT_SET_DEFAULT_SUCCESS,
-  PROFILE_UPDATE_SUCCESS,
-  USER_DELETE_SUCCESS,
-} from "../../lib/successMessages";
-import {
-  deleteUserProfile,
-  uploadProfileImage,
-} from "../../services/userService";
 import { useGlobalToast } from "../GlobalToastProvider";
 import DataStatus from "../shared/DataStatus";
 import DarkModeToggle from "../ui/buttons/DarkModeToggle";

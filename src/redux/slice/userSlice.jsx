@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   AUTH_PASSWORD_UPDATE_ERROR,
   AUTH_PROFILE_UPDATE_ERROR,
   AUTH_PROFILE_UPLOAD_ERROR,
-} from "../../lib/errorMessages";
-import { createCustomer as apiCreateCustomer } from "../../services/subscriptionService";
-import * as userService from "../../services/userService";
+} from "@lib/errorMessages";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createCustomer as apiCreateCustomer } from "@services/subscriptionService";
+import * as userService from "@services/userService";
 
 /* Thunks */
 export const fetchUserProfile = createAsyncThunk(

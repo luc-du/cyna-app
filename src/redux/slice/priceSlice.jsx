@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createPrice } from "../../services/subscriptionService";
+import { createPrice } from "@services/subscriptionService";
 
 export const createPriceThunk = createAsyncThunk(
   "price/create",

@@ -1,9 +1,9 @@
 import { useToast } from "@hooks/useToast";
+import { syncCartWithServer } from "@services/cartService";
 import { updateQuantity } from "@slices/cartSlice";
 import { emptyCartIcon } from "@utils/indexImages";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { syncCartWithServer } from "../../services/cartService";
 import CTAButton from "../shared/buttons/CTAButton";
 import CartActions from "./CartActions";
 import CartItem from "./CartItem";
