@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { IconCrossCircle } from "../../public/indexImages";
+import { IconCrossCircle } from "../utils/indexImages";
 /**
  * Composant React pour afficher une page d'accès refusé.
  *

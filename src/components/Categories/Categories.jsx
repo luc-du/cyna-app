@@ -1,6 +1,6 @@
+import { emptyBox } from "@utils/indexImages";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { emptyBox } from "../../../public/indexImages";
 import {
   clearSearchResults,
   fetchCategories,

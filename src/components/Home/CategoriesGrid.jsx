@@ -39,13 +39,12 @@ const CategoriesGrid = () => {
         Découvrez nos différentes solutions de cybersécurité adaptées à vos
         besoins.
       </p>
-
+      c
       <DataStatus
         loading={loading}
         error={error}
         dataLength={categories.length}
       />
-
       <div
         className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
         role="list"

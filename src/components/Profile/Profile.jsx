@@ -1,12 +1,8 @@
+import { useAuthEffect } from "@hooks/useAuthEffect";
+import { useAutoLogout } from "@hooks/useAutoLogout";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PaymentMethodsSection from "./PaymentMethods/PaymentMethodsSection";
-import ProfileHeader from "./ProfileHeader";
-import ProfileSection from "./ProfileSection";
-import DataStatus from "../shared/DataStatus";
-import { useAuthEffect } from "../../hooks/useAuthEffect";
-import { useAutoLogout } from "../../hooks/useAutoLogout";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
   AVATAR_UPLOAD_ERROR,
@@ -46,14 +42,18 @@ import {
   uploadProfileImage,
 } from "../../services/userService";
 import { useGlobalToast } from "../GlobalToastProvider";
+import DataStatus from "../shared/DataStatus";
+import DarkModeToggle from "../ui/buttons/DarkModeToggle";
 import AccountSettingsSection from "./AccountSettings/AccountSettingsSection";
 import AddressSection from "./Address/AddressSection";
 import DeleteAccountButton from "./DeletAccountButton";
 import LogoutButton from "./LogoutButton";
 import PasswordSection from "./Password/PasswordSection";
+import PaymentMethodsSection from "./PaymentMethods/PaymentMethodsSection";
+import ProfileHeader from "./ProfileHeader";
+import ProfileSection from "./ProfileSection";
 import { profileTabs } from "./ProfileTabs/ProfileTabs";
 import SubscriptionsSection from "./Subscriptions/SubscriptionsSection";
-import DarkModeToggle from "../ui/buttons/DarkModeToggle";
 
 /**
  * Page de profil utilisateur avec système de tabs

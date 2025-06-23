@@ -3,7 +3,7 @@ import {
   FaCcJcb,
   MastercardIcon,
   VisaIcon,
-} from "../../../public/indexImages";
+} from "@utils/indexImages";
 
 const CARD_ICONS = {
   visa: VisaIcon,

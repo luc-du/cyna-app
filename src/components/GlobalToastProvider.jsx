@@ -1,6 +1,6 @@
+import { useToast } from "@hooks/useToast";
 import PropTypes from "prop-types";
 import { createContext, useContext } from "react";
-import { useToast } from "../hooks/useToast";
 
 const ToastContext = createContext();
 

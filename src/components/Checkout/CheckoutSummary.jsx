@@ -34,7 +34,7 @@ export default function CheckoutSummary({ product, quantity }) {
 
       <div className="flex items-center gap-4">
         <img
-          src={imageUrl}
+          src={product.imageUrl}
           alt={name}
           className="w-24 h-24 object-cover rounded-md border"
         />
@@ -69,6 +69,7 @@ CheckoutSummary.propTypes = {
     description: PropTypes.string,
     price: PropTypes.number.isRequired,
     image: PropTypes.string,
+    imageUrl: PropTypes.string,
   }),
   quantity: PropTypes.number.isRequired,
 };

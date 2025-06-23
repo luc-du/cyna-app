@@ -15,6 +15,11 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "@lib": path.resolve(__dirname, "src/lib"),
+      "@components": path.resolve(__dirname, "src/components"),
+      "@hooks": path.resolve(__dirname, "src/hooks"),
+      "@redux": path.resolve(__dirname, "src/redux"),
+      "@utils": path.resolve(__dirname, "src/utils"),
+      "@slices": path.resolve(__dirname, "@redux/slice"),
     },
   },
 });

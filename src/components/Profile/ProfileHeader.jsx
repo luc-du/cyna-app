@@ -1,6 +1,6 @@
+import { MenDefaultAvatar } from "@utils/indexImages";
 import PropTypes from "prop-types";
 import { useRef } from "react";
-import { MenDefaultAvatar } from "../../../public/indexImages";
 import CTAButton from "../shared/buttons/CTAButton";
 
 /**

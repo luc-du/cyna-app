@@ -1,6 +1,6 @@
+import { useAuthEffect } from "@hooks/useAuthEffect";
+import { useAutoLogout } from "@hooks/useAutoLogout";
 import { useSelector } from "react-redux";
-import { useAuthEffect } from "../hooks/useAuthEffect";
-import { useAutoLogout } from "../hooks/useAutoLogout";
 import Unauthorized from "./Unauthorized";
 
 /**
