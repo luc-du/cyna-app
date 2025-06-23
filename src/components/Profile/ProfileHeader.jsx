@@ -1,7 +1,7 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import { MenDefaultAvatar } from "@utils/indexImages";
 import PropTypes from "prop-types";
 import { useRef } from "react";
-import CTAButton from "../shared/buttons/CTAButton";
 
 /**
  * En-tête de la page de profil utilisateur, affiche l'avatar

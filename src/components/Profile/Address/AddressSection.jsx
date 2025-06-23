@@ -1,7 +1,7 @@
+import CTAButton from "@shared/buttons/CTAButton";
+import DataStatus from "@shared/DataStatus";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import CTAButton from "../../shared/buttons/CTAButton";
-import DataStatus from "../../shared/DataStatus";
 import ConfirmModal from "../../ui/ConfirmModal";
 import ModalOverlay from "../../ui/ModalOverlay";
 import AddressForm from "./AddressForm";

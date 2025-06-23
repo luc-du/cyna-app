@@ -17,6 +17,7 @@ import {
   USER_DELETE_SUCCESS,
 } from "@lib/successMessages";
 import { deleteUserProfile, uploadProfileImage } from "@services/userService";
+import DataStatus from "@shared/DataStatus";
 import {
   createAddress,
   deleteAddress,
@@ -35,12 +36,11 @@ import {
   fetchUserProfile,
   updateUserProfile,
 } from "@slices/userSlice";
+import DarkModeToggle from "@ui/buttons/DarkModeToggle";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useGlobalToast } from "../GlobalToastProvider";
-import DataStatus from "../shared/DataStatus";
-import DarkModeToggle from "../ui/buttons/DarkModeToggle";
 import AccountSettingsSection from "./AccountSettings/AccountSettingsSection";
 import AddressSection from "./Address/AddressSection";
 import DeleteAccountButton from "./DeletAccountButton";

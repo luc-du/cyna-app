@@ -1,3 +1,6 @@
+import DataStatus from "@shared/DataStatus";
+import NoResult from "@shared/NoResult";
+import SearchBar from "@shared/SearchBar";
 import {
   fetchProducts,
   resetToProductList,
@@ -6,9 +9,6 @@ import {
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../Home/ProductCard";
-import DataStatus from "../shared/DataStatus";
-import NoResult from "../shared/NoResult";
-import SearchBar from "../shared/SearchBar";
 
 const ProductList = () => {
   const dispatch = useDispatch();

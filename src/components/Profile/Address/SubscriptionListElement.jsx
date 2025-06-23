@@ -1,6 +1,6 @@
+import DownloadInvoiceButton from "@shared/buttons/DownloadInvoiceButton";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import DownloadInvoiceButton from "../../shared/buttons/DownloadInvoiceButton";
 import {
   renderSubscriptionStatus,
   setMappedDate,

@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import CTAButton from "@shared/buttons/CTAButton";
+import DataStatus from "@shared/DataStatus";
 import { getUserAddresses } from "@slices/addressSlice";
 import { fetchPaymentMethods } from "@slices/paymentSlice";
 import { createPriceThunk } from "@slices/priceSlice";
 import { createCustomerSubscription } from "@slices/subscriptionSlice";
 import { fetchUserProfile } from "@slices/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
-import CTAButton from "../shared/buttons/CTAButton";
-import DataStatus from "../shared/DataStatus";
 import { getToken } from "../utils/auth/authStorage";
 import AddressSelector from "./AddressSelector";
 import CheckoutSummary from "./CheckoutSummary";

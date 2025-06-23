@@ -14,14 +14,15 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      "@lib": path.resolve(__dirname, "src/lib"),
-      "@shared": path.resolve(__dirname, "src/shared"),
       "@components": path.resolve(__dirname, "src/components"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
+      "@lib": path.resolve(__dirname, "src/lib"),
       "@redux": path.resolve(__dirname, "src/redux"),
-      "@utils": path.resolve(__dirname, "src/utils"),
+      "@shared": path.resolve(__dirname, "src/components/shared"),
       "@slices": path.resolve(__dirname, "src/redux/slice"),
       "@services": path.resolve(__dirname, "src/services"),
+      "@ui": path.resolve(__dirname, "src/components/ui"),
+      "@utils": path.resolve(__dirname, "src/utils"),
     },
   },
 });

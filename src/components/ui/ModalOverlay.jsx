@@ -1,7 +1,7 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
-import CTAButton from "../shared/buttons/CTAButton";
 
 const ModalOverlay = ({ children, onClose }) => {
   const modalRef = useRef(null);

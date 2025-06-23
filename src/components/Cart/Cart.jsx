@@ -1,10 +1,10 @@
 import { useToast } from "@hooks/useToast";
 import { syncCartWithServer } from "@services/cartService";
+import CTAButton from "@shared/buttons/CTAButton";
 import { updateQuantity } from "@slices/cartSlice";
-import { emptyCartIcon } from "@utils/indexImages";
 import { useEffect, useState } from "react";
+import { FaShoppingCart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import CTAButton from "../shared/buttons/CTAButton";
 import CartActions from "./CartActions";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
@@ -90,11 +90,7 @@ const Cart = () => {
       {cart.length === 0 && !isSyncing ? (
         <section className="flex flex-col mt-6 gap-6 justify-center items-center h-64 text-gray-700 dark:text-gray-200">
           <div className="flex justify-center items-center mt-6">
-            <img
-              src={emptyCartIcon}
-              alt="Panier vide"
-              className="inline-block w-32 h-32object-contain"
-            />
+            <FaShoppingCart className="w-16 h-16 text-gray-500 dark:text-white" />
           </div>
           <h3 className="text-xl font-semibold">Votre panier est vide.</h3>
           <p className="text-lg text-center text-gray-500 dark:text-gray-400">

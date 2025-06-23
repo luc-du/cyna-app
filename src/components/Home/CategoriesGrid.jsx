@@ -1,7 +1,7 @@
+import DataStatus from "@shared/DataStatus";
 import { fetchCategories } from "@slices/categorySlice";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import DataStatus from "../shared/DataStatus";
 import CategoryCard from "./CategoryCard";
 
 const CategoriesGrid = () => {

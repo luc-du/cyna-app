@@ -1,6 +1,6 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import CTAButton from "../../shared/buttons/CTAButton";
 import ModalOverlay from "../../ui/ModalOverlay";
 import PasswordForm from "./PasswordForm";
 

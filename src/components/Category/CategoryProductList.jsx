@@ -1,9 +1,9 @@
+import DataStatus from "@shared/DataStatus";
+import NoResult from "@shared/NoResult";
 import { placeHolder } from "@utils/indexImages";
 import PropTypes from "prop-types";
 import { MOCK_SERVICES } from "../../mock/MOCKS_DATA";
 import ProductCard from "../Home/ProductCard";
-import DataStatus from "../shared/DataStatus";
-import NoResult from "../shared/NoResult";
 import sortProductsByPriority from "../utils/sortProductByPriority";
 
 /**

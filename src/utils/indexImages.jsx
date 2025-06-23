@@ -37,7 +37,7 @@ export const logoPng = "/logo/logo.png";
 export const logoCynaWhite = "/logo/logo-cyna-white.svg";
 export const placeHolder = "/images/placeholder.svg";
 export const emptyBox = "/images/empty-box.jpg";
-export const emptyCartIcon = "/images/emptyCart.jpg";
+export const emptyCartIcon = "/icons/emptyCart.svg";
 
 // Exports nommés utilisables individuellement
 export {

@@ -1,7 +1,7 @@
 // components/Profile/DeleteAccountButton.jsx
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import CTAButton from "../shared/buttons/CTAButton";
 import ConfirmModal from "../ui/ConfirmModal";
 
 /**

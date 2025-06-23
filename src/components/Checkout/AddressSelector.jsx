@@ -1,6 +1,6 @@
+import DataStatus from "@shared/DataStatus";
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
-import DataStatus from "../shared/DataStatus";
-import CTAButton from "../shared/buttons/CTAButton";
 
 /**
  * Permet à l'utilisateur de choisir une adresse pour l'abonnement.

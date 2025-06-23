@@ -1,6 +1,6 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import { clearCart } from "@slices/cartSlice";
 import { useDispatch } from "react-redux";
-import CTAButton from "../shared/buttons/CTAButton";
 
 /**
  * Bouton d'action pour vider le panier.
