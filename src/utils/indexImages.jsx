@@ -3,6 +3,7 @@ import {
   FaFileDownload as DownloadIcon,
   FaCcJcb,
   FaCcMastercard as MastercardIcon,
+  FaShoppingCart as ShoppingCartIcon,
   FaCcVisa as VisaIcon,
 } from "react-icons/fa";
 
@@ -39,12 +40,12 @@ export const placeHolder = "/images/placeholder.svg";
 export const emptyBox = "/images/empty-box.jpg";
 export const emptyCartIcon = "/icons/emptyCart.svg";
 
-// Exports nommés utilisables individuellement
 export {
   AmericanExpressIcon,
   DownloadIcon,
   FaCcJcb,
   IconCrossCircle,
   MastercardIcon,
+  ShoppingCartIcon,
   VisaIcon,
 };
