@@ -1,6 +1,6 @@
+import { fetchTopProducts } from "@slices/topProductsSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTopProducts } from "../../redux/slice/topProductsSlice";
 import DataStatus from "../shared/DataStatus";
 import ProductCard from "./ProductCard";
 

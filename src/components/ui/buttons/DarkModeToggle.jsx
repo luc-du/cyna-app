@@ -1,6 +1,6 @@
+import { toggleDarkMode } from "@slices/uiSlice";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleDarkMode } from "../../../redux/slice/uiSlice";
 
 /**
  * Bouton d'activation/désactivation du mode sombre.

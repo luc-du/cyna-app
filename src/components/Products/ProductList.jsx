@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProducts,
   resetToProductList,
   searchProducts,
-} from "../../redux/slice/productSlice";
+} from "@slices/productSlice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../Home/ProductCard";
 import DataStatus from "../shared/DataStatus";
 import NoResult from "../shared/NoResult";

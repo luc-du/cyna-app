@@ -1,11 +1,11 @@
-import { emptyBox } from "@utils/indexImages";
-import { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
   clearSearchResults,
   fetchCategories,
   searchCategories,
-} from "../../redux/slice/categorySlice";
+} from "@slices/categorySlice";
+import { emptyBox } from "@utils/indexImages";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import DataStatus from "../shared/DataStatus";
 import NoResult from "../shared/NoResult";
 import SearchBar from "../shared/SearchBar";

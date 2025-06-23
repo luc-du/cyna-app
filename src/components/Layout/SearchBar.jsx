@@ -1,12 +1,8 @@
+import { clearSearch, searchProducts, setQuery } from "@slices/searchSlice";
 import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  clearSearch,
-  searchProducts,
-  setQuery,
-} from "../../redux/slice/searchSlice";
 
 const DEBOUNCE_DELAY = 300;
 

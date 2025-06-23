@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCustomerSubscription,
   modifySubscription,
   removeSubscription,
-} from "../../../redux/slice/subscriptionSlice";
+} from "@slices/subscriptionSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import DataStatus from "../../shared/DataStatus";
 import ConfirmModal from "../../ui/ConfirmModal";
 import SubscriptionListElement from "../Address/SubscriptionListElement";

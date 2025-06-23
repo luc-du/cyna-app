@@ -1,6 +1,6 @@
+import { fetchCarouselSlides } from "@slices/carouselSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCarouselSlides } from "../../redux/slice/carouselSlice";
 import DataStatus from "../shared/DataStatus";
 import Carousel from "./Carousel";
 

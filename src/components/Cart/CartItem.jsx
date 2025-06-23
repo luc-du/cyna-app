@@ -1,6 +1,6 @@
+import { removeFromCart, updateQuantity } from "@slices/cartSlice";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
 import { getImageSrc } from "../utils/getImageSrc";
 import { getPricingLabel } from "../utils/getPricingLabel";
 import { setStripePrice } from "../utils/stripe/stripeUtils";

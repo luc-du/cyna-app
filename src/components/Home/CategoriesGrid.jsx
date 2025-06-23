@@ -1,6 +1,6 @@
+import { fetchCategories } from "@slices/categorySlice";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../redux/slice/categorySlice";
 import DataStatus from "../shared/DataStatus";
 import CategoryCard from "./CategoryCard";
 
@@ -39,7 +39,6 @@ const CategoriesGrid = () => {
         Découvrez nos différentes solutions de cybersécurité adaptées à vos
         besoins.
       </p>
-      c
       <DataStatus
         loading={loading}
         error={error}

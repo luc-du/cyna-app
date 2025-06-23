@@ -1,5 +1,5 @@
+import { clearCart } from "@slices/cartSlice";
 import { useDispatch } from "react-redux";
-import { clearCart } from "../../redux/slice/cartSlice";
 import CTAButton from "../shared/buttons/CTAButton";
 
 /**

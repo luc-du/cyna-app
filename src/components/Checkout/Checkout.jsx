@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { getUserAddresses } from "../../redux/slice/addressSlice";
-import { fetchPaymentMethods } from "../../redux/slice/paymentSlice";
-import { createPriceThunk } from "../../redux/slice/priceSlice";
-import { createCustomerSubscription } from "../../redux/slice/subscriptionSlice";
-import { fetchUserProfile } from "../../redux/slice/userSlice";
+import { getUserAddresses } from "@slices/addressSlice";
+import { fetchPaymentMethods } from "@slices/paymentSlice";
+import { createPriceThunk } from "@slices/priceSlice";
+import { createCustomerSubscription } from "@slices/subscriptionSlice";
+import { fetchUserProfile } from "@slices/userSlice";
 import { useGlobalToast } from "../GlobalToastProvider";
 import CTAButton from "../shared/buttons/CTAButton";
 import DataStatus from "../shared/DataStatus";
@@ -17,8 +17,8 @@ import PaymentSelector from "./PaymentSelector";
 import TermsAgreement from "./TermsAgreement";
 
 /* Stripe */
+import { clearCart } from "@slices/cartSlice";
 import { useStripe } from "@stripe/react-stripe-js";
-import { clearCart } from "../../redux/slice/cartSlice";
 
 /**
  * Checkout

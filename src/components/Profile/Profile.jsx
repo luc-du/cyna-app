@@ -1,5 +1,23 @@
 import { useAuthEffect } from "@hooks/useAuthEffect";
 import { useAutoLogout } from "@hooks/useAutoLogout";
+import {
+  createAddress,
+  deleteAddress,
+  getUserAddresses,
+  updateAddress,
+} from "@slices/addressSlice";
+import { changeUserPassword, logout } from "@slices/authSlice";
+import {
+  addPaymentMethod,
+  deletePaymentMethod,
+  fetchPaymentMethods,
+  setDefaultPaymentMethod,
+} from "@slices/paymentSlice";
+import {
+  createStripeCustomer,
+  fetchUserProfile,
+  updateUserProfile,
+} from "@slices/userSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,24 +37,6 @@ import {
   PROFILE_UPDATE_SUCCESS,
   USER_DELETE_SUCCESS,
 } from "../../lib/successMessages";
-import {
-  createAddress,
-  deleteAddress,
-  getUserAddresses,
-  updateAddress,
-} from "../../redux/slice/addressSlice";
-import { changeUserPassword, logout } from "../../redux/slice/authSlice";
-import {
-  addPaymentMethod,
-  deletePaymentMethod,
-  fetchPaymentMethods,
-  setDefaultPaymentMethod,
-} from "../../redux/slice/paymentSlice";
-import {
-  createStripeCustomer,
-  fetchUserProfile,
-  updateUserProfile,
-} from "../../redux/slice/userSlice";
 import {
   deleteUserProfile,
   uploadProfileImage,
