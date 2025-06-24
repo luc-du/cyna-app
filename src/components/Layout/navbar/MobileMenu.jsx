@@ -34,6 +34,7 @@ export default function MobileMenu() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="text-white text-xl p-2"
+        aria-label="bouton burger navbar"
       >
         {isOpen ? <FaTimes /> : <FaAlignJustify />}
       </button>
