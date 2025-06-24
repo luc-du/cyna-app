@@ -68,7 +68,7 @@ const Checkout = () => {
    * Récupère adresses & moyens de paiement dès que l'utilisateur est connu
    */
   useEffect(() => {
-    if (!isAuthenticated) navigate("/login");
+    // if (!isAuthenticated) navigate("/login");
 
     if (!user && getToken()) {
       dispatch(fetchUserProfile());
