@@ -1,7 +1,11 @@
 import {
   FaCcAmex as AmericanExpressIcon,
   FaFileDownload as DownloadIcon,
+  FaBalanceScale as FaBalanceScaleIcon,
   FaCcJcb,
+  FaEnvelopeOpenText as FaEnvelopeOpenTextIcon,
+  FaFileContract as FaFileContractIcon,
+  FaQuestionCircle as FaQuestionCircleIcon,
   FaCcMastercard as MastercardIcon,
   FaShoppingCart as ShoppingCartIcon,
   FaCcVisa as VisaIcon,
@@ -43,7 +47,11 @@ export const emptyCartIcon = "/icons/emptyCart.svg";
 export {
   AmericanExpressIcon,
   DownloadIcon,
+  FaBalanceScaleIcon,
   FaCcJcb,
+  FaEnvelopeOpenTextIcon,
+  FaFileContractIcon,
+  FaQuestionCircleIcon,
   IconCrossCircle,
   MastercardIcon,
   ShoppingCartIcon,
