@@ -1,14 +1,14 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { processProductData } from "../../components/utils/productUtils";
-import sortProductsByPriority from "../../components/utils/sortProductByPriority";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
   FALLBACK_STATE_PREFIX,
   SEARCH_UNKNOWN_ERROR,
-} from "../../lib/errorMessages";
+} from "@lib/errorMessages";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import productService from "@services/productService";
+import { processProductData } from "../../components/utils/productUtils";
+import sortProductsByPriority from "../../components/utils/sortProductByPriority";
 import { MOCK_SERVICES, MOCK_TOP_PRODUCTS } from "../../mock/MOCKS_DATA";
-import productService from "../../services/productService";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchAll",

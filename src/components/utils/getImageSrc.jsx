@@ -1,5 +1,4 @@
-import { placeHolder } from "../../../public/indexImages";
-
+import { placeHolder } from "@utils/indexImages";
 /**
  * Récupère l'URL de la première image d'un élément.
  * Si l'élément n'a pas d'images, retourne une image par défaut.

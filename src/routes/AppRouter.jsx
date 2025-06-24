@@ -1,15 +1,15 @@
-import Dashboard from "@/components/Dashboard";
 import PrivateRoute from "@/components/guards/PrivateRoute";
 import ProductList from "@/components/Products/ProductList";
-import ProtectedRoute from "@/components/ProtectedRoute";
 import CartPage from "@/pages/CartPage";
 import CategoriesPage from "@/pages/CategoriesPage";
 import CategoryPage from "@/pages/CategoryPage";
 import CgvPage from "@/pages/CgvPage";
 import CheckoutPage from "@/pages/CheckoutPage";
 import ContactPage from "@/pages/ContactPage";
+import FAQPage from "@/pages/FAQPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import Homepage from "@/pages/Homepage";
+import LegalNoticePage from "@/pages/LegalNoticePage.jsx.jsx";
 import LoginPage from "@/pages/LoginPage";
 import OrderPage from "@/pages/OrderPage";
 import PageNotFound from "@/pages/PageNotFound";
@@ -20,8 +20,6 @@ import SearchPage from "@/pages/SearchPage";
 import store from "@/redux/store/Store";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
-import FAQPage from "../pages/FAQPage";
-import LegalNoticePage from "../pages/LegalNoticePage.jsx.jsx";
 
 const AppRouter = () => {
   return (
@@ -50,10 +48,6 @@ const AppRouter = () => {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/order" element={<OrderPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-        </Route>
-
-        <Route element={<ProtectedRoute roles={["ADMIN", "USER"]} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
 
         <Route path="/search" element={<SearchPage />} />

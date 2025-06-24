@@ -18,7 +18,8 @@ export const ITEM_REMOVED_FROM_CART = "Produit retiré du panier.";
 
 // --- Commandes---
 export const ORDER_SUCCESS = "Commande validée avec succès.";
-export const PAYMENT_SUCCESS = "Paiement effectué avec succès.";
+export const ORDER_UPDATED_SUCCESS = "Commande mise à jour avec succès.";
+export const ORDER_CANCELED = "Commande annulée avec succès.";
 
 // --- Moyens de paiement
 export const PAYMENT_ADDED_SUCCESS = "Moyen de paiement ajouté avec succès";
@@ -26,3 +27,10 @@ export const PAYMENT_DELETION_SUCCESS =
   "Carte de paiement supprimée avec succès";
 export const PAYMENT_SET_DEFAULT_SUCCESS =
   "Carte par défaut définie avec succès";
+export const PAYMENT_SUCCESS = "Paiement effectué avec succès.";
+
+// --- Abonnements ---
+export const SUBSCRIPTION_CREATED_SUCCESS = "Abonnement créé avec succès.";
+export const SUBSCRIPTION_UPDATED_SUCCESS =
+  "Abonnement mis à jour avec succès.";
+export const SUBSCRIPTION_CANCELED_SUCCESS = "Abonnement résilié avec succès.";

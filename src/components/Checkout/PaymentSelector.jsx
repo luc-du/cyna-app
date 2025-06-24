@@ -1,6 +1,6 @@
+import CTAButton from "@shared/buttons/CTAButton";
+import DataStatus from "@shared/DataStatus";
 import PropTypes from "prop-types";
-import CTAButton from "../shared/buttons/CTAButton";
-import DataStatus from "../shared/DataStatus";
 import setCardIcon from "../utils/setCardIcon";
 
 /**

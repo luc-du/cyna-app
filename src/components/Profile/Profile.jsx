@@ -1,12 +1,5 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import PaymentMethodsSection from "./PaymentMethods/PaymentMethodsSection";
-import ProfileHeader from "./ProfileHeader";
-import ProfileSection from "./ProfileSection";
-import DataStatus from "../shared/DataStatus";
-import { useAuthEffect } from "../../hooks/useAuthEffect";
-import { useAutoLogout } from "../../hooks/useAutoLogout";
+import { useAuthEffect } from "@hooks/useAuthEffect";
+import { useAutoLogout } from "@hooks/useAutoLogout";
 import {
   AUTH_PROFILE_UPDATE_ERROR,
   AVATAR_UPLOAD_ERROR,
@@ -14,7 +7,7 @@ import {
   PAYMENT_DELETION_ERROR,
   PAYMENT_SET_DEFAULT_ERROR,
   USER_DELETE_ERROR,
-} from "../../lib/errorMessages";
+} from "@lib/errorMessages";
 import {
   AVATAR_UPLOAD_SUCCESS,
   PAYMENT_ADDED_SUCCESS,
@@ -22,38 +15,42 @@ import {
   PAYMENT_SET_DEFAULT_SUCCESS,
   PROFILE_UPDATE_SUCCESS,
   USER_DELETE_SUCCESS,
-} from "../../lib/successMessages";
+} from "@lib/successMessages";
+import { deleteUserProfile, uploadProfileImage } from "@services/userService";
+import DataStatus from "@shared/DataStatus";
 import {
   createAddress,
   deleteAddress,
   getUserAddresses,
   updateAddress,
-} from "../../redux/slice/addressSlice";
-import { changeUserPassword, logout } from "../../redux/slice/authSlice";
+} from "@slices/addressSlice";
+import { changeUserPassword, logout } from "@slices/authSlice";
 import {
   addPaymentMethod,
   deletePaymentMethod,
   fetchPaymentMethods,
   setDefaultPaymentMethod,
-} from "../../redux/slice/paymentSlice";
+} from "@slices/paymentSlice";
 import {
   createStripeCustomer,
   fetchUserProfile,
   updateUserProfile,
-} from "../../redux/slice/userSlice";
-import {
-  deleteUserProfile,
-  uploadProfileImage,
-} from "../../services/userService";
+} from "@slices/userSlice";
+import DarkModeToggle from "@ui/buttons/DarkModeToggle";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useGlobalToast } from "../GlobalToastProvider";
 import AccountSettingsSection from "./AccountSettings/AccountSettingsSection";
 import AddressSection from "./Address/AddressSection";
 import DeleteAccountButton from "./DeletAccountButton";
 import LogoutButton from "./LogoutButton";
 import PasswordSection from "./Password/PasswordSection";
+import PaymentMethodsSection from "./PaymentMethods/PaymentMethodsSection";
+import ProfileHeader from "./ProfileHeader";
+import ProfileSection from "./ProfileSection";
 import { profileTabs } from "./ProfileTabs/ProfileTabs";
 import SubscriptionsSection from "./Subscriptions/SubscriptionsSection";
-import DarkModeToggle from "../ui/buttons/DarkModeToggle";
 
 /**
  * Page de profil utilisateur avec système de tabs
@@ -409,5 +406,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-/* clean props */

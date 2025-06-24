@@ -1,6 +1,6 @@
+import { fetchProducts, searchProducts } from "@slices/productSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts, searchProducts } from "../../redux/slice/productSlice";
 import ProductCard from "../Home/ProductCard";
 import Pagination from "./Pagination";
 import ProductSearch from "./ProductSearch";

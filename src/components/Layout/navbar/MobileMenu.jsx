@@ -1,4 +1,5 @@
 // MobileMenu.tsx
+import { logout } from "@slices/authSlice";
 import { useState } from "react";
 import {
   FaAlignJustify,
@@ -12,7 +13,6 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { logout } from "../../../redux/slice/authSlice";
 
 export default function MobileMenu() {
   // 1.State

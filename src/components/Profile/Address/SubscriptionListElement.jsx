@@ -1,9 +1,11 @@
+import CTAButton from "@shared/buttons/CTAButton";
+import DownloadInvoiceButton from "@shared/buttons/DownloadInvoiceButton";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import DownloadInvoiceButton from "../../shared/buttons/DownloadInvoiceButton";
 import {
   renderSubscriptionStatus,
   setMappedDate,
+  setStripePrice,
 } from "../../utils/stripe/stripeUtils";
 
 const SubscriptionListElement = ({ sub, onModify, onCancel, loading }) => {
@@ -27,7 +29,7 @@ const SubscriptionListElement = ({ sub, onModify, onCancel, loading }) => {
         </div>
         <div>
           <dt className="font-semibold">Montant</dt>
-          <dd>{sub.amount} €</dd>
+          <dd>{setStripePrice(sub.amount)}</dd>
         </div>
         <div>
           <dt className="font-semibold">Statut</dt>
@@ -35,26 +37,32 @@ const SubscriptionListElement = ({ sub, onModify, onCancel, loading }) => {
         </div>
       </dl>
       <div className="flex items-center justify-end space-x-4">
-        <DownloadInvoiceButton
-          date={date}
-          subscription={sub}
-          user={user}
-          key={sub.subscriptionId}
-        />
-        {/* <CTAButton
-          handleClick={onModify}
-          label="Modifier"
-          className="underline"
-          disabled={loading}
-          aria-label={`Modifier l'abonnement ${sub.productName}`}
-        />
-        <CTAButton
-          handleClick={() => onCancel(sub.subscriptionId, sub.productName)}
-          label="Résilier"
-          className="cta-danger"
-          disabled={loading}
-          aria-label={`Résilier l'abonnement ${sub.productName}`}
-        /> */}
+        <div className="flex items-center w-full justify-start">
+          <DownloadInvoiceButton
+            date={date}
+            subscription={sub}
+            user={user}
+            key={sub.subscriptionId}
+          />
+        </div>
+        <div className="flex items-center w-full justify-end space-x-6">
+          {/* Prochainement disponible */}
+          {/* <CTAButton
+            handleClick={onModify}
+            label="Modifier"
+            className="underline"
+            disabled={loading}
+            aria-label={`Modifier l'abonnement ${sub.productName}`}
+          /> */}
+          {/* En développement */}
+          <CTAButton
+            handleClick={() => onCancel(sub.subscriptionId, sub.productName)}
+            label="Résilier"
+            className="cta-danger"
+            disabled={loading}
+            aria-label={`Résilier l'abonnement ${sub.productName}`}
+          />
+        </div>
       </div>
     </li>
   );

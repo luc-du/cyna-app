@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { SUBSCRIPTION_CANCELED_SUCCESS } from "@lib/successMessages";
+import DataStatus from "@shared/DataStatus";
 import {
   fetchCustomerSubscription,
   modifySubscription,
   removeSubscription,
-} from "../../../redux/slice/subscriptionSlice";
-import DataStatus from "../../shared/DataStatus";
+} from "@slices/subscriptionSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useGlobalToast } from "../../GlobalToastProvider";
 import ConfirmModal from "../../ui/ConfirmModal";
 import SubscriptionListElement from "../Address/SubscriptionListElement";
 import UpdateSubscriptionModal from "./UpdateSubscriptionModal";
@@ -14,6 +16,7 @@ export default function SubscriptionsSection() {
   const dispatch = useDispatch();
   const user = useSelector((s) => s.user.user);
   const { current: subs, loading, error } = useSelector((s) => s.subscription);
+  const { showToast } = useGlobalToast();
 
   const [confirmConfig, setConfirmConfig] = useState(null);
   const [updateConfig, setUpdateConfig] = useState(null);
@@ -36,8 +39,10 @@ export default function SubscriptionsSection() {
     setConfirmConfig({
       title: "Résilier l’abonnement",
       message: `Voulez-vous vraiment résilier l’abonnement "${productName}" ?`,
-      onConfirm: () => {
-        dispatch(removeSubscription(subscriptionId));
+      onConfirm: async () => {
+        await dispatch(removeSubscription(subscriptionId));
+        await dispatch(fetchCustomerSubscription(user.customerId));
+        showToast(SUBSCRIPTION_CANCELED_SUCCESS, "success");
         setConfirmConfig(null);
       },
     });

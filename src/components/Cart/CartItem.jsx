@@ -1,6 +1,6 @@
+import { removeFromCart, updateQuantity } from "@slices/cartSlice";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity } from "../../redux/slice/cartSlice";
 import { getImageSrc } from "../utils/getImageSrc";
 import { getPricingLabel } from "../utils/getPricingLabel";
 import { setStripePrice } from "../utils/stripe/stripeUtils";
@@ -13,6 +13,7 @@ const CartItem = ({ item, showToast }) => {
   const dispatch = useDispatch();
 
   const imageSrc = getImageSrc(item);
+  console.log(item);
 
   /**
    * Met à jour la quantité d’un article
@@ -54,7 +55,7 @@ const CartItem = ({ item, showToast }) => {
       {/* Image + Info produit */}
       <div className="flex items-center space-x-4 col-span-1">
         <img
-          src={imageSrc}
+          src={item.imageUrl || imageSrc}
           alt={`Image de ${item.name}`}
           className="w-16 h-16 object-cover rounded-lg"
         />

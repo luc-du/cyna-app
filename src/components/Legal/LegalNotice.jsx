@@ -1,4 +1,4 @@
-import CTAButton from "../shared/buttons/CTAButton";
+import CTAButton from "@shared/buttons/CTAButton";
 
 const LegalNotice = () => {
   return (

@@ -1,5 +1,5 @@
+import DataStatus from "@shared/DataStatus";
 import PropTypes from "prop-types";
-import DataStatus from "../../shared/DataStatus";
 import PaymentMethodListItem from "./PaymentMethodListItem";
 
 /**

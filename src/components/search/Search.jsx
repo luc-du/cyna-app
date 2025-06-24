@@ -1,14 +1,10 @@
+import CTAButton from "@shared/buttons/CTAButton";
+import PaginationControls from "@shared/PaginationControls";
+import { fetchCategories } from "@slices/categorySlice";
+import { clearSearch, searchProducts, setQuery } from "@slices/searchSlice";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../redux/slice/categorySlice";
-import {
-  clearSearch,
-  searchProducts,
-  setQuery,
-} from "../../redux/slice/searchSlice";
 import ProductCard from "../Home/ProductCard";
-import CTAButton from "../shared/buttons/CTAButton";
-import PaginationControls from "../shared/PaginationControls";
 import EmptyState from "../ui/EmptyState";
 import Loader from "../ui/Loader";
 import AvailabilityToggle from "./AvailabilityToggle";

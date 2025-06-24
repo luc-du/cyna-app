@@ -1,6 +1,6 @@
+import { fetchProducts, searchProducts } from "@slices/productSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchProducts, searchProducts } from "../../redux/slice/productSlice";
 
 const ProductSearch = () => {
   const [query, setQuery] = useState("");

@@ -1,13 +1,14 @@
+import CTAButton from "@shared/buttons/CTAButton";
+import DownloadInvoiceButton from "@shared/buttons/DownloadInvoiceButton";
+import DataStatus from "@shared/DataStatus";
+import { fetchCustomerSubscription } from "@slices/subscriptionSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fetchCustomerSubscription } from "../../redux/slice/subscriptionSlice";
-import CTAButton from "../shared/buttons/CTAButton";
-import DownloadInvoiceButton from "../shared/buttons/DownloadInvoiceButton";
-import DataStatus from "../shared/DataStatus";
 import {
   renderSubscriptionStatus,
   setMappedDate,
+  setStripePrice,
 } from "../utils/stripe/stripeUtils";
 
 /**
@@ -136,7 +137,7 @@ const Orders = () => {
           </div>
           <div>
             <dt className="font-semibold ">Montant</dt>
-            <dd className="">{amount} €</dd>
+            <dd className="">{setStripePrice(amount)}</dd>
           </div>
           <div>
             <dt className="font-semibold ">Statut</dt>

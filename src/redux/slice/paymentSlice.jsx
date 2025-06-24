@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import paymentService from "../../services/paymentService";
+import paymentService from "@services/paymentService";
 
 /**
  * Thunks asynchrones

@@ -1,3 +1,4 @@
+import { logout } from "@slices/authSlice";
 import {
   FaHome,
   FaSignInAlt,
@@ -7,7 +8,6 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { logout } from "../../../redux/slice/authSlice";
 
 export default function NavbarLinks() {
   const dispatch = useDispatch();
