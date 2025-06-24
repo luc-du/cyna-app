@@ -61,7 +61,6 @@ export const syncCartWithServer = async (items) => {
       try {
         const url = API_ROUTES.PRODUCTS.BY_ID(item.id);
         const response = await axios.get(url);
-        console.log("From cartService :", response.data);
         const data = response.data;
 
         return {
