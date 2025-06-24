@@ -13,7 +13,6 @@ const CartItem = ({ item, showToast }) => {
   const dispatch = useDispatch();
 
   const imageSrc = getImageSrc(item);
-  console.log(item);
 
   /**
    * Met à jour la quantité d’un article

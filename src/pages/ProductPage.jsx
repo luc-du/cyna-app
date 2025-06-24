@@ -1,11 +1,19 @@
-// src/pages/ProductPage.jsx
+import ProductDetails from "@/components/ProductDetail/ProductDetails";
+import { Helmet } from "react-helmet-async";
 
-import ProductDetails from "../components/ProductDetail/ProductDetails";
+const ProductPage = () => {
+  return (
+    <>
+      <Helmet>
+        <title>Détail produit | CYNA</title>
+        <meta
+          name="description"
+          content="Consultez les caractéristiques, prix et options d’abonnement pour ce service CYNA."
+        />
+      </Helmet>
+      <ProductDetails />
+    </>
+  );
+};
 
-/**
- * Présente la page détaillée d'un produit en fonction de l'ID passé dans l'URL.
- * Il s'agit d'un composant « route » qui encapsule ProductDetails.
- */
-export default function ProductPage() {
-  return <ProductDetails />;
-}
+export default ProductPage;
