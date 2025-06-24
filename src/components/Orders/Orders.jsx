@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   renderSubscriptionStatus,
   setMappedDate,
+  setStripePrice,
 } from "../utils/stripe/stripeUtils";
 
 /**
@@ -136,7 +137,7 @@ const Orders = () => {
           </div>
           <div>
             <dt className="font-semibold ">Montant</dt>
-            <dd className="">{amount} €</dd>
+            <dd className="">{setStripePrice(amount)}</dd>
           </div>
           <div>
             <dt className="font-semibold ">Statut</dt>

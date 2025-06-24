@@ -1,8 +1,8 @@
+import { resetPassword } from "@services/authServices";
+import CTAButton from "@shared/buttons/CTAButton";
 import { logoPng as cynaLogo } from "@utils/indexImages";
 import { useState } from "react";
-import { resetPassword } from "../services/authServices";
 import { useGlobalToast } from "./GlobalToastProvider";
-import CTAButton from "./shared/buttons/CTAButton";
 
 /**
  * Composant ForgotPassword

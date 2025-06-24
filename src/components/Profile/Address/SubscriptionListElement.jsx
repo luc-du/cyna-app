@@ -1,10 +1,11 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import DownloadInvoiceButton from "@shared/buttons/DownloadInvoiceButton";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import CTAButton from "../../shared/buttons/CTAButton";
 import {
   renderSubscriptionStatus,
   setMappedDate,
+  setStripePrice,
 } from "../../utils/stripe/stripeUtils";
 
 const SubscriptionListElement = ({ sub, onModify, onCancel, loading }) => {
@@ -28,7 +29,7 @@ const SubscriptionListElement = ({ sub, onModify, onCancel, loading }) => {
         </div>
         <div>
           <dt className="font-semibold">Montant</dt>
-          <dd>{sub.amount} €</dd>
+          <dd>{setStripePrice(sub.amount)}</dd>
         </div>
         <div>
           <dt className="font-semibold">Statut</dt>
