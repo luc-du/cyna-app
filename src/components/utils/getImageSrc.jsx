@@ -1,22 +1,28 @@
 import { placeHolder } from "@utils/indexImages";
-/**
- * Récupère l'URL de la première image d'un élément.
- * Si l'élément n'a pas d'images, retourne une image par défaut.
- *
- * @param {Object} element - L'élément dont on veut récupérer l'image.
- * @returns {string} L'URL de la première image ou une image par défaut.
- */
 
+/**
+ * Récupère l'URL de la première image d'un élément (backend ou mock).
+ * @param {Object} element - L'élément dont on veut l'image.
+ * @returns {string} L'URL de l'image ou une image par défaut.
+ */
 export const getImageSrc = (element) => {
-  if (element && typeof element === "object" && Array.isArray(element.images)) {
+  if (!element || typeof element !== "object") return placeHolder;
+
+  // Cas : mock → imageUrl (string)
+  if (element.imageUrl && typeof element.imageUrl === "string") {
+    return element.imageUrl;
+  }
+
+  // Cas : backend → images[] avec { url }
+  if (Array.isArray(element.images)) {
     const imageUrl = element.images[0]?.url;
-    if (imageUrl && typeof imageUrl === "string") {
+    if (typeof imageUrl === "string") {
       if (imageUrl.startsWith("http") || imageUrl.startsWith("/")) {
         return imageUrl;
       }
-      // Sinon on suppose un import statique (obj Vite/Webpack)
-      return typeof imageUrl === "string" ? imageUrl : placeHolder;
+      return imageUrl;
     }
   }
+
   return placeHolder;
 };
