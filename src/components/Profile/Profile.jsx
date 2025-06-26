@@ -321,17 +321,6 @@ const Profile = () => {
       aria-label="Page de profil utilisateur"
     >
       <div className="container mx-auto px-4 py-6">
-        <div className="text-center mb-8">
-          <h1
-            id="profile-title"
-            className="text-3xl font-bold text-gray-800 dark:text-white"
-            tabIndex={0}
-          >
-            {user
-              ? `Bienvenue ${user.lastname} ${user.firstname}`
-              : "Profil utilisateur"}
-          </h1>
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           <div className="lg:col-span-1">
             <nav
