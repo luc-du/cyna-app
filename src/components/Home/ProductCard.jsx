@@ -47,7 +47,7 @@ const ProductCard = ({ product, disabled = false, linkTo = "" }) => {
           </p>
         </div>
         {brand && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-white mt-1">
             Marque : {brand}
           </p>
         )}

@@ -18,6 +18,7 @@ import PersonalInfoForm from "./PersonalInfo/PersonalInfoForm";
  */
 const ProfileSection = ({ userData, onUpdateProfile, showToast }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { lastname, firstname, email, phone, roles } = userData;
 
   /**
    * Démarre le mode édition.
@@ -43,6 +44,9 @@ const ProfileSection = ({ userData, onUpdateProfile, showToast }) => {
       showToast("Erreur lors de la mise à jour du profil", "error");
     }
   };
+
+  const formatName = (name) =>
+    name[0].toUpperCase() + name.slice(1).toLowerCase();
 
   /**
    * Traduit le rôle utilisateur en français.
@@ -78,31 +82,28 @@ const ProfileSection = ({ userData, onUpdateProfile, showToast }) => {
 
       <p className="mt-4">
         <strong>Nom :</strong>{" "}
-        <span aria-label="Nom utilisateur">{userData.lastname}</span>
+        <span aria-label="Nom utilisateur">{formatName(lastname)}</span>
       </p>
 
       <p className="mt-4">
         <strong>Prénom :</strong>{" "}
-        <span aria-label="Prénom utilisateur">{userData.firstname}</span>
+        <span aria-label="Prénom utilisateur">{formatName(firstname)}</span>
       </p>
 
       <p className="mt-4">
-        <strong>Email :</strong>{" "}
-        <span aria-label="Adresse email">{userData.email}</span>
+        <strong>Email :</strong> <span aria-label="Adresse email">{email}</span>
       </p>
 
       <p className="mt-4">
         <strong>Téléphone :</strong>{" "}
         <span aria-label="Numéro de téléphone">
-          {userData.phone ? formatPhone(userData.phone) : "Non renseigné"}
+          {phone ? formatPhone(phone) : "Non renseigné"}
         </span>
       </p>
 
       <p className="mt-4">
         <strong>Statut :</strong>{" "}
-        <span aria-label="Statut utilisateur">
-          {formatUserRole(userData.roles)}
-        </span>
+        <span aria-label="Statut utilisateur">{formatUserRole(roles)}</span>
       </p>
 
       <div className="container-cta mt-4">

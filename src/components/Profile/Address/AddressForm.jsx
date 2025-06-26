@@ -65,7 +65,7 @@ const AddressForm = ({ addressData, userId, onSaveAddress, onCancel }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="form"
+      className="form m-auto"
       aria-labelledby="address-form-title"
     >
       <h2

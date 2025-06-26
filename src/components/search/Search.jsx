@@ -269,7 +269,11 @@ export default function SearchPage() {
                   aria-label="Liste des produits"
                 >
                   {finalResults.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      linkTo={`/products/${product.id}`}
+                    />
                   ))}
                 </div>
 
