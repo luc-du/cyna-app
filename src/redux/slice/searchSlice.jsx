@@ -1,12 +1,12 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_ROUTES } from "../../api/apiRoutes";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
   FALLBACK_STATE_PREFIX,
   SEARCH_UNKNOWN_ERROR,
-} from "../../lib/errorMessages";
+} from "@lib/errorMessages";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { API_ROUTES } from "../../api/apiRoutes";
 
 // ─── Async Thunk ──────────────────────────────────────────────────
 /**

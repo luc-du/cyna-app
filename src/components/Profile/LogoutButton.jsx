@@ -1,5 +1,5 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
-import CTAButton from "../shared/buttons/CTAButton";
 
 const LogoutButton = ({ handleClick, style }) => {
   // 1.States

@@ -1,7 +1,7 @@
+import { addToCart } from "@slices/cartSlice";
 import PropTypes from "prop-types";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../redux/slice/cartSlice";
 
 const AddToCartButton = ({ product, pricing }) => {
   // 1.State

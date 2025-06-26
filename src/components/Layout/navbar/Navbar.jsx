@@ -1,6 +1,6 @@
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { logoCynaWhite } from "../../../../public/indexImages";
+import { logoCynaWhite } from "@utils/indexImages";
 import SearchBar from "../SearchBar";
 import CartBadge from "./CartBadge";
 import MobileMenu from "./MobileMenu";

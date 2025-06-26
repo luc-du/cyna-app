@@ -69,7 +69,7 @@ const DataStatus = ({
 };
 
 DataStatus.propTypes = {
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
   loadingMessage: PropTypes.string,
   error: PropTypes.oneOfType([
     PropTypes.string,

@@ -4,7 +4,7 @@ import {
   createSubscription,
   getSubscriptionByCustomer,
   updateSubscription,
-} from "../../services/subscriptionService";
+} from "@services/subscriptionService";
 
 /**
  * Crée une souscription pour un client

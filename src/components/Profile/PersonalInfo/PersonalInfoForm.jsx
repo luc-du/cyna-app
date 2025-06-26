@@ -1,6 +1,6 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
  * Formulaire de mise à jour des informations personnelles.

@@ -1,16 +1,15 @@
+import DataStatus from "@shared/DataStatus";
+import NoResult from "@shared/NoResult";
+import { fetchProductById } from "@slices/productSlice";
+import { placeHolder } from "@utils/indexImages";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
-import { placeHolder } from "../../../public/indexImages";
 import { MOCK_SERVICES } from "../../mock/MOCKS_DATA";
-import { fetchProductById } from "../../redux/slice/productSlice";
-import DataStatus from "../shared/DataStatus";
-import NoResult from "../shared/NoResult";
 import ProductCarousel from "./ProductCarousel";
 import ProductCTA from "./ProductCTA";
 import ProductInfo from "./ProductInfo";
 import ProductSpecs from "./ProductSpecs";
-
 /**
  * ProductDetails
  * Affiche la fiche détaillée d’un produit.

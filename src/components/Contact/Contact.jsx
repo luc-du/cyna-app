@@ -21,7 +21,7 @@ const Contact = () => {
       </h1>
 
       <section
-        className="space-y-6 bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md"
+        className="space-y-6 rounded-xl p-6 shadow-md"
         aria-labelledby="contact-section-title"
       >
         <h2

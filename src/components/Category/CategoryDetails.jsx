@@ -1,10 +1,10 @@
+import DataStatus from "@shared/DataStatus";
+import NoResult from "@shared/NoResult";
+import { fetchCategoryById } from "@slices/categorySlice";
+import { emptyBox } from "@utils/indexImages";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { emptyBox } from "../../../public/indexImages";
-import { fetchCategoryById } from "../../redux/slice/categorySlice";
-import DataStatus from "../shared/DataStatus";
-import NoResult from "../shared/NoResult";
 import Loader from "../ui/Loader";
 import CategoryDescription from "./CategoryDescription";
 import CategoryHeader from "./CategoryHeader";

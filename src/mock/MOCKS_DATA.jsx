@@ -1,4 +1,4 @@
-import { indexImages } from "../../public/indexImages";
+import { indexImages } from "../utils/indexImages";
 
 const [
   cert, // indexImages[0]

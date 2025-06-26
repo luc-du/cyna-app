@@ -1,5 +1,5 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
-import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
  * AddressListElement
@@ -71,8 +71,7 @@ AddressListElement.propTypes = {
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired,
     url: PropTypes.string,
-    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      .isRequired,
+    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,

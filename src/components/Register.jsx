@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logoPng as cynaLogo } from "../../public/indexImages";
 import { PASSWORD_INPUTTED_ERROR, REGISTER_ERROR } from "../lib/errorMessages";
 import { REGISTER_SUCCESS } from "../lib/successMessages";
 import { registerUser } from "../redux/slice/authSlice";
 import { fetchUserProfile } from "../redux/slice/userSlice";
+import { logoPng as cynaLogo } from "../utils/indexImages";
 import { useGlobalToast } from "./GlobalToastProvider";
 import CTAButton from "./shared/buttons/CTAButton";
 import { checkPasswordStrength, getColorStrength } from "./utils/passwordUtils";

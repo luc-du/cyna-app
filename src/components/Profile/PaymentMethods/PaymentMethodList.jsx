@@ -1,5 +1,5 @@
+import DataStatus from "@shared/DataStatus";
 import PropTypes from "prop-types";
-import DataStatus from "../../shared/DataStatus";
 import PaymentMethodListItem from "./PaymentMethodListItem";
 
 /**
@@ -67,11 +67,6 @@ PaymentMethodList.propTypes = {
   ]),
   onDelete: PropTypes.func.isRequired,
   onSetDefault: PropTypes.func.isRequired,
-};
-
-PaymentMethodList.defaultProps = {
-  methods: [],
-  error: null,
 };
 
 export default PaymentMethodList;

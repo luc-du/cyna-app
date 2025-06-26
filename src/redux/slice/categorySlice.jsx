@@ -1,12 +1,12 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   FALLBACK_API_MESSAGE,
   FALLBACK_STATE_DEFAULT,
   FALLBACK_STATE_PREFIX,
   SEARCH_UNKNOWN_ERROR,
-} from "../../lib/errorMessages";
+} from "@lib/errorMessages";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import categoryService from "@services/categoryService"; // <-- on importe le service
 import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
-import categoryService from "../../services/categoryService"; // <-- on importe le service
 
 // ─── Async Thunks ─────────────────────────────────────────────
 

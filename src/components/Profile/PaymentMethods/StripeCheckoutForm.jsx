@@ -1,7 +1,7 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import PropTypes from "prop-types"; // Importation de PropTypes
 import { useState } from "react";
-import CTAButton from "../../shared/buttons/CTAButton";
 
 /**
  * @typedef {object} StripeCheckoutFormProps

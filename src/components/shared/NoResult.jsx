@@ -1,6 +1,5 @@
+import { emptyBox } from "@utils/indexImages";
 import PropTypes from "prop-types";
-import { emptyBox } from "../../../public/indexImages";
-
 /**
  * NoResult
  * Composant d'affichage fallback lorsqu'aucune donnée n'est disponible.

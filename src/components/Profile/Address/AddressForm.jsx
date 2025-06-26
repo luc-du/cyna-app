@@ -1,6 +1,6 @@
+import CTAButton from "@shared/buttons/CTAButton";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import CTAButton from "../../shared/buttons/CTAButton";
 import AddressFieldGroup from "./AddressFieldGroup";
 
 /**
@@ -65,7 +65,7 @@ const AddressForm = ({ addressData, userId, onSaveAddress, onCancel }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="form"
+      className="form m-auto"
       aria-labelledby="address-form-title"
     >
       <h2

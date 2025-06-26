@@ -45,7 +45,7 @@ export const API_ROUTES = {
       ),
   },
 
-  // ─── UTILISATEUR ───────────────────────────────────────────────────────────
+  //  UTILISATEUR
   USER: {
     BY_ID: (id) => getApiUrl(AUTH_HOST, `/user/${id}`),
     ALL: getApiUrl(AUTH_HOST, "/user"),
@@ -57,7 +57,7 @@ export const API_ROUTES = {
     UPLOAD_PROFILE: (id) => getApiUrl(AUTH_HOST, `/user/${id}/profiles`),
   },
 
-  // ─── ADRESSE ───────────────────────────────────────────────────────────────
+  //  ADRESSE
   ADDRESS: {
     GET_BY_USER: (userId) => getApiUrl(AUTH_HOST, `/address/user/${userId}`),
     ALL: getApiUrl(AUTH_HOST, "/address"),
@@ -67,7 +67,7 @@ export const API_ROUTES = {
     DELETE: (id) => getApiUrl(AUTH_HOST, `/address/${id}`),
   },
 
-  // ─── SUBSCRIPTIONS / STRIPE ─────────────────────────────────────────────────
+  //  SUBSCRIPTIONS / STRIPE
   SUBSCRIPTION: {
     CREATE_CUSTOMER: getApiUrl(
       SUBSCRIPTION_HOST,
@@ -108,7 +108,7 @@ export const API_ROUTES = {
     CONFIG: getApiUrl(SUBSCRIPTION_HOST, "/subscriptions/config"),
   },
 
-  // --- PAYMENT METHODS
+  //  PAYMENT METHODS
   PAYMENT_METHODS: {
     GET_ALL: (customerId) =>
       getApiUrl(
@@ -128,7 +128,7 @@ export const API_ROUTES = {
         )}/default?customerId=${encodeURIComponent(customerId)}`
       ),
   },
-  // ─── CATEGORIES ─────────────────────────────────────────────────────────────
+  //  CATEGORIES
   CATEGORIES: {
     ALL: getApiUrl(CATEGORIES_HOST, "/categories"),
     BY_ID: (id) => getApiUrl(CATEGORIES_HOST, `/categories/${id}`),
@@ -151,7 +151,7 @@ export const API_ROUTES = {
       getApiUrl(CATEGORIES_HOST, `/categories/${categoryId}/images`),
   },
 
-  // ─── PRODUITS ───────────────────────────────────────────────────────────────
+  //  PRODUITS
   PRODUCTS: {
     ALL: getApiUrl(PRODUCTS_HOST, "/products"),
     ALLWithPagination: getApiUrl(PRODUCTS_HOST, "/products"),
@@ -207,7 +207,7 @@ export const API_ROUTES = {
       getApiUrl(PRODUCTS_HOST, `/products/${productId}/images`),
   },
 
-  // ─── CAROUSEL ───────────────────────────────────────────────────────────────
+  //  CAROUSEL
   CAROUSEL: {
     ALL: (limits = 10) =>
       getApiUrl(CAROUSEL_HOST, `/carousel?limits=${limits}`),

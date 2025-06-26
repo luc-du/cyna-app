@@ -1,6 +1,5 @@
+import { emptyBox } from "@utils/indexImages";
 import PropTypes from "prop-types";
-import { emptyBox } from "../../../public/indexImages";
-
 /**
  * Composant d'état vide (EmptyState)
  *

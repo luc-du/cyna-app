@@ -1,4 +1,5 @@
 // MobileMenu.tsx
+import { logout } from "@slices/authSlice";
 import { useState } from "react";
 import {
   FaAlignJustify,
@@ -12,7 +13,7 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { logout } from "../../../redux/slice/authSlice";
+import FooterLinks from "../Footer/FooterLink";
 
 export default function MobileMenu() {
   // 1.State
@@ -33,6 +34,7 @@ export default function MobileMenu() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="text-white text-xl p-2"
+        aria-label="bouton burger navbar"
       >
         {isOpen ? <FaTimes /> : <FaAlignJustify />}
       </button>
@@ -86,6 +88,8 @@ export default function MobileMenu() {
               <FaUser className="mr-2" /> Mon compte
             </Link>
           )}
+          <hr className="my-4 border-gray-600" />
+          <FooterLinks className={"flex flex-col gap-2 text-sm text-white"} />
         </div>
       )}
     </div>

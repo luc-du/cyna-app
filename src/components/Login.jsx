@@ -1,7 +1,7 @@
+import { logoPng as cynaLogo } from "@utils/indexImages";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logoPng as cynaLogo } from "../../public/indexImages";
 import { loginUser } from "../redux/slice/authSlice";
 import { fetchUserProfile } from "../redux/slice/userSlice";
 import { useGlobalToast } from "./GlobalToastProvider";
@@ -49,7 +49,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="w-full flex items-center justify-center min-h-screen  bg-gray-100 dark:bg-gray-900 ">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md px-10 py-8 flex flex-col gap-6"

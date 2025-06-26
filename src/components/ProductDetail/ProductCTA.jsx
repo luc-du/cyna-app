@@ -1,10 +1,10 @@
+import { useToast } from "@hooks/useToast";
+import { addToCart } from "@slices/cartSlice";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "../../hooks/useToast";
-import { addToCart } from "../../redux/slice/cartSlice";
 import ConfirmModal from "../ui/ConfirmModal";
 const ProductCTA = ({ product }) => {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
+import CTAButton from "@shared/buttons/CTAButton";
+import DataStatus from "@shared/DataStatus";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import CTAButton from "../../shared/buttons/CTAButton";
-import DataStatus from "../../shared/DataStatus";
 import ConfirmModal from "../../ui/ConfirmModal";
 import ModalOverlay from "../../ui/ModalOverlay";
 import AddressForm from "./AddressForm";
@@ -142,14 +142,13 @@ AddressSection.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
-      postcode: PropTypes.string.isRequired,
+      postcode: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       city: PropTypes.string.isRequired,
       country: PropTypes.string.isRequired,
       url: PropTypes.string,
       user: PropTypes.shape({
-        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-          .isRequired,
-      }).isRequired,
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      }),
     })
   ).isRequired,
   loading: PropTypes.bool.isRequired,

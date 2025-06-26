@@ -46,8 +46,12 @@ const Carousel = ({ slides, delayTransitionImage }) => {
           >
             <img
               src={slide.imageUrl}
-              alt={slide.title || `Slide ${index + 1}`}
-              className="w-full h-full object-fill"
+              alt={
+                slide.title
+                  ? `Illustration : ${slide.title}`
+                  : `Slide ${index + 1}`
+              }
+              className="w-full h-full object-cover"
             />
 
             <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center p-4">
@@ -82,7 +86,7 @@ const Carousel = ({ slides, delayTransitionImage }) => {
 
       {/* Indicateurs */}
       <div
-        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
+        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-6"
         role="tablist"
         aria-label="Indicateurs de slides"
       >

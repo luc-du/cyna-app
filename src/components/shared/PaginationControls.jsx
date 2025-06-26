@@ -1,6 +1,6 @@
+import { setCurrentPage } from "@slices/searchSlice";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { setCurrentPage } from "../../redux/slice/searchSlice";
 import CTAButton from "./buttons/CTAButton";
 
 /**
