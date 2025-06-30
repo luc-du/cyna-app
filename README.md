@@ -603,3 +603,4 @@ Les fonctionnalités dynamiques (authentification, gestion du panier, abonnement
 Les données sont simulées localement via des mocks ou des fallbacks en cas d'absence d'API.
 
 Le backend complet a été développé séparément, présenté lors de la soutenance, et documenté via Swagger. Il est disponible sur un dépôt distinct (non inclus ici) et nécessite une configuration indépendante pour les tests complets.
+
