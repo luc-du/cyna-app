@@ -592,3 +592,7 @@ Le comportement mobile a été simplifié :
 ## Conclusion
 
 L’ensemble des fonctionnalités intégrées dans la HomePage, la gestion des catégories, la recherche avancée et le détail produit respecte pleinement le Cahier des Charges. La navigation est fluide, la gestion des erreurs est robuste, et les composants sont modulaires, testables et prêts pour une intégration en production.
+---
+### Informations importantes
+
+Le frontend et le backend ont été développés et versionnés séparément. Le backend Spring Boot (API REST) est disponible sur un dépôt dédié. Il a été présenté et démontré en vidéo lors de la soutenance, et la documentation Swagger a été fournie dans l’annexe.
