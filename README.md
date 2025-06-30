@@ -593,6 +593,14 @@ Le comportement mobile a été simplifié :
 
 L’ensemble des fonctionnalités intégrées dans la HomePage, la gestion des catégories, la recherche avancée et le détail produit respecte pleinement le Cahier des Charges. La navigation est fluide, la gestion des erreurs est robuste, et les composants sont modulaires, testables et prêts pour une intégration en production.
 ---
-### Informations importantes
+⚠️ Note importante sur cette version du projet
 
-Le frontend et le backend ont été développés et versionnés séparément. Le backend Spring Boot (API REST) est disponible sur un dépôt dédié. Il a été présenté et démontré en vidéo lors de la soutenance, et la documentation Swagger a été fournie dans l’annexe.
+Cette version du dépôt contient exclusivement le code frontend (React) développé pour le projet Cyna.
+Sans le backend (API REST en Spring Boot), elle se comporte comme un site vitrine statique :
+
+Les fonctionnalités dynamiques (authentification, gestion du panier, abonnements Stripe, profils utilisateurs) ne sont pas opérationnelles.
+
+Les données sont simulées localement via des mocks ou des fallbacks en cas d'absence d'API.
+
+Le backend complet a été développé séparément, présenté lors de la soutenance, et documenté via Swagger. Il est disponible sur un dépôt distinct (non inclus ici) et nécessite une configuration indépendante pour les tests complets.
+
