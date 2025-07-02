@@ -591,7 +591,8 @@ Le comportement mobile a été simplifié :
 
 ## Conclusion
 
-L’ensemble des fonctionnalités intégrées dans la HomePage, la gestion des catégories, la recherche avancée et le détail produit respecte pleinement le Cahier des Charges. La navigation est fluide, la gestion des erreurs est robuste, et les composants sont modulaires, testables et prêts pour une intégration en production.
+- L’ensemble des fonctionnalités intégrées dans la HomePage, la gestion des catégories, la recherche avancée et le détail produit respecte pleinement le Cahier des Charges. 
+- La navigation est fluide, la gestion des erreurs est robuste, et les composants sont modulaires, testables et prêts pour une intégration en production.
 ---
 ⚠️ Note importante sur cette version du projet
 
@@ -603,4 +604,6 @@ Les fonctionnalités dynamiques (authentification, gestion du panier, abonnement
 Les données sont simulées localement via des mocks ou des fallbacks en cas d'absence d'API.
 
 Le backend complet a été développé séparément, présenté lors de la soutenance, et documenté via Swagger. Il est disponible sur un dépôt distinct (non inclus ici) et nécessite une configuration indépendante pour les tests complets.
+
+Le APIKeys peuvent être présentes dans le .env ci-joint, nous sommes conscients des risques pour le cas d'un projet réel. 
 
