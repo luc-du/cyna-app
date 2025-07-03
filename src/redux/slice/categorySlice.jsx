@@ -131,7 +131,6 @@ export const fetchCategoryById = createAsyncThunk(
   }
 );
 
-
 const categorySlice = createSlice({
   name: "categories",
   initialState: {
@@ -157,7 +156,6 @@ const categorySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-     
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -183,7 +181,6 @@ const categorySlice = createSlice({
         }
       })
 
-      
       .addCase(fetchCategoryById.pending, (state) => {
         state.loadingSelected = true;
         state.errorSelected = null;
@@ -199,7 +196,6 @@ const categorySlice = createSlice({
         state.errorSelected = action.payload || SEARCH_UNKNOWN_ERROR;
         state.selectedCategory = null;
       })
-     
       .addCase(searchCategories.pending, (state) => {
         state.loadingSearch = true;
         state.errorSearch = null;
