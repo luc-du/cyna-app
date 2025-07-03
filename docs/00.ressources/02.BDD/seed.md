@@ -1,5 +1,3 @@
-Voici une méthode simple et rapide pour injecter des données de test dans votre backend Spring (ports 8082 pour carousel, categories et products). Vous pouvez exécuter ces requêtes `curl` (ou via Postman) pour créer quelques enregistrements de base :
-
 ---
 
 ## 1. Préambule
