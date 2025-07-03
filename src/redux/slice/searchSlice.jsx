@@ -8,7 +8,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ROUTES } from "../../api/apiRoutes";
 
-// ─── Async Thunk ──────────────────────────────────────────────────
+
 /**
  * Recherche de produits par mot-clé, page, filtres et tri.
  * - Si l’API renvoie un tableau vide → fulfilled([]).
