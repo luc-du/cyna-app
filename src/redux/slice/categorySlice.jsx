@@ -8,8 +8,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import categoryService from "@services/categoryService"; // <-- on importe le service
 import { MOCK_CATEGORIES } from "../../mock/MOCKS_DATA";
 
-// ─── Async Thunks ─────────────────────────────────────────────
-
 /**
  * Récupère toutes les catégories.
  * Fallback MOCK_CATEGORIES en cas d’erreur réseau/serveur ou tableau vide.
@@ -132,7 +130,6 @@ export const fetchCategoryById = createAsyncThunk(
     }
   }
 );
-// ─── Slice ───────────────────────────────────────────────────
 
 const categorySlice = createSlice({
   name: "categories",
@@ -159,7 +156,6 @@ const categorySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // ─── fetchCategories ─────────────────────────────────────────────
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -185,7 +181,6 @@ const categorySlice = createSlice({
         }
       })
 
-      // ─── fetchCategoryById ───────────────────────────────────────────
       .addCase(fetchCategoryById.pending, (state) => {
         state.loadingSelected = true;
         state.errorSelected = null;
@@ -201,7 +196,6 @@ const categorySlice = createSlice({
         state.errorSelected = action.payload || SEARCH_UNKNOWN_ERROR;
         state.selectedCategory = null;
       })
-      // ─── searchCategories ───────────────────────────────────────────
       .addCase(searchCategories.pending, (state) => {
         state.loadingSearch = true;
         state.errorSearch = null;
