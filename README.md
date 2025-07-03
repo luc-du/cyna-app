@@ -574,7 +574,7 @@ Le comportement mobile a été simplifié :
 - **Accessibilité respectée** : `aria-*`, navigation clavier, messages dynamiques.
 - **Responsive Design** : grille et mise en page adaptatives (1 à 4 colonnes).
 - **Débogage facilité** : messages d’erreur clairement affichés, distinction entre erreur d’API et fallback mock.
-- **Code commenté** de manière synthétique, sans émoticônes, pour faciliter la lecture et la maintenance.
+- **Code commenté** de manière synthétique, pour faciliter la lecture et la maintenance.
 
 ---
 
